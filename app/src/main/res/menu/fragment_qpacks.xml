@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/qpacks_menu_item_sort">
+
+        <menu>
+            <group android:checkableBehavior="single">
+
+                <item
+                    android:id="@+id/menu_item_by_last_view_date"
+                    android:title="@string/qpacks_menu_item_by_last_view_date"
+                    />
+
+                <item
+                    android:id="@+id/menu_item_by_creation_date"
+                    android:title="@string/qpacks_menu_item_by_creation_date"
+                    />
+
+            </group>
+        </menu>
+    </item>
+
+</menu>

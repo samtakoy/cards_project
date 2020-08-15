@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="@string/preferences_db_managment" >
+
+        <Preference
+            android:key="pref_key_reset_db"
+            app:title="@string/preferences_reset_db"
+            android:summary="@string/preferences_reset_db_summary"
+            >
+        </Preference>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

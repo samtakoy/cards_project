@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:gravity="center_horizontal|center_vertical"
+    >
+
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/AppTheme.screenHeader"
+        />
+    <TextView
+        android:id="@+id/cards_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/AppTheme.subHeader"
+        />
+
+    <TextView
+        android:id="@+id/status_title"
+        android:text="@string/course_info_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/AppTheme.subHeader"
+        />
+    <TextView
+        android:id="@+id/status_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/AppTheme.subHeader"
+        />
+    <TextView
+        android:id="@+id/schedule_title"
+        android:text="@string/course_info_schedule_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/AppTheme.subHeader"
+        />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/schedule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!-- TODO cards list -->
+
+    <!--
+PREPARING(1),
+    title
+    карточек: 12
+
+    status: preparing
+    расписание:
+        <><><><><><><>
+    button: начать_обучение
+
+    **** список карточек
+
+LEARN_WAITING(2),
+    title
+    карточек: 12
+
+    status: урок запланирован через: 1ч24мин...
+    button: изменить
+
+    расписание повторов:
+        <><><><><><><>
+
+    button: начать_обучение
+
+    **** список карточек
+
+LEARNING(3),
+    title
+    карточек: 12
+
+    status: выучено 0/12
+    button: отложить
+
+    расписание повторов:
+        <><><><><><><>
+
+    button: учиться/продолжить
+
+    **** список карточек
+
+REPEAT_WAITING(4),
+    title
+    карточек: 12
+
+    status: повторение через: 1ч24мин...
+    button: изменить
+
+    расписание будущих повторов:
+        <><><><><><><>
+
+    button: повторить сейчас
+    button: внеплановый повтор
+    button: просмотр
+
+    **** список карточек
+
+REPEATING(5);
+    title
+    карточек: 12
+
+    status: повторено 0/12
+    button: отложить
+
+    расписание повторов:
+        <><><><><><><>
+
+    button: повторить/продолжить
+
+    **** список карточек
+ -->
+
+
+</LinearLayout>

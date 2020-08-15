@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="ru.samtakoy">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+
+    <application
+        android:name=".core.MyApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        tools:replace="android:theme"
+        android:theme="@style/AppTheme"
+        >
+        <activity android:name=".core.screens.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".core.screens.courses.CoursesListActivity"
+            android:label="@string/fragment_courses_title"
+            />
+        <activity android:name=".core.screens.courses.CourseInfoActivity"/>
+        <activity android:name=".core.screens.ScheduleEditActivity"/>
+        <activity android:name=".core.screens.log.LogActivity"/>
+        <activity android:name=".core.screens.online_import.OnlineImportActivity"/>
+        <activity android:name=".features.settings.SettingsActivity" />
+
+        <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
+
+
+        <provider android:name=".core.database.DbContentProvider"
+            android:authorities="ru.samtakoy.core.database.DbContentProvider"
+            android:exported="false" />
+
+        <receiver android:name=".core.services.StartupReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".core.services.NotificationsPlannerService"
+            android:exported="false"
+            />
+
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="ru.samtakoy.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"
+                />
+        </provider>
+
+    </application>
+
+</manifest>

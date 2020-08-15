@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/menu_item_add"
+        android:title="@string/fragment_courses_menu_item_add"
+        android:icon="@drawable/ic_action_add"
+        app:showAsAction="ifRoom|withText" />
+    <item android:id="@+id/fragment_courses_menu_to_themes"
+        android:title="@string/fragment_courses_menu_to_themes"
+        />
+
+    <item android:id="@+id/menu_item_send_courses"
+        android:title="@string/fragment_courses_menu_to_email"
+        />
+</menu>

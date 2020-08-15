@@ -1,0 +1,187 @@
+<resources>
+
+    <string name="app_name">cards</string>
+
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_save">Сохранить</string>
+    <string name="confirm_dialog_title">?</string>
+
+    <string name="fragment_themes_menu_item_add">add</string>
+    <string name="fragment_themes_menu_item_import_cards">import</string>
+
+    <!-- импорт в чистую базу -->
+    <string name="menu_item_import_from_folder_all">import from folder</string>
+    <string name="menu_item_from_folder">from folder...</string>
+
+
+    <!-- импорт в чистую базу -->
+    <string name="menu_item_import_from_zip_all">import from ZIP</string>
+    <string name="menu_item_from_zip">from ZIP...</string>
+        <!-- импортируются только паки без id (новые) -->
+        <string name="menu_item_import_new">import only new</string>
+        <!-- обновление по айдишникам, но запрещено создавать пак с id -->
+        <string name="menu_item_update_exists">update only exists</string>
+        <!-- вся информация об id в импоритруемом  файле игнорируется -->
+        <string name="menu_item_import_as_new">import/update as new</string>
+
+
+    <string name="fragment_themes_menu_item_remote_import_cards">online import</string>
+    <string name="fragment_themes_menu_item_export_all_to">export all to folder</string>
+    <string name="fragment_themes_menu_item_export_all_to_email">export all to email</string>
+    <string name="fragment_themes_menu_item_export_cards">export</string>
+    <string name="fragment_themes_menu_item_send_cards">export by email</string>
+    <string name="fragment_themes_menu_item_delete_theme">delete</string>
+    <!--string name="fragment_themes_menu_item_show_courses">all courses</string-->
+    <string name="menu_item_settings">settings</string>
+
+    <string name="fragment_dialog_theme_add_title">Enter Theme name</string>
+    <string name="fragment_themes_list_cant_read_file_size_msg">File size read error</string>
+    <string name="fragment_themes_list_cant_open_file_msg">File open error</string>
+    <string name="fragment_themes_list_cant_save_file_msg">File save error</string>
+    <string name="fragment_themes_list_cant_send_file_msg">File sending error</string>
+    <!--string name="fragment_themes_list_cant_save_file_msg2">File save error 2</string-->
+    <string name="fragment_themes_list_cards_export_ok">File export is successful</string>
+    <string name="fragment_themes_list_cards_cards_loading_error">Cards loading error</string>
+    <string name="fragment_themes_list_not_dir_msg">Not directory was selected</string>
+
+    <string name="fragment_dialog_pack_import_title">Importing....</string>
+    <string name="fragment_dialog_pack_import_error_msg">Error on pack importing</string>
+
+    <string name="fragment_dialog_batch_import_title">Importing....</string>
+    <string name="fragment_dialog_batch_import_error_msg">Error on batch importing</string>
+
+    <string name="fragment_dialog_batch_export_title">Exporting....</string>
+    <string name="fragment_dialog_batch_export_error_msg">Error on batch exporting</string>
+
+    <string name="msg_there_is_no_cards_in_pack">Нет ни одной карточки в наборе</string>
+    <string name="msg_there_is_no_cards_to_learn">Нет карточек для изучения</string>
+    <string name="qpack_btn_view_cards">view cards</string>
+    <string name="qpack_btn_add_to_new_course">a new course</string>
+    <string name="qpack_btn_add_to_course">add to course</string>
+    <string name="qpack_btn_view_courses">view courses</string>
+    <string name="qpack_menu_delete">удалить</string>
+    <string name="qpack_cards_count">Карточек: {0}</string>
+
+    <string-array name="qpack_viewing_types">
+        <item>Карточки произволньно</item>
+        <item>Карточки по порядку</item>
+        <item>Список</item>
+    </string-array>
+    <string name="qpack_viewing_types_title">Тип просмотра</string>
+
+    <string name="cards_view_no_course_msg">Some error</string>
+    <string name="cards_view_some_err_msg">Some error</string>
+    <string name="cards_view_no_cards_msg">Empty pack</string>
+
+
+    <string name="cards_view_previous_btn">prev</string>
+    <string name="cards_view_next_btn">next</string>
+    <string name="cards_view_view_answer_btn">view answer</string>
+    <string name="cards_view_wrong_btn">i dont now</string>
+    <string name="cards_view_back_from_answer_btn">back</string>
+
+
+    <string name="cards_view_res_title">Result:</string>
+    <string name="cards_view_res_viewed_cards">viewed: {0}</string>
+    <string name="cards_view_res_err_cards">errors: {0}</string>
+    <string name="cards_view_res_schedule_text">repeat error cards after:</string>
+    <string name="cards_view_res_schedule_none">(=none)</string>
+
+
+    <string name="schedule_edit_title">Schedule:</string>
+    <string name="schedule_none">--</string>
+    <string name="schedule_clear_btn">clear</string>
+    <string name="schedule_new_item_title">schedule new item:</string>
+    <string name="schedule_item_clear_btn">X</string>
+    <string name="schedule_item_add_btn">add</string>
+
+
+    <string name="time_min">min</string>
+    <string name="time_hour">hour</string>
+    <string name="time_day">day</string>
+    <string name="time_week">week</string>
+    <string name="time_month">month</string>
+    <string name="time_year">year</string>
+
+    <string name="default_schedule_title">default</string>
+
+
+    <string name="fragment_courses_title">repeat courses</string>
+    <string name="fragment_courses_menu_item_add">new course</string>
+    <string name="fragment_courses_menu_to_themes">to themes</string>
+    <string name="fragment_courses_menu_to_email">send all to...</string>
+
+
+    <string name="additional_learn_course_title">additional {0} cards</string>
+    <string name="additional_learn_course_title_with_subtitle">{1}: additional {0} cards</string>
+
+
+
+    <string name="notifications_new_repeats_title">New repeats</string>
+    <string name="notifications_new_repeats_text">You have cards to repeat</string>
+    <string name="notifications_learn_waitings_title">New courses</string>
+    <string name="notifications_learn_waitings_text">You have cards to learn.</string>
+
+    <string name="notifications_uncompleted_title">Uncompleted...</string>
+    <string name="notifications_uncompleted_text">There is uncompleted learns or repeats.</string>
+    <!--string name="notifications_uncompleted_repeats_title">Uncompleted...</string>
+    <string name="notifications_uncompleted_repeats_text">There is uncompleted repeats.</string-->
+
+
+    <string name="course_info_card_count">{0} cards</string>
+    <string name="course_info_status">status:</string>
+    <string name="course_info_status_preparing">preparing</string>
+    <string name="course_info_status_learn_waiting">урок запланирован через {0}</string>
+    <string name="course_info_status_learning">просмотрено {0}</string>
+    <string name="course_info_status_repeat_waiting">повторение через {0}</string>
+    <string name="course_info_status_repeating">повторено {0}</string>
+    <string name="course_info_status_completed">обучение завершено</string>
+
+    <string name="course_info_menu_delete">удалить</string>
+
+    <string name="course_info_schedule_title">расписание:</string>
+    <string name="course_info_schedule_is_completed">(завершено)</string>
+    <string name="course_info_schedule_is_empty">(нет)</string>
+
+    <string name="course_info_btn_complete_preparing">начать обучение:</string>
+    <string name="course_info_btn_start_learning">начать обучение</string>
+    <string name="course_info_btn_learn">учиться</string>
+    <string name="course_info_btn_continue_learning">продолжить</string>
+    <string name="course_info_btn_repeat_now">повторить сейчас</string>
+    <string name="course_info_btn_repeat">повторить</string>
+    <string name="course_info_btn_continue_repeating">продолжить</string>
+
+    <string name="course_info_extra_repeating_confirm">Будет запущено внеплановое повторение</string>
+
+
+
+    <string name="preferences_db_managment">Управление данными</string>
+    <string name="preferences_reset_db">Удалить все данные</string>
+    <string name="preferences_reset_db_summary">Все карточки и курсы будут утеряны безвозвратно</string>
+
+    <string name="clear_db_title">Очистка...</string>
+    <string name="clear_db_error">Ошибка при удалении базы данных</string>
+    <string name="clear_db_confirmation_msg">Все карточки и курсы будут удалены безвозвратно. Удалить?</string>
+    <string name="bottom_sheet_cards_title">Карточки</string>
+
+    <string name="main_drawer_themes">по темам</string>
+    <string name="main_drawer_qpacks">списком</string>
+    <string name="main_drawer_courses">расписания</string>
+    <string name="main_drawer_settings">настройки</string>
+
+    <string name="main_drawer_open_nav_drawer">открыть</string>
+    <string name="main_drawer_close_nav_drawer">закрыть</string>
+
+    <string name="courses_list_is_empty">курсы отсутствуют</string>
+    <string name="courses_list_select_title">выбор курса</string>
+
+    <string name="edit_text_block_hint">Редактирование текста</string>
+    <string name="edit_text_context_edit">редактировать</string>
+
+    <string name="qpacks_menu_item_sort">сортировка</string>
+    <string name="qpacks_menu_item_by_last_view_date">давно просмотренные</string>
+    <string name="qpacks_menu_item_by_creation_date">недавно созданные</string>
+
+
+</resources>

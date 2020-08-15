@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- files-path name="send" path="_send"/ -->
+    <cache-path name="send" path="_send" />
+    <cache-path name="zip" path="_zip" />
+</paths>

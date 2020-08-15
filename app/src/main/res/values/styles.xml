@@ -1,0 +1,40 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <!--style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"-->
+    <!--style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar"-->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+
+
+    </style>
+
+
+    <style name="AppTheme.screenHeader">
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="AppTheme.subHeader">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="AppTheme.controlButton">
+        <item name="android:textSize">24sp</item>
+    </style>
+
+
+    <style name="cardQuestionText" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="cardAnswerText" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">23sp</item>
+    </style>
+
+</resources>
