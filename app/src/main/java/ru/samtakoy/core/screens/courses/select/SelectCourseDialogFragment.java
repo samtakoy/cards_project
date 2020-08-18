@@ -1,4 +1,4 @@
-package ru.samtakoy.core.screens.courses;
+package ru.samtakoy.core.screens.courses.select;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,23 +8,32 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
+import moxy.MvpAppCompatDialogFragment;
+import moxy.presenter.InjectPresenter;
+import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
+import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.model.LearnCourse;
 import ru.samtakoy.core.model.QPack;
 import ru.samtakoy.core.screens.courses.list.CoursesAdapter;
 import ru.samtakoy.core.screens.qpack.QPackInfoFragment;
 
-public class SelectCourseDialogFragment extends DialogFragment
-        implements CoursesAdapter.CourseClickListener{
+public class SelectCourseDialogFragment extends MvpAppCompatDialogFragment
+        implements CoursesAdapter.CourseClickListener, SelectCourseView {
 
     private static final String ARG_TARGET_QPACK = "ARG_TARGET_QPACK";
 
@@ -32,9 +41,9 @@ public class SelectCourseDialogFragment extends DialogFragment
 
     public static SelectCourseDialogFragment newFragment(
             @Nullable QPack targetQPack,
-            QPackInfoFragment targetFragment,
+            @NotNull QPackInfoFragment targetFragment,
             int requestCode
-    ){
+    ) {
         SelectCourseDialogFragment result = new SelectCourseDialogFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_TARGET_QPACK, targetQPack);
@@ -47,18 +56,27 @@ public class SelectCourseDialogFragment extends DialogFragment
     private RecyclerView mCoursesRecycler;
     private CoursesAdapter mCoursesAdapter;
 
-    @Nullable private QPack mTargetQPack;
+
+    @InjectPresenter
+    SelectCoursePresenter mPresenter;
+    @Inject
+    Provider<SelectCoursePresenter.Factory> mFactoryProvider;
+
+    @ProvidePresenter
+    SelectCoursePresenter providePresenter() {
+        return mFactoryProvider.get().create(readQPack());
+    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
-        
+        MyApp.getInstance().getAppComponent().inject(this);
 
         super.onCreate(savedInstanceState);
     }
 
     private void initView(View v) {
-        mTargetQPack = (QPack) getArguments().getSerializable(ARG_TARGET_QPACK);
 
         mCoursesIsEmptyLabel = v.findViewById(R.id.courses_is_empty_label);
 
@@ -68,7 +86,11 @@ public class SelectCourseDialogFragment extends DialogFragment
         mCoursesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mCoursesRecycler.setAdapter(mCoursesAdapter);
 
-        updateCurCourses();
+    }
+
+    @Nullable
+    private QPack readQPack() {
+        return (QPack) getArguments().getSerializable(ARG_TARGET_QPACK);
     }
 
     @NonNull
@@ -81,24 +103,23 @@ public class SelectCourseDialogFragment extends DialogFragment
         return new AlertDialog.Builder(getContext())
                 .setTitle(R.string.courses_list_select_title)
                 .setView(v)
-                .setNegativeButton(R.string.btn_cancel, (dialogInterface, i) -> onCancel())
+                .setNegativeButton(R.string.btn_cancel, (dialogInterface, i) -> exitCanceled())
                 .create();
     }
 
-    private void updateCurCourses() {
-        List<LearnCourse> curCourses;
-        if(mTargetQPack == null){
-            curCourses = ContentProviderHelper.getAllCourses(getActivity());
-        } else {
-            curCourses = ContentProviderHelper.getCoursesFor(getActivity(), mTargetQPack.getId());
-        }
+    @Override
+    public void showCourses(@NotNull List<? extends LearnCourse> curCourses) {
         mCoursesAdapter.setCurCourses(curCourses);
-
         updateListVisibility(curCourses.size() > 0);
     }
 
+    @Override
+    public void showError(int codeResId) {
+        Toast.makeText(getContext(), codeResId, Toast.LENGTH_SHORT).show();
+    }
+
     private void updateListVisibility(boolean coursesIsVisible) {
-        if(coursesIsVisible){
+        if (coursesIsVisible) {
             mCoursesRecycler.setVisibility(View.VISIBLE);
             mCoursesIsEmptyLabel.setVisibility(View.GONE);
         } else {
@@ -107,24 +128,29 @@ public class SelectCourseDialogFragment extends DialogFragment
         }
     }
 
-    private void onCancel(){
-        if(getTargetFragment() == null){
-            return;
+    @Override
+    public void exitCanceled() {
+        if (getTargetFragment() != null) {
+
+            Intent result = new Intent();
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, result);
         }
-        Intent result = new Intent();
-        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, result);
+        dismiss();
+    }
+
+    @Override
+    public void exitOk(long courseId) {
+        if (getTargetFragment() != null) {
+            Intent result = new Intent();
+            result.putExtra(RESULT_EXTRA_COURSE_ID, courseId);
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, result);
+        }
+
         dismiss();
     }
 
     @Override
     public void onCourseClick(LearnCourse course) {
-        if(getTargetFragment() == null){
-            return;
-        }
-        Intent result = new Intent();
-        result.putExtra(RESULT_EXTRA_COURSE_ID, course.getId());
-        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, result);
-
-        dismiss();
+        mPresenter.onUiCourseClick(course);
     }
 }

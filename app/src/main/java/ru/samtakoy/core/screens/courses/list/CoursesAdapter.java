@@ -1,4 +1,4 @@
-package ru.samtakoy.core.screens.courses;
+package ru.samtakoy.core.screens.courses.list;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,14 +47,14 @@ public class CoursesAdapter extends RecyclerView.Adapter <CoursesAdapter.Courses
     }
 
     private CourseClickListener mCourseClickListener;
-    private List<LearnCourse> mCurCourses;
+    private List<? extends LearnCourse> mCurCourses;
 
     public CoursesAdapter(CourseClickListener clickListener){
         mCurCourses = new ArrayList<>();
         mCourseClickListener = clickListener;
     }
 
-    public void setCurCourses(List<LearnCourse> curCourses) {
+    public void setCurCourses(List<? extends LearnCourse> curCourses) {
         mCurCourses = curCourses;
         notifyDataSetChanged();
     }

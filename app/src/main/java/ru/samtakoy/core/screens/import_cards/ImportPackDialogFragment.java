@@ -7,8 +7,8 @@ import androidx.fragment.app.Fragment;
 
 import io.reactivex.Completable;
 import ru.samtakoy.R;
+import ru.samtakoy.core.business.impl.ImportCardsHelper;
 import ru.samtakoy.core.screens.ProgressDialogFragment;
-import ru.samtakoy.core.services.import_utils.ImportCardsHelper;
 import ru.samtakoy.core.services.import_utils.ImportCardsOpts;
 
 public class ImportPackDialogFragment extends ProgressDialogFragment {

@@ -1,4 +1,4 @@
-package ru.samtakoy.core.services.import_utils;
+package ru.samtakoy.core.business.impl;
 
 import android.content.ContentResolver;
 import android.net.Uri;
@@ -16,7 +16,6 @@ import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.Single;
-import ru.samtakoy.core.business.impl.ExportConst;
 import ru.samtakoy.core.business.impl.helpers.ZipHelper;
 import ru.samtakoy.core.database.CardsDbSchema;
 import ru.samtakoy.core.database.DbContentProvider;
@@ -27,7 +26,11 @@ import ru.samtakoy.core.model.Theme;
 import ru.samtakoy.core.model.utils.cbuild.CBuilderConst;
 import ru.samtakoy.core.model.utils.cbuild.CardBuilder;
 import ru.samtakoy.core.model.utils.cbuild.QPackBuilder;
-import ru.samtakoy.core.business.impl.ContentProviderHelper;
+import ru.samtakoy.core.services.import_utils.FromUriStreamFactory;
+import ru.samtakoy.core.services.import_utils.FromZipEntryStreamFactory;
+import ru.samtakoy.core.services.import_utils.ImportCardsException;
+import ru.samtakoy.core.services.import_utils.ImportCardsOpts;
+import ru.samtakoy.core.services.import_utils.StreamFactory;
 
 
 public class ImportCardsHelper {

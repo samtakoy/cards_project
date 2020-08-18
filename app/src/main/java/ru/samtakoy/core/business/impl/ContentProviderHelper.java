@@ -34,7 +34,7 @@ import ru.samtakoy.core.screens.log.MyLog;
 import static ru.samtakoy.core.model.LearnCourseMode.LEARN_WAITING;
 import static ru.samtakoy.core.model.LearnCourseMode.REPEAT_WAITING;
 
-class ContentProviderHelper {
+public class ContentProviderHelper {
 
     private static final String TAG = "ContentProviderHelper";
 
@@ -43,7 +43,7 @@ class ContentProviderHelper {
         Uri courseUri = resolver.insert(DbContentProvider.CONTENT_URI_COURSES, learnCourse.getContentValues(false));
         Long courseId = Long.parseLong(courseUri.getLastPathSegment());
 
-MyLog.add("NEW COURSE ID:"+courseId);
+        MyLog.add("NEW COURSE ID:" + courseId);
 
         learnCourse.setId(courseId);
         return courseId;
@@ -92,8 +92,6 @@ MyLog.add("NEW COURSE ID:"+courseId);
         }
         return result;
     }
-
-    //public static int tagsToCardTags
 
     public static int addCardTags(ContentResolver resolver, Long cardId, List<Tag> tags){
 

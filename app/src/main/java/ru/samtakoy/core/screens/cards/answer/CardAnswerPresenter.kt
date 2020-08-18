@@ -1,4 +1,4 @@
-package ru.samtakoy.core.screens.cards
+package ru.samtakoy.core.screens.cards.answer
 
 import moxy.InjectViewState
 import moxy.MvpPresenter
@@ -98,21 +98,10 @@ class CardAnswerPresenter constructor(
 
     }
 
+    fun onUiBackToQuestion() = callbacks.onBackToQuestion()
+    fun onUiWrongAnswer() = callbacks.onWrongAnswer()
+    fun onUiNextCard() = callbacks.onNextCard()
+    fun onUiEditAnswerText() = callbacks.onEditAnswerText()
 
-    fun onUiBackToQuestion(){
-        callbacks.onBackToQuestion()
-    }
-
-    fun onUiWrongAnswer(){
-        callbacks.onWrongAnswer()
-    }
-
-    fun onUiNextCard(){
-        callbacks.onNextCard()
-    }
-
-    fun onUiEditAnswerText(){
-        callbacks.onEditAnswerText()
-    }
 
 }

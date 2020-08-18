@@ -16,6 +16,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
@@ -24,12 +25,16 @@ import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.business.events.EventBusHolder;
 import ru.samtakoy.core.navigation.RouterHolder;
 import ru.samtakoy.core.navigation.Screens;
+import ru.samtakoy.core.navigation.TopNavigable;
 import ru.samtakoy.core.screens.log.MyLog;
 import ru.terrakok.cicerone.Navigator;
 import ru.terrakok.cicerone.NavigatorHolder;
 import ru.terrakok.cicerone.Router;
 import ru.terrakok.cicerone.android.support.SupportAppNavigator;
+import ru.terrakok.cicerone.android.support.SupportAppScreen;
 import ru.terrakok.cicerone.commands.Command;
+import ru.terrakok.cicerone.commands.Forward;
+import ru.terrakok.cicerone.commands.Replace;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RouterHolder, EventBusHolder {
 
@@ -49,8 +54,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public void applyCommands(Command[] commands) {
             super.applyCommands(commands);
             getSupportFragmentManager().executePendingTransactions();
-
         }
+
+        @Override
+        protected void fragmentForward(@NotNull Forward command) {
+            super.fragmentForward(command);
+
+            processNavigable((SupportAppScreen) command.getScreen());
+        }
+
+        @Override
+        protected void fragmentReplace(@NotNull Replace command) {
+            super.fragmentReplace(command);
+
+            processNavigable((SupportAppScreen) command.getScreen());
+        }
+
+        private void processNavigable(SupportAppScreen screen) {
+            if (screen instanceof TopNavigable) {
+                TopNavigable topNavigable = ((TopNavigable) screen);
+
+                if (topNavigable.isNavigationItemSet()) {
+                    int itemId = topNavigable.getTopMenuItemId();
+                    MenuItem item = mNavigationView.getMenu().findItem(itemId);
+                    item.setChecked(true);
+
+                    changeTitle(item.getTitle());
+                }
+
+            }
+        }
+
+
     };
 
     public static Intent newRootActivity(Context context) {
@@ -142,32 +177,19 @@ MyLog.add(" %% CREATE_ACTIVITY___ " );
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-
-        MyLog.add(":: "+item.getTitle().toString());
-
         switch (item.getItemId()){
             case R.id.nav_packs_themes:
-                // по идее - это часть перехода навигации (TODO куда-то перенести, в AppNAvigator?)
-                item.setChecked(true);
-
-                getSupportActionBar().setTitle(item.getTitle());
                 mRouter.newRootScreen(new Screens.ThemeListScreen());
                 //mRouter.;
                 break;
             case R.id.nav_packs_raw_list:
-                // по идее - это часть перехода навигации (TODO куда-то перенести)
-                item.setChecked(true);
-                getSupportActionBar().setTitle(item.getTitle());
                 mRouter.newRootScreen(new Screens.QPacksListScreen());
                 break;
             case R.id.nav_courses:
-                // по идее - это часть перехода навигации (TODO куда-то перенести)
-                item.setChecked(true);
-                getSupportActionBar().setTitle(item.getTitle());
                 mRouter.newRootScreen(Screens.CoursesListScreen.allCoursesScreen());
                 break;
             case R.id.nav_settings:
-                getSupportActionBar().setTitle(item.getTitle());
+                changeTitle(item.getTitle());
                 mRouter.navigateTo(new Screens.SettingsScreen());
                 break;
         }
@@ -177,6 +199,18 @@ MyLog.add(" %% CREATE_ACTIVITY___ " );
         return true;
     }
 
+    private void changeTitle(CharSequence title) {
+
+        MyLog.add("new title: " + title);
+
+        getSupportActionBar().setTitle(title);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        mRouter.exit();
+    }
 
 
 }

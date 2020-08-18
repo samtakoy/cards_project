@@ -16,39 +16,26 @@ import ru.samtakoy.core.business.impl.NCoursesInteractorImpl;
 import ru.samtakoy.core.di.modules.AppModule;
 
 @Module(includes = {AppModule.class, CardsModule.class})
-public class CoursesModule {
-
-    //private CurrentCourseHolder mCurrentCourseHolder;
-
-    public CoursesModule(/*CurrentCourseHolder currentCourseHolder/**/) {
-        //mCurrentCourseHolder = currentCourseHolder;
-    }
+public abstract class CoursesModule {
 
 
     @Provides
     @Singleton
-    CoursesRepository provideCoursesRepository(Context context){
+    static CoursesRepository provideCoursesRepository(Context context) {
         return new CoursesRepositoryImpl(context);
     }
 
     @Provides
     @Singleton
-    NCoursesInteractor provideCoursesInteractor(Context context, CardsRepository cardsRepository, CoursesRepository corsesRepository){
+    static NCoursesInteractor provideCoursesInteractor(Context context, CardsRepository cardsRepository, CoursesRepository corsesRepository) {
         return new NCoursesInteractorImpl(context, cardsRepository, corsesRepository);
     }
 
     @Provides
     @Singleton
-    CoursesPlanner provideCoursesPlanner(Context context){
+    static CoursesPlanner provideCoursesPlanner(Context context) {
         return new CoursesPlannerImpl(context);
     }
 
-    /*
-    @Provides
-    @Singleton
-    CurrentCourseHolder provideCurrentCourseHolder(){
-        return mCurrentCourseHolder;
-    }
-    /***/
 
 }

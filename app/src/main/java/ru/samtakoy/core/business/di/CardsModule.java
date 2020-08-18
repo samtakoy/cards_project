@@ -15,17 +15,17 @@ import ru.samtakoy.core.business.impl.CardsRepositoryImpl;
 import ru.samtakoy.core.di.modules.AppModule;
 
 @Module(includes = {AppModule.class, EventBusModule.class})
-public class CardsModule {
+public abstract class CardsModule {
 
     @Provides
     @Singleton
-    CardsRepository provideCardsRepository(Context context, EventBus eventBus){
+    static CardsRepository provideCardsRepository(Context context, EventBus eventBus) {
         return new CardsRepositoryImpl(context, eventBus);
     }
 
     @Provides
     @Singleton
-    CardsInteractor provideCardsInteractor(Context context, CardsRepository cardsRepository){
+    static CardsInteractor provideCardsInteractor(Context context, CardsRepository cardsRepository) {
         return new CardsInteractorImpl(context, cardsRepository);
     }
 

@@ -36,29 +36,26 @@ import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
+import ru.samtakoy.R;
 import ru.samtakoy.core.Const;
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.R;
 import ru.samtakoy.core.model.QPack;
 import ru.samtakoy.core.model.Theme;
 import ru.samtakoy.core.navigation.RouterHolder;
 import ru.samtakoy.core.navigation.Screens;
-import ru.samtakoy.core.screens.courses.CoursesListActivity;
 import ru.samtakoy.core.screens.export_cards.BatchExportDialogFragment;
 import ru.samtakoy.core.screens.import_cards.BatchImportDialogFragment;
 import ru.samtakoy.core.screens.import_cards.ImportPackDialogFragment;
 import ru.samtakoy.core.screens.import_cards.ImportZipDialogFragment;
 import ru.samtakoy.core.screens.log.LogActivity;
-import ru.samtakoy.core.screens.log.MyLog;
-import ru.samtakoy.core.screens.themes.mvp.ThemesListPresenter;
 import ru.samtakoy.core.screens.themes.mvp.ThemeListView;
+import ru.samtakoy.core.screens.themes.mvp.ThemesListPresenter;
 import ru.samtakoy.core.services.import_utils.ImportCardsOpts;
 
 public class ThemesListFragment extends MvpAppCompatFragment implements ThemeListView {
@@ -170,15 +167,11 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         setHasOptionsMenu(true);
         registerForContextMenu(mThemesRecycler);
 
-MyLog.add(" %% CREATE_F_VIEW " + readThemeId());
-
         return v;
     }
 
     @Override
     public void onDestroyView() {
-
-MyLog.add(" %% destroy_F_VIEW " + readThemeId());
 
         unregisterForContextMenu(mThemesRecycler);
 

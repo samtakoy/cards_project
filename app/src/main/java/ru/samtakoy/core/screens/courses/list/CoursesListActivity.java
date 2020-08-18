@@ -1,10 +1,9 @@
-package ru.samtakoy.core.screens.courses;
+package ru.samtakoy.core.screens.courses.list;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -13,13 +12,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.model.LearnCourse;
 import ru.samtakoy.core.model.LearnCourseMode;
 import ru.samtakoy.core.model.QPack;
 import ru.samtakoy.core.navigation.RouterHolder;
-import ru.samtakoy.core.navigation.Screens;
 import ru.samtakoy.core.screens.SingleFragmentActivity;
 import ru.terrakok.cicerone.Navigator;
 import ru.terrakok.cicerone.NavigatorHolder;

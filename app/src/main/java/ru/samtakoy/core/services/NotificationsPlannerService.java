@@ -1,7 +1,6 @@
 package ru.samtakoy.core.services;
 
 import android.app.IntentService;
-
 import android.content.Context;
 import android.content.Intent;
 
@@ -10,12 +9,12 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.screens.log.MyLog;
+import ru.samtakoy.core.business.impl.LearnCourseHelper;
 import ru.samtakoy.core.model.LearnCourse;
 import ru.samtakoy.core.model.LearnCourseMode;
-import ru.samtakoy.core.business.impl.LearnCourseHelper;
-import ru.samtakoy.core.screens.courses.CourseInfoActivity;
-import ru.samtakoy.core.screens.courses.CoursesListActivity;
+import ru.samtakoy.core.screens.courses.info.CourseInfoActivity;
+import ru.samtakoy.core.screens.courses.list.CoursesListActivity;
+import ru.samtakoy.core.screens.log.MyLog;
 import ru.samtakoy.core.services.learn_courses.LearnsInteractor;
 import ru.samtakoy.core.services.learn_courses.NewRepeatsInteractor;
 import ru.samtakoy.core.services.learn_courses.UncompletedTaskInteractor;

@@ -29,10 +29,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".core.screens.courses.CoursesListActivity"
-            android:label="@string/fragment_courses_title"
-            />
-        <activity android:name=".core.screens.courses.CourseInfoActivity"/>
+        <activity
+            android:name=".core.screens.courses.list.CoursesListActivity"
+            android:label="@string/fragment_courses_title" />
+        <activity android:name=".core.screens.courses.info.CourseInfoActivity" />
         <activity android:name=".core.screens.ScheduleEditActivity"/>
         <activity android:name=".core.screens.log.LogActivity"/>
         <activity android:name=".core.screens.online_import.OnlineImportActivity"/>

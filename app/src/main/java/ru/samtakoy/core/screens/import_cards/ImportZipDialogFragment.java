@@ -2,15 +2,13 @@ package ru.samtakoy.core.screens.import_cards;
 
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 
 import io.reactivex.Completable;
-import io.reactivex.disposables.Disposable;
 import ru.samtakoy.R;
+import ru.samtakoy.core.business.impl.ImportCardsHelper;
 import ru.samtakoy.core.screens.ProgressDialogFragment;
-import ru.samtakoy.core.screens.log.MyLog;
-import ru.samtakoy.core.services.import_utils.ImportCardsException;
-import ru.samtakoy.core.services.import_utils.ImportCardsHelper;
 import ru.samtakoy.core.services.import_utils.ImportCardsOpts;
 
 public class ImportZipDialogFragment extends ProgressDialogFragment {

@@ -1,4 +1,4 @@
-package ru.samtakoy.core.screens.courses;
+package ru.samtakoy.core.screens.courses.info;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,16 +14,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.fragment.app.Fragment;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.MessageFormat;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
+import moxy.MvpAppCompatFragment;
+import moxy.presenter.InjectPresenter;
+import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
+import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.model.LearnCourse;
 import ru.samtakoy.core.model.LearnCourseMode;
-import ru.samtakoy.core.model.elements.ScheduleTimeUnit;
-import ru.samtakoy.core.business.impl.ContentProviderHelper;
-import ru.samtakoy.core.model.utils.DateUtils;
 import ru.samtakoy.core.model.utils.TimeViewUtils;
 import ru.samtakoy.core.navigation.RouterHolder;
 import ru.samtakoy.core.navigation.Screens;
@@ -32,12 +37,12 @@ import ru.samtakoy.core.screens.cards.types.CardViewMode;
 import ru.samtakoy.core.screens.cards.types.CardViewSource;
 import ru.samtakoy.core.screens.log.LogActivity;
 
-public class CourseInfoFragment extends Fragment {
+public class CourseInfoFragment extends MvpAppCompatFragment implements CourseInfoView {
 
     private static final String ARG_LEARN_COURSE_ID = "ARG_LEARN_COURSE_ID";
 
 
-    public static CourseInfoFragment newFragment(Long learnCourseId){
+    public static CourseInfoFragment newFragment(Long learnCourseId) {
         CourseInfoFragment result = new CourseInfoFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_LEARN_COURSE_ID, learnCourseId);
@@ -45,25 +50,27 @@ public class CourseInfoFragment extends Fragment {
         return result;
     }
 
-    private LearnCourse mLearnCourse;
-
-
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    // android:id="@+id/title"
     private TextView mTitleText;
-    // android:id="@+id/cards_count"
     private TextView mCardCountText;
-    // android:id="@+id/status_content"
     private TextView mStatusContentText;
-    // android:id="@+id/schedule"
     private Button mScheduleButton;
-    // android:id="@+id/action_button"
     private Button mActionButton;
 
 
     private RouterHolder mRouterHolder;
+
+    @InjectPresenter
+    CourseInfoPresenter mPresenter;
+    @Inject
+    Provider<CourseInfoPresenter.Factory> mFactoryProvider;
+
+    @ProvidePresenter
+    CourseInfoPresenter providePresenter() {
+        return mFactoryProvider.get().create(readLearnCourseId());
+    }
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -71,13 +78,16 @@ public class CourseInfoFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+
+        MyApp.getInstance().getAppComponent().inject(this);
+
         super.onCreate(savedInstanceState);
 
-        //
-        Long courseId = getArguments().getLong(ARG_LEARN_COURSE_ID);
-        mLearnCourse = ContentProviderHelper.getConcreteCourse(getContext(), courseId);
-
         setHasOptionsMenu(true);
+    }
+
+    private Long readLearnCourseId() {
+        return getArguments().getLong(ARG_LEARN_COURSE_ID, -1);
     }
 
     @Override
@@ -106,7 +116,7 @@ public class CourseInfoFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_item_delete:
-                deleteCourse();
+                mPresenter.onUiDeleteCourse();
                 return true;
             case R.id.menu_item_log:
                 startActivity(LogActivity.newActivityIntent(getContext()));
@@ -115,10 +125,9 @@ public class CourseInfoFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void deleteCourse() {
-
-        ContentProviderHelper.deleteCourse(getContext(), mLearnCourse.getId());
-        getActivity().finish();
+    @Override
+    public void exit() {
+        mRouterHolder.getRouter().exit();
     }
 
     @Nullable
@@ -135,180 +144,84 @@ public class CourseInfoFragment extends Fragment {
         // android:id="@+id/schedule"
         mScheduleButton = v.findViewById(R.id.schedule);
         mScheduleButton.setOnClickListener(view -> {
-
         });
         // android:id="@+id/action_button"
         mActionButton = v.findViewById(R.id.action_button);
-        mActionButton.setOnClickListener(view -> {
-            onDoAction();
-        });
+        mActionButton.setOnClickListener(view -> mPresenter.onUiActionButtonClick());
 
         return v;
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        applyDataToView();
-    }
-
-    private void onDoAction() {
-        switch (mLearnCourse.getMode()){
-            case PREPARING:
-            case LEARN_WAITING:
-                startLearning();
-                break;
-            case LEARNING:
-                continueLearning();
-                break;
-            case REPEAT_WAITING:
-                startRepeatingExtraordinaryOrNext();
-                break;
-            case REPEATING:
-                continueRepeating();
-                break;
-            case COMPLETED:
-                startRepeatingExtraordinary();
-                break;
-        }
-    }
-
-    private void showCards() {
-
-        CardViewMode viewMode = mLearnCourse.getMode() == LearnCourseMode.LEARNING ?
-                CardViewMode.LEARNING : CardViewMode.REPEATING;
+    public void navigateToCardsViewScreen(
+            long learnCourseId,
+            CardViewSource viewSource,
+            @NotNull CardViewMode viewMode
+    ) {
         mRouterHolder.getRouter().navigateTo(
-                new Screens.CardsViewScreen(
-                        mLearnCourse.getId(),
-                        CardViewSource.ROUTINE_REPEATING,
-                        viewMode
-                )
+                new Screens.CardsViewScreen(learnCourseId, viewSource, viewMode)
         );
     }
 
-    private void showCardsExtraordinaryRepeating() {
-
-        //MyApp myApp = (MyApp)getActivity().getApplication();
-        LearnCourse tempLearnCourse = ContentProviderHelper.getTempCourseFor(
-                getContext(),
-                mLearnCourse.getQPackId(),
-                mLearnCourse.getCardIds(),
-                true
-        );
-        tempLearnCourse.toRepeatMode();
-
-        mRouterHolder.getRouter().navigateTo(
-                new Screens.CardsViewScreen(
-                        tempLearnCourse.getId(),
-                        CardViewSource.EXTRA_REPEATING,
-                        CardViewMode.REPEATING)
-        );
-    }
-
-
-    private void startLearning() {
-        // TODO отдебажить,
-        // сначала импорт файла - курс просмотреть, заьем batch
-        // android карточки - запустить курс -> эксепшен с id курса
-        mLearnCourse.toLearnMode();
-        ContentProviderHelper.saveCourse(getContext(), mLearnCourse);
-        applyDataToView();
-        showCards();
-    }
-
-    private void continueLearning() {
-        showCards();
-    }
-
-    private void continueRepeating() {
-        //mLearnCourse.prepareToCardsView();
-        showCards();
-    }
-
-    private void startRepeatingExtraordinaryOrNext() {
-        long timeDelta = DateUtils.dateToDbSerialized(mLearnCourse.getRepeatDate()) - DateUtils.getCurrentTimeLong();
-        if(timeDelta < ScheduleTimeUnit.MINUTE.getMillis()){
-            startRepeating();
-        } else {
-            requestExtraordinaryRepeating();
-        }
-    }
-
-    private void startRepeating() {
-        mLearnCourse.toRepeatMode();
-        ContentProviderHelper.saveCourse(getContext(), mLearnCourse);
-        applyDataToView();
-        showCards();
-    }
-
-    private void requestExtraordinaryRepeating() {
+    @Override
+    public void requestExtraordinaryRepeating() {
         DialogHelper.showYesNoDialog(
                 getContext(),
                 getResources().getString(R.string.confirm_dialog_title),
                 getResources().getString(R.string.course_info_extra_repeating_confirm),
-                (dialogInterface, i) -> {
-                    startRepeatingExtraordinary();
-                },
+                (dialogInterface, i) -> mPresenter.onUiStartRepeatingExtraConfirm(),
                 null
         );
     }
 
-    private void startRepeatingExtraordinary() {
-        showCardsExtraordinaryRepeating();
-    }
+    @Override
+    public void showLearnCourseInfo(LearnCourse learnCourse) {
 
-    private void applyDataToView() {
-
-        mTitleText.setText(mLearnCourse.getTitle());
-        // android:id="@+id/cards_count"
+        mTitleText.setText(learnCourse.getTitle());
         mCardCountText.setText(
-                MessageFormat.format(getResources().getString(R.string.course_info_card_count), mLearnCourse.getCardsCount())
+                MessageFormat.format(getResources().getString(R.string.course_info_card_count), learnCourse.getCardsCount())
         );
-        // android:id="@+id/status_content"
-        mStatusContentText.setText(getStatusString());
-        // android:id="@+id/schedule"
-        mScheduleButton.setText(getScheduleButtonText());
-        // android:id="@+id/action_button"
-        mActionButton.setText(getActionButtonText());
+        mStatusContentText.setText(getStatusString(learnCourse));
+        mScheduleButton.setText(getScheduleButtonText(learnCourse));
+        mActionButton.setText(getActionButtonText(learnCourse));
     }
 
-    private String getScheduleButtonText() {
-        if(mLearnCourse.getMode() == LearnCourseMode.COMPLETED){
+    private String getScheduleButtonText(LearnCourse learnCourse) {
+        if (learnCourse.getMode() == LearnCourseMode.COMPLETED) {
             return getResources().getString(R.string.course_info_schedule_is_completed);
         }
-        if(mLearnCourse.getMode() == LearnCourseMode.PREPARING){
-            if(mLearnCourse.getRestSchedule().isEmpty()){
+        if (learnCourse.getMode() == LearnCourseMode.PREPARING) {
+            if (learnCourse.getRestSchedule().isEmpty()) {
                 return getResources().getString(R.string.course_info_schedule_is_empty);
             } else {
-                return mLearnCourse.getRestSchedule().toStringView(getResources());
+                return learnCourse.getRestSchedule().toStringView(getResources());
             }
         }
-        if(mLearnCourse.getMode() == LearnCourseMode.REPEATING || mLearnCourse.getMode() == LearnCourseMode.REPEAT_WAITING) {
-            return mLearnCourse.getRestSchedule().toStringViewWithPrev(getResources(), mLearnCourse.getRealizedSchedule());
+        if (learnCourse.getMode() == LearnCourseMode.REPEATING || learnCourse.getMode() == LearnCourseMode.REPEAT_WAITING) {
+            return learnCourse.getRestSchedule().toStringViewWithPrev(getResources(), learnCourse.getRealizedSchedule());
         }
-        return mLearnCourse.getRestSchedule().toStringView(getResources());
+        return learnCourse.getRestSchedule().toStringView(getResources());
     }
 
-    private String getStatusString() {
+    private String getStatusString(LearnCourse learnCourse) {
 
         String resString;
 
-        switch (mLearnCourse.getMode()){
+        switch (learnCourse.getMode()) {
             case PREPARING:
                 return getResources().getString(R.string.course_info_status_preparing);
             case LEARN_WAITING:
                 resString = getResources().getString(R.string.course_info_status_learn_waiting);
-                return MessageFormat.format(resString, TimeViewUtils.getTimeView(getResources(), (int) mLearnCourse.getMillisToStart()));
+                return MessageFormat.format(resString, TimeViewUtils.getTimeView(getResources(), (int) learnCourse.getMillisToStart()));
             case LEARNING:
                 resString = getResources().getString(R.string.course_info_status_learning);
-                return MessageFormat.format(resString, mLearnCourse.getViewedCardsCount()+"/"+ mLearnCourse.getCardsCount());
+                return MessageFormat.format(resString, learnCourse.getViewedCardsCount() + "/" + learnCourse.getCardsCount());
             case REPEAT_WAITING:
                 resString = getResources().getString(R.string.course_info_status_repeat_waiting);
-                return MessageFormat.format(resString, TimeViewUtils.getTimeView(getResources(), (int) mLearnCourse.getMillisToStart()));
+                return MessageFormat.format(resString, TimeViewUtils.getTimeView(getResources(), (int) learnCourse.getMillisToStart()));
             case REPEATING:
                 resString = getResources().getString(R.string.course_info_status_repeating);
-                return MessageFormat.format(resString, mLearnCourse.getViewedCardsCount()+"/"+ mLearnCourse.getCardsCount());
+                return MessageFormat.format(resString, learnCourse.getViewedCardsCount() + "/" + learnCourse.getCardsCount());
             case COMPLETED:
                 return getResources().getString(R.string.course_info_status_completed);
             default:
@@ -316,10 +229,10 @@ public class CourseInfoFragment extends Fragment {
         }
     }
 
-    private String getActionButtonText() {
+    private String getActionButtonText(LearnCourse learnCourse) {
 
         @StringRes int resId;
-        switch (mLearnCourse.getMode()){
+        switch (learnCourse.getMode()) {
             case PREPARING:
                 resId = R.string.course_info_btn_complete_preparing;
                 break;
@@ -327,9 +240,9 @@ public class CourseInfoFragment extends Fragment {
                 resId = R.string.course_info_btn_start_learning;
                 break;
             case LEARNING:
-                if(mLearnCourse.getViewedCardsCount() > 0){
+                if (learnCourse.getViewedCardsCount() > 0) {
                     resId = R.string.course_info_btn_continue_learning;
-                } else{
+                } else {
                     resId = R.string.course_info_btn_learn;
                 }
                 break;
@@ -337,7 +250,7 @@ public class CourseInfoFragment extends Fragment {
                 resId = R.string.course_info_btn_repeat_now;
                 break;
             case REPEATING:
-                if(mLearnCourse.getViewedCardsCount() > 0){
+                if (learnCourse.getViewedCardsCount() > 0) {
                     resId = R.string.course_info_btn_continue_repeating;
                 } else {
                     resId = R.string.course_info_btn_repeat;

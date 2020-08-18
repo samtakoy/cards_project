@@ -5,11 +5,9 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import io.reactivex.Completable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import ru.samtakoy.R;
+import ru.samtakoy.core.business.impl.ImportCardsHelper;
 import ru.samtakoy.core.screens.ProgressDialogFragment;
-import ru.samtakoy.core.services.import_utils.ImportCardsHelper;
 import ru.samtakoy.core.services.import_utils.ImportCardsOpts;
 
 public class BatchImportDialogFragment extends ProgressDialogFragment {

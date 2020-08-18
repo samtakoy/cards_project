@@ -35,7 +35,7 @@ public class CoursesExporterImpl implements CoursesExporter {
     @Override
     public Completable exportAllToFolder(String exportDirPath) {
         mCoursesReposithory.getAllCourses()
-                .toList()
+                //.toList()
                 .map(learnCourses -> exportCoursesToFolder(learnCourses, exportDirPath))
                 ;
         return null;
@@ -44,7 +44,7 @@ public class CoursesExporterImpl implements CoursesExporter {
     @Override
     public Completable exportAllToEmail() {
         return mCoursesReposithory.getAllCourses()
-                .toList()
+                //.toList()
                 .map(learnCourses -> exportCoursesToEmail(learnCourses))
                 .ignoreElement()
         ;

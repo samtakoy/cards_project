@@ -1,4 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -46,6 +49,7 @@ dependencies {
     implementation "androidx.preference:preference:1.0.0"
     implementation 'org.apache.commons:commons-lang3:3.9'
     implementation 'androidx.core:core-ktx:+'
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     // Stetho core
@@ -68,11 +72,10 @@ dependencies {
     implementation 'net.rdrei.android.dirchooser:library:3.2@aar'
 
 
-    //implementation 'com.arello-mobile:moxy:1.5.5'
-    //annotationProcessor 'com.arello-mobile:moxy-compiler:1.5.5'
     //def moxy_version = "2.1.2"
     implementation "com.github.moxy-community:moxy:$moxy_version"
     annotationProcessor "com.github.moxy-community:moxy-compiler:$moxy_version"
+    kapt "com.github.moxy-community:moxy-compiler:$moxy_version"
     implementation "com.github.moxy-community:moxy-androidx:$moxy_version"
 
     // cicerone
@@ -83,7 +86,11 @@ dependencies {
     //api 'com.google.dagger:dagger-android-support:2.27' // if you use the support libraries
     //annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+    // assisted inject
+    //compileOnly 'com.squareup.inject:assisted-inject-annotations-dagger2:0.5.2'
+    //annotationProcessor 'com.squareup.inject:assisted-inject-processor-dagger2:0.5.2'
 
 
     // retrofit

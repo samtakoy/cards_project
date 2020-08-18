@@ -108,14 +108,15 @@
 
 
     <string name="fragment_courses_title">repeat courses</string>
+    <string name="fragment_courses_courses_loading_err">Ошибка загрузки курсов</string>
+    <string name="fragment_courses_course_add_err">Ошибка при добавлении курса</string>
     <string name="fragment_courses_menu_item_add">new course</string>
-    <string name="fragment_courses_menu_to_themes">to themes</string>
+    <!--string name="fragment_courses_menu_to_themes">to themes</string-->
     <string name="fragment_courses_menu_to_email">send all to...</string>
 
 
     <string name="additional_learn_course_title">additional {0} cards</string>
     <string name="additional_learn_course_title_with_subtitle">{1}: additional {0} cards</string>
-
 
 
     <string name="notifications_new_repeats_title">New repeats</string>

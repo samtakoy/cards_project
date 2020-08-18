@@ -1,6 +1,5 @@
-package ru.samtakoy.core.screens.courses;
+package ru.samtakoy.core.screens.courses.list;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,33 +10,38 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.sql.Date;
-import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
+import moxy.MvpAppCompatFragment;
+import moxy.presenter.InjectPresenter;
+import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
-import ru.samtakoy.core.database.DbContentProvider;
+import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.model.LearnCourse;
 import ru.samtakoy.core.model.LearnCourseMode;
 import ru.samtakoy.core.model.QPack;
-import ru.samtakoy.core.model.elements.Schedule;
-import ru.samtakoy.core.business.impl.ContentProviderHelper;
 import ru.samtakoy.core.navigation.RouterHolder;
 import ru.samtakoy.core.navigation.Screens;
+import ru.samtakoy.core.screens.courses.CourseEditDialogFragment;
 import ru.samtakoy.core.screens.export_cards.BatchExportDialogFragment;
 
 
-public class CoursesListFragment extends Fragment implements CoursesAdapter.CourseClickListener {
+public class CoursesListFragment extends MvpAppCompatFragment
+        implements CoursesAdapter.CourseClickListener, CoursesListView {
 
     private static final String ARG_TARGET_QPACK = "ARG_TARGET_QPACK";
     private static final String ARG_TARGET_MODES = "ARG_TARGET_MODES";
@@ -50,13 +54,6 @@ public class CoursesListFragment extends Fragment implements CoursesAdapter.Cour
     private static final String TAG_DIALOG_EXPORT_COURSES = "TAG_DIALOG_EXPORT_COURSES";
 
     private static final String SAVED_NEW_COURSE_DEFAULT_TITLE = "SAVED_NEW_COURSE_DEFAULT_TITLE";
-
-
-    /*
-    public interface Callbacks{
-        //void onCourseSelected(LearnCourse course);
-        //void backToThemes();
-    }/**/
 
     public static CoursesListFragment newFragment(
             @Nullable QPack targetQPack,
@@ -76,19 +73,46 @@ public class CoursesListFragment extends Fragment implements CoursesAdapter.Cour
     private RecyclerView mCoursesRecycler;
     private CoursesAdapter mCoursesAdapter;
 
-    //private Callbacks mCallbacks;
     private RouterHolder mRouterHolder;
 
-    @Nullable private QPack mTargetQPack;
-    @Nullable private List<LearnCourseMode> mTargetModes;
-    @Nullable private Long[] mTargetCourseIds;
-    private String mNewCourseDefaultTitle;
+    @InjectPresenter
+    CoursesListPresenter mPresenter;
+    @Inject
+    Provider<CoursesListPresenter.Factory> mPresenterFactoryProvider;
 
-
+    @ProvidePresenter
+    CoursesListPresenter providePresenter() {
+        return mPresenterFactoryProvider.get().create(
+                readTargetPack(), readTargetModes(), readTargetCourseIds()
+        );
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+
+        MyApp.getInstance().getAppComponent().inject(this);
+
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mPresenter.onRestoreState(savedInstanceState.getString(SAVED_NEW_COURSE_DEFAULT_TITLE));
+        }
+
+    }
+
+    @Nullable
+    private QPack readTargetPack() {
+        return (QPack) getArguments().getSerializable(ARG_TARGET_QPACK);
+    }
+
+    @Nullable
+    private List<LearnCourseMode> readTargetModes() {
+        return (List<LearnCourseMode>) getArguments().getSerializable(ARG_TARGET_MODES);
+    }
+
+    @Nullable
+    private Long[] readTargetCourseIds() {
+        return ArrayUtils.toObject(getArguments().getLongArray(ARG_TARGET_COURSE_IDS));
     }
 
     @Nullable
@@ -96,22 +120,13 @@ public class CoursesListFragment extends Fragment implements CoursesAdapter.Cour
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_courses, container, false);
 
+        initViews(v);
+        setHasOptionsMenu(true);
 
+        return v;
+    }
 
-        mTargetQPack = (QPack) getArguments().getSerializable(ARG_TARGET_QPACK);
-        mTargetModes = (List<LearnCourseMode>) getArguments().getSerializable(ARG_TARGET_MODES);
-
-        mTargetCourseIds = ArrayUtils.toObject(getArguments().getLongArray(ARG_TARGET_COURSE_IDS));
-        if(mTargetQPack != null){
-            if(savedInstanceState != null){
-                mNewCourseDefaultTitle = savedInstanceState.getString(SAVED_NEW_COURSE_DEFAULT_TITLE);
-            } else {
-                mNewCourseDefaultTitle = mTargetQPack.getTitle();
-            }
-        } else {
-            mNewCourseDefaultTitle = "";
-        }
-
+    private void initViews(View v) {
         mCoursesIsEmptyLabel = v.findViewById(R.id.courses_is_empty_label);
 
         mCoursesAdapter = new CoursesAdapter(this);
@@ -119,12 +134,6 @@ public class CoursesListFragment extends Fragment implements CoursesAdapter.Cour
         mCoursesRecycler = v.findViewById(R.id.courses_list_recycler);
         mCoursesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mCoursesRecycler.setAdapter(mCoursesAdapter);
-
-        updateCurCourses();
-
-        setHasOptionsMenu(true);
-
-        return v;
     }
 
     @Override
@@ -136,13 +145,11 @@ public class CoursesListFragment extends Fragment implements CoursesAdapter.Cour
         mCoursesRecycler.getAdapter().notifyDataSetChanged();
     }
 
-
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString(SAVED_NEW_COURSE_DEFAULT_TITLE, mNewCourseDefaultTitle);
+        outState.putString(SAVED_NEW_COURSE_DEFAULT_TITLE, mPresenter.getStateToSave());
     }
 
     @Override
@@ -153,14 +160,14 @@ public class CoursesListFragment extends Fragment implements CoursesAdapter.Cour
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        //mCallbacks = (CoursesListFragment.Callbacks)context;
+
         mRouterHolder = (RouterHolder) context;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        //mCallbacks = null;
+
         mRouterHolder = null;
     }
 
@@ -170,65 +177,50 @@ public class CoursesListFragment extends Fragment implements CoursesAdapter.Cour
         MenuItem item;
 
         item = menu.findItem(R.id.menu_item_add);
-        item.setVisible(mTargetQPack != null);
-
-        //item = menu.findItem(R.id.fragment_courses_menu_to_themes);
-        //item.setVisible(mTargetQPack == null);
+        item.setVisible(mPresenter.hasQPack());
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_item_add:
-                tryAddCourse();
+                mPresenter.onUiAddCourseRequestClick();
                 return true;
-            /*case R.id.fragment_courses_menu_to_themes:
-                //toThemes();
-                return true;*/
             case R.id.menu_item_send_courses:
-                exportToEmail();
+                mPresenter.onUiBatchExportToEmailClick();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void exportToEmail() {
+    @Override
+    public void showBatchExportToEmailDialog() {
         BatchExportDialogFragment dialog = BatchExportDialogFragment.newCoursesFragment(
                 "", this, REQ_CODE_EXPORT_COURSES
         );
         dialog.show(getActivity().getSupportFragmentManager(), TAG_DIALOG_EXPORT_COURSES);
     }
 
-    /*
-    private void toThemes() {
-        mCallbacks.backToThemes();
-    }/***/
-
-    private void tryAddCourse() {
-        CourseEditDialogFragment dialog = CourseEditDialogFragment.newDialog(mNewCourseDefaultTitle);
+    @Override
+    public void showAddCourseDialog(String defaultTitle) {
+        CourseEditDialogFragment dialog = CourseEditDialogFragment.newDialog(defaultTitle);
         dialog.setTargetFragment(this, REQ_CODE_ADD_COURSE);
         dialog.show(getActivity().getSupportFragmentManager(), TAG_DIALOG_ADD_COURSE);
     }
 
-    private void updateCurCourses() {
-
-        List<LearnCourse> curCourses;
-        if(mTargetQPack == null && mTargetModes == null && mTargetCourseIds == null){
-            curCourses = ContentProviderHelper.getAllCourses(getActivity());
-        } else if (mTargetCourseIds != null) {
-            curCourses = ContentProviderHelper.getCoursesByIds(getActivity(), mTargetCourseIds);
-        } else if (mTargetModes != null) {
-            curCourses = ContentProviderHelper.getCoursesByModes(getActivity(), mTargetModes);
-        } else {
-            curCourses = ContentProviderHelper.getCoursesFor(getActivity(), mTargetQPack.getId());
-        }
+    @Override
+    public void showCourses(@NotNull List<? extends LearnCourse> curCourses) {
         mCoursesAdapter.setCurCourses(curCourses);
-
         updateListVisibility(curCourses.size() > 0);
     }
 
+    @Override
+    public void showError(int codeResId) {
+        Toast.makeText(getContext(), codeResId, Toast.LENGTH_SHORT).show();
+    }
+
     private void updateListVisibility(boolean coursesIsVisible) {
-        if(coursesIsVisible){
+        if (coursesIsVisible) {
             mCoursesRecycler.setVisibility(View.VISIBLE);
             mCoursesIsEmptyLabel.setVisibility(View.GONE);
         } else {
@@ -239,39 +231,24 @@ public class CoursesListFragment extends Fragment implements CoursesAdapter.Cour
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode){
+        switch (requestCode) {
             case REQ_CODE_ADD_COURSE:
                 String courseTitle = data.getStringExtra(CourseEditDialogFragment.RESULT_EXTRA_TEXT);
-                if(courseTitle != null && courseTitle.length()>0){
-                    addCourse(courseTitle);
-                    // TODO and SELECT it!?
+                if (courseTitle != null && courseTitle.length() > 0) {
+                    mPresenter.onUiAddNewCourseConfirm(courseTitle);
                 }
                 break;
         }
     }
 
-    private void addCourse(String courseTitle) {
-
-        LearnCourse newCourse = LearnCourse.createNewPreparing(
-                mTargetQPack.getId(), courseTitle, LearnCourseMode.PREPARING,
-                new LinkedList<Long>(), Schedule.DEFAULT, new Date(0)
-        );
-        ContentResolver resolver = getActivity().getContentResolver();
-        resolver.insert(DbContentProvider.CONTENT_URI_COURSES, newCourse.getContentValues(false));
-        updateCurCourses();
-        mCoursesRecycler.getAdapter().notifyDataSetChanged();
-
-
-        mNewCourseDefaultTitle = "";
-    }
-
-    private void gotoCourse(LearnCourse course){
-        mRouterHolder.getRouter().navigateTo(new Screens.CourseInfoScreen(course.getId()));
+    @Override
+    public void navigateToCourseInfo(long courseId) {
+        mRouterHolder.getRouter().navigateTo(new Screens.CourseInfoScreen(courseId));
     }
 
     @Override
     public void onCourseClick(LearnCourse course) {
-        gotoCourse(course);
+        mPresenter.onUiCourseClick(course);
     }
 
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

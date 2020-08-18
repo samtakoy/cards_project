@@ -1,4 +1,26 @@
 package ru.samtakoy.core.screens.courses.info
 
-interface CourseInfoView {
+import moxy.MvpView
+import moxy.viewstate.strategy.AddToEndSingleStrategy
+import moxy.viewstate.strategy.SingleStateStrategy
+import moxy.viewstate.strategy.SkipStrategy
+import moxy.viewstate.strategy.StateStrategyType
+import ru.samtakoy.core.model.LearnCourse
+import ru.samtakoy.core.screens.cards.types.CardViewMode
+import ru.samtakoy.core.screens.cards.types.CardViewSource
+
+interface CourseInfoView : MvpView {
+
+    @StateStrategyType(value = AddToEndSingleStrategy::class)
+    fun showLearnCourseInfo(learnCourse: LearnCourse)
+
+    @StateStrategyType(value = SingleStateStrategy::class)
+    fun exit();
+
+    @StateStrategyType(value = SkipStrategy::class)
+    fun navigateToCardsViewScreen(learnCourseId: Long, viewSource: CardViewSource, viewMode: CardViewMode)
+
+    @StateStrategyType(value = SkipStrategy::class)
+    fun requestExtraordinaryRepeating()
+
 }

@@ -1,7 +1,5 @@
-package ru.samtakoy.core.screens.cards;
+package ru.samtakoy.core.screens.cards.question;
 
-import android.content.ContentResolver;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -13,26 +11,25 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import javax.inject.Inject;
+import javax.inject.Provider;
 
+import moxy.MvpAppCompatFragment;
+import moxy.presenter.InjectPresenter;
+import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
-import ru.samtakoy.core.business.events.CardUpdateEvent;
-import ru.samtakoy.core.business.events.EventBusHolder;
-import ru.samtakoy.core.model.Card;
-import ru.samtakoy.core.business.impl.ContentProviderHelper;
+import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.screens.cards.types.CardViewMode;
 
-public class CardQuestionFragment extends Fragment {
+public class CardQuestionFragment extends MvpAppCompatFragment implements CardQuestionView {
 
     private static final String ARG_QPACK_ID = "ARG_QPACK_ID";
     private static final String ARG_CARD_ID = "ARG_CARD_ID";
     private static final String ARG_LAST_CARD = "ARG_LAST_CARD";
     private static final String ARG_VIEW_MODE = "ARG_VIEW_MODE";
 
-    public static CardQuestionFragment newFragment(Long qPackId, Long cardId, boolean lastCard, CardViewMode viewMode){
+    public static CardQuestionFragment newFragment(Long qPackId, Long cardId, boolean lastCard, CardViewMode viewMode) {
         CardQuestionFragment result = new CardQuestionFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_QPACK_ID, qPackId);
@@ -43,68 +40,48 @@ public class CardQuestionFragment extends Fragment {
         return result;
     }
 
-    public interface Callbacks{
-        void onPrevCard();
-        void onViewAnswer();
-        void onNextCard();
-        void onEditQuestionText();
-    }
 
     private View mView;
-
-    //private QPack mQPack;
-    private Card mCard;
-    private boolean mLastCard;
-    private CardViewMode mViewMode;
 
     private TextView mText;
     private Button mPrevCardButton;
     private Button mNextCardButton;
     private Button mViewAnswerButton;
 
-    private EventBusHolder mEventBusHolder;
+    @InjectPresenter
+    CardQuestionPresenter mPresenter;
+    @Inject
+    Provider<CardQuestionPresenter.Factory> mPresenterProvider;
+
+    @ProvidePresenter
+    CardQuestionPresenter providePresenter() {
+        return mPresenterProvider.get().create(
+                getCallbacks(), readCardId(), readViewMode(), readLastCard()
+        );
+    }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
 
+        MyApp.getInstance().getAppComponent().inject(this);
         super.onCreate(savedInstanceState);
-
-        readArgs(getArguments());
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-
-        mEventBusHolder = (EventBusHolder) context;
+    private CardQuestionPresenter.Callbacks getCallbacks() {
+        return (CardQuestionPresenter.Callbacks) getParentFragment();
     }
 
-    @Override
-    public void onDetach() {
-
-        mEventBusHolder = null;
-
-        super.onDetach();
+    private Long readCardId() {
+        return getArguments().getLong(ARG_CARD_ID, -1);
     }
 
-    private Callbacks getCallbacks(){
-        return (Callbacks) getParentFragment();
+    private boolean readLastCard() {
+        return getArguments().getBoolean(ARG_LAST_CARD);
     }
 
-    private void readArgs(Bundle arguments) {
-        Long qPackId = arguments.getLong(ARG_QPACK_ID, -1);
-        //mQPack = getQPack(qPackId);
-        ContentResolver cr = getContext().getContentResolver();
-        mCard = ContentProviderHelper.getConcreteCard(cr, arguments.getLong(ARG_CARD_ID));
-        mLastCard = arguments.getBoolean(ARG_LAST_CARD);
-        mViewMode = (CardViewMode) arguments.getSerializable(ARG_VIEW_MODE);
+    private CardViewMode readViewMode() {
+        return (CardViewMode) getArguments().getSerializable(ARG_VIEW_MODE);
     }
-
-    /*
-    private QPack getQPack(Long qPackId){
-        //return mCardsRepository.getQPack(qPackId);
-        return ContentProviderHelper.getConcretePack(getContext().getContentResolver(), qPackId);
-    }/**/
 
     @Nullable
     @Override
@@ -114,19 +91,15 @@ public class CardQuestionFragment extends Fragment {
 
         mText = v.findViewById(R.id.text);
 
-
-
         mPrevCardButton = v.findViewById(R.id.prev_card_btn);
-        mPrevCardButton.setOnClickListener(view -> getCallbacks().onPrevCard());
+        mPrevCardButton.setOnClickListener(view -> mPresenter.onUiPrevCard());
         mNextCardButton = v.findViewById(R.id.next_card_btn);
-        mNextCardButton.setOnClickListener(view -> getCallbacks().onNextCard());
+        mNextCardButton.setOnClickListener(view -> mPresenter.onUiNextCard());
         mViewAnswerButton = v.findViewById(R.id.view_answer_btn);
-        mViewAnswerButton.setOnClickListener(view -> getCallbacks().onViewAnswer());
+        mViewAnswerButton.setOnClickListener(view -> mPresenter.onUiViewAnswer());
 
         mText.setLongClickable(true);
         registerForContextMenu(mView);
-
-        setButtonsVisibility();
 
         return v;
     }
@@ -147,60 +120,32 @@ public class CardQuestionFragment extends Fragment {
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_item_edit:
-                getCallbacks().onEditQuestionText();
+                mPresenter.onUiEditQuestionText();
                 return true;
         }
         return super.onContextItemSelected(item);
     }
 
-    private void setButtonsVisibility() {
-        if(mViewMode == CardViewMode.LEARNING) {
-            mPrevCardButton.setVisibility(View.VISIBLE);
-            mViewAnswerButton.setVisibility(View.VISIBLE);
-            mNextCardButton.setVisibility(View.GONE);
-        }else
-        if(mViewMode == CardViewMode.REPEATING) {
-            mPrevCardButton.setVisibility(View.VISIBLE);
-            mViewAnswerButton.setVisibility(View.VISIBLE);
-            mNextCardButton.setVisibility(View.GONE);
-        }else
-        if(mViewMode == CardViewMode.REPEATING_FAST) {
-            mPrevCardButton.setVisibility(View.GONE);
-            mViewAnswerButton.setVisibility(View.VISIBLE);
-            mNextCardButton.setVisibility(View.VISIBLE);
-        }
-
-    }
-
-    private void updateView(){
-        mText.setText(mCard.getQuestion());
+    @Override
+    public void setPrevCardButtonVisible(boolean visible) {
+        mPrevCardButton.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        mEventBusHolder.getEventBus().register(this);
-
-        updateView();
+    public void setViewAnswerButtonVisible(boolean visible) {
+        mViewAnswerButton.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
-    public void onStop() {
-
-        mEventBusHolder.getEventBus().unregister(this);
-
-        super.onStop();
+    public void setNextCardButtonVisible(boolean visible) {
+        mNextCardButton.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCardUpdateEvent(CardUpdateEvent event){
-        if(mCard.getId().equals(event.getCard().getId())){
-            mCard = event.getCard();
-            updateView();
-        }
+    @Override
+    public void setQuestionText(String text) {
+        mText.setText(text);
     }
 
 

@@ -1,4 +1,4 @@
-package ru.samtakoy.core.screens.courses;
+package ru.samtakoy.core.screens.courses.info;
 
 import android.content.Context;
 import android.content.Intent;
@@ -63,5 +63,11 @@ public class CourseInfoActivity extends SingleFragmentActivity implements Router
     @Override
     public Router getRouter() {
         return mRouter;
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        mRouter.exit();
     }
 }

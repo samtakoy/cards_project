@@ -16,18 +16,18 @@ import ru.samtakoy.core.business.impl.QPacksExporterImpl;
 import ru.samtakoy.core.di.modules.AppModule;
 
 @Module(includes = {AppModule.class, CardsModule.class, CoursesModule.class})
-public class ImportExportModule {
+public abstract class ImportExportModule {
 
 
     @Provides
     @Singleton
-    public QPacksExporter provideQPacksExporter(Context ctx, CardsRepository cardsRep){
+    public static QPacksExporter provideQPacksExporter(Context ctx, CardsRepository cardsRep) {
         return new QPacksExporterImpl(ctx, cardsRep);
     }
 
     @Provides
     @Singleton
-    public CoursesExporter provideCoursesExporter(Context ctx, CoursesRepository coursesRep){
+    public static CoursesExporter provideCoursesExporter(Context ctx, CoursesRepository coursesRep) {
         return new CoursesExporterImpl(ctx, coursesRep);
     }
 

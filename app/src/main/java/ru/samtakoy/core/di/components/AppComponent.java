@@ -1,8 +1,6 @@
 package ru.samtakoy.core.di.components;
 
 
-import org.greenrobot.eventbus.EventBus;
-
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -13,11 +11,15 @@ import ru.samtakoy.core.business.di.ImportExportModule;
 import ru.samtakoy.core.di.modules.AppModule;
 import ru.samtakoy.core.navigation.NavigationModule;
 import ru.samtakoy.core.screens.MainActivity;
-import ru.samtakoy.core.screens.cards.CardAnswerFragment;
-import ru.samtakoy.core.screens.cards.CardQuestionFragment;
 import ru.samtakoy.core.screens.cards.CardsViewPresenter;
-import ru.samtakoy.core.screens.courses.CourseInfoActivity;
-import ru.samtakoy.core.screens.courses.CoursesListActivity;
+import ru.samtakoy.core.screens.cards.answer.CardAnswerFragment;
+import ru.samtakoy.core.screens.cards.question.CardQuestionFragment;
+import ru.samtakoy.core.screens.cards.result.CardsViewResultFragment;
+import ru.samtakoy.core.screens.courses.info.CourseInfoActivity;
+import ru.samtakoy.core.screens.courses.info.CourseInfoFragment;
+import ru.samtakoy.core.screens.courses.list.CoursesListActivity;
+import ru.samtakoy.core.screens.courses.list.CoursesListFragment;
+import ru.samtakoy.core.screens.courses.select.SelectCourseDialogFragment;
 import ru.samtakoy.core.screens.export_cards.BatchExportCoursesPresenter;
 import ru.samtakoy.core.screens.export_cards.BatchExportQPacksPresenter;
 import ru.samtakoy.core.screens.qpack.QPackInfoPresenter;
@@ -44,20 +46,38 @@ public interface AppComponent {
     void inject(MainActivity a);
 
     void inject(ThemesListFragment f);
+
     void inject(ThemesListPresenter p);
 
     void inject(BatchExportQPacksPresenter p);
+
     void inject(BatchExportCoursesPresenter p);
 
-    // для навигатора....
+    // для навигатора.... TODO еще надо?
+    // для навигатора.... TODO еще надо?
     void inject(CoursesListActivity a);
+
+    void inject(CoursesListFragment f);
+
+    // TODO больше не надо (инжекты перенести во фрагмент)
     void inject(CourseInfoActivity a);
+
+    void inject(CourseInfoFragment f);
+
     void inject(SettingsActivity a);
+
+    void inject(SelectCourseDialogFragment f);
 
 
     void inject(ClearDbDialogFragment f);
 
     void inject(CardsViewPresenter p);
+
+    void inject(CardQuestionFragment f);
+
+    void inject(CardAnswerFragment f);
+
+    void inject(CardsViewResultFragment f);
 
     void inject(QPacksListPresenter p);
 

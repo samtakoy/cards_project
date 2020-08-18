@@ -31,17 +31,22 @@ import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.business.events.EventBusHolder;
 import ru.samtakoy.core.model.elements.Schedule;
 import ru.samtakoy.core.navigation.RouterHolder;
+import ru.samtakoy.core.screens.cards.answer.CardAnswerFragment;
+import ru.samtakoy.core.screens.cards.answer.CardAnswerPresenter;
+import ru.samtakoy.core.screens.cards.question.CardQuestionFragment;
+import ru.samtakoy.core.screens.cards.question.CardQuestionPresenter;
+import ru.samtakoy.core.screens.cards.result.CardsViewResultFragment;
+import ru.samtakoy.core.screens.cards.result.CardsViewResultPresenter;
 import ru.samtakoy.core.screens.cards.types.CardViewMode;
 import ru.samtakoy.core.screens.cards.types.CardViewSource;
 import ru.samtakoy.core.screens.log.LogActivity;
 import ru.samtakoy.core.screens.misc.edit_text_block.EditTextBlockDialogFragment;
 
 public class CardsViewFragment extends MvpAppCompatFragment
-        implements CardQuestionFragment.Callbacks, CardAnswerFragment.Callbacks, CardsViewResultFragment.Callbacks, CardsViewView{
+        implements CardQuestionPresenter.Callbacks, CardAnswerPresenter.Callbacks, CardsViewResultPresenter.Callbacks, CardsViewView {
 
 
     private static final String ARG_COURSE_ID = "ARG_COURSE_ID";
-    //private static final String ARG_VIEW_SOURCE = "ARG_VIEW_SOURCE";
     private static final String ARG_VIEW_MODE = "ARG_VIEW_MODE";
 
     private static final int REQ_CODE_EDIT_Q_TEXT = 1;
@@ -262,14 +267,15 @@ public class CardsViewFragment extends MvpAppCompatFragment
         mPresenter.onUiNextCard();
     }
 
-    @Override
-    public void onEditAnswerText() {
-        mPresenter.onUiAnswerEditTextClick();
-    }
 
     @Override
     public void onEditQuestionText() {
         mPresenter.onUiQuestionEditTextClick();
+    }
+
+    @Override
+    public void onBackToQuestion() {
+        mPresenter.onUiBackToQuestion();
     }
 
     @Override
@@ -278,9 +284,10 @@ public class CardsViewFragment extends MvpAppCompatFragment
     }
 
     @Override
-    public void onBackToQuestion(){
-        mPresenter.onUiBackToQuestion();
+    public void onEditAnswerText() {
+        mPresenter.onUiAnswerEditTextClick();
     }
+
 
     @Override
     public void onResultOk(Schedule newSchedule) {

@@ -39,7 +39,7 @@ import ru.samtakoy.core.navigation.Screens;
 import ru.samtakoy.core.screens.cards.types.CardViewMode;
 import ru.samtakoy.core.screens.cards.types.CardViewSource;
 import ru.samtakoy.core.screens.courses.CourseEditDialogFragment;
-import ru.samtakoy.core.screens.courses.SelectCourseDialogFragment;
+import ru.samtakoy.core.screens.courses.select.SelectCourseDialogFragment;
 
 public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfoView, CardViewingTypeSelector.CardViewingTypeSelectorListener {
 
@@ -161,9 +161,6 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
         mTbUpDown = v.findViewById(R.id.toggleButton);
         mCardsFastViewList = v.findViewById(R.id.list);
 
-        //mBottomSheetBehavior.setFitToContents(false);
-        //mBottomSheetBehavior.setHalfExpandedRatio(0.6f);
-
         mTbUpDown.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             if(isChecked){
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -253,7 +250,6 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
                 break;
             case AREQUEST_SELECT_COURSE_TO_ADD_TO:
                 if(resultCode == Activity.RESULT_OK){
-                    //Long courseId = data.getLongExtra(CoursesListActivity.RESULT_EXTRA_COURSE_ID, -1);
                     Long courseId = data.getLongExtra(SelectCourseDialogFragment.RESULT_EXTRA_COURSE_ID, -1);
                     mQPackInfoPresenter.onAddCardsToCourseCommit(courseId);
                 }
@@ -270,7 +266,8 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
     }
 
     public void closeScreen() {
-        getActivity().finish();
+
+        mRouterHolder.getRouter().exit();
     }
 
     @Override
@@ -295,17 +292,8 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
         dialog.show(getFragmentManager(), TAG);
     }
 
+    @Override
     public void requestsSelectCourseToAdd(QPack qPack) {
-
-        /*
-        startActivityForResult(
-                CoursesListActivity.newActivityIntent(
-                        getActivity(),
-                        qPack,
-                        true
-                ),
-                AREQUEST_SELECT_COURSE_TO_ADD_TO
-        );/***/
         SelectCourseDialogFragment.newFragment(
                 qPack, this, AREQUEST_SELECT_COURSE_TO_ADD_TO
         ).show(getFragmentManager(), "SelectCourseDialogFragment");

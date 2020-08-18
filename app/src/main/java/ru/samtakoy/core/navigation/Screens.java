@@ -10,14 +10,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import ru.samtakoy.R;
 import ru.samtakoy.core.Const;
 import ru.samtakoy.core.model.LearnCourseMode;
 import ru.samtakoy.core.model.QPack;
 import ru.samtakoy.core.screens.cards.CardsViewFragment;
 import ru.samtakoy.core.screens.cards.types.CardViewMode;
 import ru.samtakoy.core.screens.cards.types.CardViewSource;
-import ru.samtakoy.core.screens.courses.CourseInfoFragment;
-import ru.samtakoy.core.screens.courses.CoursesListFragment;
+import ru.samtakoy.core.screens.courses.info.CourseInfoFragment;
+import ru.samtakoy.core.screens.courses.list.CoursesListFragment;
 import ru.samtakoy.core.screens.online_import.OnlineImportActivity;
 import ru.samtakoy.core.screens.qpack.QPackInfoFragment;
 import ru.samtakoy.core.screens.qpacks.QPacksListFragment;
@@ -28,7 +29,7 @@ import ru.terrakok.cicerone.android.support.SupportAppScreen;
 public class Screens {
 
 
-    public static class ThemeListScreen extends SupportAppScreen{
+    public static class ThemeListScreen extends SupportAppScreen implements TopNavigable {
 
         private Long mThemeId;
         private String mThemeTitle;
@@ -47,6 +48,11 @@ public class Screens {
 
         private void updateScreenKey() {
             screenKey = getClass().getSimpleName() + "_" + mThemeId;
+        }
+
+        @Override
+        public int getTopMenuItemId() {
+            return R.id.nav_packs_themes;
         }
 
         /*
@@ -102,17 +108,17 @@ public class Screens {
         }
     }
 
-    public static class CoursesListScreen extends SupportAppScreen{
+    public static class CoursesListScreen extends SupportAppScreen implements TopNavigable {
 
-        public static CoursesListScreen allCoursesScreen(){
+        public static CoursesListScreen allCoursesScreen() {
             return new CoursesListScreen(null, null, null);
         }
 
-        public static CoursesListScreen qPackCoursesScreen(@Nullable QPack targetQPack){
+        public static CoursesListScreen qPackCoursesScreen(@Nullable QPack targetQPack) {
             return new CoursesListScreen(targetQPack, null, null);
         }
 
-        public static CoursesListScreen newScreenForModesIntent(@Nullable List<LearnCourseMode> modesShowFilter){
+        public static CoursesListScreen newScreenForModesIntent(@Nullable List<LearnCourseMode> modesShowFilter) {
             return new CoursesListScreen(null, modesShowFilter, null);
         }
 
@@ -136,7 +142,10 @@ public class Screens {
             mTargetCourseIds = targetCourseIds;
         }
 
-
+        @Override
+        public int getTopMenuItemId() {
+            return R.id.nav_courses;
+        }
 
         @Nullable
         @Override
@@ -181,7 +190,12 @@ public class Screens {
     }
 
 
-    public static class QPacksListScreen extends SupportAppScreen {
+    public static class QPacksListScreen extends SupportAppScreen implements TopNavigable {
+
+        @Override
+        public int getTopMenuItemId() {
+            return R.id.nav_packs_raw_list;
+        }
 
         @Nullable
         @Override

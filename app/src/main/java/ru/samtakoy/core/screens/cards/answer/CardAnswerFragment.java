@@ -1,4 +1,4 @@
-package ru.samtakoy.core.screens.cards;
+package ru.samtakoy.core.screens.cards.answer;
 
 import android.os.Bundle;
 import android.view.ContextMenu;

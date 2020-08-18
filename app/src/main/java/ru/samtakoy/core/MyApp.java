@@ -1,15 +1,9 @@
 package ru.samtakoy.core;
 
-import android.app.Application;
-
 import androidx.multidex.MultiDexApplication;
 
 import com.facebook.stetho.Stetho;
 
-import java.sql.Date;
-
-import ru.samtakoy.core.business.di.CardsModule;
-import ru.samtakoy.core.business.di.CoursesModule;
 import ru.samtakoy.core.di.components.AppComponent;
 import ru.samtakoy.core.di.components.DaggerAppComponent;
 import ru.samtakoy.core.di.modules.AppModule;
@@ -50,9 +44,6 @@ public class MyApp extends MultiDexApplication {
 
         mAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
-                .cardsModule(new CardsModule())
-                .coursesModule(new CoursesModule())
-                //.cardsViewModule(new CardsViewModule())
                 .build();
 
         try {

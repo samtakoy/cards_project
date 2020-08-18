@@ -1,4 +1,4 @@
-package ru.samtakoy.core.screens.cards;
+package ru.samtakoy.core.screens.cards.result;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,25 +11,29 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import java.text.MessageFormat;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
+import moxy.MvpAppCompatFragment;
+import moxy.presenter.InjectPresenter;
+import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
-import ru.samtakoy.core.model.LearnCourse;
+import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.model.elements.Schedule;
-import ru.samtakoy.core.business.impl.ContentProviderHelper;
 import ru.samtakoy.core.screens.ScheduleEditFragment;
 import ru.samtakoy.core.screens.cards.types.CardViewMode;
 
-public class CardsViewResultFragment extends Fragment {
+public class CardsViewResultFragment extends MvpAppCompatFragment implements CardsViewResultView {
 
     private static final String TAG = "CardsViewResultFragment";
 
     private static final String ARG_LEARN_COURSE_ID = "ARG_LEARN_COURSE_ID";
     private static final String ARG_VIEW_MODE = "ARG_VIEW_MODE";
 
-    private static final String SAVED_SCHEDULE = "SAVED_SCHEDULE";
+    private static final String SAVE_KEY_PRESENTER_STATE = "SAVE_KEY_PRESENTER_STATE";
 
     private static final int REQ_SCHEDULE_EDIT = 1;
 
@@ -42,13 +46,6 @@ public class CardsViewResultFragment extends Fragment {
         return result;
     }
 
-    public interface Callbacks{
-        void onResultOk(Schedule newSchedule);
-    }
-
-
-    private LearnCourse mLearnCourse;
-    private CardViewMode mViewMode;
 
     private TextView mViewedCardsText;
     private TextView mErrorCardsText;
@@ -56,18 +53,28 @@ public class CardsViewResultFragment extends Fragment {
     private Button mScheduleBtn;
     private Button mOkBtn;
 
-    private Schedule mNewSchedule;
 
+    @InjectPresenter
+    CardsViewResultPresenter mPresenter;
+    @Inject
+    Provider<CardsViewResultPresenter.Factory> mPresenterFactoryProvider;
+
+    @ProvidePresenter
+    CardsViewResultPresenter providePresenter() {
+        return mPresenterFactoryProvider.get().create(
+                getCallbacks(), readLearnCourseId(), readCardViewMode()
+        );
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+
+        MyApp.getInstance().getAppComponent().inject(this);
+
         super.onCreate(savedInstanceState);
 
-        readArgs(getArguments());
-
-        mNewSchedule = new Schedule();
         if (savedInstanceState != null) {
-            mNewSchedule.initFromString(savedInstanceState.getString(SAVED_SCHEDULE));
+            mPresenter.onRestoreState(savedInstanceState.getString(SAVE_KEY_PRESENTER_STATE));
         }
 
     }
@@ -76,30 +83,19 @@ public class CardsViewResultFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString(SAVED_SCHEDULE, mNewSchedule.toString());
+        outState.putString(SAVE_KEY_PRESENTER_STATE, mPresenter.getStateToSave());
     }
 
-    @Override
-    public void onDestroy() {
-        mLearnCourse = null;
-
-        mViewedCardsText = null;
-        mErrorCardsText = null;
-        mScheduleBtn = null;
-        mOkBtn = null;
-
-        super.onDestroy();
+    private CardsViewResultPresenter.Callbacks getCallbacks() {
+        return (CardsViewResultPresenter.Callbacks) getParentFragment();
     }
 
-    private Callbacks getCallbacks(){
-        return (Callbacks) getParentFragment();
+    private Long readLearnCourseId() {
+        return getArguments().getLong(ARG_LEARN_COURSE_ID, -1);
     }
 
-    private void readArgs(Bundle arguments) {
-        Long learnCourseId = arguments.getLong(ARG_LEARN_COURSE_ID, -1);
-        mLearnCourse = ContentProviderHelper.getConcreteCourse(getContext(), learnCourseId);
-        mViewMode = (CardViewMode) arguments.getSerializable(ARG_VIEW_MODE);
-
+    private CardViewMode readCardViewMode() {
+        return (CardViewMode) getArguments().getSerializable(ARG_VIEW_MODE);
     }
 
     @Nullable
@@ -108,65 +104,68 @@ public class CardsViewResultFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_cards_view_result, container, false);
 
         mViewedCardsText = v.findViewById(R.id.viewed_cards_text);
-        mViewedCardsText.setText(
-                MessageFormat.format(
-                        getResources().getString(R.string.cards_view_res_viewed_cards),
-                        mLearnCourse.getViewedCardsCount()
-                )
-        );
-
-
         mErrorCardsText = v.findViewById(R.id.err_cards_text);
-        mErrorCardsText.setText(
-                MessageFormat.format(getResources().getString(R.string.cards_view_res_err_cards), mLearnCourse.getErrorCardsCount())
-        );
-        //mErrorCardsText.setVisibility(mViewMode == CardViewMode.LEARNING ? View.INVISIBLE : View.VISIBLE);
-
 
         mScheduleLabelText = v.findViewById(R.id.schedule_label);
         mScheduleBtn = v.findViewById(R.id.schedule_btn);
-        mScheduleBtn.setOnClickListener(view -> onScheduleClick());
-
-        if(mViewMode == CardViewMode.LEARNING){
-            mErrorCardsText.setVisibility(View.INVISIBLE);
-            mScheduleLabelText.setVisibility(View.INVISIBLE);
-            mScheduleBtn.setVisibility(View.INVISIBLE);
-        }
+        mScheduleBtn.setOnClickListener(view -> mPresenter.onUiScheduleClick());
 
         mOkBtn = v.findViewById(R.id.ok_btn);
-        mOkBtn.setOnClickListener(view -> onOkClick());
-
-        updateNewScheduleString();
+        mOkBtn.setOnClickListener(view -> mPresenter.onUiOkClick());
 
         return v;
     }
 
-    private void updateNewScheduleString() {
-        if(!mNewSchedule.isEmpty()){
-            mScheduleBtn.setText( mNewSchedule.toStringView(getResources()) );
+    @Override
+    public void setLearnView(boolean value) {
+        int visible = value ? View.INVISIBLE : View.VISIBLE;
+        mErrorCardsText.setVisibility(visible);
+        mScheduleLabelText.setVisibility(visible);
+        mScheduleBtn.setVisibility(visible);
+    }
+
+    @Override
+    public void setViewedCardsCount(int count) {
+        mViewedCardsText.setText(
+                MessageFormat.format(
+                        getResources().getString(R.string.cards_view_res_viewed_cards),
+                        count
+                )
+        );
+    }
+
+    @Override
+    public void setErrorCardsCount(int count) {
+        mErrorCardsText.setText(
+                MessageFormat.format(getResources().getString(R.string.cards_view_res_err_cards), count)
+        );
+    }
+
+    @Override
+    public void showNewScheduleString(Schedule schedule) {
+        if (!schedule.isEmpty()) {
+            mScheduleBtn.setText(schedule.toStringView(getResources()));
         } else {
             mScheduleBtn.setText(R.string.schedule_none);
         }
     }
 
-    private void onScheduleClick(){
-        ScheduleEditFragment dialog = ScheduleEditFragment.newFragment(mNewSchedule);
+    @Override
+    public void showScheduleEditDialog(Schedule schedule) {
+        ScheduleEditFragment dialog = ScheduleEditFragment.newFragment(schedule);
         dialog.setTargetFragment(this, REQ_SCHEDULE_EDIT);
         dialog.show(getFragmentManager(), ScheduleEditFragment.TAG);
-    }
-
-    private void onOkClick(){
-        getCallbacks().onResultOk(mNewSchedule);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQ_SCHEDULE_EDIT && resultCode == Activity.RESULT_OK){
+        if (requestCode == REQ_SCHEDULE_EDIT && resultCode == Activity.RESULT_OK) {
             String scheduleString = data.getStringExtra(ScheduleEditFragment.RESULT_SCHEDULE_STRING);
-            mNewSchedule.initFromString(scheduleString);
-            updateNewScheduleString();
+            Schedule schedule = new Schedule();
+            schedule.initFromString(scheduleString);
+            mPresenter.onNewScheduleSet(schedule);
         }
 
     }

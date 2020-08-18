@@ -1,4 +1,4 @@
-package ru.samtakoy.core.screens.cards
+package ru.samtakoy.core.screens.cards.answer
 
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy

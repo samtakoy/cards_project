@@ -1,4 +1,10 @@
 package ru.samtakoy.core.navigation;
 
-interface TopNavigable {
+public interface TopNavigable {
+
+    default boolean isNavigationItemSet() {
+        return true;
+    }
+
+    int getTopMenuItemId();
 }
