@@ -172,8 +172,8 @@ public class CoursesListFragment extends Fragment implements CoursesAdapter.Cour
         item = menu.findItem(R.id.menu_item_add);
         item.setVisible(mTargetQPack != null);
 
-        item = menu.findItem(R.id.fragment_courses_menu_to_themes);
-        item.setVisible(mTargetQPack == null);
+        //item = menu.findItem(R.id.fragment_courses_menu_to_themes);
+        //item.setVisible(mTargetQPack == null);
     }
 
     @Override
@@ -182,9 +182,9 @@ public class CoursesListFragment extends Fragment implements CoursesAdapter.Cour
             case R.id.menu_item_add:
                 tryAddCourse();
                 return true;
-            case R.id.fragment_courses_menu_to_themes:
+            /*case R.id.fragment_courses_menu_to_themes:
                 //toThemes();
-                return true;
+                return true;*/
             case R.id.menu_item_send_courses:
                 exportToEmail();
                 return true;

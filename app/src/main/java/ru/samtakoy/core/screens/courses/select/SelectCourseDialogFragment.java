@@ -20,7 +20,7 @@ import java.util.List;
 import ru.samtakoy.R;
 import ru.samtakoy.core.model.LearnCourse;
 import ru.samtakoy.core.model.QPack;
-import ru.samtakoy.core.business.impl.ContentProviderHelper;
+import ru.samtakoy.core.screens.courses.list.CoursesAdapter;
 import ru.samtakoy.core.screens.qpack.QPackInfoFragment;
 
 public class SelectCourseDialogFragment extends DialogFragment
@@ -48,6 +48,14 @@ public class SelectCourseDialogFragment extends DialogFragment
     private CoursesAdapter mCoursesAdapter;
 
     @Nullable private QPack mTargetQPack;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+
+        
+
+        super.onCreate(savedInstanceState);
+    }
 
     private void initView(View v) {
         mTargetQPack = (QPack) getArguments().getSerializable(ARG_TARGET_QPACK);
