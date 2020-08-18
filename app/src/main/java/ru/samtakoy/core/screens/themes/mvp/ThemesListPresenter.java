@@ -103,9 +103,10 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
 
         updateCurThemes();
         updateCurQPacks();
+
         // TODO через DiffUtil
-        // TODO я так понимаю, это теперь не работает
-        //getViewState().updateListData();
+
+
         getViewState().setListData(mCurThemes, mCurQPacks);
     }
 

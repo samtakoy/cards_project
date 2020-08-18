@@ -83,7 +83,7 @@ class CoursesListPresenter(
 
         compositeDisposableForCourses.add(
                 curCourses
-                        .subscribeOn(Schedulers.computation())
+                        .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 { t: MutableList<LearnCourse>? -> viewState.showCourses(t!!) },
@@ -107,7 +107,7 @@ class CoursesListPresenter(
         compositeDisposableForCourses.clear()
         compositeDisposableForCourses.add(
                 coursesInteractor.addNewCourse(newCourse)
-                        .subscribeOn(Schedulers.computation())
+                        .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 { t -> onCourseAdded(t) },
