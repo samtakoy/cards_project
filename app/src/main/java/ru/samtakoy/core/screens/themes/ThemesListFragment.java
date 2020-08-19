@@ -232,6 +232,7 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
 
     public void setListData(List<Theme> themes, List<QPack> qPacks){
         mThemesAdapter.updateData(themes, qPacks);
+
     }
 
     public void updateList(){

@@ -1,9 +1,10 @@
 package ru.samtakoy.features.settings;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
@@ -11,14 +12,12 @@ import io.reactivex.Completable;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.business.CardsInteractor;
-import ru.samtakoy.core.model.utils.cbuild.CBuilderConst;
 import ru.samtakoy.core.navigation.RouterHolder;
-import ru.samtakoy.core.navigation.Screens;
 import ru.samtakoy.core.screens.MainActivity;
-import ru.samtakoy.core.screens.ProgressDialogFragment;
+import ru.samtakoy.core.screens.progress_dialog.ProgressDialogFragment;
+import ru.samtakoy.core.screens.progress_dialog.ProgressDialogPresenter;
 
 public class ClearDbDialogFragment extends ProgressDialogFragment {
-
 
     public static final String TAG = "ClearDbDialogFragment";
 
@@ -29,6 +28,7 @@ public class ClearDbDialogFragment extends ProgressDialogFragment {
         return result;
     }
 
+    // TODO во все прогресс диалоги делаем инжект, ради инжекта presenter родительского класса, что неочевидно
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         MyApp.getInstance().getAppComponent().inject(this);
@@ -36,26 +36,34 @@ public class ClearDbDialogFragment extends ProgressDialogFragment {
     }
 
     @Override
-    protected Completable createObservable() {
-        return mCardsInteractor.clearDb();
+    protected ProgressDialogPresenter.WorkerImpl createWorkerImpl() {
+        return new ProgressDialogPresenter.WorkerImpl() {
+            @NotNull
+            @Override
+            public Completable createObservable() {
+                return mCardsInteractor.clearDb();
+            }
+
+            @Override
+            public int getTitleTextId() {
+                return R.string.clear_db_title;
+            }
+
+            @Override
+            public int getErrorTextId() {
+                return R.string.clear_db_error;
+            }
+
+            @Override
+            public void onComplete() {
+                navigateToBlankRootScreen();
+            }
+        };
     }
 
-    @Override
-    protected int getTitleTextId() {
-        return R.string.clear_db_title;
-    }
-
-    @Override
-    protected int getErrorTextId() {
-        return R.string.clear_db_error;
-    }
-
-    @Override
-    protected void onComplete() {
-        super.onComplete();
-
-        RouterHolder rh = (RouterHolder)getActivity();
-        if(rh != null){
+    private void navigateToBlankRootScreen() {
+        RouterHolder rh = (RouterHolder) getActivity();
+        if (rh != null) {
             //rh.getRouter().newRootScreen(new Screens.ThemeListScreen(-1L, ""));
             startActivity(MainActivity.newRootActivity(getContext()));
         }

@@ -22,6 +22,9 @@ import ru.samtakoy.core.screens.courses.list.CoursesListFragment;
 import ru.samtakoy.core.screens.courses.select.SelectCourseDialogFragment;
 import ru.samtakoy.core.screens.export_cards.BatchExportCoursesPresenter;
 import ru.samtakoy.core.screens.export_cards.BatchExportQPacksPresenter;
+import ru.samtakoy.core.screens.import_cards.BatchImportDialogFragment;
+import ru.samtakoy.core.screens.import_cards.ImportPackDialogFragment;
+import ru.samtakoy.core.screens.import_cards.ImportZipDialogFragment;
 import ru.samtakoy.core.screens.qpack.QPackInfoPresenter;
 import ru.samtakoy.core.screens.qpacks.QPacksListPresenter;
 import ru.samtakoy.core.screens.themes.ThemesListFragment;
@@ -69,7 +72,14 @@ public interface AppComponent {
     void inject(SelectCourseDialogFragment f);
 
 
+    // progress dialogs
     void inject(ClearDbDialogFragment f);
+
+    void inject(BatchImportDialogFragment f);
+
+    void inject(ImportPackDialogFragment f);
+
+    void inject(ImportZipDialogFragment f);
 
     void inject(CardsViewPresenter p);
 

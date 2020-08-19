@@ -55,7 +55,7 @@ public class DbContentProvider extends ContentProvider {
             mDb = new MyDb(getContext());
             mReadableDb = null;
         } finally {
-            mLock.writeLock().lock();
+            mLock.writeLock().unlock();
         }
         return true;
     }
