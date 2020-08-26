@@ -2,6 +2,7 @@ package ru.samtakoy.core.business.impl
 
 import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.Single
 import ru.samtakoy.core.business.CardsRepository
 import ru.samtakoy.core.database.room.MyRoomDb
 import ru.samtakoy.core.database.room.entities.CardEntity
@@ -53,7 +54,7 @@ class CardsRepositoryImpl(private val db: MyRoomDb) : CardsRepository {
     //return ContentProviderHelper.getQPackCardCount(mCtx.getContentResolver(), qPackId)
 
 
-    override fun getQPackCardsWithTags(qPackId: Long): List<CardWithTags> =
-            db.cardDao().getCardsWithTagsFRomQPack(qPackId)
+    override fun getQPackCardsWithTagsRx(qPackId: Long): Single<List<CardWithTags>> =
+            db.cardDao().getCardsWithTagsFRomQPackRx(qPackId)
     //return ContentProviderHelper.getQPackCardsWithTags(mCtx, qPack.getId());
 }

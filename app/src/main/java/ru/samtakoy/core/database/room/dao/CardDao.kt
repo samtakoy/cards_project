@@ -2,6 +2,7 @@ package ru.samtakoy.core.database.room.dao
 
 import androidx.room.*
 import io.reactivex.Flowable
+import io.reactivex.Single
 import ru.samtakoy.core.database.room.entities.CardEntity
 import ru.samtakoy.core.database.room.entities.CardEntity.Companion._id
 import ru.samtakoy.core.database.room.entities.CardEntity.Companion._qpack_id
@@ -33,7 +34,8 @@ interface CardDao {
 
     @Transaction
     @Query("SELECT * FROM ${table} WHERE ${_qpack_id}=:qPackId")
-    fun getCardsWithTagsFRomQPack(qPackId: Long): List<CardWithTags>
+    fun getCardsWithTagsFRomQPackRx(qPackId: Long): Single<List<CardWithTags>>
+
 
     @Update
     fun updateCard(card: CardEntity)

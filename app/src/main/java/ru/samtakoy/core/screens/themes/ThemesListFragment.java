@@ -376,12 +376,13 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         switch (item.getItemId()){
 
 
+            /* убрал как устаревшее
             case R.id.menu_item_export_cards:
                 if(mThemesAdapter.isQPackLongClicked()){
                     mPresenter.onUiExportQPackCards(mThemesAdapter.getLongClickedQPack());
                 }else{}
 
-                return true;
+                return true;*/
 
             case R.id.menu_item_send_cards:
                 if(mThemesAdapter.isQPackLongClicked()){

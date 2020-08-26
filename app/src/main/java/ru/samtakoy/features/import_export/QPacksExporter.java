@@ -6,9 +6,9 @@ import ru.samtakoy.core.database.room.entities.QPackEntity;
 public interface QPacksExporter {
 
     //void exportThemeTree(QPack qPack);
-    boolean exportQPackToEmail(QPackEntity qPack);
+    Completable exportQPackToEmailRx(QPackEntity qPack);
 
-    boolean exportQPack(QPackEntity qPack);
+    Completable exportQPack(QPackEntity qPack);
 
 
     Completable exportAllToEmail();

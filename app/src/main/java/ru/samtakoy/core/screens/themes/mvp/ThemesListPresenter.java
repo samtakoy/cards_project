@@ -51,7 +51,8 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
     private List<ThemeEntity> mCurThemes;
     private List<QPackEntity> mCurQPacks;
 
-    private CompositeDisposable mCompositeDisposable;
+    private CompositeDisposable mDataGettersDisposable;
+    private CompositeDisposable mCurrentTaskDisposable;
 
     enum OPENED_DIALOG_TYPE implements Serializable {
         NONE,
@@ -90,7 +91,8 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
 
         mLastDialogState = new DialogState();
 
-        mCompositeDisposable = new CompositeDisposable();
+        mDataGettersDisposable = new CompositeDisposable();
+        mCurrentTaskDisposable = new CompositeDisposable();
 
         updateTitles();
 
@@ -103,7 +105,8 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
     @Override
     public void onDestroy() {
 
-        mCompositeDisposable.dispose();
+        mCurrentTaskDisposable.dispose();
+        mDataGettersDisposable.dispose();
         super.onDestroy();
     }
 
@@ -129,9 +132,9 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
 
     private void bindData() {
 
-        mCompositeDisposable.clear();
+        mDataGettersDisposable.clear();
 
-        mCompositeDisposable.add(
+        mDataGettersDisposable.add(
                 mCardsInteractor.getChildThemesRx(mThemeId)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -141,7 +144,7 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
                         })
         );
 
-        mCompositeDisposable.add(
+        mDataGettersDisposable.add(
                 mCardsInteractor.getChildQPacksRx(mThemeId)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -253,21 +256,37 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
         getViewState().navigateToOnlineImport();
     }
 
-
+    //TODO больше не использую
     public void onUiExportQPackCards(QPackEntity qPack) {
 
-        ///* TODO вернуть
-        if (!mQPacksExporter.exportQPack(qPack)) {
-            getViewState().showMessage(R.string.fragment_themes_list_cant_save_file_msg);
-        } else {
-            getViewState().showMessage(R.string.fragment_themes_list_cards_export_ok);
-        }/**/
+        mCurrentTaskDisposable.clear();
+
+        mCurrentTaskDisposable.add(
+                mQPacksExporter.exportQPack(qPack)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                () -> getViewState().showMessage(R.string.fragment_themes_list_cards_export_ok),
+                                throwable -> getViewState().showMessage(R.string.fragment_themes_list_cant_save_file_msg)
+                        )
+        );
     }
 
     public void onUiSendQPackCards(QPackEntity qPack) {
-        if (!mQPacksExporter.exportQPackToEmail(qPack)) {
-            getViewState().showMessage(R.string.fragment_themes_list_cant_send_file_msg);
-        }
+
+        mCurrentTaskDisposable.clear();
+
+        mCurrentTaskDisposable.add(
+                mQPacksExporter.exportQPackToEmailRx(qPack)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                () -> {
+                                },
+                                throwable -> getViewState().showMessage(R.string.fragment_themes_list_cant_send_file_msg)
+                        )
+        );
+
     }
 
     public void onThemeDeleteClick(ThemeEntity theme) {

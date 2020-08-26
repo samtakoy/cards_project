@@ -3,8 +3,9 @@ package ru.samtakoy.features.import_export;
 import android.content.Context;
 import android.net.Uri;
 
-import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,7 +18,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
-import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import ru.samtakoy.core.business.CardsRepository;
 import ru.samtakoy.core.business.QPacksRepository;
 import ru.samtakoy.core.business.ThemesRepository;
@@ -76,7 +77,7 @@ public class QPacksExporterImpl implements QPacksExporter {
         validateThemePath(localPath);
     }/**/
 
-    @Nullable
+    @NotNull
     private String validateThemePath(String baseFolder, String localPath) {
 
         File file = new File(baseFolder, localPath);
@@ -84,19 +85,27 @@ public class QPacksExporterImpl implements QPacksExporter {
             file.mkdirs();
         }
 
+        /*
         if(!file.exists()){
             MyLog.add("-- file not created:"+baseFolder+", "+localPath);
             return null;
-        }
+        }*/
 
         return file.getAbsolutePath();
     }
 
 
-    public boolean exportQPackToEmail(QPackEntity qPack) {
+    public Completable exportQPackToEmailRx(QPackEntity qPack) {
 
-        List<CardWithTags> cards = mCardsRepository.getQPackCardsWithTags(qPack.getId());
+        return mCardsRepository
+                .getQPackCardsWithTagsRx(qPack.getId())
+                .flatMapCompletable(
+                        cardWithTags -> Completable.fromCallable(() -> exportQPackToEmail(qPack, cardWithTags))
+                );
+    }
 
+    @NotNull
+    private Boolean exportQPackToEmail(QPackEntity qPack, List<CardWithTags> cards) {
         File file;
 
         try {
@@ -124,35 +133,31 @@ public class QPacksExporterImpl implements QPacksExporter {
         );
     }
 
-    public boolean exportQPack(QPackEntity qPack) {
+    public Completable exportQPack(QPackEntity qPack) {
         String defaultBaseFolder = mContext.getExternalFilesDir(null).getAbsolutePath();
-        ;
         return exportQPackToFolder(qPack, defaultBaseFolder);
     }
 
-    public boolean exportQPackToFolder(QPackEntity qPack, String baseFolder) {
+    public Completable exportQPackToFolder(QPackEntity qPack, String baseFolder) {
 
-        MyLog.add("export qPack: " + qPack + ", to folder: " + baseFolder);
+        MyLog.add("export qPack: " + qPack.getTitle() + ", to folder: " + baseFolder);
 
         String path = validateThemePath(baseFolder, getExportQPackLocalPath(qPack));
-
-        if (path == null) {
-            return false;
-        }
-
-        List<CardWithTags> cards = mCardsRepository.getQPackCardsWithTags(qPack.getId());
-
         // первый вариант макс. просто - в файл export.txt
         //getFile
         File file = new File(path, qPack.getExportFileName());
-
-        // TODO подтверждение удаления
-        if(file.exists()){
+        if (file.exists()) {
             file.delete();
         }
 
-        return exportQPackToFile(file, qPack, cards);
+        //List<CardWithTags> cards =
 
+        return mCardsRepository.getQPackCardsWithTagsRx(qPack.getId())
+                .flatMapCompletable(
+                        cardWithTags -> Completable.fromCallable(
+                                () -> exportQPackToFile(file, qPack, cardWithTags)
+                        )
+                );
     }
 
 
@@ -174,6 +179,8 @@ public class QPacksExporterImpl implements QPacksExporter {
                 return false;
             }
         }
+
+        MyLog.add("exportQPackToFile !OK! qPack: " + qPack.getTitle() + ", to folder: " + file.getAbsolutePath());
         return true;
     }
 
@@ -201,18 +208,21 @@ public class QPacksExporterImpl implements QPacksExporter {
 
         MyLog.add("__exportAllToEmail__, callThread:"+Thread.currentThread().getName());
 
-        return exportAllToFolder(exportDirPath)
-                .doOnComplete(
+        Completable zippingAndSending = Completable.fromCallable(
                 () -> {
-                    MyLog.add("__exportAllToEmail__, onComplete thread:"+Thread.currentThread().getName());
 
+                    MyLog.add("__exportAllToEmail__, onComplete thread:" + Thread.currentThread().getName());
 
                     File zipFile = File.createTempFile("all_packs_export", ".zip", recreateTempFolderFile(ZIP_FOLDER));
                     ZipHelper.zipDirectory(new File(exportDirPath), zipFile);
                     Uri fileUri = FileProvider.getUriForFile(mContext, ExportConst.FILE_PROVIDER_AUTHORITY, zipFile);
                     SendEmailHelper.sendFileByEmail(mContext, "all qPacks archive", "", fileUri);
+
+                    return true;
                 }
         );
+
+        return exportAllToFolder(exportDirPath).andThen(zippingAndSending);
     }
 
     @Override
@@ -220,17 +230,22 @@ public class QPacksExporterImpl implements QPacksExporter {
 
         return mQPacksRepository
                 .getAllQPacks()
-                .flatMap(list -> Flowable.fromIterable(list))
+                .flatMapObservable(list -> Observable.fromIterable(list))
+                .flatMap(
+                        qPack -> exportQPackToFolder(qPack, exportDirPath).toObservable()
+                )
+                /*
                 .map(qPack -> {
-
                             if (exportQPackToFolder(qPack, exportDirPath)) {
                                 return qPack;
                             } else {
+                                MyLog.add("!!!");
                                 throw new Exception("cant Export qPack:" + qPack.getId() + ", " + qPack.getTitle() + ", baseFolder: " + exportDirPath);
                             }
                         }
-                )
-                .ignoreElements();
+                )*/
+                .toList()
+                .ignoreElement();
     }
 
 

@@ -1,6 +1,7 @@
 package ru.samtakoy.core.business.impl
 
 import io.reactivex.Flowable
+import io.reactivex.Single
 import ru.samtakoy.core.business.QPacksRepository
 import ru.samtakoy.core.database.room.MyRoomDb
 import ru.samtakoy.core.database.room.entities.QPackEntity
@@ -47,7 +48,7 @@ class QPacksRepositoryImpl(
     override fun getQPacksFromThemeRx(themeId: Long): Flowable<List<QPackEntity>> =
             db.qPackDao().getQPacksFromThemeRx(themeId)
 
-    override fun getAllQPacks(): Flowable<List<QPackEntity>> {
+    override fun getAllQPacks(): Single<List<QPackEntity>> {
         val allQPacks = db.qPackDao().getAllQPacks()
         return allQPacks
     }

@@ -32,7 +32,7 @@
     <string name="fragment_themes_menu_item_remote_import_cards">online import</string>
     <string name="fragment_themes_menu_item_export_all_to">export all to folder</string>
     <string name="fragment_themes_menu_item_export_all_to_email">export all to email</string>
-    <string name="fragment_themes_menu_item_export_cards">export</string>
+    <!--string name="fragment_themes_menu_item_export_cards">export</string-->
     <string name="fragment_themes_menu_item_send_cards">export by email</string>
     <string name="fragment_themes_menu_item_delete_theme">delete</string>
     <!--string name="fragment_themes_menu_item_show_courses">all courses</string-->

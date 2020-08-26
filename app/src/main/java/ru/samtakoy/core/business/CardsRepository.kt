@@ -2,6 +2,7 @@ package ru.samtakoy.core.business
 
 import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.Single
 import ru.samtakoy.core.database.room.entities.CardEntity
 import ru.samtakoy.core.database.room.entities.other.CardIds
 import ru.samtakoy.core.database.room.entities.other.CardWithTags
@@ -21,7 +22,7 @@ interface CardsRepository {
     fun getQPackCards(qPackId: Long): List<CardEntity>
     fun getCardsIdsFromQPack(qPackId: Long): List<Long>
 
-    fun getQPackCardsWithTags(qPackId: Long): List<CardWithTags>
+    fun getQPackCardsWithTagsRx(qPackId: Long): Single<List<CardWithTags>>
     fun getQPackCardCount(qPackId: Long): Int
 
 

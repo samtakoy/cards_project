@@ -1,6 +1,7 @@
 package ru.samtakoy.core.business
 
 import io.reactivex.Flowable
+import io.reactivex.Single
 import ru.samtakoy.core.database.room.entities.QPackEntity
 
 interface QPacksRepository {
@@ -17,7 +18,7 @@ interface QPacksRepository {
     fun getQPacksFromTheme(themeId: Long): List<QPackEntity>
     fun getQPacksFromThemeRx(themeId: Long): Flowable<List<QPackEntity>>
 
-    fun getAllQPacks(): Flowable<List<QPackEntity>>
+    fun getAllQPacks(): Single<List<QPackEntity>>
     fun getAllQPacksByLastViewDateAsc(): Flowable<List<QPackEntity>>
     fun getAllQPacksByCreationDateDesc(): Flowable<List<QPackEntity>>
 

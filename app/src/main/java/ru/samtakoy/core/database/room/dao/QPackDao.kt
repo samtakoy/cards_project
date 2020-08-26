@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import io.reactivex.Flowable
+import io.reactivex.Single
 import ru.samtakoy.core.database.room.entities.QPackEntity
 import ru.samtakoy.core.database.room.entities.QPackEntity.Companion._creation_date
 import ru.samtakoy.core.database.room.entities.QPackEntity.Companion._id
@@ -28,7 +29,7 @@ interface QPackDao {
     fun getQPacksFromThemeRx(themeId: Long): Flowable<List<QPackEntity>>
 
     @Query("SELECT * FROM $table")
-    fun getAllQPacks(): Flowable<List<QPackEntity>>
+    fun getAllQPacks(): Single<List<QPackEntity>>
 
 
     @Query("SELECT * FROM $table ORDER BY $_last_view_date ")
