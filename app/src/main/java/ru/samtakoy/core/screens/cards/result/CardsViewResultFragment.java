@@ -22,7 +22,7 @@ import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.model.elements.Schedule;
+import ru.samtakoy.core.database.room.entities.elements.Schedule;
 import ru.samtakoy.core.screens.ScheduleEditFragment;
 import ru.samtakoy.core.screens.cards.types.CardViewMode;
 

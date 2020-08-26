@@ -1,27 +1,55 @@
 package ru.samtakoy.core.business;
 
+
+import androidx.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Date;
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Single;
-import ru.samtakoy.core.model.LearnCourse;
-import ru.samtakoy.core.model.LearnCourseMode;
+import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
+import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
 
 public interface CoursesRepository {
 
-    LearnCourse getCourse(Long learnCourseId);
+    @Nullable
+    LearnCourseEntity getCourse(@NotNull Long learnCourseId);
+
+    @Nullable
+    LearnCourseEntity getCourseByMode(@NotNull LearnCourseMode mode);
+
+
+    void updateCourse(LearnCourseEntity course);
 
     void deleteCourse(long courseId);
 
-    Single<LearnCourse> addNewCourse(LearnCourse newCourse);
+    // TODO TEMP
+    Long addNewCourseNow(LearnCourseEntity newCourse);
 
-    //Observable<LearnCourse> getAllCourses();
-    Single<List<LearnCourse>> getAllCourses();
+    // TODO Single вернуть к Flowable, для возможности update данных
 
-    Single<List<LearnCourse>> getCoursesByIds(Long[] targetCourseIds);
+    Single<LearnCourseEntity> addNewCourse(LearnCourseEntity newCourse);
 
-    Single<List<LearnCourse>> getCoursesByModes(List<LearnCourseMode> targetModes);
+    Single<List<LearnCourseEntity>> getAllCourses();
 
-    Single<List<LearnCourse>> getCoursesForQPack(Long qPackId);
+    Single<List<LearnCourseEntity>> getCoursesByIds(Long[] targetCourseIds);
 
+    Single<List<LearnCourseEntity>> getCoursesByModes(List<LearnCourseMode> targetModes);
+
+    Flowable<List<LearnCourseEntity>> getCoursesByModes(LearnCourseMode... mode);
+
+    List<LearnCourseEntity> getCoursesByModesNow(LearnCourseMode... mode);
+
+    Single<List<LearnCourseEntity>> getCoursesForQPack(Long qPackId);
+
+
+    List<LearnCourseEntity> getCoursesLessThan(LearnCourseMode mode, Date repeatDate);
+
+    //return getCoursesWithComparator(ctx, mode, repeatDate, "<=");
+    List<LearnCourseEntity> getCoursesMoreThan(LearnCourseMode mode, Date repeatDate);
+    //return getCoursesWithComparator(ctx, mode, repeatDate, ">");
 
 }

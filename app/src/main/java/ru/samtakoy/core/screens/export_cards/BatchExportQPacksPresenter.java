@@ -13,28 +13,43 @@ import io.reactivex.schedulers.Schedulers;
 import moxy.InjectViewState;
 import moxy.MvpPresenter;
 import ru.samtakoy.R;
-import ru.samtakoy.core.business.QPacksExporter;
-import ru.samtakoy.core.di.components.AppComponent;
 import ru.samtakoy.core.screens.log.MyLog;
+import ru.samtakoy.features.import_export.QPacksExporter;
 
 @InjectViewState
 public class BatchExportQPacksPresenter extends MvpPresenter<BatchExportDialogView> {
 
-    @Inject
+
     QPacksExporter mQPacksExporter;
 
-    //private Disposable mSubscriber;
+    public static class Factory {
+
+        @Inject
+        QPacksExporter mQPacksExporter;
+
+        @Inject
+        public Factory() {
+        }
+
+        public BatchExportQPacksPresenter create(String exportDirPath) {
+            return new BatchExportQPacksPresenter(mQPacksExporter, exportDirPath);
+        }
+
+    }
+
     private CompositeDisposable mDisposable;
 
-    public BatchExportQPacksPresenter(AppComponent appComponent, String exportDirPath){
+    public BatchExportQPacksPresenter(
+            QPacksExporter qPacksExporter,
+            String exportDirPath) {
 
-        appComponent.inject(this);
+        mQPacksExporter = qPacksExporter;
 
         mDisposable = new CompositeDisposable();
 
-        if(exportDirPath == null || exportDirPath.length()==0){
+        if (exportDirPath == null || exportDirPath.length() == 0) {
             exportToEmail();
-        } else{
+        } else {
             exportToDir(exportDirPath);
         }
 

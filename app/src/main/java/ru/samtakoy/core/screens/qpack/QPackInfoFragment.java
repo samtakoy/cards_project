@@ -27,13 +27,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.text.MessageFormat;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.model.Card;
-import ru.samtakoy.core.model.QPack;
+import ru.samtakoy.core.database.room.entities.CardEntity;
 import ru.samtakoy.core.navigation.RouterHolder;
 import ru.samtakoy.core.navigation.Screens;
 import ru.samtakoy.core.screens.cards.types.CardViewMode;
@@ -52,16 +53,26 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
     private static final String ARG_QPACK_ID = "ARG_QPACK_ID";
 
 
-    @InjectPresenter
-    QPackInfoPresenter mQPackInfoPresenter;
-
-    public static QPackInfoFragment createFragment(Long qPackId){
+    public static QPackInfoFragment createFragment(Long qPackId) {
         QPackInfoFragment result = new QPackInfoFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_QPACK_ID, qPackId);
         result.setArguments(args);
         return result;
     }
+
+
+    @InjectPresenter
+    QPackInfoPresenter mQPackInfoPresenter;
+    @Inject
+    QPackInfoPresenter.Factory mPresenterFactory;
+
+    @ProvidePresenter
+    QPackInfoPresenter providePresenter() {
+        Long qPackId = getArguments().getLong(ARG_QPACK_ID, -1);
+        return mPresenterFactory.create(qPackId);
+    }
+
 
     private TextView mQPackTitle;
     private TextView mQPackCardsCount;
@@ -85,6 +96,9 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+
+        MyApp.getInstance().getAppComponent().inject(this);
+
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
@@ -105,12 +119,7 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
         super.onDetach();
     }
 
-    @ProvidePresenter
-    QPackInfoPresenter providePresenter(){
-        Long qPackId = getArguments().getLong(ARG_QPACK_ID, -1);
 
-        return new QPackInfoPresenter(((MyApp)getActivity().getApplication()).getAppComponent(), qPackId);
-    }
 
     @Nullable
     @Override
@@ -282,8 +291,9 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
         return MessageFormat.format(result, cardsCount);
     }
 
-    public void showCourses(QPack qPack) {
-        mRouterHolder.getRouter().navigateTo(Screens.CoursesListScreen.qPackCoursesScreen(qPack));
+    @Override
+    public void showCourses(Long qPackId) {
+        mRouterHolder.getRouter().navigateTo(Screens.CoursesListScreen.qPackCoursesScreen(qPackId));
     }
 
     public void requestNewCourseCreation(String title) {
@@ -293,9 +303,9 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
     }
 
     @Override
-    public void requestsSelectCourseToAdd(QPack qPack) {
+    public void requestsSelectCourseToAdd(@Nullable Long qPackId) {
         SelectCourseDialogFragment.newFragment(
-                qPack, this, AREQUEST_SELECT_COURSE_TO_ADD_TO
+                qPackId, this, AREQUEST_SELECT_COURSE_TO_ADD_TO
         ).show(getFragmentManager(), "SelectCourseDialogFragment");
     }
 
@@ -333,7 +343,7 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
     }
 
     @Override
-    public void setFastViewCards(List<Card> cards) {
+    public void setFastViewCards(List<CardEntity> cards) {
         CardsFastViewAdapter adapter = new CardsFastViewAdapter(cards);
         mCardsFastViewList.setHasFixedSize(false);
         mCardsFastViewList.setAdapter(adapter);

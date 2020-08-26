@@ -2,26 +2,50 @@ package ru.samtakoy.core.business.impl;
 
 import android.content.Context;
 
-
+import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Completable;
-import io.reactivex.Single;
+import io.reactivex.Flowable;
 import ru.samtakoy.core.business.CardsInteractor;
 import ru.samtakoy.core.business.CardsRepository;
-import ru.samtakoy.core.model.Card;
-import ru.samtakoy.core.model.QPack;
-import ru.samtakoy.core.model.Theme;
+import ru.samtakoy.core.business.QPacksRepository;
+import ru.samtakoy.core.business.TagsRepository;
+import ru.samtakoy.core.business.ThemesRepository;
+import ru.samtakoy.core.database.room.entities.CardEntity;
+import ru.samtakoy.core.database.room.entities.QPackEntity;
+import ru.samtakoy.core.database.room.entities.ThemeEntity;
 
 public class CardsInteractorImpl implements CardsInteractor {
 
-    private Context mCtx;
-    private CardsRepository mCardsRepository;
+    @Inject
+    Context mCtx;
+    @Inject
+    TagsRepository mTagsRepository;
+    @Inject
+    CardsRepository mCardsRepository;
+    @Inject
+    ThemesRepository mThemesRepository;
+    @Inject
+    QPacksRepository mQPacksRepository;
 
-
-    public CardsInteractorImpl(Context ctx, CardsRepository cardsRepository){
+    @Inject
+    public CardsInteractorImpl(
+            /*Context ctx,
+            TagsRepository tagsRep,
+            CardsRepository cardsRep,
+            ThemesRepository themesRep,
+            QPacksRepository qPacksRep*/
+    ) {
+        /*
         mCtx = ctx;
-        mCardsRepository = cardsRepository;
+        mTagsRepository = tagsRep;
+        mCardsRepository = cardsRep;
+        mThemesRepository = themesRep;
+        mQPacksRepository = qPacksRep;
+         */
     }
 
     @Override
@@ -29,44 +53,62 @@ public class CardsInteractorImpl implements CardsInteractor {
         return mCardsRepository.clearDb();
     }
 
-    public Card getCard(Long cardId){
+
+    @Override
+    public CardEntity getCard(Long cardId) {
         return mCardsRepository.getCard(cardId);
     }
 
     @Override
+    public Flowable<CardEntity> getCardRx(Long cardId) {
+        return mCardsRepository.getCardRx(cardId);
+    }
+
+    @Override
+    public void deleteCardWithRelations(Long cardId) {
+        mTagsRepository.deleteAllTagsFromCard(cardId);
+        mCardsRepository.deleteCard(cardId);
+    }
+
+    @Override
     public void setCardNewQuestionText(Long cardId, String text) {
-        Card card = mCardsRepository.getCard(cardId);
+        CardEntity card = mCardsRepository.getCard(cardId);
         card.setQuestion(text);
-        mCardsRepository.saveCard(card);
+        mCardsRepository.updateCard(card);
     }
 
     @Override
     public void setCardNewAnswerText(Long cardId, String text) {
-        Card card = mCardsRepository.getCard(cardId);
+        CardEntity card = mCardsRepository.getCard(cardId);
         card.setAnswer(text);
-        mCardsRepository.saveCard(card);
+        mCardsRepository.updateCard(card);
     }
 
-    public boolean hasPackCards(Long qPackId){
-        return ContentProviderHelper.getQPackCardIds(mCtx.getContentResolver(), qPackId).length >  0;
+    public boolean hasPackCards(Long qPackId) {
+        return mCardsRepository.getQPackCardCount(qPackId) > 0;
     }
 
-    public QPack getQPack(Long qPackId){
-        return mCardsRepository.getQPack(qPackId);
+    public QPackEntity getQPack(Long qPackId) {
+        return mQPacksRepository.getQPack(qPackId);
     }
 
-    public void deleteQPack(Long qPackId){
-        mCardsRepository.deletePack(qPackId);
+    @Override
+    public Flowable<QPackEntity> getQPackRx(Long qPackId) {
+        return mQPacksRepository.getQPackRx(qPackId);
+    }
+
+    public void deleteQPack(Long qPackId) {
+        mQPacksRepository.deletePack(qPackId);
     }
 
     @Override
     public boolean hasAnyQPack() {
-        return mCardsRepository.hasAnyQPack();
+        return mQPacksRepository.hasAnyQPack();
     }
 
     @Override
-    public List<Card> getQPackCards(QPack qPack) {
-        return mCardsRepository.getQPackCards(qPack);
+    public List<CardEntity> getQPackCards(Long qPackId) {
+        return mCardsRepository.getQPackCards(qPackId);
     }
 
     public int getQPackCardCount(Long qPackId) {
@@ -75,7 +117,7 @@ public class CardsInteractorImpl implements CardsInteractor {
 
     @Override
     public Long addNewTheme(Long parentThemeId, String title) {
-        return mCardsRepository.addNewTheme(parentThemeId, title);
+        return mThemesRepository.addNewTheme(parentThemeId, title);
     }
 
     // TODO пока удаление, только если тема пустая, работает молча
@@ -83,77 +125,63 @@ public class CardsInteractorImpl implements CardsInteractor {
     public boolean deleteTheme(Long themeId) {
 
         // TODO optimize to count check
-        if(mCardsRepository.getChildQPacks(themeId).size() > 0 || mCardsRepository.getChildThemes(themeId).size()>0){
+        if (mQPacksRepository.getQPacksFromTheme(themeId).size() > 0 || mThemesRepository.getChildThemes(themeId).size() > 0) {
             return false;
         }
-        return mCardsRepository.deleteTheme(themeId);
+        return mThemesRepository.deleteTheme(themeId);
     }
 
     @Override
-    public Theme getParentTheme(Long themeId) {
+    public ThemeEntity getParentTheme(Long themeId) {
 
-        Theme theme = mCardsRepository.getTheme(themeId);
-        if(theme == null){
+        ThemeEntity theme = mThemesRepository.getTheme(themeId);
+        if (theme == null) {
             return null;
         }
-        Theme parentTheme = mCardsRepository.getTheme(theme.getParentId());
+        ThemeEntity parentTheme = mThemesRepository.getTheme(theme.getParentId());
         return parentTheme;
     }
 
     @Override
-    public List<Theme> getChildThemes(Long themeId) {
-        return mCardsRepository.getChildThemes(themeId);
+    public List<ThemeEntity> getChildThemes(Long themeId) {
+        return mThemesRepository.getChildThemes(themeId);
     }
 
     @Override
-    public List<QPack> getChildQPacks(Long themeId) {
-        return mCardsRepository.getChildQPacks(themeId);
+    public List<QPackEntity> getChildQPacks(Long themeId) {
+        return mQPacksRepository.getQPacksFromTheme(themeId);
     }
 
     @Override
-    public void saveQPackLastViewDate(Long qPackId, long currentTimeLong, boolean incrementViewCounter) {
-        QPack qPack = getQPack(qPackId);
-        qPack.setLastViewDateMillis(currentTimeLong);
-        if(incrementViewCounter){
-            qPack.setViewCount(qPack.getViewCount()+1);
+    public Flowable<List<ThemeEntity>> getChildThemesRx(Long themeId) {
+        return mThemesRepository.getChildThemesRx(themeId);
+    }
+
+    @Override
+    public Flowable<List<QPackEntity>> getChildQPacksRx(Long themeId) {
+        return mQPacksRepository.getQPacksFromThemeRx(themeId);
+    }
+
+
+    @Override
+    public void saveQPackLastViewDate(Long qPackId, Date currentTime, boolean incrementViewCounter) {
+        QPackEntity qPack = getQPack(qPackId);
+        qPack.setLastViewDate(currentTime);
+        if (incrementViewCounter) {
+            qPack.setViewCount(qPack.getViewCount() + 1);
         }
-        mCardsRepository.saveQPack(qPack);
+        mQPacksRepository.updateQPack(qPack);
     }
 
     @Override
-    public Single<List<QPack>> getAllQPacksByLastViewDateAsc() {
-        return mCardsRepository
-                .getAllQPacks()
-                .toSortedList(
-                        (aQPack, bQPack) -> {
-                            long delta = aQPack.getLastViewDateAsLong()-bQPack.getLastViewDateAsLong();
-                            if(delta > 0){
-                                return 1;
-                            }else
-                            if(delta < 0){
-                                return -1;
-                            }
-                            return 0;
-                        }
-        );
+    public Flowable<List<QPackEntity>> getAllQPacksByLastViewDateAsc() {
+        return mQPacksRepository.getAllQPacksByLastViewDateAsc();
     }
 
     @Override
-    public Single<List<QPack>> getAllQPacksByCreationDateDesc() {
-        return mCardsRepository
-                .getAllQPacks()
-                .toSortedList(
-                        (aQPack, bQPack) -> {
-                            long delta = aQPack.getCreationDateAsLong()-bQPack.getCreationDateAsLong();
-                            if(delta > 0){
-                                return -1;
-                            }else
-                            if(delta < 0){
-                                return 1;
-                            }
-                            return 0;
-                        }
-                );
+    public Flowable<List<QPackEntity>> getAllQPacksByCreationDateDesc() {
+        return mQPacksRepository.getAllQPacksByCreationDateDesc();
     }
+
 
 }

@@ -1,21 +1,22 @@
 package ru.samtakoy.core.screens.cards.answer
 
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import moxy.InjectViewState
 import moxy.MvpPresenter
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import org.apache.commons.lang3.exception.ExceptionUtils
+import ru.samtakoy.R
 import ru.samtakoy.core.business.CardsInteractor
-import ru.samtakoy.core.business.events.CardUpdateEvent
-import ru.samtakoy.core.model.Card
-import ru.samtakoy.core.model.QPack
+import ru.samtakoy.core.database.room.entities.CardEntity
+import ru.samtakoy.core.database.room.entities.QPackEntity
 import ru.samtakoy.core.screens.cards.types.CardViewMode
+import ru.samtakoy.core.screens.log.MyLog
 import javax.inject.Inject
 
 @InjectViewState
 class CardAnswerPresenter constructor(
         val cardsInteractor: CardsInteractor,
-        val eventBus: EventBus,
         val callbacks: Callbacks,
         qPackId: Long,
         cardId: Long,
@@ -25,8 +26,7 @@ class CardAnswerPresenter constructor(
 
 
     class Factory @Inject constructor(
-            val cardsInteractor: CardsInteractor,
-            val eventBus: EventBus
+            val cardsInteractor: CardsInteractor
     ){
         fun create(
                 callbacks: Callbacks,
@@ -34,7 +34,7 @@ class CardAnswerPresenter constructor(
                 cardId: Long,
                 viewMode: CardViewMode,
                 isLastCard: Boolean
-        ) = CardAnswerPresenter(cardsInteractor, eventBus, callbacks, qPackId, cardId, viewMode, isLastCard)
+        ) = CardAnswerPresenter(cardsInteractor, callbacks, qPackId, cardId, viewMode, isLastCard)
     }
 
     interface Callbacks {
@@ -45,33 +45,45 @@ class CardAnswerPresenter constructor(
     }
 
 
-    private val mQPack: QPack
-    private var mCard: Card
+    private val mQPack: QPackEntity
+    private var card: CardEntity? = null
+    private val mCompositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    init{
-
+    init {
         mQPack = cardsInteractor.getQPack(qPackId)
-        mCard = cardsInteractor.getCard(cardId)
-
-        eventBus.register(this)
-
-        viewState.setAnswerText(mCard.answer)
         updateButtonsVisibility()
+        bindData(cardId)
+    }
+
+    private fun bindData(cardId: Long) {
+
+        mCompositeDisposable.add(
+                cardsInteractor.getCardRx(cardId)
+                        .onBackpressureLatest()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                { t -> onCardUpdate(t) },
+                                { t -> onGetError(t) }
+                        )
+        )
+
+    }
+
+    private fun onGetError(t: Throwable) {
+        MyLog.add(ExceptionUtils.getMessage(t))
+        viewState.showError(R.string.db_request_err_message)
+    }
+
+    private fun onCardUpdate(newCard: CardEntity) {
+        card = newCard
+        viewState.setAnswerText(newCard.answer)
     }
 
     override fun onDestroy() {
 
-        eventBus.unregister(this)
-
+        mCompositeDisposable.dispose()
         super.onDestroy()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onCardUpdateEvent(event: CardUpdateEvent) {
-        if (mCard.id.equals(event.card.id)) {
-            mCard = event.card
-            viewState.setAnswerText(mCard.answer)
-        }
     }
 
     private fun updateButtonsVisibility() {

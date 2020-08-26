@@ -4,12 +4,12 @@ import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import ru.samtakoy.core.model.LearnCourse
+import ru.samtakoy.core.database.room.entities.LearnCourseEntity
 
 interface SelectCourseView : MvpView {
 
     @StateStrategyType(value = AddToEndSingleStrategy::class)
-    fun showCourses(curCourses: List<LearnCourse>)
+    fun showCourses(curCourses: List<LearnCourseEntity>)
 
     @StateStrategyType(value = OneExecutionStateStrategy::class)
     fun showError(codeResId: Int)

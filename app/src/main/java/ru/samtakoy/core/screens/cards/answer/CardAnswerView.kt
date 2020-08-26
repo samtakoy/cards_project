@@ -2,6 +2,7 @@ package ru.samtakoy.core.screens.cards.answer
 
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
+import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(AddToEndSingleStrategy::class)
@@ -20,4 +21,6 @@ interface CardAnswerView : MvpView{
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setNextCardButtonVisible(visible: Boolean)
 
+    @StateStrategyType(value = OneExecutionStateStrategy::class)
+    fun showError(codeResId: Int)
 }

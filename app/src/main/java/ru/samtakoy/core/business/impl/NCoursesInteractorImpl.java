@@ -1,42 +1,51 @@
 package ru.samtakoy.core.business.impl;
 
-import android.content.Context;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Single;
 import ru.samtakoy.core.business.CardsRepository;
+import ru.samtakoy.core.business.CoursesPlanner;
 import ru.samtakoy.core.business.CoursesRepository;
 import ru.samtakoy.core.business.NCoursesInteractor;
-import ru.samtakoy.core.model.LearnCourse;
-import ru.samtakoy.core.model.LearnCourseMode;
-import ru.samtakoy.core.model.QPack;
-import ru.samtakoy.core.model.elements.Schedule;
+import ru.samtakoy.core.business.QPacksRepository;
+import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
+import ru.samtakoy.core.database.room.entities.QPackEntity;
+import ru.samtakoy.core.database.room.entities.elements.Schedule;
+import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
+import ru.samtakoy.core.utils.DateUtils;
 
 public class NCoursesInteractorImpl implements NCoursesInteractor {
 
-    // TODO  вместо этого ContentResolver?
-    private Context mCtx;
-    private CardsRepository mCardsRepository;
-    private CoursesRepository mCoursesRepository;
+    @Inject
+    CardsRepository mCardsRepository;
+    @Inject
+    QPacksRepository mQPacksRepository;
+    @Inject
+    CoursesRepository mCoursesRepository;
+    @Inject
+    CoursesPlanner mCoursesPlanner;
 
     private static final Date SOME_DATE = new Date(0);
 
-    public NCoursesInteractorImpl(
-            Context ctx,
-            CardsRepository cardsRepository,
+    @Inject
+    public NCoursesInteractorImpl() {
+    }
+            /*Context ctx,
+            QPacksRepository cardsRepository,
             CoursesRepository corsesRepository
     ) {
         mCtx = ctx;
-        mCardsRepository = cardsRepository;
+        mQPacksRepository = cardsRepository;
         mCoursesRepository = corsesRepository;
-    }
+    }*/
 
-    public LearnCourse getCourse(Long courseId) {
+    public LearnCourseEntity getCourse(Long courseId) {
         return mCoursesRepository.getCourse(courseId);
     }
 
@@ -45,97 +54,115 @@ public class NCoursesInteractorImpl implements NCoursesInteractor {
         mCoursesRepository.deleteCourse(courseId);
     }
 
-    public boolean hasMissedCards(LearnCourse learnCourse, Long qPackId) {
-        List<Long> cardIds = ContentProviderHelper.getQPackCardIdsAsList(mCtx.getContentResolver(), qPackId);
-        //LearnCourse learnCourse = mCoursesRepository.getCourse(courseId);
+    public boolean hasMissedCards(LearnCourseEntity learnCourse, Long qPackId) {
+        List<Long> cardIds = mCardsRepository.getCardsIdsFromQPack(qPackId);
         return learnCourse.hasNotInCards(cardIds);
     }
 
-    public List<Long> getNotInCards(LearnCourse learnCourse, Long qPackId) {
-        List<Long> cardIds = ContentProviderHelper.getQPackCardIdsAsList(mCtx.getContentResolver(), qPackId);
-        //LearnCourse learnCourse = mCoursesRepository.getCourse(courseId);
+    public List<Long> getNotInCards(LearnCourseEntity learnCourse, Long qPackId) {
+        List<Long> cardIds = mCardsRepository.getCardsIdsFromQPack(qPackId);
         return learnCourse.getNotInCards(cardIds);
     }
 
     public void addCardsToCourse(Long courseId, List<Long> newCardsToAdd) {
-        LearnCourse learnCourse = mCoursesRepository.getCourse(courseId);
+        LearnCourseEntity learnCourse = mCoursesRepository.getCourse(courseId);
         addCardsToCourse(learnCourse, newCardsToAdd);
 
     }
-    public void addCardsToCourse(LearnCourse learnCourse, List<Long> newCardsToAdd) {
+
+    public void addCardsToCourse(LearnCourseEntity learnCourse, List<Long> newCardsToAdd) {
 
 
         learnCourse.addCardsToCourse(newCardsToAdd);
-        ContentProviderHelper.saveCourse(mCtx, learnCourse);
+        mCoursesRepository.updateCourse(learnCourse);
 
         // additional
-        if(learnCourse.hasRealizedSchedule()){
+        if (learnCourse.hasRealizedSchedule()) {
             Schedule addSchedule = learnCourse.getRealizedSchedule().copy();
-            if(learnCourse.hasRestSchedule()){
+            if (learnCourse.hasRestSchedule()) {
                 addSchedule.addItem(learnCourse.getRestSchedule().getFirstItem());
             }
 
             String qPackTitle = null;
             if(learnCourse.hasQPackId()){
-                QPack qPack = mCardsRepository.getQPack(learnCourse.getQPackId());
+                QPackEntity qPack = mQPacksRepository.getQPack(learnCourse.getQPackId());
                 qPackTitle = qPack.getTitle();
             }
 
-            LearnCourseHelper.planAdditionalCards(
-                    mCtx, learnCourse.getQPackId(), qPackTitle, newCardsToAdd, addSchedule
-            );
+            mCoursesPlanner.planAdditionalCards(learnCourse.getQPackId(), qPackTitle, newCardsToAdd, addSchedule);
         }
     }
 
     public Long addCourseForQPack(String courseTitle, Long qPackId) {
-        List<Long> cardIds = ContentProviderHelper.getQPackCardIdsAsList(mCtx.getContentResolver(), qPackId);
+        List<Long> cardIds = mCardsRepository.getCardsIdsFromQPack(qPackId);
         Schedule schedule = Schedule.DEFAULT;
-        return LearnCourseHelper.addNewCourse(mCtx, qPackId, courseTitle, cardIds, schedule, null);
+
+        LearnCourseEntity course = LearnCourseEntity.Companion.initNew(
+                qPackId, courseTitle, LearnCourseMode.PREPARING,
+                cardIds, schedule, null
+        );
+        return mCoursesRepository.addNewCourseNow(course);
     }
 
     @NotNull
     @Override
-    public Single<List<LearnCourse>> getAllCourses() {
+    public Single<List<LearnCourseEntity>> getAllCourses() {
         return mCoursesRepository.getAllCourses();
     }
 
     @NotNull
     @Override
-    public Single<List<LearnCourse>> getCoursesByIds(@NotNull Long[] targetCourseIds) {
+    public Single<List<LearnCourseEntity>> getCoursesByIds(@NotNull Long[] targetCourseIds) {
         return mCoursesRepository.getCoursesByIds(targetCourseIds);
     }
 
     @NotNull
     @Override
-    public Single<List<LearnCourse>> getCoursesByModes(@NotNull List<LearnCourseMode> targetModes) {
+    public Single<List<LearnCourseEntity>> getCoursesByModes(@NotNull List<LearnCourseMode> targetModes) {
         return mCoursesRepository.getCoursesByModes(targetModes);
     }
 
     @NotNull
     @Override
-    public Single<List<LearnCourse>> getCoursesForQPack(@NotNull Long qPackId) {
+    public Single<List<LearnCourseEntity>> getCoursesForQPack(@NotNull Long qPackId) {
         return mCoursesRepository.getCoursesForQPack(qPackId);
     }
 
-    public void saveCourse(LearnCourse learnCourse) {
-        ContentProviderHelper.saveCourse(mCtx, learnCourse);
+    public void saveCourse(LearnCourseEntity learnCourse) {
+        mCoursesRepository.updateCourse(learnCourse);
     }
 
     @Override
-    public Single<LearnCourse> addNewCourse(@Nullable LearnCourse newCourse) {
+    public Single<LearnCourseEntity> addNewCourse(@Nullable LearnCourseEntity newCourse) {
         return mCoursesRepository.addNewCourse(newCourse);
     }
 
     // ---
 
     @Override
-    public LearnCourse getTempCourseFor(Long qPackId, List<Long> cardIds, boolean shuffleCards) {
-        return ContentProviderHelper.getTempCourseFor(mCtx, qPackId, cardIds, shuffleCards);
+    public LearnCourseEntity getTempCourseFor(Long qPackId, List<Long> cardIds, boolean shuffleCards) {
+
+        LearnCourseEntity learnCourse = mCoursesRepository.getCourseByMode(LearnCourseMode.TEMPORARY);
+        Date date = DateUtils.getCurrentTimeDate();
+
+        if (learnCourse == null) {
+            learnCourse = LearnCourseEntity.Companion.createNewPreparing(
+                    qPackId, "", LearnCourseMode.TEMPORARY, cardIds, Schedule.createEmpty(), date
+            );
+            mCoursesRepository.addNewCourseNow(learnCourse);
+        } else {
+            learnCourse.change(qPackId, cardIds, date);
+        }
+        // TODO сомнительно, что этот тут должно быть
+        learnCourse.prepareToCardsView(shuffleCards);
+
+        mCoursesRepository.updateCourse(learnCourse);
+        return learnCourse;
     }
 
     @Override
-    public LearnCourse getTempCourseFor(Long qPackId, boolean shuffleCards) {
-        List<Long> cardIds = ContentProviderHelper.getQPackCardIdsAsList(mCtx.getContentResolver(), qPackId);
+    public LearnCourseEntity getTempCourseFor(Long qPackId, boolean shuffleCards) {
+        List<Long> cardIds = mCardsRepository.getCardsIdsFromQPack(qPackId);
         return getTempCourseFor(qPackId, cardIds, shuffleCards);
     }
 

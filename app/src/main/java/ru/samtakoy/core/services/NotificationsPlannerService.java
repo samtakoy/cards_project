@@ -8,16 +8,18 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.business.impl.LearnCourseHelper;
-import ru.samtakoy.core.model.LearnCourse;
-import ru.samtakoy.core.model.LearnCourseMode;
+import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
+import ru.samtakoy.core.database.room.entities.other.LearnCourseHelper;
+import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
 import ru.samtakoy.core.screens.courses.info.CourseInfoActivity;
 import ru.samtakoy.core.screens.courses.list.CoursesListActivity;
 import ru.samtakoy.core.screens.log.MyLog;
-import ru.samtakoy.core.services.learn_courses.LearnsInteractor;
-import ru.samtakoy.core.services.learn_courses.NewRepeatsInteractor;
-import ru.samtakoy.core.services.learn_courses.UncompletedTaskInteractor;
+import ru.samtakoy.core.services.learn_courses.LearnsApi;
+import ru.samtakoy.core.services.learn_courses.NewRepeatsApi;
+import ru.samtakoy.core.services.learn_courses.UncompletedTaskApi;
 
 
 public class NotificationsPlannerService extends IntentService {
@@ -67,9 +69,12 @@ public class NotificationsPlannerService extends IntentService {
     // 4. начал повторять и закрыл приложение
     //       через 10-20-30 мин напомнить UNFINISHED
 
-    private NewRepeatsInteractor mNewRepeatsInteractor;
-    private LearnsInteractor mLearnsInteractor;
-    private UncompletedTaskInteractor mUncompletedTaskInteractor;
+    @Inject
+    NewRepeatsApi mNewRepeatsApi;
+    @Inject
+    LearnsApi mLearnsApi;
+    @Inject
+    UncompletedTaskApi mUncompletedTaskApi;
 
 
     public NotificationsPlannerService() {
@@ -138,12 +143,12 @@ public class NotificationsPlannerService extends IntentService {
 
         MyLog.add("NotificationsPlannerService::onHandleIntent");
 
-        switch (flag){
+        switch (flag) {
 
             case FLAG_ON_BOOT_RESCHEDULING:
-                getLearnsInteractor().rescheduleNewLearnCourses();
-                getNewRepeatsInteractor().rescheduleNewRepeatings();
-                getUncompletedTaskInteractor().checkAndNotifyAboutUncompletedTasks(true);
+                getLearnsApi().rescheduleNewLearnCourses();
+                getNewRepeatsApi().rescheduleNewRepeatings();
+                getUncompletedTaskApi().checkAndNotifyAboutUncompletedTasks(true);
                 return;
 
             case FLAG_NEW_REPEATINGS_RESCHEDULING:
@@ -151,23 +156,23 @@ public class NotificationsPlannerService extends IntentService {
                 MyLog.add("FLAG_NEW_REPEATINGS_RESCHEDULING");
 
                 // обновить нотификации и таймеры напоминания
-                if(targetMode == LearnCourseMode.LEARN_WAITING) {
+                if (targetMode == LearnCourseMode.LEARN_WAITING) {
                     MyLog.add("LEARN_WAITING");
-                    getLearnsInteractor().rescheduleNewLearnCourses();
+                    getLearnsApi().rescheduleNewLearnCourses();
                 }
                 if(targetMode == LearnCourseMode.REPEAT_WAITING) {
                     MyLog.add("REPEAT_WAITING");
-                    getNewRepeatsInteractor().rescheduleNewRepeatings();
+                    getNewRepeatsApi().rescheduleNewRepeatings();
                 }
                 return;
 
             case FLAG_NEW_REPEATINGS_SHIFT:
 
                 if(targetMode == LearnCourseMode.LEARN_WAITING) {
-                    getLearnsInteractor().shiftLearnCourses();
+                    getLearnsApi().shiftLearnCourses();
                 }
                 if(targetMode == LearnCourseMode.REPEAT_WAITING) {
-                    getNewRepeatsInteractor().shiftNewRepeatings();
+                    getNewRepeatsApi().shiftNewRepeatings();
                 }
                 return;
 
@@ -181,10 +186,10 @@ public class NotificationsPlannerService extends IntentService {
                 return;
 
             case FLAG_SCHIFT_UNCOMPLETED_CHECKING:
-                getUncompletedTaskInteractor().shiftUncompletedChecking();
+                getUncompletedTaskApi().shiftUncompletedChecking();
                 return;
             case FLAG_CHECK_UNCOMPLETED_TASKS:
-                getUncompletedTaskInteractor().checkAndNotifyAboutUncompletedTasks(false);
+                getUncompletedTaskApi().checkAndNotifyAboutUncompletedTasks(false);
                 return;
             case FLAG_SHOW_UNCOMPLETED_TASKS:
                 showUncompletedTasks();
@@ -193,22 +198,21 @@ public class NotificationsPlannerService extends IntentService {
     }
 
     private void showNewLearnings(){
-        showNewCourses(getLearnsInteractor().getNewLearnCourses());
+        showNewCourses(getLearnsApi().getNewLearnCourses());
     }
 
     private void showNewRepeatings() {
-        showNewCourses(getNewRepeatsInteractor().getNewLearnCourses());
+        showNewCourses(getNewRepeatsApi().getNewLearnCourses());
     }
 
-    private void showNewCourses(List<LearnCourse> courses) {
+    private void showNewCourses(List<LearnCourseEntity> courses) {
         Long[] courseIds = LearnCourseHelper.getLearnCourseIds(courses);
 
 
-
-        if(courseIds.length == 0){
+        if (courseIds.length == 0) {
             // TODO error
             return;
-        } else if(courseIds.length == 1){
+        } else if (courseIds.length == 1) {
             Intent activityIntent = CourseInfoActivity.newActivityIntent(this, courseIds[0]);
             activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(activityIntent);
@@ -221,7 +225,7 @@ public class NotificationsPlannerService extends IntentService {
     }
 
     private void showUncompletedTasks() {
-        List<LearnCourse> uncompletedCourses = mUncompletedTaskInteractor.getUncompletedCourses();
+        List<LearnCourseEntity> uncompletedCourses = mUncompletedTaskApi.getUncompletedCourses();
         if(uncompletedCourses.size() == 0){
             // TODO error
             return;
@@ -232,15 +236,24 @@ public class NotificationsPlannerService extends IntentService {
             startActivity(activityIntent);
             return;
         } else {
-            Intent activityIntent = CoursesListActivity.newActivityForModesIntent(this, mUncompletedTaskInteractor.getUncompletedCourseModes());
+            Intent activityIntent = CoursesListActivity.newActivityForModesIntent(this, mUncompletedTaskApi.getUncompletedCourseModes());
             activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(activityIntent);
         }
     }
 
     @Override
+    public void onCreate() {
+
+        MyApp.getInstance().getAppComponent().inject(this);
+
+        super.onCreate();
+    }
+
+    @Override
     public void onDestroy() {
 
+        /*
         if(mNewRepeatsInteractor != null){
             mNewRepeatsInteractor.dispose();
             mNewRepeatsInteractor = null;
@@ -249,39 +262,40 @@ public class NotificationsPlannerService extends IntentService {
         if(mLearnsInteractor != null){
             mLearnsInteractor.dispose();
             mLearnsInteractor = null;
-        }
+        }*/
 
-        if(mUncompletedTaskInteractor != null){
-            mUncompletedTaskInteractor.dispose();
-            mUncompletedTaskInteractor = null;
-        }
+        /*
+        if(mUncompletedTaskApi != null){
+            mUncompletedTaskApi.dispose();
+            mUncompletedTaskApi = null;
+        }*/
 
         super.onDestroy();
     }
 
-    private NewRepeatsInteractor getNewRepeatsInteractor(){
+    private NewRepeatsApi getNewRepeatsApi() {
+        /*
         if(mNewRepeatsInteractor == null){
-            mNewRepeatsInteractor = new NewRepeatsInteractor(this);
-        }
-        return mNewRepeatsInteractor;
+            mNewRepeatsInteractor = new NewRepeatsApi(this);
+        }*/
+        return mNewRepeatsApi;
     }
 
-    private LearnsInteractor getLearnsInteractor(){
+    private LearnsApi getLearnsApi() {
+        /*
         if(mLearnsInteractor == null){
-            mLearnsInteractor = new LearnsInteractor(this);
-        }
-        return mLearnsInteractor;
+
+            mLearnsInteractor = new LearnsApi(this);
+        }*/
+        return mLearnsApi;
     }
 
-    private UncompletedTaskInteractor getUncompletedTaskInteractor(){
-        if(mUncompletedTaskInteractor == null){
-            mUncompletedTaskInteractor = new UncompletedTaskInteractor(this, getPreferences());
-        }
-        return mUncompletedTaskInteractor;
-    }
-
-    private AppPreferences getPreferences(){
-        return ((MyApp) getApplication()).getPreferences();
+    private UncompletedTaskApi getUncompletedTaskApi() {
+        /*
+        if(mUncompletedTaskApi == null){
+            mUncompletedTaskApi = new UncompletedTaskApi();
+        }*/
+        return mUncompletedTaskApi;
     }
 
 }

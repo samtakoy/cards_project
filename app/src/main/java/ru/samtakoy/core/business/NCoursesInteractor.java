@@ -6,44 +6,44 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 import io.reactivex.Single;
-import ru.samtakoy.core.model.LearnCourse;
-import ru.samtakoy.core.model.LearnCourseMode;
+import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
+import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
 
 public interface NCoursesInteractor {
 
-    LearnCourse getCourse(Long courseId);
+    LearnCourseEntity getCourse(Long courseId);
 
     void deleteCourse(long courseId);
 
-    boolean hasMissedCards(LearnCourse learnCourse, Long qPackId);
+    boolean hasMissedCards(LearnCourseEntity learnCourse, Long qPackId);
 
-    List<Long> getNotInCards(LearnCourse learnCourse, Long qPackId);
+    List<Long> getNotInCards(LearnCourseEntity learnCourse, Long qPackId);
 
     void addCardsToCourse(Long courseId, List<Long> newCardsToAdd);
 
-    void addCardsToCourse(LearnCourse learnCourse, List<Long> newCardsToAdd);
+    void addCardsToCourse(LearnCourseEntity learnCourse, List<Long> newCardsToAdd);
 
     Long addCourseForQPack(String courseTitle, Long qPackId);
 
-    void saveCourse(LearnCourse learnCourse);
+    void saveCourse(LearnCourseEntity learnCourse);
 
-    Single<LearnCourse> addNewCourse(@Nullable LearnCourse newCourse);
-
-    @NotNull
-    Single<List<LearnCourse>> getAllCourses();
+    Single<LearnCourseEntity> addNewCourse(@Nullable LearnCourseEntity newCourse);
 
     @NotNull
-    Single<List<LearnCourse>> getCoursesByIds(@NotNull Long[] targetCourseIds);
+    Single<List<LearnCourseEntity>> getAllCourses();
 
     @NotNull
-    Single<List<LearnCourse>> getCoursesByModes(@NotNull List<LearnCourseMode> targetModes);
+    Single<List<LearnCourseEntity>> getCoursesByIds(@NotNull Long[] targetCourseIds);
 
     @NotNull
-    Single<List<LearnCourse>> getCoursesForQPack(@NotNull Long qPackId);
+    Single<List<LearnCourseEntity>> getCoursesByModes(@NotNull List<LearnCourseMode> targetModes);
 
-    LearnCourse getTempCourseFor(Long qPackId, List<Long> cardIds, boolean shuffleCards);
+    @NotNull
+    Single<List<LearnCourseEntity>> getCoursesForQPack(@NotNull Long qPackId);
 
-    LearnCourse getTempCourseFor(Long qPackId, boolean shuffleCards);
+    LearnCourseEntity getTempCourseFor(Long qPackId, List<Long> cardIds, boolean shuffleCards);
+
+    LearnCourseEntity getTempCourseFor(Long qPackId, boolean shuffleCards);
 
 
 }

@@ -1,21 +1,22 @@
 package ru.samtakoy.core.screens.cards.question
 
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import moxy.InjectViewState
 import moxy.MvpPresenter
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import org.apache.commons.lang3.exception.ExceptionUtils
+import ru.samtakoy.R
 import ru.samtakoy.core.business.CardsInteractor
-import ru.samtakoy.core.business.events.CardUpdateEvent
-import ru.samtakoy.core.model.Card
+import ru.samtakoy.core.database.room.entities.CardEntity
 import ru.samtakoy.core.screens.cards.types.CardViewMode
+import ru.samtakoy.core.screens.log.MyLog
 import javax.inject.Inject
 
 @InjectViewState
 class CardQuestionPresenter(
 
-        cardsInteractor: CardsInteractor,
-        val eventBus: EventBus,
+        val cardsInteractor: CardsInteractor,
 
         val callbacks: Callbacks,
         cardId: Long,
@@ -34,8 +35,7 @@ class CardQuestionPresenter(
 
 
     class Factory @Inject constructor(
-            val cardsInteractor: CardsInteractor,
-            val eventBus: EventBus
+            val cardsInteractor: CardsInteractor
     ) {
 
         fun create(
@@ -43,35 +43,47 @@ class CardQuestionPresenter(
                 cardId: Long,
                 viewMode: CardViewMode,
                 lastCard: Boolean
-        ) = CardQuestionPresenter(cardsInteractor, eventBus, callbacks, cardId, viewMode, lastCard)
+        ) = CardQuestionPresenter(cardsInteractor, callbacks, cardId, viewMode, lastCard)
     }
 
-    private var card: Card
+    private var card: CardEntity? = null
+    private val mCompositeDisposable: CompositeDisposable = CompositeDisposable()
 
     init {
 
-        card = cardsInteractor.getCard(cardId);
-        eventBus.register(this)
-
-
-        viewState.setQuestionText(card.question)
         setButtonsVisibility()
+
+        bindData(cardId)
+    }
+
+    private fun bindData(cardId: Long) {
+
+        mCompositeDisposable.add(
+                cardsInteractor.getCardRx(cardId)
+                        .onBackpressureLatest()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                { t -> onCardUpdate(t) },
+                                { t -> onGetError(t) }
+                        )
+        )
+
+    }
+
+    private fun onGetError(t: Throwable) {
+        MyLog.add(ExceptionUtils.getMessage(t))
+        viewState.showError(R.string.db_request_err_message)
+    }
+
+    private fun onCardUpdate(newCard: CardEntity) {
+        card = newCard
+        viewState.setQuestionText(newCard.question)
     }
 
     override fun onDestroy() {
-
-        eventBus.unregister(this)
-
+        mCompositeDisposable.dispose()
         super.onDestroy()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onCardUpdateEvent(event: CardUpdateEvent) {
-        if (card.getId().equals(event.card.id)) {
-            card = event.card
-
-            viewState.setQuestionText(card.question)
-        }
     }
 
     private fun setButtonsVisibility() {
@@ -96,7 +108,6 @@ class CardQuestionPresenter(
                 }
             }
         }
-
     }
 
     fun onUiPrevCard() = callbacks.onPrevCard()

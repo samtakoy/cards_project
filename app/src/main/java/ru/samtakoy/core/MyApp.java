@@ -8,7 +8,6 @@ import ru.samtakoy.core.di.components.AppComponent;
 import ru.samtakoy.core.di.components.DaggerAppComponent;
 import ru.samtakoy.core.di.modules.AppModule;
 import ru.samtakoy.core.screens.log.MyLog;
-import ru.samtakoy.core.services.AppPreferences;
 
 //public class MyApp extends Application {
 public class MyApp extends MultiDexApplication {
@@ -20,7 +19,7 @@ public class MyApp extends MultiDexApplication {
     private static final String TAG = "MyApp";
 
 
-    private AppPreferences mPreferences;
+    //private AppPreferencesImpl mPreferences;
 
     private AppComponent mAppComponent;
 
@@ -39,18 +38,13 @@ public class MyApp extends MultiDexApplication {
         sInstance = this;
 
         Stetho.initializeWithDefaults(this);
-        mPreferences = new AppPreferences(this);
-
+        //mPreferences = new AppPreferencesImpl(this);
 
         mAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();
 
         try {
-
-            // TODO
-            // TODO
-            // TODO
             // TODO
             //deleteDatabase(MyDb.DB_NAME);
         }catch(Throwable ignore){}
@@ -58,10 +52,6 @@ public class MyApp extends MultiDexApplication {
 
     public AppComponent getAppComponent() {
         return mAppComponent;
-    }
-
-    public AppPreferences getPreferences(){
-        return mPreferences;
     }
 
 

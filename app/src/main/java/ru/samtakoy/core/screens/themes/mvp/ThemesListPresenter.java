@@ -3,34 +3,57 @@ package ru.samtakoy.core.screens.themes.mvp;
 import android.net.Uri;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import moxy.InjectViewState;
 import moxy.MvpPresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.business.CardsInteractor;
-import ru.samtakoy.core.business.QPacksExporter;
-import ru.samtakoy.core.di.components.AppComponent;
-import ru.samtakoy.core.model.QPack;
-import ru.samtakoy.core.model.Theme;
-import ru.samtakoy.core.services.import_utils.ImportCardsOpts;
+import ru.samtakoy.core.database.room.entities.QPackEntity;
+import ru.samtakoy.core.database.room.entities.ThemeEntity;
+import ru.samtakoy.features.import_export.QPacksExporter;
+import ru.samtakoy.features.import_export.utils.ImportCardsOpts;
 
 @InjectViewState
 public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
 
-    @Inject CardsInteractor mCardsInteractor;
-    @Inject QPacksExporter mQPacksExporter;
+    CardsInteractor mCardsInteractor;
+    QPacksExporter mQPacksExporter;
 
     private Long mThemeId;
     private String mThemeTitle;
 
+    public static class Factory {
 
-    private List<Theme> mCurThemes;
-    private List<QPack> mCurQPacks;
+        @Inject
+        CardsInteractor mCardsInteractor;
+        @Inject
+        QPacksExporter mQPacksExporter;
 
-    enum OPENED_DIALOG_TYPE implements Serializable{
+        @Inject
+        public Factory() {
+        }
+
+
+        public ThemesListPresenter create(Long themeId, String themeTitle) {
+            return new ThemesListPresenter(
+                    mCardsInteractor, mQPacksExporter, themeId, themeTitle
+            );
+        }
+    }
+
+    private List<ThemeEntity> mCurThemes;
+    private List<QPackEntity> mCurQPacks;
+
+    private CompositeDisposable mCompositeDisposable;
+
+    enum OPENED_DIALOG_TYPE implements Serializable {
         NONE,
         SELECT_DIR_TO_BATCH_IMPORT,
         SELECT_DIR_TO_BATCH_EXPORT,
@@ -43,22 +66,23 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
         OPENED_DIALOG_TYPE mDialogType;
         ImportCardsOpts mImportCardOpts;
 
-        public DialogState(){
+        public DialogState() {
             mDialogType = OPENED_DIALOG_TYPE.NONE;
             mImportCardOpts = ImportCardsOpts.NONE;
         }
 
     }
 
-    // Caused by: java.io.NotSerializableException: ru.samtakoy.core.screens.themes.mvp.ThemesListPresenter
-
     private DialogState mLastDialogState;
 
+    public ThemesListPresenter(
+            CardsInteractor cardsInteractor,
+            QPacksExporter qPacksExporter,
+            Long themeId, String themeTitle
+    ) {
 
-    public ThemesListPresenter(AppComponent appComponent, Long themeId, String themeTitle){
-
-
-        appComponent.inject(this);
+        mCardsInteractor = cardsInteractor;
+        mQPacksExporter = qPacksExporter;
 
 
         mThemeId = themeId;
@@ -66,18 +90,30 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
 
         mLastDialogState = new DialogState();
 
+        mCompositeDisposable = new CompositeDisposable();
 
         updateTitles();
-        updateListData();
+
+        mCurThemes = new ArrayList<>();
+        mCurQPacks = new ArrayList<>();
+        bindData();
+
+    }
+
+    @Override
+    public void onDestroy() {
+
+        mCompositeDisposable.dispose();
+        super.onDestroy();
     }
 
     private void updateTitles() {
 
-        Theme parentTheme = mCardsInteractor.getParentTheme(mThemeId);
-        if(parentTheme == null){
+        ThemeEntity parentTheme = mCardsInteractor.getParentTheme(mThemeId);
+        if (parentTheme == null) {
             getViewState().updateToolbarTitle(null);
-        }else{
-            getViewState().updateToolbarTitle("../"+parentTheme.getTitle());
+        } else {
+            getViewState().updateToolbarTitle("../" + parentTheme.getTitle());
         }
 
         getViewState().updateToolbarSubtitle(mThemeTitle);
@@ -91,24 +127,37 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
         mLastDialogState = (DialogState)state;
     }
 
-    private void updateCurThemes() {
-        mCurThemes = mCardsInteractor.getChildThemes(mThemeId);
+    private void bindData() {
+
+        mCompositeDisposable.clear();
+
+        mCompositeDisposable.add(
+                mCardsInteractor.getChildThemesRx(mThemeId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(themeEntities -> {
+                            mCurThemes = themeEntities;
+                            setDataToView();
+                        })
+        );
+
+        mCompositeDisposable.add(
+                mCardsInteractor.getChildQPacksRx(mThemeId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(qPackEntities -> {
+                            mCurQPacks = qPackEntities;
+                            setDataToView();
+                        })
+        );
+
     }
 
-    private void updateCurQPacks() {
-        mCurQPacks = mCardsInteractor.getChildQPacks(mThemeId);
-    }
-
-    private void updateListData() {
-
-        updateCurThemes();
-        updateCurQPacks();
-
+    private void setDataToView() {
         // TODO через DiffUtil
-
-
         getViewState().setListData(mCurThemes, mCurQPacks);
     }
+
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -128,25 +177,21 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
 
     // TODO убрать и сделать через отслеживание изменений модели
     public void onUiSomeDialogClosed(){
-        updateListData();
     }
 
     public void onUiAddNewThemeRequest(){
         getViewState().showInputThemeTitleDialog();
     }
 
-    /*
-    public void onUiAllCoursesClick(){
-        getViewState().navigateToAllCourses();
-    }/***/
-
     public void onUiSettingsClick(){
         getViewState().navigateToSettings();
     }
 
-    public void onUiNewThemeTitleEntered(String title){
+    public void onUiNewThemeTitleEntered(String title) {
         mCardsInteractor.addNewTheme(mThemeId, title);
-        updateListData();
+
+        // TODO проверить
+        //updateListData();
     }
 
     public void onUiImportPackRequest(){
@@ -209,28 +254,24 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
     }
 
 
-    public void onUiExportQPackCards(QPack qPack) {
-
-        //mQPacksExporter.exportThemeTree(qPack);
-        //getViewState().showMessage(R.string.fragment_themes_list_cards_export_ok);
+    public void onUiExportQPackCards(QPackEntity qPack) {
 
         ///* TODO вернуть
-        if(!mQPacksExporter.exportQPack(qPack)){
+        if (!mQPacksExporter.exportQPack(qPack)) {
             getViewState().showMessage(R.string.fragment_themes_list_cant_save_file_msg);
         } else {
             getViewState().showMessage(R.string.fragment_themes_list_cards_export_ok);
         }/**/
     }
 
-    public void onUiSendQPackCards(QPack qPack) {
-        if(!mQPacksExporter.exportQPackToEmail(qPack)){
+    public void onUiSendQPackCards(QPackEntity qPack) {
+        if (!mQPacksExporter.exportQPackToEmail(qPack)) {
             getViewState().showMessage(R.string.fragment_themes_list_cant_send_file_msg);
         }
     }
 
-    public void onThemeDeleteClick(Theme theme) {
-        if(mCardsInteractor.deleteTheme(theme.getId())){
-            updateListData();
+    public void onThemeDeleteClick(ThemeEntity theme) {
+        if (mCardsInteractor.deleteTheme(theme.getId())) {
         }
 
     }

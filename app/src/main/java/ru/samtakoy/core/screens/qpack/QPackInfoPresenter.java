@@ -10,33 +10,50 @@ import moxy.MvpPresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.business.CardsInteractor;
 import ru.samtakoy.core.business.NCoursesInteractor;
-import ru.samtakoy.core.di.components.AppComponent;
-import ru.samtakoy.core.model.Card;
-import ru.samtakoy.core.model.LearnCourse;
-import ru.samtakoy.core.model.QPack;
+import ru.samtakoy.core.database.room.entities.CardEntity;
+import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
+import ru.samtakoy.core.database.room.entities.QPackEntity;
 
 @InjectViewState
 public class QPackInfoPresenter extends MvpPresenter<QPackInfoView> {
 
-    private QPack mQPack;
+    private QPackEntity mQPack;
 
-    @Inject
     public CardsInteractor mCardsInteractor;
-    @Inject
     public NCoursesInteractor mCoursesInteractor;
 
-    //public QPackInfoPresenter(CurrentCourseHolder currentCourseHolder, CardsInteractor cardsInteractor, NCoursesInteractor coursesInteractor){
-    public QPackInfoPresenter(AppComponent appComponent, Long qPackId){
+    public static class Factory {
+
+        @Inject
+        public CardsInteractor mCardsInteractor;
+        @Inject
+        public NCoursesInteractor mCoursesInteractor;
+
+        @Inject
+        Factory() {
+        }
+
+        public QPackInfoPresenter create(Long qPackId) {
+            return new QPackInfoPresenter(
+                    mCardsInteractor, mCoursesInteractor, qPackId
+            );
+        }
+    }
 
 
-        appComponent.inject(this);
+    public QPackInfoPresenter(
+            CardsInteractor cardsInteractor,
+            NCoursesInteractor coursesInteractor,
+            Long qPackId
+    ) {
 
-        appComponent.inject(this);
+        mCardsInteractor = cardsInteractor;
+        mCoursesInteractor = coursesInteractor;
 
         setup(qPackId);
     }
 
-    private QPackInfoPresenter setup(Long qPackId){
+    private QPackInfoPresenter setup(Long qPackId) {
         mQPack = mCardsInteractor.getQPack(qPackId);
 
         getViewState().initView(mQPack.getTitle(), String.valueOf(mCardsInteractor.getQPackCardCount(qPackId)));
@@ -64,7 +81,7 @@ public class QPackInfoPresenter extends MvpPresenter<QPackInfoView> {
     }
 
     public void onShowPackCourses(){
-        getViewState().showCourses(mQPack);
+        getViewState().showCourses(mQPack.getId());
     }
 
     public void onAddToNewCourse() {
@@ -80,12 +97,12 @@ public class QPackInfoPresenter extends MvpPresenter<QPackInfoView> {
             getViewState().showMessage(R.string.msg_there_is_no_cards_in_pack);
             return;
         }
-        getViewState().requestsSelectCourseToAdd(mQPack);
+        getViewState().requestsSelectCourseToAdd(mQPack.getId());
     }
 
     public void onAddCardsToCourseCommit(Long courseId) {
 
-        LearnCourse learnCourse = mCoursesInteractor.getCourse(courseId);
+        LearnCourseEntity learnCourse = mCoursesInteractor.getCourse(courseId);
         if (mCoursesInteractor.hasMissedCards(learnCourse, mQPack.getId())) {
             getViewState().showMessage(R.string.msg_there_is_no_cards_to_learn);
             return;
@@ -113,7 +130,7 @@ public class QPackInfoPresenter extends MvpPresenter<QPackInfoView> {
     }
 
     public void onUiCardsFastView() {
-        List<Card> cards = mCardsInteractor.getQPackCards(mQPack);
+        List<CardEntity> cards = mCardsInteractor.getQPackCards(mQPack.getId());
         getViewState().setFastViewCards(cards);
     }
 

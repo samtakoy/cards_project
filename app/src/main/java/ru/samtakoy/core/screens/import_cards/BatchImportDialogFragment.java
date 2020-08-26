@@ -7,13 +7,15 @@ import androidx.fragment.app.Fragment;
 
 import org.jetbrains.annotations.NotNull;
 
+import javax.inject.Inject;
+
 import io.reactivex.Completable;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.business.impl.ImportCardsHelper;
 import ru.samtakoy.core.screens.progress_dialog.ProgressDialogFragment;
 import ru.samtakoy.core.screens.progress_dialog.ProgressDialogPresenter;
-import ru.samtakoy.core.services.import_utils.ImportCardsOpts;
+import ru.samtakoy.features.import_export.ImportApi;
+import ru.samtakoy.features.import_export.utils.ImportCardsOpts;
 
 public class BatchImportDialogFragment extends ProgressDialogFragment {
 
@@ -42,6 +44,9 @@ public class BatchImportDialogFragment extends ProgressDialogFragment {
         return result;
     }
 
+    @Inject
+    ImportApi mImportApi;
+
     // TODO во все прогресс диалоги делаем инжект, ради инжекта presenter родительского класса, что неочевидно
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,7 +66,7 @@ public class BatchImportDialogFragment extends ProgressDialogFragment {
             @NotNull
             @Override
             public Completable createObservable() {
-                return ImportCardsHelper.batchLoadFromFolder(getContext().getContentResolver(), dirPath, targetThemeId, opts);
+                return mImportApi.batchLoadFromFolder(dirPath, targetThemeId, opts);
             }
 
             @Override

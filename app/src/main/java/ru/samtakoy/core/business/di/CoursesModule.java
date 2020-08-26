@@ -1,41 +1,43 @@
 package ru.samtakoy.core.business.di;
 
-import android.content.Context;
-
 import javax.inject.Singleton;
 
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
-import ru.samtakoy.core.business.CardsRepository;
 import ru.samtakoy.core.business.CoursesPlanner;
 import ru.samtakoy.core.business.CoursesRepository;
 import ru.samtakoy.core.business.NCoursesInteractor;
 import ru.samtakoy.core.business.impl.CoursesPlannerImpl;
 import ru.samtakoy.core.business.impl.CoursesRepositoryImpl;
 import ru.samtakoy.core.business.impl.NCoursesInteractorImpl;
+import ru.samtakoy.core.database.room.MyRoomDb;
+import ru.samtakoy.core.database.room.di.DatabaseModule;
 import ru.samtakoy.core.di.modules.AppModule;
 
-@Module(includes = {AppModule.class, CardsModule.class})
+@Module(includes = {AppModule.class, CardsModule.class, DatabaseModule.class})
 public abstract class CoursesModule {
 
 
     @Provides
     @Singleton
-    static CoursesRepository provideCoursesRepository(Context context) {
-        return new CoursesRepositoryImpl(context);
+    static CoursesRepository provideCoursesRepository(MyRoomDb db) {
+        return new CoursesRepositoryImpl(db);
     }
 
-    @Provides
+    @Binds
     @Singleton
-    static NCoursesInteractor provideCoursesInteractor(Context context, CardsRepository cardsRepository, CoursesRepository corsesRepository) {
-        return new NCoursesInteractorImpl(context, cardsRepository, corsesRepository);
-    }
+    abstract NCoursesInteractor provideCoursesInteractor(NCoursesInteractorImpl impl);
+            /*Context context, QPacksRepository qPacksRep, CoursesRepository corsesRep
+    ) {
+        return new NCoursesInteractorImpl(context, qPacksRep, corsesRep);
+    }*/
 
-    @Provides
+    @Binds
     @Singleton
-    static CoursesPlanner provideCoursesPlanner(Context context) {
+    abstract CoursesPlanner provideCoursesPlanner(CoursesPlannerImpl impl);/*(Context context) {
         return new CoursesPlannerImpl(context);
-    }
+    }*/
 
 
 }

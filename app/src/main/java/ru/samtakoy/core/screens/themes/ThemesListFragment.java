@@ -39,14 +39,16 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.Const;
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.model.QPack;
-import ru.samtakoy.core.model.Theme;
+import ru.samtakoy.core.database.room.entities.QPackEntity;
+import ru.samtakoy.core.database.room.entities.ThemeEntity;
 import ru.samtakoy.core.navigation.RouterHolder;
 import ru.samtakoy.core.navigation.Screens;
 import ru.samtakoy.core.screens.export_cards.BatchExportDialogFragment;
@@ -56,7 +58,7 @@ import ru.samtakoy.core.screens.import_cards.ImportZipDialogFragment;
 import ru.samtakoy.core.screens.log.LogActivity;
 import ru.samtakoy.core.screens.themes.mvp.ThemeListView;
 import ru.samtakoy.core.screens.themes.mvp.ThemesListPresenter;
-import ru.samtakoy.core.services.import_utils.ImportCardsOpts;
+import ru.samtakoy.features.import_export.utils.ImportCardsOpts;
 
 public class ThemesListFragment extends MvpAppCompatFragment implements ThemeListView {
 
@@ -117,21 +119,16 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
     private RecyclerView mThemesRecycler;
     private ThemesAdapter mThemesAdapter;
 
-
-    //private Callbacks mCallbacks;
     private RouterHolder mRouterHolder;
 
     @InjectPresenter
     ThemesListPresenter mPresenter;
-
-    /*@ProvidePresenterTag(presenterClass = ThemesListPresenter.class)
-    String providePresenterTag(){
-        return String.valueOf(readThemeId());
-    }/***/
+    @Inject
+    ThemesListPresenter.Factory mPresenterFactory;
 
     @ProvidePresenter
     ThemesListPresenter providePresenter(){
-        return new ThemesListPresenter(MyApp.getInstance().getAppComponent(), readThemeId(), readThemeTitle());
+        return mPresenterFactory.create(readThemeId(), readThemeTitle());
     }
 
     @Nullable
@@ -230,7 +227,7 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         }
     }
 
-    public void setListData(List<Theme> themes, List<QPack> qPacks){
+    public void setListData(List<ThemeEntity> themes, List<QPackEntity> qPacks) {
         mThemesAdapter.updateData(themes, qPacks);
 
     }
@@ -594,12 +591,12 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         dialog.show(getFragmentManager(), BatchImportDialogFragment.TAG);
     }
 
-    private void navigateToTheme(Theme theme){
+    private void navigateToTheme(ThemeEntity theme) {
         //mCallbacks.onThemeSelected(theme);
         mRouterHolder.getRouter().navigateTo(new Screens.ThemeListScreen(theme.getId(), theme.getTitle()));
     }
 
-    private void navigateToQPack(QPack qPack){
+    private void navigateToQPack(QPackEntity qPack) {
         //mCallbacks.onQPackSelected(qPack);
         mRouterHolder.getRouter().navigateTo(new Screens.QPackInfoScreen(qPack.getId()));
     }
@@ -611,9 +608,12 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        MyApp.getInstance().getAppComponent().inject(this);
+
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             mPresenter.onRestoreState(savedInstanceState.getSerializable(SAVE_KEY_PRESENTER_STATE));
         }
 
@@ -631,11 +631,11 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     class ThemesItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
-    View.OnCreateContextMenuListener{
+            View.OnCreateContextMenuListener {
 
         private int mViewType;
-        private Theme mTheme;
-        private QPack mQPack;
+        private ThemeEntity mTheme;
+        private QPackEntity mQPack;
         private TextView mText;
 
 
@@ -647,14 +647,14 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
 
         }
 
-        public void bindTheme(Theme t){
+        public void bindTheme(ThemeEntity t) {
             mTheme = t;
             mQPack = null;
             mText.setText(t.getTitle());
 
         }
 
-        public void bindQPack(QPack qPack){
+        public void bindQPack(QPackEntity qPack) {
             mTheme = null;
             mQPack = qPack;
 
@@ -687,20 +687,20 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         }
     }
 
-    class ThemesAdapter extends RecyclerView.Adapter <ThemesItemHolder>{
+    class ThemesAdapter extends RecyclerView.Adapter<ThemesItemHolder> {
 
         private int mLongClickPosition;
 
-        private List<Theme> mCurThemes;
-        private List<QPack> mCurQPacks;
+        private List<ThemeEntity> mCurThemes;
+        private List<QPackEntity> mCurQPacks;
 
-        public ThemesAdapter(){
+        public ThemesAdapter() {
 
             mCurThemes = Collections.EMPTY_LIST;
             mCurQPacks = Collections.EMPTY_LIST;
         }
 
-        public void updateData(List<Theme> themes, List<QPack> qPacks) {
+        public void updateData(List<ThemeEntity> themes, List<QPackEntity> qPacks) {
             mCurThemes = themes;
             mCurQPacks = qPacks;
             notifyDataSetChanged();
@@ -757,12 +757,12 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
             return  mLongClickPosition-mCurThemes.size() >= 0;
         }
 
-        public QPack getLongClickedQPack(){
-            return  mCurQPacks.get(mLongClickPosition-mCurThemes.size());
+        public QPackEntity getLongClickedQPack() {
+            return mCurQPacks.get(mLongClickPosition - mCurThemes.size());
         }
 
-        public Theme getLongClickedTheme(){
-            return  mCurThemes.get(mLongClickPosition);
+        public ThemeEntity getLongClickedTheme() {
+            return mCurThemes.get(mLongClickPosition);
         }
 
 

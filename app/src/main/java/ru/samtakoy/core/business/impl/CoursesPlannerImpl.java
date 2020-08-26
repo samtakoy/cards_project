@@ -2,20 +2,32 @@ package ru.samtakoy.core.business.impl;
 
 import android.content.Context;
 
+import androidx.annotation.Nullable;
+
+import java.text.MessageFormat;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import ru.samtakoy.R;
 import ru.samtakoy.core.business.CoursesPlanner;
-import ru.samtakoy.core.model.LearnCourseMode;
-import ru.samtakoy.core.model.elements.Schedule;
+import ru.samtakoy.core.business.CoursesRepository;
+import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
+import ru.samtakoy.core.database.room.entities.elements.Schedule;
+import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
+import ru.samtakoy.core.services.NotificationsConst;
 import ru.samtakoy.core.services.NotificationsPlannerService;
 
 public class CoursesPlannerImpl implements CoursesPlanner {
 
 
-    private Context mCtx;
+    @Inject
+    Context mCtx;
+    @Inject
+    CoursesRepository mCoursesRepository;
 
-    public CoursesPlannerImpl(Context context) {
-        mCtx = context;
+    @Inject
+    public CoursesPlannerImpl() {
     }
 
     @Override
@@ -27,6 +39,32 @@ public class CoursesPlannerImpl implements CoursesPlanner {
 
     @Override
     public void planAdditionalCards(Long qPackId, List<Long> errorCardIds, Schedule schedule) {
-        LearnCourseHelper.planAdditionalCards( mCtx, qPackId, null, errorCardIds, schedule );
+        planAdditionalCards(qPackId, null, errorCardIds, schedule);
     }
+
+    @Override
+    public void planAdditionalCards(
+            Long qPackId, @Nullable String subTitle, List<Long> cardIds, Schedule restSchedule
+    ) {
+
+        String title;
+
+        if (subTitle == null) {
+            title = mCtx.getResources().getString(R.string.additional_learn_course_title);
+            title = MessageFormat.format(title, cardIds.size());
+        } else {
+            title = mCtx.getResources().getString(R.string.additional_learn_course_title_with_subtitle);
+            title = MessageFormat.format(title, cardIds.size(), subTitle);
+        }
+
+        LearnCourseEntity lc = LearnCourseEntity.Companion.createNewAdditional(
+                qPackId, title, cardIds, restSchedule, NotificationsConst.NEW_COURSE_LEARN_DEFAULT_MILLIS_DELTA
+        );
+        mCoursesRepository.addNewCourseNow(lc);
+
+        mCtx.startService(NotificationsPlannerService.getLearnCoursesReSchedulingIntent(
+                mCtx, LearnCourseMode.LEARN_WAITING
+        ));
+    }
+
 }

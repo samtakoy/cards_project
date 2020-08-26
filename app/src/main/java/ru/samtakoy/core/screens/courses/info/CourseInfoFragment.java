@@ -27,15 +27,15 @@ import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.model.LearnCourse;
-import ru.samtakoy.core.model.LearnCourseMode;
-import ru.samtakoy.core.model.utils.TimeViewUtils;
+import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
+import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
 import ru.samtakoy.core.navigation.RouterHolder;
 import ru.samtakoy.core.navigation.Screens;
 import ru.samtakoy.core.screens.DialogHelper;
 import ru.samtakoy.core.screens.cards.types.CardViewMode;
 import ru.samtakoy.core.screens.cards.types.CardViewSource;
 import ru.samtakoy.core.screens.log.LogActivity;
+import ru.samtakoy.core.utils.TimeViewUtils;
 
 public class CourseInfoFragment extends MvpAppCompatFragment implements CourseInfoView {
 
@@ -175,7 +175,7 @@ public class CourseInfoFragment extends MvpAppCompatFragment implements CourseIn
     }
 
     @Override
-    public void showLearnCourseInfo(LearnCourse learnCourse) {
+    public void showLearnCourseInfo(LearnCourseEntity learnCourse) {
 
         mTitleText.setText(learnCourse.getTitle());
         mCardCountText.setText(
@@ -186,7 +186,7 @@ public class CourseInfoFragment extends MvpAppCompatFragment implements CourseIn
         mActionButton.setText(getActionButtonText(learnCourse));
     }
 
-    private String getScheduleButtonText(LearnCourse learnCourse) {
+    private String getScheduleButtonText(LearnCourseEntity learnCourse) {
         if (learnCourse.getMode() == LearnCourseMode.COMPLETED) {
             return getResources().getString(R.string.course_info_schedule_is_completed);
         }
@@ -203,7 +203,7 @@ public class CourseInfoFragment extends MvpAppCompatFragment implements CourseIn
         return learnCourse.getRestSchedule().toStringView(getResources());
     }
 
-    private String getStatusString(LearnCourse learnCourse) {
+    private String getStatusString(LearnCourseEntity learnCourse) {
 
         String resString;
 
@@ -229,7 +229,7 @@ public class CourseInfoFragment extends MvpAppCompatFragment implements CourseIn
         }
     }
 
-    private String getActionButtonText(LearnCourse learnCourse) {
+    private String getActionButtonText(LearnCourseEntity learnCourse) {
 
         @StringRes int resId;
         switch (learnCourse.getMode()) {

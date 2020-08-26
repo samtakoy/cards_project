@@ -8,15 +8,14 @@ import moxy.MvpPresenter
 import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
 import ru.samtakoy.core.business.NCoursesInteractor
-import ru.samtakoy.core.model.LearnCourse
-import ru.samtakoy.core.model.QPack
+import ru.samtakoy.core.database.room.entities.LearnCourseEntity
 import ru.samtakoy.core.screens.log.MyLog
 import javax.inject.Inject
 
 @InjectViewState
 class SelectCoursePresenter(
         private val coursesInteractor: NCoursesInteractor,
-        targetQPack: QPack?
+        targetQPackId: Long?
 ) : MvpPresenter<SelectCourseView>() {
 
 
@@ -25,15 +24,15 @@ class SelectCoursePresenter(
     ) {
 
         fun create(
-                targetQPack: QPack?
-        ) = SelectCoursePresenter(coursesInteractor, targetQPack)
+                targetQPackId: Long?
+        ) = SelectCoursePresenter(coursesInteractor, targetQPackId)
     }
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     init {
 
-        updateCurCourses(targetQPack)
+        updateCurCourses(targetQPackId)
     }
 
     override fun onDestroy() {
@@ -42,11 +41,11 @@ class SelectCoursePresenter(
         super.onDestroy()
     }
 
-    private fun updateCurCourses(targetQPack: QPack?) {
-        val curCourses = if (targetQPack == null) {
+    private fun updateCurCourses(targetQPackId: Long?) {
+        val curCourses = if (targetQPackId == null) {
             coursesInteractor.getAllCourses();
         } else {
-            coursesInteractor.getCoursesForQPack(targetQPack.id)
+            coursesInteractor.getCoursesForQPack(targetQPackId)
         }
 
         compositeDisposable.clear()
@@ -67,7 +66,7 @@ class SelectCoursePresenter(
         viewState.showError(R.string.fragment_courses_courses_loading_err)
     }
 
-    fun onUiCourseClick(course: LearnCourse) = viewState.exitOk(course.id);
+    fun onUiCourseClick(course: LearnCourseEntity) = viewState.exitOk(course.id);
 
 
 }

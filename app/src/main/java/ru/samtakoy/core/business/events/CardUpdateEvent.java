@@ -1,16 +1,17 @@
 package ru.samtakoy.core.business.events;
 
-import ru.samtakoy.core.model.Card;
+
+import ru.samtakoy.core.database.room.entities.CardEntity;
 
 public class CardUpdateEvent {
 
-    private Card mCard;
+    private CardEntity mCard;
 
-    public CardUpdateEvent(Card card){
+    public CardUpdateEvent(CardEntity card) {
         mCard = card;
     }
 
-    public Card getCard() {
+    public CardEntity getCard() {
         return mCard;
     }
 }

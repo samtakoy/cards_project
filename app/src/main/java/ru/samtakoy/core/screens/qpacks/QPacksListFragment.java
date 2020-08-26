@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,12 +20,15 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.model.QPack;
+import ru.samtakoy.core.database.room.entities.QPackEntity;
 import ru.samtakoy.core.navigation.RouterHolder;
 import ru.samtakoy.core.navigation.Screens;
 
@@ -49,20 +53,21 @@ public class QPacksListFragment extends MvpAppCompatFragment implements QPacksLi
 
     private RouterHolder mRouterHolder;
 
-    @InjectPresenter QPacksListPresenter mPresenter;
-
-
+    @InjectPresenter
+    QPacksListPresenter mPresenter;
+    @Inject
+    Provider<QPacksListPresenter> mPresenterProvider;
 
     @ProvidePresenter
-    QPacksListPresenter providePresenter(){
-        QPacksListPresenter result = new QPacksListPresenter(
-                MyApp.getInstance().getAppComponent()
-        );
-        return result;
+    QPacksListPresenter providePresenter() {
+        return mPresenterProvider.get();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        MyApp.getInstance().getAppComponent().inject(this);
+
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
@@ -117,13 +122,14 @@ public class QPacksListFragment extends MvpAppCompatFragment implements QPacksLi
         mRouterHolder = null;
         super.onDetach();
     }
+
     @Override
-    public void setQPacks(List<QPack> items, QPackSortType sortType) {
+    public void setQPacks(List<QPackEntity> items, QPackSortType sortType) {
         mAdapter.setItems(items, sortType);
     }
 
     @Override
-    public void showPackInfo(QPack qPack){
+    public void showPackInfo(QPackEntity qPack) {
         mRouterHolder.getRouter().navigateTo(new Screens.QPackInfoScreen(qPack.getId()));
     }
 
@@ -170,10 +176,15 @@ public class QPacksListFragment extends MvpAppCompatFragment implements QPacksLi
         updateTabsState(sortType);
     }
 
+    @Override
+    public void showError(int codeResId) {
+        Toast.makeText(getContext(), codeResId, Toast.LENGTH_SHORT).show();
+    }
+
     private void updateTabsState(QPackSortType sortType) {
         TabLayout.Tab tab = null;
 
-        switch (sortType){
+        switch (sortType) {
 
             case LAST_VIEW_DATE_ASC:
                 tab = mTabByLastViewDate;

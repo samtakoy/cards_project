@@ -13,8 +13,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.model.LearnCourseMode;
-import ru.samtakoy.core.model.QPack;
+import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
 import ru.samtakoy.core.navigation.RouterHolder;
 import ru.samtakoy.core.screens.SingleFragmentActivity;
 import ru.terrakok.cicerone.Navigator;
@@ -25,7 +24,7 @@ import ru.terrakok.cicerone.android.support.SupportAppNavigator;
 public class CoursesListActivity extends SingleFragmentActivity implements RouterHolder {
 
 
-    private static final String EXTRA_TARGET_QPACK = "EXTRA_TARGET_QPACK";
+    private static final String EXTRA_TARGET_QPACK_ID = "EXTRA_TARGET_QPACK_ID";
     private static final String EXTRA_TARGET_MODES = "EXTRA_TARGET_MODES";
     private static final String EXTRA_TARGET_COURSE_IDS_ARRAY = "EXTRA_TARGET_COURSE_IDS_ARRAY";
 
@@ -46,8 +45,10 @@ public class CoursesListActivity extends SingleFragmentActivity implements Route
         return aIntent;
     }
 
-    @Nullable private QPack mTargetQPack;
-    @Nullable private List<LearnCourseMode> mTargetModes;
+    @Nullable
+    private Long mTargetQPackId;
+    @Nullable
+    private List<LearnCourseMode> mTargetModes;
     @Nullable private Long[] mTargetCourseIds;
 
 
@@ -59,7 +60,7 @@ public class CoursesListActivity extends SingleFragmentActivity implements Route
 
     @Override
     protected Fragment createFragment() {
-        return CoursesListFragment.newFragment(mTargetQPack, mTargetModes, mTargetCourseIds);
+        return CoursesListFragment.newFragment(mTargetQPackId, mTargetModes, mTargetCourseIds);
     }
 
     @Override
@@ -69,8 +70,8 @@ public class CoursesListActivity extends SingleFragmentActivity implements Route
 
         super.onCreate(savedInstanceState);
 
-        mTargetQPack = (QPack)getIntent().getSerializableExtra(EXTRA_TARGET_QPACK);
-        mTargetModes = (List<LearnCourseMode>)getIntent().getSerializableExtra(EXTRA_TARGET_MODES);
+        mTargetQPackId = (Long) getIntent().getSerializableExtra(EXTRA_TARGET_QPACK_ID);
+        mTargetModes = (List<LearnCourseMode>) getIntent().getSerializableExtra(EXTRA_TARGET_MODES);
         mTargetCourseIds = (Long[])getIntent().getSerializableExtra(EXTRA_TARGET_COURSE_IDS_ARRAY);
     }
 

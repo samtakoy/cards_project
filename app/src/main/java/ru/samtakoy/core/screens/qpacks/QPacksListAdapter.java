@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.samtakoy.R;
-import ru.samtakoy.core.model.QPack;
+import ru.samtakoy.core.database.room.entities.QPackEntity;
 
 public class QPacksListAdapter extends RecyclerView.Adapter<QPacksListAdapter.QPacksListViewHolder>{
 
 
 
     public interface ItemClickListener{
-        void onClick(QPack qPack);
+        void onClick(QPackEntity qPack);
     }
 
 
@@ -43,10 +43,10 @@ public class QPacksListAdapter extends RecyclerView.Adapter<QPacksListAdapter.QP
 //            mItemView.setClickable(true);
         }
 
-        public void bindData(QPack qPack, QPackSortType itemType, ItemClickListener listener){
+        public void bindData(QPackEntity qPack, QPackSortType itemType, ItemClickListener listener) {
 
             mTitle.setText(qPack.getTitle());
-            switch (itemType){
+            switch (itemType) {
                 case LAST_VIEW_DATE_ASC:
                     mLastViewText.setText(qPack.getLastViewDateAsString());
                     break;
@@ -63,7 +63,7 @@ public class QPacksListAdapter extends RecyclerView.Adapter<QPacksListAdapter.QP
 
 
     private QPackSortType mItemType;
-    private List<QPack> mItems;
+    private List<QPackEntity> mItems;
     private ItemClickListener mItemClickListener;
 
     public QPacksListAdapter(ItemClickListener itemClickListener){
@@ -73,7 +73,7 @@ public class QPacksListAdapter extends RecyclerView.Adapter<QPacksListAdapter.QP
         mItemType = null;
     }
 
-    public void setItems(List<QPack> items, QPackSortType itemType) {
+    public void setItems(List<QPackEntity> items, QPackSortType itemType) {
         mItems = items;
         mItemType = itemType;
         notifyDataSetChanged();

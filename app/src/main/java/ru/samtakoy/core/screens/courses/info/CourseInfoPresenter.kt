@@ -3,12 +3,12 @@ package ru.samtakoy.core.screens.courses.info
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import ru.samtakoy.core.business.NCoursesInteractor
-import ru.samtakoy.core.model.LearnCourse
-import ru.samtakoy.core.model.LearnCourseMode.*
-import ru.samtakoy.core.model.elements.ScheduleTimeUnit
-import ru.samtakoy.core.model.utils.DateUtils
+import ru.samtakoy.core.database.room.entities.LearnCourseEntity
+import ru.samtakoy.core.database.room.entities.elements.ScheduleTimeUnit
+import ru.samtakoy.core.database.room.entities.types.LearnCourseMode.*
 import ru.samtakoy.core.screens.cards.types.CardViewMode
 import ru.samtakoy.core.screens.cards.types.CardViewSource
+import ru.samtakoy.core.utils.DateUtils
 import javax.inject.Inject
 
 
@@ -26,7 +26,7 @@ class CourseInfoPresenter(
         fun create(courseId: Long) = CourseInfoPresenter(coursesInteractor, courseId)
     }
 
-    val learnCourse: LearnCourse
+    val learnCourse: LearnCourseEntity
 
     init {
         learnCourse = coursesInteractor.getCourse(courseId)
@@ -53,7 +53,7 @@ class CourseInfoPresenter(
     }
 
     private fun startRepeatingExtraordinaryOrNext() {
-        val timeDelta = DateUtils.dateToDbSerialized(learnCourse.getRepeatDate()) - DateUtils.getCurrentTimeLong()
+        val timeDelta = DateUtils.dateToDbSerialized(learnCourse.repeatDate) - DateUtils.getCurrentTimeLong()
         if (timeDelta < ScheduleTimeUnit.MINUTE.millis) {
             startRepeating()
         } else {
@@ -71,8 +71,8 @@ class CourseInfoPresenter(
     private fun startRepeatingExtraordinary() {
 
         val tempLearnCourse = coursesInteractor.getTempCourseFor(
-                learnCourse.getQPackId(),
-                learnCourse.getCardIds(),
+                learnCourse.qPackId,
+                learnCourse.cardIds,
                 true
         )
         tempLearnCourse.toRepeatMode()
@@ -100,6 +100,7 @@ class CourseInfoPresenter(
             REPEAT_WAITING -> startRepeatingExtraordinaryOrNext()
             REPEATING -> continueRepeating()
             COMPLETED -> startRepeatingExtraordinary()
+            TEMPORARY -> return
         }
     }
 

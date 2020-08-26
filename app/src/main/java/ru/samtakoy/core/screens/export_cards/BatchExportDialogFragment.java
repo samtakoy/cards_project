@@ -12,12 +12,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import moxy.MvpAppCompatDialogFragment;
 import moxy.MvpPresenter;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
-import ru.samtakoy.core.MyApp;
 import ru.samtakoy.R;
+import ru.samtakoy.core.MyApp;
 
 
 public class BatchExportDialogFragment extends MvpAppCompatDialogFragment implements BatchExportDialogView{
@@ -63,20 +66,27 @@ public class BatchExportDialogFragment extends MvpAppCompatDialogFragment implem
 
     @InjectPresenter
     MvpPresenter<BatchExportDialogView> mPresenter;
+    @Inject
+    Provider<BatchExportQPacksPresenter.Factory> mBatchExportQPacksPresenterProvider;
+    @Inject
+    Provider<BatchExportCoursesPresenter.Factory> mBatchExportCoursesPresenterProvider;
 
     @ProvidePresenter
-    MvpPresenter<BatchExportDialogView> providePresenter(){
+    MvpPresenter<BatchExportDialogView> providePresenter() {
         Bundle args = getArguments();
 
-        if(args.getInt(ARG_EXPORT_TYPE) == EXPORT_TYPE_QPACKS){
-            return  new BatchExportQPacksPresenter(
-                    MyApp.getInstance().getAppComponent(), args.getString(ARG_DIR_PATH)
-            );
+        if (args.getInt(ARG_EXPORT_TYPE) == EXPORT_TYPE_QPACKS) {
+            return mBatchExportQPacksPresenterProvider.get().create(args.getString(ARG_DIR_PATH));
         }
+        return mBatchExportCoursesPresenterProvider.get().create(args.getString(ARG_DIR_PATH));
+    }
 
-        return  new BatchExportCoursesPresenter(
-                MyApp.getInstance().getAppComponent(), args.getString(ARG_DIR_PATH)
-        );
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+
+        MyApp.getInstance().getAppComponent().inject(this);
+
+        super.onCreate(savedInstanceState);
     }
 
     @NonNull

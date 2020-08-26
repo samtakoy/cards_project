@@ -9,19 +9,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 import ru.samtakoy.R;
-import ru.samtakoy.core.model.Card;
-import ru.samtakoy.core.services.api.pojo.RemoteFile;
+import ru.samtakoy.core.database.room.entities.CardEntity;
 
 
 public class CardsFastViewAdapter extends RecyclerView.Adapter<CardsFastViewAdapter.MyViewHolder> {
 
 
-    private List<Card> mCards;
+    private List<CardEntity> mCards;
 
-    public CardsFastViewAdapter(List<Card> cards) {
+    public CardsFastViewAdapter(List<CardEntity> cards) {
 
         mCards = cards;
     }
@@ -56,7 +54,7 @@ public class CardsFastViewAdapter extends RecyclerView.Adapter<CardsFastViewAdap
             mTextA = itemView.findViewById(R.id.answerText);
         }
 
-        public void bind(Card card) {
+        public void bind(CardEntity card) {
 
             mTextQ.setText(card.getQuestion());
             mTextA.setText(card.getAnswer());

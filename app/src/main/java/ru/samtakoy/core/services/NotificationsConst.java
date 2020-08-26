@@ -1,6 +1,6 @@
 package ru.samtakoy.core.services;
 
-import ru.samtakoy.core.model.elements.ScheduleTimeUnit;
+import ru.samtakoy.core.database.room.entities.elements.ScheduleTimeUnit;
 
 public class NotificationsConst {
 

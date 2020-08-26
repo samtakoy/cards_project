@@ -33,27 +33,27 @@
             android:name=".core.screens.courses.list.CoursesListActivity"
             android:label="@string/fragment_courses_title" />
         <activity android:name=".core.screens.courses.info.CourseInfoActivity" />
-        <activity android:name=".core.screens.ScheduleEditActivity"/>
-        <activity android:name=".core.screens.log.LogActivity"/>
-        <activity android:name=".core.screens.online_import.OnlineImportActivity"/>
+        <activity android:name=".core.screens.ScheduleEditActivity" />
+        <activity android:name=".core.screens.log.LogActivity" />
+        <activity android:name=".core.screens.online_import.OnlineImportActivity" />
         <activity android:name=".features.settings.SettingsActivity" />
 
         <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
 
 
-        <provider android:name=".core.database.DbContentProvider"
-            android:authorities="ru.samtakoy.core.database.DbContentProvider"
-            android:exported="false" />
+        <!--provider android:name=".core.database.old.DbContentProvider"
+            android:authorities="ru.samtakoy.core.database.old.DbContentProvider"
+            android:exported="false" /-->
 
-        <receiver android:name=".core.services.StartupReceiver" >
+        <receiver android:name=".core.services.StartupReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".core.services.NotificationsPlannerService"
-            android:exported="false"
-            />
+        <service
+            android:name=".core.services.NotificationsPlannerService"
+            android:exported="false" />
 
 
         <provider

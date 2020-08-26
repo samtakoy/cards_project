@@ -23,13 +23,14 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.ProgressIndicator;
 
+import javax.inject.Inject;
+
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.business.events.EventBusHolder;
-import ru.samtakoy.core.model.elements.Schedule;
+import ru.samtakoy.core.database.room.entities.elements.Schedule;
 import ru.samtakoy.core.navigation.RouterHolder;
 import ru.samtakoy.core.screens.cards.answer.CardAnswerFragment;
 import ru.samtakoy.core.screens.cards.answer.CardAnswerPresenter;
@@ -52,6 +53,8 @@ public class CardsViewFragment extends MvpAppCompatFragment
     private static final int REQ_CODE_EDIT_Q_TEXT = 1;
     private static final int REQ_CODE_EDIT_A_TEXT = 2;
 
+    private static final String SAVE_KEY_PRESENTER_STATE = "SAVE_KEY_PRESENTER_STATE";
+
     public static CardsViewFragment newInstance(
             Long qLearnPlanId,
             CardViewSource viewSource,
@@ -72,15 +75,17 @@ public class CardsViewFragment extends MvpAppCompatFragment
     private FloatingActionButton mFab;
 
     private RouterHolder mRouterHolder;
-    private EventBusHolder mEventBusHolder;
+    //private EventBusHolder mEventBusHolder;
 
     @InjectPresenter
     CardsViewPresenter mPresenter;
-
+    @Inject
+    CardsViewPresenter.Factory mPresenterFactory;
 
     @ProvidePresenter
     CardsViewPresenter providePresenter() {
-        return new CardsViewPresenter(MyApp.getInstance().getAppComponent(), readLearnCourseId(), readViewMode());
+        //return new CardsViewPresenter(MyApp.getInstance().getAppComponent(), readLearnCourseId(), readViewMode());
+        return mPresenterFactory.create(readLearnCourseId(), readViewMode());
     }
 
     private CardViewMode readViewMode() {
@@ -90,6 +95,27 @@ public class CardsViewFragment extends MvpAppCompatFragment
     private Long readLearnCourseId() {
         Long learnCourseId = getArguments().getLong(ARG_COURSE_ID, -1);
         return learnCourseId;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+
+        MyApp.getInstance().getAppComponent().inject(this);
+
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mPresenter.onRestoreState(savedInstanceState.getParcelable(SAVE_KEY_PRESENTER_STATE));
+        } else {
+            mPresenter.onNoRestoreState();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(SAVE_KEY_PRESENTER_STATE, mPresenter.getStateToSave());
     }
 
     @Nullable
@@ -112,14 +138,14 @@ public class CardsViewFragment extends MvpAppCompatFragment
         super.onAttach(context);
 
         mRouterHolder = (RouterHolder) context;
-        mEventBusHolder = (EventBusHolder) context;
+        //mEventBusHolder = (EventBusHolder) context;
     }
 
     @Override
     public void onDetach() {
 
         mRouterHolder = null;
-        mEventBusHolder = null;
+        //mEventBusHolder = null;
 
         super.onDetach();
     }

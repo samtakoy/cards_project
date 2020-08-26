@@ -7,13 +7,13 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 import moxy.MvpView;
+import moxy.viewstate.strategy.AddToEndSingleStrategy;
 import moxy.viewstate.strategy.OneExecutionStateStrategy;
 import moxy.viewstate.strategy.SkipStrategy;
 import moxy.viewstate.strategy.StateStrategyType;
-import moxy.viewstate.strategy.AddToEndSingleStrategy;
-import ru.samtakoy.core.model.QPack;
-import ru.samtakoy.core.model.Theme;
-import ru.samtakoy.core.services.import_utils.ImportCardsOpts;
+import ru.samtakoy.core.database.room.entities.QPackEntity;
+import ru.samtakoy.core.database.room.entities.ThemeEntity;
+import ru.samtakoy.features.import_export.utils.ImportCardsOpts;
 
 
 public interface ThemeListView extends MvpView {
@@ -25,7 +25,8 @@ public interface ThemeListView extends MvpView {
     void updateToolbarSubtitle(@Nullable String title);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void setListData(List<Theme> themes, List<QPack> qPacks);
+    void setListData(List<ThemeEntity> themes, List<QPackEntity> qPacks);
+
     @StateStrategyType(SkipStrategy.class)
     void updateList();
 

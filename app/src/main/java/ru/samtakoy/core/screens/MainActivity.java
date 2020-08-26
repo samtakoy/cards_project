@@ -15,14 +15,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 
-import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.business.events.EventBusHolder;
 import ru.samtakoy.core.navigation.RouterHolder;
 import ru.samtakoy.core.navigation.Screens;
 import ru.samtakoy.core.navigation.TopNavigable;
@@ -36,7 +34,7 @@ import ru.terrakok.cicerone.commands.Command;
 import ru.terrakok.cicerone.commands.Forward;
 import ru.terrakok.cicerone.commands.Replace;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RouterHolder, EventBusHolder {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RouterHolder {
 
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
@@ -45,8 +43,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // --
     @Inject
     public Router mRouter;
-    @Inject
-    public EventBus mEventBus;
+    //@Inject
+    //public EventBus mEventBus;
     @Inject
     NavigatorHolder mNavigatorHolder;
     private Navigator mNavigator = new SupportAppNavigator(this, R.id.container) {
@@ -169,15 +167,15 @@ MyLog.add(" %% CREATE_ACTIVITY___ " );
         return mRouter;
     }
 
-    @Override
-    public EventBus getEventBus() {
-        return mEventBus;
-    }
+    //@Override
+    //public EventBus getEventBus() {
+    //return mEventBus;
+    //}
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.nav_packs_themes:
                 mRouter.newRootScreen(new Screens.ThemeListScreen());
                 //mRouter.;

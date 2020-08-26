@@ -3,7 +3,7 @@ package ru.samtakoy.core.screens.cards.result
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import ru.samtakoy.core.business.NCoursesInteractor
-import ru.samtakoy.core.model.elements.Schedule
+import ru.samtakoy.core.database.room.entities.elements.Schedule
 import ru.samtakoy.core.screens.cards.types.CardViewMode
 import javax.inject.Inject
 
@@ -36,8 +36,8 @@ class CardsViewResultPresenter(
         val learnCourse = coursesInteractor.getCourse(learnCourseId)
 
         viewState.setLearnView(cardViewMode === CardViewMode.LEARNING)
-        viewState.setViewedCardsCount(learnCourse.viewedCardsCount)
-        viewState.setErrorCardsCount(learnCourse.errorCardsCount)
+        viewState.setViewedCardsCount(learnCourse.getViewedCardsCount())
+        viewState.setErrorCardsCount(learnCourse.getErrorCardsCount())
         viewState.showNewScheduleString(newSchedule)
     }
 

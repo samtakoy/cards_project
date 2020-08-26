@@ -7,6 +7,9 @@
     <string name="btn_save">Сохранить</string>
     <string name="confirm_dialog_title">?</string>
 
+
+    <string name="db_request_err_message">Ощибка при запросе к базе данных</string>
+
     <string name="fragment_themes_menu_item_add">add</string>
     <string name="fragment_themes_menu_item_import_cards">import</string>
 
@@ -110,6 +113,7 @@
     <string name="fragment_courses_title">repeat courses</string>
     <string name="fragment_courses_courses_loading_err">Ошибка загрузки курсов</string>
     <string name="fragment_courses_course_add_err">Ошибка при добавлении курса</string>
+    <string name="fragment_courses_get_qpack_err">Ошибка при получении пака</string>
     <string name="fragment_courses_menu_item_add">new course</string>
     <!--string name="fragment_courses_menu_to_themes">to themes</string-->
     <string name="fragment_courses_menu_to_email">send all to...</string>
@@ -183,6 +187,7 @@
     <string name="qpacks_menu_item_sort">сортировка</string>
     <string name="qpacks_menu_item_by_last_view_date">давно просмотренные</string>
     <string name="qpacks_menu_item_by_creation_date">недавно созданные</string>
+    <string name="qpacks_request_error">Ошибка при запросе списка</string>
 
 
 </resources>

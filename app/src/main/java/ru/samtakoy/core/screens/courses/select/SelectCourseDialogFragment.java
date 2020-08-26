@@ -27,26 +27,25 @@ import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.model.LearnCourse;
-import ru.samtakoy.core.model.QPack;
+import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
 import ru.samtakoy.core.screens.courses.list.CoursesAdapter;
 import ru.samtakoy.core.screens.qpack.QPackInfoFragment;
 
 public class SelectCourseDialogFragment extends MvpAppCompatDialogFragment
         implements CoursesAdapter.CourseClickListener, SelectCourseView {
 
-    private static final String ARG_TARGET_QPACK = "ARG_TARGET_QPACK";
+    private static final String ARG_TARGET_QPACK_ID = "ARG_TARGET_QPACK_ID";
 
     public static final String RESULT_EXTRA_COURSE_ID = "RESULT_EXTRA_COURSE_ID";
 
     public static SelectCourseDialogFragment newFragment(
-            @Nullable QPack targetQPack,
+            @Nullable Long targetQPackId,
             @NotNull QPackInfoFragment targetFragment,
             int requestCode
     ) {
         SelectCourseDialogFragment result = new SelectCourseDialogFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_TARGET_QPACK, targetQPack);
+        args.putSerializable(ARG_TARGET_QPACK_ID, targetQPackId);
         result.setArguments(args);
         result.setTargetFragment(targetFragment, requestCode);
         return result;
@@ -64,7 +63,7 @@ public class SelectCourseDialogFragment extends MvpAppCompatDialogFragment
 
     @ProvidePresenter
     SelectCoursePresenter providePresenter() {
-        return mFactoryProvider.get().create(readQPack());
+        return mFactoryProvider.get().create(readQPackId());
     }
 
 
@@ -89,8 +88,8 @@ public class SelectCourseDialogFragment extends MvpAppCompatDialogFragment
     }
 
     @Nullable
-    private QPack readQPack() {
-        return (QPack) getArguments().getSerializable(ARG_TARGET_QPACK);
+    private Long readQPackId() {
+        return (Long) getArguments().getSerializable(ARG_TARGET_QPACK_ID);
     }
 
     @NonNull
@@ -108,7 +107,7 @@ public class SelectCourseDialogFragment extends MvpAppCompatDialogFragment
     }
 
     @Override
-    public void showCourses(@NotNull List<? extends LearnCourse> curCourses) {
+    public void showCourses(@NotNull List<LearnCourseEntity> curCourses) {
         mCoursesAdapter.setCurCourses(curCourses);
         updateListVisibility(curCourses.size() > 0);
     }
@@ -150,7 +149,7 @@ public class SelectCourseDialogFragment extends MvpAppCompatDialogFragment
     }
 
     @Override
-    public void onCourseClick(LearnCourse course) {
+    public void onCourseClick(LearnCourseEntity course) {
         mPresenter.onUiCourseClick(course);
     }
 }

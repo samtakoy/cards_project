@@ -12,17 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.samtakoy.R;
-import ru.samtakoy.core.model.LearnCourse;
+import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
 
 public class CoursesAdapter extends RecyclerView.Adapter <CoursesAdapter.CoursesItemHolder>{
 
     public interface CourseClickListener{
-        void onCourseClick(LearnCourse course);
+        void onCourseClick(LearnCourseEntity course);
     }
 
     class CoursesItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private LearnCourse mCourse;
+        private LearnCourseEntity mCourse;
         private TextView mText;
         private CourseClickListener mCourseClickListener;
 
@@ -33,7 +33,7 @@ public class CoursesAdapter extends RecyclerView.Adapter <CoursesAdapter.Courses
             itemView.setOnClickListener(this);
         }
 
-        public void bindCourse(LearnCourse t){
+        public void bindCourse(LearnCourseEntity t) {
             mCourse = t;
             mText.setText(t.getDynamicTitle());
 
@@ -47,14 +47,14 @@ public class CoursesAdapter extends RecyclerView.Adapter <CoursesAdapter.Courses
     }
 
     private CourseClickListener mCourseClickListener;
-    private List<? extends LearnCourse> mCurCourses;
+    private List<? extends LearnCourseEntity> mCurCourses;
 
     public CoursesAdapter(CourseClickListener clickListener){
         mCurCourses = new ArrayList<>();
         mCourseClickListener = clickListener;
     }
 
-    public void setCurCourses(List<? extends LearnCourse> curCourses) {
+    public void setCurCourses(List<? extends LearnCourseEntity> curCourses) {
         mCurCourses = curCourses;
         notifyDataSetChanged();
     }

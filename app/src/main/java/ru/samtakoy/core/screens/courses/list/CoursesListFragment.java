@@ -31,9 +31,8 @@ import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.model.LearnCourse;
-import ru.samtakoy.core.model.LearnCourseMode;
-import ru.samtakoy.core.model.QPack;
+import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
+import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
 import ru.samtakoy.core.navigation.RouterHolder;
 import ru.samtakoy.core.navigation.Screens;
 import ru.samtakoy.core.screens.courses.CourseEditDialogFragment;
@@ -43,7 +42,7 @@ import ru.samtakoy.core.screens.export_cards.BatchExportDialogFragment;
 public class CoursesListFragment extends MvpAppCompatFragment
         implements CoursesAdapter.CourseClickListener, CoursesListView {
 
-    private static final String ARG_TARGET_QPACK = "ARG_TARGET_QPACK";
+    private static final String ARG_TARGET_QPACK_ID = "ARG_TARGET_QPACK_ID";
     private static final String ARG_TARGET_MODES = "ARG_TARGET_MODES";
     private static final String ARG_TARGET_COURSE_IDS = "ARG_TARGET_COURSE_IDS";
     private static final String RESULT_EXTRA_COURSE_ID = "RESULT_EXTRA_COURSE_ID";
@@ -56,13 +55,13 @@ public class CoursesListFragment extends MvpAppCompatFragment
     private static final String SAVED_NEW_COURSE_DEFAULT_TITLE = "SAVED_NEW_COURSE_DEFAULT_TITLE";
 
     public static CoursesListFragment newFragment(
-            @Nullable QPack targetQPack,
+            @Nullable Long targetQPackId,
             @Nullable List<LearnCourseMode> targetModes,
             @Nullable Long[] targetCourseIds
     ){
         CoursesListFragment result = new CoursesListFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_TARGET_QPACK, targetQPack);
+        args.putSerializable(ARG_TARGET_QPACK_ID, targetQPackId);
         args.putSerializable(ARG_TARGET_MODES, (Serializable) targetModes);
         args.putLongArray(ARG_TARGET_COURSE_IDS, ArrayUtils.toPrimitive(targetCourseIds));
         result.setArguments(args);
@@ -83,7 +82,7 @@ public class CoursesListFragment extends MvpAppCompatFragment
     @ProvidePresenter
     CoursesListPresenter providePresenter() {
         return mPresenterFactoryProvider.get().create(
-                readTargetPack(), readTargetModes(), readTargetCourseIds()
+                readTargetPackId(), readTargetModes(), readTargetCourseIds()
         );
     }
 
@@ -101,8 +100,8 @@ public class CoursesListFragment extends MvpAppCompatFragment
     }
 
     @Nullable
-    private QPack readTargetPack() {
-        return (QPack) getArguments().getSerializable(ARG_TARGET_QPACK);
+    private Long readTargetPackId() {
+        return (Long) getArguments().getSerializable(ARG_TARGET_QPACK_ID);
     }
 
     @Nullable
@@ -209,7 +208,7 @@ public class CoursesListFragment extends MvpAppCompatFragment
     }
 
     @Override
-    public void showCourses(@NotNull List<? extends LearnCourse> curCourses) {
+    public void showCourses(@NotNull List<LearnCourseEntity> curCourses) {
         mCoursesAdapter.setCurCourses(curCourses);
         updateListVisibility(curCourses.size() > 0);
     }
@@ -247,7 +246,7 @@ public class CoursesListFragment extends MvpAppCompatFragment
     }
 
     @Override
-    public void onCourseClick(LearnCourse course) {
+    public void onCourseClick(LearnCourseEntity course) {
         mPresenter.onUiCourseClick(course);
     }
 

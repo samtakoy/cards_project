@@ -12,21 +12,37 @@ import io.reactivex.schedulers.Schedulers;
 import moxy.InjectViewState;
 import moxy.MvpPresenter;
 import ru.samtakoy.R;
-import ru.samtakoy.core.business.CoursesExporter;
-import ru.samtakoy.core.di.components.AppComponent;
 import ru.samtakoy.core.screens.log.MyLog;
+import ru.samtakoy.features.import_export.CoursesExporter;
 
 @InjectViewState
 public class BatchExportCoursesPresenter extends MvpPresenter<BatchExportDialogView> {
 
-    @Inject
+
     CoursesExporter mCoursesExporter;
+
+    public static class Factory {
+
+        @Inject
+        CoursesExporter mCoursesExporter;
+
+        @Inject
+        Factory() {
+        }
+
+        public BatchExportCoursesPresenter create(String exportDirPath) {
+            return new BatchExportCoursesPresenter(mCoursesExporter, exportDirPath);
+        }
+    }
 
     private CompositeDisposable mDisposable;
 
-    public BatchExportCoursesPresenter(AppComponent appComponent, String exportDirPath){
+    public BatchExportCoursesPresenter(
+            CoursesExporter coursesExporter,
+            String exportDirPath
+    ) {
 
-        appComponent.inject(this);
+        mCoursesExporter = coursesExporter;
 
         mDisposable = new CompositeDisposable();
 

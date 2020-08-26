@@ -7,7 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import ru.samtakoy.core.model.elements.Schedule;
+import ru.samtakoy.core.database.room.entities.elements.Schedule;
 
 
 // TODO remove

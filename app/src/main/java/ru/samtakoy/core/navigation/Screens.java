@@ -12,8 +12,7 @@ import java.util.List;
 
 import ru.samtakoy.R;
 import ru.samtakoy.core.Const;
-import ru.samtakoy.core.model.LearnCourseMode;
-import ru.samtakoy.core.model.QPack;
+import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
 import ru.samtakoy.core.screens.cards.CardsViewFragment;
 import ru.samtakoy.core.screens.cards.types.CardViewMode;
 import ru.samtakoy.core.screens.cards.types.CardViewSource;
@@ -114,30 +113,30 @@ public class Screens {
             return new CoursesListScreen(null, null, null);
         }
 
-        public static CoursesListScreen qPackCoursesScreen(@Nullable QPack targetQPack) {
-            return new CoursesListScreen(targetQPack, null, null);
+        public static CoursesListScreen qPackCoursesScreen(@Nullable Long targetQPackId) {
+            return new CoursesListScreen(targetQPackId, null, null);
         }
 
         public static CoursesListScreen newScreenForModesIntent(@Nullable List<LearnCourseMode> modesShowFilter) {
             return new CoursesListScreen(null, modesShowFilter, null);
         }
 
-        public static CoursesListScreen newScreenForCourseIdsIntent(@Nullable Long[] courseIds){
+        public static CoursesListScreen newScreenForCourseIdsIntent(@Nullable Long[] courseIds) {
             return new CoursesListScreen(null, null, courseIds);
         }
 
         @Nullable
-        private QPack mTargetQPack;
+        private Long mTargetQPackId;
         @Nullable
         private List<LearnCourseMode> mTargetModes;
         @Nullable
         private Long[] mTargetCourseIds;
 
         private CoursesListScreen(
-                @Nullable QPack targetQPack,
+                @Nullable Long targetQPackId,
                 @Nullable List<LearnCourseMode> targetModes,
                 @Nullable Long[] targetCourseIds) {
-            mTargetQPack = targetQPack;
+            mTargetQPackId = targetQPackId;
             mTargetModes = targetModes;
             mTargetCourseIds = targetCourseIds;
         }
@@ -151,7 +150,7 @@ public class Screens {
         @Override
         public Fragment getFragment() {
 
-            return CoursesListFragment.newFragment(mTargetQPack, mTargetModes, mTargetCourseIds);
+            return CoursesListFragment.newFragment(mTargetQPackId, mTargetModes, mTargetCourseIds);
         }
     }
 
