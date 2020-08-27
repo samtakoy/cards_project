@@ -142,12 +142,12 @@ public class CoursesRepositoryImpl implements CoursesRepository {
     // не в Rx стиле для сервиса, перенести в отдельный репозиторий?
 
     @Override
-    public List<LearnCourseEntity> getCoursesLessThan(LearnCourseMode mode, Date repeatDate) {
-        return db.courseDao().getCoursesLessThan(mode, repeatDate);
+    public List<LearnCourseEntity> getOrderedCoursesLessThan(LearnCourseMode mode, Date repeatDate) {
+        return db.courseDao().getOrderedCoursesLessThan(mode, repeatDate);
     }
 
     @Override
-    public List<LearnCourseEntity> getCoursesMoreThan(LearnCourseMode mode, Date repeatDate) {
-        return db.courseDao().getCoursesMoreThan(mode, repeatDate);
+    public List<LearnCourseEntity> getOrderedCoursesMoreThan(LearnCourseMode mode, Date repeatDate) {
+        return db.courseDao().getOrderedCoursesMoreThan(mode, repeatDate);
     }
 }

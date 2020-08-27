@@ -60,11 +60,11 @@ interface LearnCourseDao {
     @Query("SELECT * FROM $table WHERE $_qpack_id = :qPackId ")
     fun getCoursesForQPack(qPackId: Long): Flowable<List<LearnCourseEntity>>
 
-    @Query("SELECT * FROM $table WHERE $_mode = :mode AND $_repeat_date <= :repeatDate ")
+    @Query("SELECT * FROM $table WHERE $_mode = :mode AND $_repeat_date <= :repeatDate ORDER BY $_repeat_date ASC")
     @TypeConverters(LearnCourseModeConverter::class, DateLongConverter::class)
-    fun getCoursesLessThan(mode: LearnCourseMode, repeatDate: Date): List<LearnCourseEntity>
+    fun getOrderedCoursesLessThan(mode: LearnCourseMode, repeatDate: Date): List<LearnCourseEntity>
 
-    @Query("SELECT * FROM $table WHERE $_mode = :mode AND $_repeat_date > :repeatDate ")
+    @Query("SELECT * FROM $table WHERE $_mode = :mode AND $_repeat_date > :repeatDate ORDER BY $_repeat_date ASC")
     @TypeConverters(LearnCourseModeConverter::class, DateLongConverter::class)
-    fun getCoursesMoreThan(mode: LearnCourseMode, repeatDate: Date): List<LearnCourseEntity>
+    fun getOrderedCoursesMoreThan(mode: LearnCourseMode, repeatDate: Date): List<LearnCourseEntity>
 }

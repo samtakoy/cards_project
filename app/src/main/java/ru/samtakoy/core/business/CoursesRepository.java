@@ -51,10 +51,8 @@ public interface CoursesRepository {
     Flowable<List<LearnCourseEntity>> getCoursesForQPack(Long qPackId);
 
 
-    List<LearnCourseEntity> getCoursesLessThan(LearnCourseMode mode, Date repeatDate);
+    List<LearnCourseEntity> getOrderedCoursesLessThan(LearnCourseMode mode, Date repeatDate);
 
-    //return getCoursesWithComparator(ctx, mode, repeatDate, "<=");
-    List<LearnCourseEntity> getCoursesMoreThan(LearnCourseMode mode, Date repeatDate);
-    //return getCoursesWithComparator(ctx, mode, repeatDate, ">");
+    List<LearnCourseEntity> getOrderedCoursesMoreThan(LearnCourseMode mode, Date repeatDate);
 
 }

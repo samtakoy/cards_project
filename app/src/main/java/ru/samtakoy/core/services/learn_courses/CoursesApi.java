@@ -85,7 +85,7 @@ public abstract class CoursesApi {
     }
 
     public List<LearnCourseEntity> getNewLearnCourses() {
-        return mCoursesRepository.getCoursesLessThan(
+        return mCoursesRepository.getOrderedCoursesLessThan(
                 getLearnCourseMode(),
                 DateUtils.dateFromDbSerialized(getCurrentDateLong())
         );
@@ -96,7 +96,7 @@ public abstract class CoursesApi {
     protected void shiftLearnCourses(LearnCourseMode lcMode, int shiftMillis) {
         long currentDateLong = getCurrentDateLong();
         Date currentDate = DateUtils.dateFromDbSerialized(currentDateLong);
-        List<LearnCourseEntity> newLearnCourses = mCoursesRepository.getCoursesLessThan(lcMode, currentDate);
+        List<LearnCourseEntity> newLearnCourses = mCoursesRepository.getOrderedCoursesLessThan(lcMode, currentDate);
 
         long newMinTimeLong = getCurrentDateLong() + shiftMillis;
         Date newMinTime = DateUtils.dateFromDbSerialized(newMinTimeLong);
@@ -116,7 +116,7 @@ public abstract class CoursesApi {
         // фиксируем дату для расчетов
         long currentDateLong = getCurrentDateLong();
         Date currentDate = DateUtils.dateFromDbSerialized(currentDateLong);
-        List<LearnCourseEntity> newRepeatCourses = mCoursesRepository.getCoursesLessThan(lcMode, currentDate);
+        List<LearnCourseEntity> newRepeatCourses = mCoursesRepository.getOrderedCoursesLessThan(lcMode, currentDate);
 
         if(newRepeatCourses.size() > 0){
 
@@ -138,12 +138,15 @@ public abstract class CoursesApi {
             hideNotificationForReadyCourses(notificationId);
         }
 
-        List<LearnCourseEntity> futureRepeatCourses = mCoursesRepository.getCoursesMoreThan(lcMode, currentDate);
+        List<LearnCourseEntity> futureRepeatCourses = mCoursesRepository.getOrderedCoursesMoreThan(lcMode, currentDate);
         if(futureRepeatCourses.size() == 0){
             MyLog.add("NONE to alarm");
             cancelLearnCoursesAlarm();
         } else {
             MyLog.add("PLAN alarm");
+
+            // TODO тут и во всех сервисах почему-то идет расчет на то, что курсы будут упорядочены по времени повторения
+            // хотя такого не было,
             planLearnCoursesAlarm(futureRepeatCourses.get(0));
         }
     }
