@@ -29,7 +29,7 @@ import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.database.room.entities.QPackEntity;
-import ru.samtakoy.core.navigation.RouterHolder;
+import ru.samtakoy.core.screens.RouterHolder;
 import ru.samtakoy.core.screens.qpack.QPackInfoFragment;
 
 public class QPacksListFragment extends MvpAppCompatFragment implements QPacksListView{

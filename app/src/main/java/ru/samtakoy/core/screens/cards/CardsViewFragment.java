@@ -33,7 +33,7 @@ import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.database.room.entities.elements.Schedule;
-import ru.samtakoy.core.navigation.RouterHolder;
+import ru.samtakoy.core.screens.RouterHolder;
 import ru.samtakoy.core.screens.cards.answer.CardAnswerFragment;
 import ru.samtakoy.core.screens.cards.answer.CardAnswerPresenter;
 import ru.samtakoy.core.screens.cards.question.CardQuestionFragment;

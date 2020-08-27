@@ -19,7 +19,6 @@ import com.google.android.material.navigation.NavigationView;
 
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.navigation.RouterHolder;
 import ru.samtakoy.core.screens.log.MyLog;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RouterHolder {

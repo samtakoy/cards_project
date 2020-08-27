@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 
-import ru.samtakoy.core.navigation.RouterHolder;
+import ru.samtakoy.core.screens.RouterHolder;
 
 
 // TODO удалить

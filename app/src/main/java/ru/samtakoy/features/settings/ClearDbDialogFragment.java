@@ -12,8 +12,8 @@ import io.reactivex.Completable;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.business.CardsInteractor;
-import ru.samtakoy.core.navigation.RouterHolder;
 import ru.samtakoy.core.screens.MainActivity;
+import ru.samtakoy.core.screens.RouterHolder;
 import ru.samtakoy.core.screens.progress_dialog.ProgressDialogFragment;
 import ru.samtakoy.core.screens.progress_dialog.ProgressDialogPresenter;
 

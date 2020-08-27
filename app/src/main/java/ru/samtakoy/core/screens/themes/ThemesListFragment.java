@@ -51,7 +51,7 @@ import ru.samtakoy.core.Const;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.database.room.entities.QPackEntity;
 import ru.samtakoy.core.database.room.entities.ThemeEntity;
-import ru.samtakoy.core.navigation.RouterHolder;
+import ru.samtakoy.core.screens.RouterHolder;
 import ru.samtakoy.core.screens.export_cards.BatchExportDialogFragment;
 import ru.samtakoy.core.screens.import_cards.BatchImportDialogFragment;
 import ru.samtakoy.core.screens.import_cards.ImportPackDialogFragment;

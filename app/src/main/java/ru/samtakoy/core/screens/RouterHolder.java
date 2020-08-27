@@ -1,4 +1,4 @@
-package ru.samtakoy.core.navigation;
+package ru.samtakoy.core.screens;
 
 import androidx.navigation.NavController;
 

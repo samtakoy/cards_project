@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
-import ru.samtakoy.core.navigation.RouterHolder;
+import ru.samtakoy.core.screens.RouterHolder;
 
 
 // TODO удалить

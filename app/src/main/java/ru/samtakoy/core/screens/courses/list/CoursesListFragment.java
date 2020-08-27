@@ -32,7 +32,7 @@ import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
 import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
-import ru.samtakoy.core.navigation.RouterHolder;
+import ru.samtakoy.core.screens.RouterHolder;
 import ru.samtakoy.core.screens.courses.CourseEditDialogFragment;
 import ru.samtakoy.core.screens.courses.info.CourseInfoFragment;
 import ru.samtakoy.core.screens.export_cards.BatchExportDialogFragment;

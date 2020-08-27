@@ -35,7 +35,7 @@ import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.database.room.entities.CardEntity;
-import ru.samtakoy.core.navigation.RouterHolder;
+import ru.samtakoy.core.screens.RouterHolder;
 import ru.samtakoy.core.screens.cards.CardsViewFragment;
 import ru.samtakoy.core.screens.cards.types.CardViewMode;
 import ru.samtakoy.core.screens.cards.types.CardViewSource;
