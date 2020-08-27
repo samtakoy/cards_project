@@ -3,6 +3,7 @@ package ru.samtakoy.core.database.room.entities.types;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public enum CourseType {
 
 
@@ -11,26 +12,31 @@ public enum CourseType {
     // курс, для новодобавленных карточек, догоняет обычный
     SECONDARY(2),
     // дополнительное повторение, заланированное по желанию пользователя
-    ADDITIONAL(3);
+    ADDITIONAL(3),
+
+    // временный курс для служебных целей, не видимый пользователю
+    TEMPORARY(4);
+
 
     private static final Map<Integer, CourseType> sIdToEnumMap = new HashMap();
+
     static {
-        for(CourseType courseType:values()){
-            sIdToEnumMap.put(courseType.mId, courseType);
+        for (CourseType courseType : values()) {
+            sIdToEnumMap.put(courseType.mDatabaseId, courseType);
         }
     }
 
-    private final Integer mId;
+    private final Integer mDatabaseId;
 
-    CourseType(Integer id){
-        mId = id;
+    CourseType(Integer dbId) {
+        mDatabaseId = dbId;
     }
 
-    public Integer getId(){
-        return mId;
+    public Integer getDbId() {
+        return mDatabaseId;
     }
 
-    public static CourseType valueOfId(Integer id){
-        return  sIdToEnumMap.get(id);
+    public static CourseType valueOfId(Integer id) {
+        return sIdToEnumMap.get(id);
     }
 }

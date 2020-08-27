@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -34,8 +33,8 @@ import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
 import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
 import ru.samtakoy.core.navigation.RouterHolder;
-import ru.samtakoy.core.navigation.Screens;
 import ru.samtakoy.core.screens.courses.CourseEditDialogFragment;
+import ru.samtakoy.core.screens.courses.info.CourseInfoFragment;
 import ru.samtakoy.core.screens.export_cards.BatchExportDialogFragment;
 
 
@@ -45,7 +44,7 @@ public class CoursesListFragment extends MvpAppCompatFragment
     private static final String ARG_TARGET_QPACK_ID = "ARG_TARGET_QPACK_ID";
     private static final String ARG_TARGET_MODES = "ARG_TARGET_MODES";
     private static final String ARG_TARGET_COURSE_IDS = "ARG_TARGET_COURSE_IDS";
-    private static final String RESULT_EXTRA_COURSE_ID = "RESULT_EXTRA_COURSE_ID";
+    //private static final String RESULT_EXTRA_COURSE_ID = "RESULT_EXTRA_COURSE_ID";
 
     private static final int REQ_CODE_ADD_COURSE = 1;
     private static final int REQ_CODE_EXPORT_COURSES = 2;
@@ -58,15 +57,20 @@ public class CoursesListFragment extends MvpAppCompatFragment
             @Nullable Long targetQPackId,
             @Nullable List<LearnCourseMode> targetModes,
             @Nullable Long[] targetCourseIds
-    ){
+    ) {
         CoursesListFragment result = new CoursesListFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_TARGET_QPACK_ID, targetQPackId);
-        args.putSerializable(ARG_TARGET_MODES, (Serializable) targetModes);
-        args.putLongArray(ARG_TARGET_COURSE_IDS, ArrayUtils.toPrimitive(targetCourseIds));
-        result.setArguments(args);
+        result.setArguments(buildBundle(targetQPackId, targetModes, targetCourseIds));
         return result;
     }
+
+    public static Bundle buildBundle(@Nullable Long targetQPackId, @Nullable List<LearnCourseMode> targetModes, @Nullable Long[] targetCourseIds) {
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_TARGET_QPACK_ID, targetQPackId);
+        args.putIntArray(ARG_TARGET_MODES, LearnCourseMode.listToPrimitiveArray(targetModes));
+        args.putLongArray(ARG_TARGET_COURSE_IDS, ArrayUtils.toPrimitive(targetCourseIds));
+        return args;
+    }
+
 
     private TextView mCoursesIsEmptyLabel;
     private RecyclerView mCoursesRecycler;
@@ -101,12 +105,14 @@ public class CoursesListFragment extends MvpAppCompatFragment
 
     @Nullable
     private Long readTargetPackId() {
-        return (Long) getArguments().getSerializable(ARG_TARGET_QPACK_ID);
+        Long result = (Long) getArguments().getSerializable(ARG_TARGET_QPACK_ID);
+        return result == 0 ? null : result;
     }
 
     @Nullable
     private List<LearnCourseMode> readTargetModes() {
-        return (List<LearnCourseMode>) getArguments().getSerializable(ARG_TARGET_MODES);
+        int[] result = getArguments().getIntArray(ARG_TARGET_MODES);
+        return LearnCourseMode.primitiveArrayToList(result);
     }
 
     @Nullable
@@ -242,7 +248,15 @@ public class CoursesListFragment extends MvpAppCompatFragment
 
     @Override
     public void navigateToCourseInfo(long courseId) {
-        mRouterHolder.getRouter().navigateTo(new Screens.CourseInfoScreen(courseId));
+
+        //Navigation.findNavController()
+        //action_coursesListFragment_to_courseInfoFragment
+
+        mRouterHolder.getNavController().navigate(
+                R.id.action_coursesListFragment_to_courseInfoFragment,
+                CourseInfoFragment.buildBundle(courseId)
+        );
+        //mRouterHolder.getRouter().navigateTo(new Screens.CourseInfoScreen(courseId));
     }
 
     @Override

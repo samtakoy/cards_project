@@ -16,11 +16,17 @@ public enum CardViewMode {
     REPEATING,
 
     // ускоренная тренировка, при которой просматриваются только вопросы, а ответ можно посомтреть кликом по кнопке
-        // вопрос: ответ далее
-        // ответ:  ошибся далее
+    // вопрос: ответ далее
+    // ответ:  ошибся далее
     REPEATING_FAST;
 
     /*public boolean isTraining(){
         return this == REPEATING || this == REPEATING_FAST;
     }/**/
+
+    private static final CardViewMode values[] = values();
+
+    public static CardViewMode get(int ordinal) {
+        return values[ordinal];
+    }
 }

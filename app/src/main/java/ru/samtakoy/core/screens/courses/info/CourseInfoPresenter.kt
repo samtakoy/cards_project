@@ -2,9 +2,11 @@ package ru.samtakoy.core.screens.courses.info
 
 import moxy.InjectViewState
 import moxy.MvpPresenter
+import ru.samtakoy.core.business.CoursesPlanner
 import ru.samtakoy.core.business.NCoursesInteractor
 import ru.samtakoy.core.database.room.entities.LearnCourseEntity
 import ru.samtakoy.core.database.room.entities.elements.ScheduleTimeUnit
+import ru.samtakoy.core.database.room.entities.types.CourseType
 import ru.samtakoy.core.database.room.entities.types.LearnCourseMode.*
 import ru.samtakoy.core.screens.cards.types.CardViewMode
 import ru.samtakoy.core.screens.cards.types.CardViewSource
@@ -15,15 +17,17 @@ import javax.inject.Inject
 @InjectViewState
 class CourseInfoPresenter(
         val coursesInteractor: NCoursesInteractor,
+        val coursesPlanner: CoursesPlanner,
         val courseId: Long
 ) : MvpPresenter<CourseInfoView>() {
 
 
     class Factory @Inject constructor(
-            val coursesInteractor: NCoursesInteractor
+            val coursesInteractor: NCoursesInteractor,
+            val coursesPlanner: CoursesPlanner
     ) {
 
-        fun create(courseId: Long) = CourseInfoPresenter(coursesInteractor, courseId)
+        fun create(courseId: Long) = CourseInfoPresenter(coursesInteractor, coursesPlanner, courseId)
     }
 
     val learnCourse: LearnCourseEntity
@@ -37,19 +41,22 @@ class CourseInfoPresenter(
     // ----------------------------
 
     private fun startLearning() {
+        planUncompletedTaskCheckingIfNeeded();
+
         learnCourse.toLearnMode()
         coursesInteractor.saveCourse(learnCourse)
         viewState.showLearnCourseInfo(learnCourse)
-        goroCardsRepeating()
+        gotoCardsRepeating()
     }
 
     private fun continueLearning() {
-        goroCardsRepeating()
+        planUncompletedTaskCheckingIfNeeded();
+        gotoCardsRepeating()
     }
 
     private fun continueRepeating() {
-        //mLearnCourse.prepareToCardsView();
-        goroCardsRepeating()
+        planUncompletedTaskCheckingIfNeeded();
+        gotoCardsRepeating()
     }
 
     private fun startRepeatingExtraordinaryOrNext() {
@@ -62,11 +69,15 @@ class CourseInfoPresenter(
     }
 
     private fun startRepeating() {
+
+        planUncompletedTaskCheckingIfNeeded();
+
         learnCourse.toRepeatMode()
         coursesInteractor.saveCourse(learnCourse)
         viewState.showLearnCourseInfo(learnCourse)
-        goroCardsRepeating()
+        gotoCardsRepeating()
     }
+
 
     private fun startRepeatingExtraordinary() {
 
@@ -80,10 +91,16 @@ class CourseInfoPresenter(
         viewState.navigateToCardsViewScreen(tempLearnCourse.id, CardViewSource.EXTRA_REPEATING, CardViewMode.REPEATING)
     }
 
-    private fun goroCardsRepeating() {
+    private fun gotoCardsRepeating() {
         val viewMode = if (learnCourse.mode === LEARNING) CardViewMode.LEARNING else CardViewMode.REPEATING
         // TODO почему-то тут оказалось CardViewSource.ROUTINE_REPEATING, совсем не используется?
         viewState.navigateToCardsViewScreen(learnCourse.id, CardViewSource.ROUTINE_REPEATING, viewMode)
+    }
+
+    private fun planUncompletedTaskCheckingIfNeeded() {
+        if (learnCourse.courseType != CourseType.TEMPORARY) {
+            coursesPlanner.planUncompletedTasksChecking();
+        }
     }
 
     // ----------------------------
@@ -100,7 +117,7 @@ class CourseInfoPresenter(
             REPEAT_WAITING -> startRepeatingExtraordinaryOrNext()
             REPEATING -> continueRepeating()
             COMPLETED -> startRepeatingExtraordinary()
-            TEMPORARY -> return
+            //TEMPORARY -> return
         }
     }
 

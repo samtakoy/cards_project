@@ -1,21 +1,24 @@
 package ru.samtakoy.core.services;
 
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.Nullable;
+import androidx.navigation.NavDeepLinkBuilder;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
 import ru.samtakoy.core.database.room.entities.other.LearnCourseHelper;
 import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
-import ru.samtakoy.core.screens.courses.info.CourseInfoActivity;
-import ru.samtakoy.core.screens.courses.list.CoursesListActivity;
+import ru.samtakoy.core.screens.courses.info.CourseInfoFragment;
+import ru.samtakoy.core.screens.courses.list.CoursesListFragment;
 import ru.samtakoy.core.screens.log.MyLog;
 import ru.samtakoy.core.services.learn_courses.LearnsApi;
 import ru.samtakoy.core.services.learn_courses.NewRepeatsApi;
@@ -23,6 +26,8 @@ import ru.samtakoy.core.services.learn_courses.UncompletedTaskApi;
 
 
 public class NotificationsPlannerService extends IntentService {
+
+    private static final String TAG = "NotificationsPlannerSer";
 
     // типизирование интента
     private static final String EXTRA_FLAG = "EXTRA_FLAG";
@@ -40,10 +45,13 @@ public class NotificationsPlannerService extends IntentService {
 
     // запланировать отложенную проверку наличия незавершенных задач
     // а при их отсутствии - отменить все таймеры
-    private static final int FLAG_SCHIFT_UNCOMPLETED_CHECKING = 5;
+    // при смахивании нотификации
+    private static final int FLAG_SHIFT_UNCOMPLETED_CHECKING = 5;
+    // приложение запрашивает проверить незавершенные задачи позднее
+    private static final int FLAG_PLAN_UNCOMPLETED_CHECKING = 6;
     // проверить наличие незавершенной и нотифицировать
-    private static final int FLAG_CHECK_UNCOMPLETED_TASKS = 6;
-    private static final int FLAG_SHOW_UNCOMPLETED_TASKS = 7;
+    private static final int FLAG_CHECK_UNCOMPLETED_TASKS_AND_NOTIFY_NOW = 7;
+    private static final int FLAG_SHOW_UNCOMPLETED_TASKS = 8;
 
     // TODO пока делаю копипаст LEARNING's И REPEATINGS's - все одинаково, только типы и сообщения разные, а также типы нотификаций
     //
@@ -110,26 +118,32 @@ public class NotificationsPlannerService extends IntentService {
         return intent;
     }
 
-    public static Intent getLearnCoursesShowIntent(Context callerContext, LearnCourseMode targetLCMode){
+    public static Intent getLearnCoursesShowIntent(Context callerContext, LearnCourseMode targetLCMode) {
         Intent intent = new Intent(callerContext, NotificationsPlannerService.class);
         intent.putExtra(EXTRA_FLAG, FLAG_NEW_REPEATINGS_SHOW);
         intent.putExtra(EXTRA_TARGET_MODE, targetLCMode);
         return intent;
     }
 
-    public static Intent getSchiftUncompletedCheckingIntent(Context callerContext){
+    public static Intent getSchiftUncompletedCheckingIntent(Context callerContext) {
         Intent intent = new Intent(callerContext, NotificationsPlannerService.class);
-        intent.putExtra(EXTRA_FLAG, FLAG_SCHIFT_UNCOMPLETED_CHECKING);
+        intent.putExtra(EXTRA_FLAG, FLAG_SHIFT_UNCOMPLETED_CHECKING);
         return intent;
     }
 
-    public static Intent getCheckUncompletedTasksIntent(Context callerContext){
+    public static Intent getPlanUncompletedCheckingIntent(Context callerContext) {
         Intent intent = new Intent(callerContext, NotificationsPlannerService.class);
-        intent.putExtra(EXTRA_FLAG, FLAG_CHECK_UNCOMPLETED_TASKS);
+        intent.putExtra(EXTRA_FLAG, FLAG_PLAN_UNCOMPLETED_CHECKING);
         return intent;
     }
 
-    public static Intent getShowUncompletedTasksIntent(Context callerContext){
+    public static Intent getCheckUncompletedTasksIntent(Context callerContext) {
+        Intent intent = new Intent(callerContext, NotificationsPlannerService.class);
+        intent.putExtra(EXTRA_FLAG, FLAG_CHECK_UNCOMPLETED_TASKS_AND_NOTIFY_NOW);
+        return intent;
+    }
+
+    public static Intent getShowUncompletedTasksIntent(Context callerContext) {
         Intent intent = new Intent(callerContext, NotificationsPlannerService.class);
         intent.putExtra(EXTRA_FLAG, FLAG_SHOW_UNCOMPLETED_TASKS);
         return intent;
@@ -177,18 +191,20 @@ public class NotificationsPlannerService extends IntentService {
                 return;
 
             case FLAG_NEW_REPEATINGS_SHOW:
-                if(targetMode == LearnCourseMode.LEARN_WAITING) {
+                if (targetMode == LearnCourseMode.LEARN_WAITING) {
                     showNewLearnings();
-                } else
-                if(targetMode == LearnCourseMode.REPEAT_WAITING) {
+                } else if (targetMode == LearnCourseMode.REPEAT_WAITING) {
                     showNewRepeatings();
                 }
                 return;
 
-            case FLAG_SCHIFT_UNCOMPLETED_CHECKING:
+
+            case FLAG_SHIFT_UNCOMPLETED_CHECKING:
+            case FLAG_PLAN_UNCOMPLETED_CHECKING:
+                // пока действуем одинаково
                 getUncompletedTaskApi().shiftUncompletedChecking();
                 return;
-            case FLAG_CHECK_UNCOMPLETED_TASKS:
+            case FLAG_CHECK_UNCOMPLETED_TASKS_AND_NOTIFY_NOW:
                 getUncompletedTaskApi().checkAndNotifyAboutUncompletedTasks(false);
                 return;
             case FLAG_SHOW_UNCOMPLETED_TASKS:
@@ -213,34 +229,52 @@ public class NotificationsPlannerService extends IntentService {
             // TODO error
             return;
         } else if (courseIds.length == 1) {
-            Intent activityIntent = CourseInfoActivity.newActivityIntent(this, courseIds[0]);
-            activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(activityIntent);
+            startCourseInfoActivity(courseIds[0]);
             return;
-        } else{
-            Intent activityIntent = CoursesListActivity.newActivityForCourseIdsIntent(this, courseIds);
-            activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(activityIntent);
+        } else {
+            showCoursesByIds(courseIds);
         }
+    }
+
+
+    private void startCourseInfoActivity(Long courseId) {
+
+        /*
+        Intent activityIntent = CourseInfoActivity.newActivityIntent(this, courseId);
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(activityIntent);
+        */
+
+        //
+        PendingIntent pIntent = new NavDeepLinkBuilder(this)
+                .setGraph(R.navigation.main_graph)
+                .setDestination(R.id.courseInfoFragment)
+                .setArguments(CourseInfoFragment.buildBundle(courseId))
+                .createPendingIntent();
+
+        try {
+            pIntent.send();
+        } catch (PendingIntent.CanceledException e) {
+            MyLog.add(TAG, e);
+        }
+
     }
 
     private void showUncompletedTasks() {
         List<LearnCourseEntity> uncompletedCourses = mUncompletedTaskApi.getUncompletedCourses();
-        if(uncompletedCourses.size() == 0){
-            // TODO error
+        if (uncompletedCourses.size() == 0) {
+            // nothing to show - open empty courses list?
+            showCoursesByIds(new Long[]{});
             return;
         } else
         if(uncompletedCourses.size() == 1){
-            Intent activityIntent = CourseInfoActivity.newActivityIntent(this, uncompletedCourses.get(0).getId());
-            activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(activityIntent);
+            startCourseInfoActivity(uncompletedCourses.get(0).getId());
             return;
         } else {
-            Intent activityIntent = CoursesListActivity.newActivityForModesIntent(this, mUncompletedTaskApi.getUncompletedCourseModes());
-            activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(activityIntent);
+            showCoursesByModes(mUncompletedTaskApi.getUncompletedCourseModes());
         }
     }
+
 
     @Override
     public void onCreate() {
@@ -298,4 +332,35 @@ public class NotificationsPlannerService extends IntentService {
         return mUncompletedTaskApi;
     }
 
+    private void showCoursesByIds(Long[] courseIds) {
+        /*
+        Intent activityIntent = CoursesListActivity.newActivityForCourseIdsIntent(this, courseIds);
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(activityIntent);*/
+
+        showCoursesActivityWithParams(null, courseIds);
+    }
+
+    private void showCoursesByModes(List<LearnCourseMode> modes) {
+        /*Intent activityIntent = CoursesListActivity.newActivityForModesIntent(this, modes);
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(activityIntent);*/
+
+        showCoursesActivityWithParams(modes, null);
+    }
+
+    private void showCoursesActivityWithParams(@Nullable List<LearnCourseMode> modes, @Nullable Long[] courseIds) {
+
+        PendingIntent pIntent = new NavDeepLinkBuilder(this)
+                .setGraph(R.navigation.main_graph)
+                .setDestination(R.id.coursesListFragment)
+                .setArguments(CoursesListFragment.buildBundle(null, modes, courseIds))
+                .createPendingIntent();
+
+        try {
+            pIntent.send();
+        } catch (PendingIntent.CanceledException e) {
+            MyLog.add(TAG, e);
+        }
+    }
 }

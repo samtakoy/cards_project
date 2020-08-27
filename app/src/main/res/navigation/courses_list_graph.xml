@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/second_graph"
+    app:startDestination="@id/coursesListFragment">
+
+    <fragment
+        android:id="@+id/coursesListFragment"
+        android:name="ru.samtakoy.core.screens.courses.list.CoursesListFragment"
+        android:label="CoursesListFragment">
+        <argument
+            android:name="ARG_TARGET_QPACK_ID"
+            app:argType="long"
+            android:defaultValue="0L" />
+        <argument
+            android:name="ARG_TARGET_MODES"
+            app:argType="integer[]" />
+        <argument
+            android:name="ARG_TARGET_COURSE_IDS"
+            app:argType="long[]" />
+        <action
+            android:id="@+id/action_coursesListFragment_to_courseInfoFragment"
+            app:destination="@id/courseInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/courseInfoFragment"
+        android:name="ru.samtakoy.core.screens.courses.info.CourseInfoFragment"
+        android:label="CourseInfoFragment">
+        <argument
+            android:name="ARG_LEARN_COURSE_ID"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_courseInfoFragment_to_cardsViewFragment"
+            app:destination="@id/cardsViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cardsViewFragment"
+        android:name="ru.samtakoy.core.screens.cards.CardsViewFragment"
+        android:label="CardsViewFragment">
+        <argument
+            android:name="ARG_COURSE_ID"
+            app:argType="long" />
+        <argument
+            android:name="ARG_VIEW_MODE"
+            app:argType="integer" />
+    </fragment>
+</navigation>

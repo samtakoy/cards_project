@@ -1,9 +1,12 @@
 package ru.samtakoy.core.navigation;
 
-import ru.terrakok.cicerone.Router;
+import androidx.navigation.NavController;
+
+//import ru.terrakok.cicerone.Router;
 
 public interface RouterHolder {
 
-    Router getRouter();
+    //Router getRouter();
 
+    NavController getNavController();
 }

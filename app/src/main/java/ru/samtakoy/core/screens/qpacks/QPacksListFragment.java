@@ -30,7 +30,7 @@ import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.database.room.entities.QPackEntity;
 import ru.samtakoy.core.navigation.RouterHolder;
-import ru.samtakoy.core.navigation.Screens;
+import ru.samtakoy.core.screens.qpack.QPackInfoFragment;
 
 public class QPacksListFragment extends MvpAppCompatFragment implements QPacksListView{
 
@@ -130,7 +130,13 @@ public class QPacksListFragment extends MvpAppCompatFragment implements QPacksLi
 
     @Override
     public void showPackInfo(QPackEntity qPack) {
-        mRouterHolder.getRouter().navigateTo(new Screens.QPackInfoScreen(qPack.getId()));
+
+        mRouterHolder.getNavController().navigate(
+                R.id.action_qPacksListFragment_to_qPackInfoFragment,
+                QPackInfoFragment.buildBundle(qPack.getId())
+        );
+
+        //mRouterHolder.getRouter().navigateTo(new Screens.QPackInfoScreen(qPack.getId()));
     }
 
     @Override

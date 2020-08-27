@@ -18,13 +18,16 @@ public interface CoursesRepository {
     @Nullable
     LearnCourseEntity getCourse(@NotNull Long learnCourseId);
 
+    @NotNull
+    LearnCourseEntity getTempCourseFor(Long qPackId, List<Long> cardIds, Boolean shuffleCards);
+
     @Nullable
     LearnCourseEntity getCourseByMode(@NotNull LearnCourseMode mode);
 
 
-    void updateCourse(LearnCourseEntity course);
+    boolean updateCourse(LearnCourseEntity course);
 
-    void deleteCourse(long courseId);
+    boolean deleteCourse(long courseId);
 
     // TODO TEMP
     Long addNewCourseNow(LearnCourseEntity newCourse);

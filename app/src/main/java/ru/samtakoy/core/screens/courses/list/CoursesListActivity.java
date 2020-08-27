@@ -5,23 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
 
 import java.io.Serializable;
 import java.util.List;
 
-import javax.inject.Inject;
-
-import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
 import ru.samtakoy.core.navigation.RouterHolder;
-import ru.samtakoy.core.screens.SingleFragmentActivity;
-import ru.terrakok.cicerone.Navigator;
-import ru.terrakok.cicerone.NavigatorHolder;
-import ru.terrakok.cicerone.Router;
-import ru.terrakok.cicerone.android.support.SupportAppNavigator;
 
-public class CoursesListActivity extends SingleFragmentActivity implements RouterHolder {
+
+// TODO удалить
+public class CoursesListActivity extends AppCompatActivity implements RouterHolder {
 
 
     private static final String EXTRA_TARGET_QPACK_ID = "EXTRA_TARGET_QPACK_ID";
@@ -31,7 +26,7 @@ public class CoursesListActivity extends SingleFragmentActivity implements Route
 
     public static Intent newActivityForModesIntent(
             Context ctx, @Nullable List<LearnCourseMode> modesShowFilter
-    ){
+    ) {
         Intent aIntent = new Intent(ctx, CoursesListActivity.class);
         aIntent.putExtra(EXTRA_TARGET_MODES, (Serializable) modesShowFilter);
         return aIntent;
@@ -51,22 +46,14 @@ public class CoursesListActivity extends SingleFragmentActivity implements Route
     private List<LearnCourseMode> mTargetModes;
     @Nullable private Long[] mTargetCourseIds;
 
-
-    @Inject Router mRouter;
-    @Inject NavigatorHolder mNavigatorHolder;
-    private Navigator mNavigator = new SupportAppNavigator(this, getFragmentContainerId());
-
-
-
+/*
     @Override
     protected Fragment createFragment() {
         return CoursesListFragment.newFragment(mTargetQPackId, mTargetModes, mTargetCourseIds);
-    }
+    }*/
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-
-        MyApp.getInstance().getAppComponent().inject(this);
 
         super.onCreate(savedInstanceState);
 
@@ -78,17 +65,17 @@ public class CoursesListActivity extends SingleFragmentActivity implements Route
     @Override
     public void onResume() {
         super.onResume();
-        mNavigatorHolder.setNavigator(mNavigator);
+        //mNavigatorHolder.setNavigator(mNavigator);
     }
 
     @Override
     public void onPause() {
-        mNavigatorHolder.removeNavigator();
+        //mNavigatorHolder.removeNavigator();
         super.onPause();
     }
 
     @Override
-    public Router getRouter() {
-        return mRouter;
+    public NavController getNavController() {
+        return null;
     }
 }

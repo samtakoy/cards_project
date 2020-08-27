@@ -23,6 +23,8 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.ProgressIndicator;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.inject.Inject;
 
 import moxy.MvpAppCompatFragment;
@@ -61,14 +63,19 @@ public class CardsViewFragment extends MvpAppCompatFragment
             CardViewMode viewMode
     ) {
 
-        Bundle args = new Bundle();
-        args.putLong(ARG_COURSE_ID, qLearnPlanId);
-        //args.putExtra(ARG_VIEW_SOURCE, viewSource);
-        args.putSerializable(ARG_VIEW_MODE, viewMode);
+        Bundle args = buildBundle(qLearnPlanId, viewSource, viewMode);
 
         CardsViewFragment fragment = new CardsViewFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @NotNull
+    public static Bundle buildBundle(Long qLearnPlanId, CardViewSource viewSource, CardViewMode viewMode) {
+        Bundle args = new Bundle();
+        args.putLong(ARG_COURSE_ID, qLearnPlanId);
+        args.putInt(ARG_VIEW_MODE, viewMode.ordinal());
+        return args;
     }
 
     private ProgressIndicator mProgressIndicator;
@@ -89,7 +96,8 @@ public class CardsViewFragment extends MvpAppCompatFragment
     }
 
     private CardViewMode readViewMode() {
-        return (CardViewMode) getArguments().getSerializable(ARG_VIEW_MODE);
+        int cardViewModeOrdinal = getArguments().getInt(ARG_VIEW_MODE);
+        return CardViewMode.get(cardViewModeOrdinal);
     }
 
     private Long readLearnCourseId() {
@@ -329,7 +337,9 @@ public class CardsViewFragment extends MvpAppCompatFragment
     public void closeScreen() {
         //getActivity().getFragmentManager().popBackStack();
         //finish();
-        mRouterHolder.getRouter().exit();
+
+        mRouterHolder.getNavController().navigateUp();
+        //mRouterHolder.getRouter().exit();
     }
 
     @Override

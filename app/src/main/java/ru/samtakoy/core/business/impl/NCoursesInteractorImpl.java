@@ -18,7 +18,6 @@ import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
 import ru.samtakoy.core.database.room.entities.QPackEntity;
 import ru.samtakoy.core.database.room.entities.elements.Schedule;
 import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
-import ru.samtakoy.core.utils.DateUtils;
 
 public class NCoursesInteractorImpl implements NCoursesInteractor {
 
@@ -141,23 +140,7 @@ public class NCoursesInteractorImpl implements NCoursesInteractor {
 
     @Override
     public LearnCourseEntity getTempCourseFor(Long qPackId, List<Long> cardIds, boolean shuffleCards) {
-
-        LearnCourseEntity learnCourse = mCoursesRepository.getCourseByMode(LearnCourseMode.TEMPORARY);
-        Date date = DateUtils.getCurrentTimeDate();
-
-        if (learnCourse == null) {
-            learnCourse = LearnCourseEntity.Companion.createNewPreparing(
-                    qPackId, "", LearnCourseMode.TEMPORARY, cardIds, Schedule.createEmpty(), date
-            );
-            mCoursesRepository.addNewCourseNow(learnCourse);
-        } else {
-            learnCourse.change(qPackId, cardIds, date);
-        }
-        // TODO сомнительно, что этот тут должно быть
-        learnCourse.prepareToCardsView(shuffleCards);
-
-        mCoursesRepository.updateCourse(learnCourse);
-        return learnCourse;
+        return mCoursesRepository.getTempCourseFor(qPackId, cardIds, shuffleCards);
     }
 
     @Override

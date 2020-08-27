@@ -35,12 +35,16 @@ import static ru.samtakoy.core.services.NotificationsHelper.CHANNEL_ID;
 
 public class UncompletedTaskApi {
 
+    // нотификации по курсам, которые начали учить или повторять
+    // и не закончили
+
     //
     //.загрузка: актуализация и показ нотификаций
     //.
-    //.начали курс:           запланировать отложенную проверку состояния
-    //.возобновили курс:      запланировать отложенную проверку состояния
-    //.нажали на нотификацию: запланировать отложенную проверку состояния
+    //.начали курс:           запланировать отложенную проверку состояния на 30-60 мин
+    //.возобновили курс:      запланировать отложенную проверку состояния на 30-60 мин
+    //.завершили курс -  TODO по хорошему, проверить - надо ли отменить таймер. СЕЙЧАС НЕ ОТМЕНЯЕТСЯ!
+    //.нажали на нотификацию: открываем список незаконченных
     //.смахнули нотификацию:  отложить нотификации
     //
 
@@ -55,8 +59,8 @@ public class UncompletedTaskApi {
     protected CoursesRepository mCoursesRepository;
 
     private UncompletedTaskSettings mS = new UncompletedTaskSettings(
-            30 * ScheduleTimeUnit.MINUTE.getMillis(),
-            30 * ScheduleTimeUnit.MINUTE.getMillis()
+            1 * ScheduleTimeUnit.MINUTE.getMillis(),
+            1 * ScheduleTimeUnit.MINUTE.getMillis()
     );
 
     @Inject
@@ -72,22 +76,27 @@ public class UncompletedTaskApi {
         return mContext.getApplicationContext();
     }
 
-    protected String getString(@StringRes int id){
+    protected String getString(@StringRes int id) {
         return mContext.getResources().getString(id);
     }
 
+    /*
+    планирует показ нотификаций;
     public void onUncompletedTaskShow(){
         cancelAllAlarmsAndNotifications();
         // запланировать проверку
         //shiftUncompletedChecking();
         planCheckingAlarm(mS.getOpenCourseShiftMillis());
-    }
+    }*/
 
+    /**
+     * onBoot - не используется
+     */
     public void checkAndNotifyAboutUncompletedTasks(boolean onBoot) {
 
         List<LearnCourseEntity> uncompletedCourses = getUncompletedCourses();
 
-        if(uncompletedCourses.size() == 0){
+        if (uncompletedCourses.size() == 0) {
             // отменить все таймеры и нотификации
             cancelAllAlarmsAndNotifications();
             return;
@@ -133,10 +142,10 @@ public class UncompletedTaskApi {
 
     @NotNull
     public List<LearnCourseEntity> getUncompletedCourses() {
-        // TODO
+        // т.е. те, которые в процессе обучения, или повторения
         return mCoursesRepository.getCoursesByModesNow(
-                LearnCourseMode.LEARN_WAITING,
-                LearnCourseMode.REPEAT_WAITING);
+                LearnCourseMode.LEARNING,
+                LearnCourseMode.REPEATING);
     }
 
     private void cancelAllAlarmsAndNotifications() {
@@ -169,6 +178,7 @@ public class UncompletedTaskApi {
         aManager.set(AlarmManager.ELAPSED_REALTIME,  targetTime, pIntent);
     }
 
+    //интент, заставляющий проверить стейт незавершенных в указанное время и при наличии таковых показать нотификацию
     private PendingIntent getAlarmPendingIntent(boolean noCreate) {
         return PendingIntent.getService(getAppContext(), REQ_CODE_UNCOMPLETED_TASKS_ALARM, NotificationsPlannerService.getCheckUncompletedTasksIntent(getAppContext()), noCreate ?  PendingIntent.FLAG_NO_CREATE: 0);
     }

@@ -31,6 +31,11 @@ public class CoursesPlannerImpl implements CoursesPlanner {
     }
 
     @Override
+    public void planUncompletedTasksChecking() {
+        mCtx.startService(NotificationsPlannerService.getPlanUncompletedCheckingIntent(mCtx));
+    }
+
+    @Override
     public void reScheduleLearnCourses() {
         mCtx.startService(NotificationsPlannerService.getLearnCoursesReSchedulingIntent(
                 mCtx, LearnCourseMode.REPEAT_WAITING

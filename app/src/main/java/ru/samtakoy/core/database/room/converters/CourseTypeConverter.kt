@@ -9,5 +9,5 @@ class CourseTypeConverter {
     fun fromInt(id: Int): CourseType = CourseType.valueOfId(id)
 
     @TypeConverter
-    fun fromCourseType(type: CourseType): Int = type.id
+    fun fromCourseType(type: CourseType): Int = type.dbId
 }

@@ -5,43 +5,73 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import ru.samtakoy.core.business.CoursesRepository;
+import ru.samtakoy.core.business.TempCourseRepository;
 import ru.samtakoy.core.database.room.MyRoomDb;
 import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
+import ru.samtakoy.core.database.room.entities.types.CourseType;
 import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
+import ru.samtakoy.core.screens.log.MyLog;
 
 public class CoursesRepositoryImpl implements CoursesRepository {
 
-    private MyRoomDb db;
+    private static final String TAG = "CoursesRepositoryImpl";
 
-    public CoursesRepositoryImpl(MyRoomDb db) {
-        this.db = db;
+    @Inject
+    MyRoomDb db;
+    @Inject
+    TempCourseRepository mTempCourseRepository;
+
+    @Inject
+    public CoursesRepositoryImpl() {
     }
 
     public LearnCourseEntity getCourse(Long learnCourseId) {
+
+        if (learnCourseId == mTempCourseRepository.getTempCourseId()) {
+            return mTempCourseRepository.getTempCourse();
+        }
         return db.courseDao().getLearnCourse(learnCourseId);
     }
 
     @Override
+    public LearnCourseEntity getTempCourseFor(Long qPackId, List<Long> cardIds, Boolean shuffleCards) {
+        return mTempCourseRepository.getTempCourseFor(qPackId, cardIds, shuffleCards);
+    }
+
+    @Override
     public LearnCourseEntity getCourseByMode(LearnCourseMode mode) {
-        return db.courseDao().getLearnCourseByMode(mode.getId());
-    }
-
-
-    @Override
-    public void updateCourse(LearnCourseEntity course) {
-        db.courseDao().updateCourse(course);
+        return db.courseDao().getLearnCourseByMode(mode.getDbId());
     }
 
     @Override
-    public void deleteCourse(long courseId) {
-        db.courseDao().deleteCourseById(courseId);
+    public boolean updateCourse(LearnCourseEntity course) {
+
+        if (course.getCourseType() == CourseType.TEMPORARY) {
+            mTempCourseRepository.updateTempCourse(course);
+            return true;
+        }
+
+        return db.courseDao().updateCourse(course) > 0;
+    }
+
+    @Override
+    public boolean deleteCourse(long courseId) {
+        return db.courseDao().deleteCourseById(courseId) > 0;
     }
 
     @Override
     public Long addNewCourseNow(LearnCourseEntity newCourse) {
+
+        if (newCourse.getCourseType() == CourseType.TEMPORARY) {
+            MyLog.add(TAG + ", CourseType.TEMPORARY cant be added to Database");
+            return 0L;
+        }
+
         Long id = db.courseDao().addLearnCourse(newCourse);
         newCourse.setId(id);
         return id;
@@ -51,6 +81,13 @@ public class CoursesRepositoryImpl implements CoursesRepository {
     public Single<LearnCourseEntity> addNewCourse(LearnCourseEntity newCourse) {
         return Single.fromCallable(
                 () -> {
+
+                    if (newCourse.getCourseType() == CourseType.TEMPORARY) {
+                        String error = TAG + ", CourseType.TEMPORARY cant be added to Database";
+                        MyLog.add(error);
+                        throw new Exception(error);
+                    }
+
                     Long id = db.courseDao().addLearnCourse(newCourse);
                     newCourse.setId(id);
                     return newCourse;
@@ -58,62 +95,32 @@ public class CoursesRepositoryImpl implements CoursesRepository {
         );
     }
 
+
     @Override
-    //public Observable<LearnCourse> getAllCourses() {
     public Single<List<LearnCourseEntity>> getAllCourses() {
-        return db.courseDao().getAllCoursesExcept(LearnCourseMode.TEMPORARY.getId()).singleOrError();
-        /*
-        return
-                Observable.fromCallable(
-                        () -> {
-                            List<LearnCourseEntity> result = ContentProviderHelper.getAllCourses(mCtx);
-                            MyLog.add("-- courses count: " + result.size() + "m thread:" + Thread.currentThread().getName());
-                            return result;
-                        }
-                ).singleOrError();*/
+        return db.courseDao().getAllCourses().singleOrError();
     }
 
     @Override
     public Single<List<LearnCourseEntity>> getCoursesByIds(Long[] targetCourseIds) {
         return db.courseDao().getCoursesByIds(Arrays.asList(targetCourseIds)).singleOrError();
-        /*return Observable.fromCallable(
-                () -> {
-                    List<LearnCourseEntity> result = ContentProviderHelper.getCoursesByIds(mCtx, targetCourseIds);
-                    MyLog.add("-- courses count: " + result.size() + "m thread:" + Thread.currentThread().getName());
-                    return result;
-                }
-        ).singleOrError();*/
     }
 
     private List<Integer> modesToIds(List<LearnCourseMode> targetModes) {
         List<Integer> result = new ArrayList<>(targetModes.size());
         for (LearnCourseMode mode : targetModes) {
-            result.add(mode.getId());
+            result.add(mode.getDbId());
         }
         return result;
     }
 
     @Override
     public Single<List<LearnCourseEntity>> getCoursesByModes(List<LearnCourseMode> targetModes) {
-
         return db.courseDao().getCoursesByModes(modesToIds(targetModes)).singleOrError();
-        /*return Observable.fromCallable(
-                () -> {
-                    List<LearnCourseEntity> result = ContentProviderHelper.getCoursesByModes(mCtx, targetModes);
-                    MyLog.add("-- courses count: " + result.size() + "m thread:" + Thread.currentThread().getName());
-                    return result;
-                }
-        ).singleOrError();*/
     }
 
     @Override
     public Flowable<List<LearnCourseEntity>> getCoursesByModes(LearnCourseMode... mode) {
-
-        /*
-        List<Integer> modes = new ArrayList<>(mode.length);
-        for(LearnCourseMode oneMode: mode){
-            modes.add(oneMode.getId());
-        }*/
         return db.courseDao().getLearnCourseByModes(Arrays.asList(mode));
     }
 
@@ -124,17 +131,8 @@ public class CoursesRepositoryImpl implements CoursesRepository {
 
     @Override
     public Single<List<LearnCourseEntity>> getCoursesForQPack(Long qPackId) {
-
         return db.courseDao().getCoursesForQPack(qPackId).singleOrError();
-        /*return Observable.fromCallable(
-                () -> {
-                    List<LearnCourseEntity> result = ContentProviderHelper.getCoursesFor(mCtx, qPackId);
-                    MyLog.add("-- courses count: " + result.size() + "m thread:" + Thread.currentThread().getName());
-                    return result;
-                }
-        ).singleOrError();*/
     }
-
 
     @Override
     public List<LearnCourseEntity> getCoursesLessThan(LearnCourseMode mode, Date repeatDate) {

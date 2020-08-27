@@ -7,6 +7,7 @@ import ru.samtakoy.core.database.room.entities.types.CourseType
 import ru.samtakoy.core.database.room.entities.types.LearnCourseMode
 import ru.samtakoy.core.screens.log.MyLog
 import ru.samtakoy.core.utils.DateUtils
+import java.io.Serializable
 import java.util.*
 
 @Entity(tableName = LearnCourseEntity.table,
@@ -18,7 +19,7 @@ import java.util.*
                     childColumns = [LearnCourseEntity._qpack_id],
                     onDelete = ForeignKey.RESTRICT)
         ],
-        indices = [Index(LearnCourseEntity._mode)]
+        indices = [Index(LearnCourseEntity._mode), Index(LearnCourseEntity._course_type)]
 )
 class LearnCourseEntity(
 
@@ -64,7 +65,7 @@ class LearnCourseEntity(
         @field:TypeConverters(DateLongConverter::class)
         @ColumnInfo(name = LearnCourseEntity._repeat_date) var repeatDate: java.util.Date
 
-) {
+) : Serializable {
 
 
     //@Ignore
@@ -108,6 +109,7 @@ class LearnCourseEntity(
                     repeatDate ?: DateUtils.getCurrentTimeDate()
             )
         }
+
 
         fun createNewPreparing(
                 qPackId: Long, title: String,

@@ -35,6 +35,8 @@ import com.misc.RealPathUtil;
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
@@ -50,12 +52,12 @@ import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.database.room.entities.QPackEntity;
 import ru.samtakoy.core.database.room.entities.ThemeEntity;
 import ru.samtakoy.core.navigation.RouterHolder;
-import ru.samtakoy.core.navigation.Screens;
 import ru.samtakoy.core.screens.export_cards.BatchExportDialogFragment;
 import ru.samtakoy.core.screens.import_cards.BatchImportDialogFragment;
 import ru.samtakoy.core.screens.import_cards.ImportPackDialogFragment;
 import ru.samtakoy.core.screens.import_cards.ImportZipDialogFragment;
 import ru.samtakoy.core.screens.log.LogActivity;
+import ru.samtakoy.core.screens.qpack.QPackInfoFragment;
 import ru.samtakoy.core.screens.themes.mvp.ThemeListView;
 import ru.samtakoy.core.screens.themes.mvp.ThemesListPresenter;
 import ru.samtakoy.features.import_export.utils.ImportCardsOpts;
@@ -99,13 +101,19 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         return result;
     }/***/
 
-    public static ThemesListFragment newFragment(Long themeId, String themeTitle){
+    public static ThemesListFragment newFragment(Long themeId, String themeTitle) {
         ThemesListFragment result = new ThemesListFragment();
+        Bundle args = buildBundle(themeId, themeTitle);
+        result.setArguments(args);
+        return result;
+    }
+
+    @NotNull
+    private static Bundle buildBundle(Long themeId, String themeTitle) {
         Bundle args = new Bundle();
         args.putLong(ARG_KEY_THEME_ID, themeId);
         args.putString(ARG_KEY_THEME_TITLE, themeTitle);
-        result.setArguments(args);
-        return result;
+        return args;
     }
 
     // TODO вместо этого NavigationHolder
@@ -121,13 +129,15 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
 
     private RouterHolder mRouterHolder;
 
+    //private NavController mNavController;
+
     @InjectPresenter
     ThemesListPresenter mPresenter;
     @Inject
     ThemesListPresenter.Factory mPresenterFactory;
 
     @ProvidePresenter
-    ThemesListPresenter providePresenter(){
+    ThemesListPresenter providePresenter() {
         return mPresenterFactory.create(readThemeId(), readThemeTitle());
     }
 
@@ -135,6 +145,8 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_themes, container, false);
+
+        //mNavController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_container);
 
         mThemesRecycler = v.findViewById(R.id.themes_list_recycler);
         mThemesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -267,7 +279,9 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
     @Override
     public void navigateToOnlineImport() {
         //mCallbacks.onNavigateToOnlineImport();
-        mRouterHolder.getRouter().navigateTo(new Screens.OnlineImportScreen());
+
+        mRouterHolder.getNavController().navigate(R.id.action_themesListFragment_to_onlineImportFragment);
+        //mRouterHolder.getRouter().navigateTo(new Screens.OnlineImportScreen());
     }
 
     public void showMessage(int resourceId){
@@ -522,16 +536,12 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
 
     // //////////////////////////////////////////////////////////////////////////////
 
-    /*
-    @Override
-    public void navigateToAllCourses() {
-        getContext().startActivity(CoursesListActivity.newActivityIntent(getContext(), null));
-    }/***/
-
     @Override
     public void navigateToSettings() {
-        //mCallbacks.onNavigateToSettings();
-        mRouterHolder.getRouter().navigateTo(new Screens.SettingsScreen());
+
+        mRouterHolder.getNavController().navigate(R.id.settingsFragment);
+
+        //mRouterHolder.getRouter().navigateTo(new Screens.SettingsScreen());
     }
 
     @Override
@@ -594,12 +604,25 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
 
     private void navigateToTheme(ThemeEntity theme) {
         //mCallbacks.onThemeSelected(theme);
-        mRouterHolder.getRouter().navigateTo(new Screens.ThemeListScreen(theme.getId(), theme.getTitle()));
+
+        //mRouterHolder.getRouter().navigateTo(new Screens.ThemeListScreen(theme.getId(), theme.getTitle()));
+
+        /*
+        ThemesListFragmentDirections.ActionThemesListFragmentSelf action = ThemesListFragmentDirections.actionThemesListFragmentSelf();
+        action.setARGKEYTHEMEID(theme.getId());
+        action.setARGKEYTHEMETITLE(theme.getTitle());*/
+
+        mRouterHolder.getNavController().navigate(R.id.action_themesListFragment_self, buildBundle(theme.getId(), theme.getTitle()));
     }
 
     private void navigateToQPack(QPackEntity qPack) {
         //mCallbacks.onQPackSelected(qPack);
-        mRouterHolder.getRouter().navigateTo(new Screens.QPackInfoScreen(qPack.getId()));
+
+        mRouterHolder.getNavController().navigate(
+                R.id.action_themesListFragment_to_qPackInfoFragment,
+                QPackInfoFragment.buildBundle(qPack.getId())
+        );
+        //mRouterHolder.getRouter().navigateTo(new Screens.QPackInfoScreen(qPack.getId()));
     }
 
     @Override

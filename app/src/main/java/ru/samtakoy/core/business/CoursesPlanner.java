@@ -9,6 +9,9 @@ import ru.samtakoy.core.database.room.entities.elements.Schedule;
 public interface CoursesPlanner {
 
 
+    // проверить позднее - есть ли начатые незавершенные обучения/повторения и показать нотификацию
+    void planUncompletedTasksChecking();
+
     void reScheduleLearnCourses();
 
     void planAdditionalCards(Long qPackId, List<Long> errorCardIds, Schedule schedule);

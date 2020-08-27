@@ -30,8 +30,8 @@ import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
 import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
 import ru.samtakoy.core.navigation.RouterHolder;
-import ru.samtakoy.core.navigation.Screens;
 import ru.samtakoy.core.screens.DialogHelper;
+import ru.samtakoy.core.screens.cards.CardsViewFragment;
 import ru.samtakoy.core.screens.cards.types.CardViewMode;
 import ru.samtakoy.core.screens.cards.types.CardViewSource;
 import ru.samtakoy.core.screens.log.LogActivity;
@@ -44,10 +44,16 @@ public class CourseInfoFragment extends MvpAppCompatFragment implements CourseIn
 
     public static CourseInfoFragment newFragment(Long learnCourseId) {
         CourseInfoFragment result = new CourseInfoFragment();
-        Bundle args = new Bundle();
-        args.putLong(ARG_LEARN_COURSE_ID, learnCourseId);
+        Bundle args = buildBundle(learnCourseId);
         result.setArguments(args);
         return result;
+    }
+
+    @NotNull
+    public static Bundle buildBundle(Long learnCourseId) {
+        Bundle args = new Bundle();
+        args.putLong(ARG_LEARN_COURSE_ID, learnCourseId);
+        return args;
     }
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -127,7 +133,8 @@ public class CourseInfoFragment extends MvpAppCompatFragment implements CourseIn
 
     @Override
     public void exit() {
-        mRouterHolder.getRouter().exit();
+        mRouterHolder.getNavController().navigateUp();
+        //mRouterHolder.getRouter().exit();
     }
 
     @Nullable
@@ -158,9 +165,12 @@ public class CourseInfoFragment extends MvpAppCompatFragment implements CourseIn
             CardViewSource viewSource,
             @NotNull CardViewMode viewMode
     ) {
-        mRouterHolder.getRouter().navigateTo(
-                new Screens.CardsViewScreen(learnCourseId, viewSource, viewMode)
+
+        mRouterHolder.getNavController().navigate(
+                R.id.action_courseInfoFragment_to_cardsViewFragment,
+                CardsViewFragment.buildBundle(learnCourseId, viewSource, viewMode)
         );
+        //mRouterHolder.getRouter().navigateTo(new Screens.CardsViewScreen(learnCourseId, viewSource, viewMode));
     }
 
     @Override

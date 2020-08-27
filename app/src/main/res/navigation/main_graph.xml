@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/themesListFragment">
+
+    <fragment
+        android:id="@+id/themesListFragment"
+        android:name="ru.samtakoy.core.screens.themes.ThemesListFragment"
+        android:label="ThemesListFragment">
+
+        <action
+            android:id="@+id/action_themesListFragment_self"
+            app:destination="@id/themesListFragment" />
+        <argument
+            android:name="ARG_KEY_THEME_ID"
+            app:argType="long"
+            android:defaultValue="0L" />
+        <argument
+            android:name="ARG_KEY_THEME_TITLE"
+            app:argType="string"
+            android:defaultValue='""' />
+        <action
+            android:id="@+id/action_themesListFragment_to_qPackInfoFragment"
+            app:destination="@id/qPackInfoFragment" />
+        <action
+            android:id="@+id/action_themesListFragment_to_onlineImportFragment"
+            app:destination="@id/onlineImportFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/qPacksListFragment"
+        android:name="ru.samtakoy.core.screens.qpacks.QPacksListFragment"
+        android:label="QPacksListFragment">
+        <action
+            android:id="@+id/action_qPacksListFragment_to_qPackInfoFragment"
+            app:destination="@id/qPackInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/coursesListFragment"
+        android:name="ru.samtakoy.core.screens.courses.list.CoursesListFragment"
+        android:label="CoursesListFragment">
+        <argument
+            android:name="ARG_TARGET_QPACK_ID"
+            android:defaultValue="0L"
+            app:argType="long" />
+        <argument
+            android:name="ARG_TARGET_MODES"
+            app:argType="integer[]" />
+        <argument
+            android:name="ARG_TARGET_COURSE_IDS"
+            app:argType="long[]" />
+        <action
+            android:id="@+id/action_coursesListFragment_to_courseInfoFragment"
+            app:destination="@id/courseInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="ru.samtakoy.features.settings.SettingsFragment"
+        android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/courseInfoFragment"
+        android:name="ru.samtakoy.core.screens.courses.info.CourseInfoFragment"
+        android:label="CourseInfoFragment">
+        <argument
+            android:name="ARG_LEARN_COURSE_ID"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_courseInfoFragment_to_cardsViewFragment"
+            app:destination="@id/cardsViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/qPackInfoFragment"
+        android:name="ru.samtakoy.core.screens.qpack.QPackInfoFragment"
+        android:label="QPackInfoFragment">
+        <argument
+            android:name="ARG_QPACK_ID"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_qPackInfoFragment_to_cardsViewFragment"
+            app:destination="@id/cardsViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/onlineImportFragment"
+        android:name="ru.samtakoy.core.screens.online_import.OnlineImportFragment"
+        android:label="OnlineImportFragment" />
+    <fragment
+        android:id="@+id/cardsViewFragment"
+        android:name="ru.samtakoy.core.screens.cards.CardsViewFragment"
+        android:label="CardsViewFragment">
+        <argument
+            android:name="ARG_COURSE_ID"
+            app:argType="long" />
+        <argument
+            android:name="ARG_VIEW_MODE"
+            app:argType="integer" />
+    </fragment>
+</navigation>

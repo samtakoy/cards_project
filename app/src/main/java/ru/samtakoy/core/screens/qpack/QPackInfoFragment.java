@@ -36,10 +36,12 @@ import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.database.room.entities.CardEntity;
 import ru.samtakoy.core.navigation.RouterHolder;
-import ru.samtakoy.core.navigation.Screens;
+import ru.samtakoy.core.screens.cards.CardsViewFragment;
 import ru.samtakoy.core.screens.cards.types.CardViewMode;
 import ru.samtakoy.core.screens.cards.types.CardViewSource;
 import ru.samtakoy.core.screens.courses.CourseEditDialogFragment;
+import ru.samtakoy.core.screens.courses.info.CourseInfoFragment;
+import ru.samtakoy.core.screens.courses.list.CoursesListFragment;
 import ru.samtakoy.core.screens.courses.select.SelectCourseDialogFragment;
 
 public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfoView, CardViewingTypeSelector.CardViewingTypeSelectorListener {
@@ -55,10 +57,14 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
 
     public static QPackInfoFragment createFragment(Long qPackId) {
         QPackInfoFragment result = new QPackInfoFragment();
+        result.setArguments(buildBundle(qPackId));
+        return result;
+    }
+
+    public static Bundle buildBundle(Long qPackId) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_QPACK_ID, qPackId);
-        result.setArguments(args);
-        return result;
+        return args;
     }
 
 
@@ -267,7 +273,9 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
     }
 
     public void showCourseScreen(Long courseId) {
-        mRouterHolder.getRouter().navigateTo(new Screens.CourseInfoScreen(courseId));
+
+        mRouterHolder.getNavController().navigate(R.id.courseInfoFragment, CourseInfoFragment.buildBundle(courseId));
+        //mRouterHolder.getRouter().navigateTo(new Screens.CourseInfoScreen(courseId));
     }
 
     public void showMessage(int messageId){
@@ -276,7 +284,8 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
 
     public void closeScreen() {
 
-        mRouterHolder.getRouter().exit();
+        mRouterHolder.getNavController().navigateUp();
+        //mRouterHolder.getRouter().exit();
     }
 
     @Override
@@ -293,7 +302,10 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
 
     @Override
     public void showCourses(Long qPackId) {
-        mRouterHolder.getRouter().navigateTo(Screens.CoursesListScreen.qPackCoursesScreen(qPackId));
+        mRouterHolder.getNavController().navigate(
+                R.id.coursesListFragment, CoursesListFragment.buildBundle(qPackId, null, null)
+        );
+        //mRouterHolder.getRouter().navigateTo(Screens.CoursesListScreen.qPackCoursesScreen(qPackId));
     }
 
     public void requestNewCourseCreation(String title) {
@@ -316,9 +328,19 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
     }
 
     public void showLearnCourseCards(Long learnCourseId) {
-        mRouterHolder.getRouter().navigateTo(
-                new Screens.CardsViewScreen(learnCourseId, CardViewSource.SIMPLE_VIEW, CardViewMode.LEARNING)
+
+
+        mRouterHolder.getNavController().navigate(
+                R.id.action_qPackInfoFragment_to_cardsViewFragment,
+                CardsViewFragment.buildBundle(
+                        learnCourseId,
+                        CardViewSource.SIMPLE_VIEW,
+                        CardViewMode.LEARNING
+                )
         );
+
+
+        //mRouterHolder.getRouter().navigateTo(new Screens.CardsViewScreen(learnCourseId, CardViewSource.SIMPLE_VIEW, CardViewMode.LEARNING));
     }
 
     @Override

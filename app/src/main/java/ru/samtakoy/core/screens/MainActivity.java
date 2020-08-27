@@ -12,27 +12,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.navigation.NavigationView;
-
-import org.jetbrains.annotations.NotNull;
-
-import javax.inject.Inject;
 
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.navigation.RouterHolder;
-import ru.samtakoy.core.navigation.Screens;
-import ru.samtakoy.core.navigation.TopNavigable;
 import ru.samtakoy.core.screens.log.MyLog;
-import ru.terrakok.cicerone.Navigator;
-import ru.terrakok.cicerone.NavigatorHolder;
-import ru.terrakok.cicerone.Router;
-import ru.terrakok.cicerone.android.support.SupportAppNavigator;
-import ru.terrakok.cicerone.android.support.SupportAppScreen;
-import ru.terrakok.cicerone.commands.Command;
-import ru.terrakok.cicerone.commands.Forward;
-import ru.terrakok.cicerone.commands.Replace;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RouterHolder {
 
@@ -40,51 +28,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
 
-    // --
-    @Inject
-    public Router mRouter;
-    //@Inject
-    //public EventBus mEventBus;
-    @Inject
-    NavigatorHolder mNavigatorHolder;
-    private Navigator mNavigator = new SupportAppNavigator(this, R.id.container) {
-        @Override
-        public void applyCommands(Command[] commands) {
-            super.applyCommands(commands);
-            getSupportFragmentManager().executePendingTransactions();
-        }
+    private NavController mNavController;
 
-        @Override
-        protected void fragmentForward(@NotNull Forward command) {
-            super.fragmentForward(command);
-
-            processNavigable((SupportAppScreen) command.getScreen());
-        }
-
-        @Override
-        protected void fragmentReplace(@NotNull Replace command) {
-            super.fragmentReplace(command);
-
-            processNavigable((SupportAppScreen) command.getScreen());
-        }
-
-        private void processNavigable(SupportAppScreen screen) {
-            if (screen instanceof TopNavigable) {
-                TopNavigable topNavigable = ((TopNavigable) screen);
-
-                if (topNavigable.isNavigationItemSet()) {
-                    int itemId = topNavigable.getTopMenuItemId();
-                    MenuItem item = mNavigationView.getMenu().findItem(itemId);
-                    item.setChecked(true);
-
-                    changeTitle(item.getTitle());
-                }
-
-            }
-        }
-
-
-    };
 
     public static Intent newRootActivity(Context context) {
         Intent aIntent = new Intent(context, MainActivity.class);
@@ -105,15 +50,16 @@ MyLog.add(" %% DESTROY_ACTIVITY___ " );
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
-
-MyLog.add(" %% CREATE_ACTIVITY___ " );
-
         MyApp.getInstance().getAppComponent().inject(this);
 
         super.onCreate(savedInstanceState);
 
 
         setContentView(R.layout.activity_main);
+
+
+        mNavController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
+
 
         mToolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(mToolbar);
@@ -131,64 +77,49 @@ MyLog.add(" %% CREATE_ACTIVITY___ " );
 
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        /*
-        getSupportFragmentManager().registerFragmentLifecycleCallbacks(
-        );/***/
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             setupInitialFragment();
         }
+
+        //test();
+
     }
+
 
     private void setupInitialFragment() {
-        /*getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.container, ThemesListFragment.newFragment())
-                .addToBackStack(ThemesListFragment.class.getSimpleName())
-                .commit();*/
-        mRouter.newRootScreen(new Screens.ThemeListScreen());
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mNavigatorHolder.setNavigator(mNavigator);
-    }
-
-    @Override
-    protected void onPause() {
-        mNavigatorHolder.removeNavigator();
-        super.onPause();
+        //mRouter.newRootScreen(new Screens.ThemeListScreen());
 
     }
 
     @Override
-    public Router getRouter() {
-        return mRouter;
+    public NavController getNavController() {
+        return mNavController;
     }
 
-    //@Override
-    //public EventBus getEventBus() {
-    //return mEventBus;
-    //}
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()) {
             case R.id.nav_packs_themes:
-                mRouter.newRootScreen(new Screens.ThemeListScreen());
+                mNavController.popBackStack(R.id.themesListFragment, false);
+                //mRouter.newRootScreen(new Screens.ThemeListScreen());
                 //mRouter.;
                 break;
             case R.id.nav_packs_raw_list:
-                mRouter.newRootScreen(new Screens.QPacksListScreen());
+                mNavController.navigate(R.id.qPacksListFragment);
+                //mRouter.newRootScreen(new Screens.QPacksListScreen());
                 break;
             case R.id.nav_courses:
-                mRouter.newRootScreen(Screens.CoursesListScreen.allCoursesScreen());
+                mNavController.navigate(R.id.coursesListFragment);
+                //mRouter.newRootScreen(Screens.CoursesListScreen.allCoursesScreen());
                 break;
             case R.id.nav_settings:
                 changeTitle(item.getTitle());
-                mRouter.navigateTo(new Screens.SettingsScreen());
+                mNavController.navigate(R.id.settingsFragment);
+                //mRouter.navigateTo(new Screens.SettingsScreen());
                 break;
         }
 
@@ -207,8 +138,14 @@ MyLog.add(" %% CREATE_ACTIVITY___ " );
     @Override
     public void onBackPressed() {
 
-        mRouter.exit();
+        //if(!mNavController.navigateUp()){
+        super.onBackPressed();
+        //}
+
     }
 
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        return mNavController.navigateUp();
+    }
 }
