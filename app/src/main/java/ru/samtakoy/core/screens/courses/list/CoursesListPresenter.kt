@@ -48,7 +48,7 @@ class CoursesListPresenter(
 
     init {
 
-        updateCurCourses()
+        bindCoures()
 
         if (targetQPackId != null) {
             updateDefaultTitleFromQPackTitle()
@@ -88,7 +88,7 @@ class CoursesListPresenter(
 
     fun hasQPack(): Boolean = targetQPackId != null
 
-    private fun updateCurCourses() {
+    private fun bindCoures() {
 
         compositeDisposableForCourses.clear()
 
@@ -107,10 +107,15 @@ class CoursesListPresenter(
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
-                                { t: MutableList<LearnCourseEntity>? -> viewState.showCourses(t!!) },
+                                { t: MutableList<LearnCourseEntity>? -> onCoursesReceived(t!!) },
                                 { t: Throwable? -> onCoursesGetError(t) }
                         ))
 
+    }
+
+    private fun onCoursesReceived(coursesList: List<LearnCourseEntity>) {
+        // TODO DiffUtil (тут или в ui)
+        viewState.showCourses(coursesList);
     }
 
     private fun onCoursesGetError(t: Throwable?) {
@@ -151,7 +156,7 @@ class CoursesListPresenter(
 
     private fun onCourseAdded(course: LearnCourseEntity) {
         mNewCourseDefaultTitle = ""
-        updateCurCourses()
+        //updateCurCourses()
     }
 
     fun onUiCourseClick(course: LearnCourseEntity) = viewState.navigateToCourseInfo(course.id)

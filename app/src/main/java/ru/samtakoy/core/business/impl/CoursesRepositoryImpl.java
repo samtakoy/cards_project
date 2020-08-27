@@ -97,13 +97,18 @@ public class CoursesRepositoryImpl implements CoursesRepository {
 
 
     @Override
-    public Single<List<LearnCourseEntity>> getAllCourses() {
-        return db.courseDao().getAllCourses().singleOrError();
+    public Flowable<List<LearnCourseEntity>> getAllCourses() {
+        return db.courseDao().getAllCourses();
     }
 
     @Override
-    public Single<List<LearnCourseEntity>> getCoursesByIds(Long[] targetCourseIds) {
-        return db.courseDao().getCoursesByIds(Arrays.asList(targetCourseIds)).singleOrError();
+    public Single<List<LearnCourseEntity>> getAllCoursesSingle() {
+        return db.courseDao().getAllCoursesSingle();
+    }
+
+    @Override
+    public Flowable<List<LearnCourseEntity>> getCoursesByIds(Long[] targetCourseIds) {
+        return db.courseDao().getCoursesByIds(Arrays.asList(targetCourseIds));
     }
 
     private List<Integer> modesToIds(List<LearnCourseMode> targetModes) {
@@ -115,8 +120,8 @@ public class CoursesRepositoryImpl implements CoursesRepository {
     }
 
     @Override
-    public Single<List<LearnCourseEntity>> getCoursesByModes(List<LearnCourseMode> targetModes) {
-        return db.courseDao().getCoursesByModes(modesToIds(targetModes)).singleOrError();
+    public Flowable<List<LearnCourseEntity>> getCoursesByModes(List<LearnCourseMode> targetModes) {
+        return db.courseDao().getCoursesByModes(modesToIds(targetModes));
     }
 
     @Override
@@ -130,9 +135,11 @@ public class CoursesRepositoryImpl implements CoursesRepository {
     }
 
     @Override
-    public Single<List<LearnCourseEntity>> getCoursesForQPack(Long qPackId) {
-        return db.courseDao().getCoursesForQPack(qPackId).singleOrError();
+    public Flowable<List<LearnCourseEntity>> getCoursesForQPack(Long qPackId) {
+        return db.courseDao().getCoursesForQPack(qPackId);
     }
+
+    // не в Rx стиле для сервиса, перенести в отдельный репозиторий?
 
     @Override
     public List<LearnCourseEntity> getCoursesLessThan(LearnCourseMode mode, Date repeatDate) {

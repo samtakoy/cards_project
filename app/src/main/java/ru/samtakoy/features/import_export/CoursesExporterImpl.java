@@ -33,8 +33,7 @@ public class CoursesExporterImpl implements CoursesExporter {
 
     @Override
     public Completable exportAllToFolder(String exportDirPath) {
-        mCoursesReposithory.getAllCourses()
-                //.toList()
+        mCoursesReposithory.getAllCoursesSingle()
                 .map(learnCourses -> exportCoursesToFolder(learnCourses, exportDirPath))
                 ;
         return null;
@@ -42,11 +41,11 @@ public class CoursesExporterImpl implements CoursesExporter {
 
     @Override
     public Completable exportAllToEmail() {
-        return mCoursesReposithory.getAllCourses()
+        return mCoursesReposithory.getAllCoursesSingle()
                 //.toList()
                 .map(learnCourses -> exportCoursesToEmail(learnCourses))
                 .ignoreElement()
-        ;
+                ;
     }
 
     private String serializeCourses(List<LearnCourseEntity> learnCourses) {

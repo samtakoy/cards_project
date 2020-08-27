@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import ru.samtakoy.core.business.CardsRepository;
 import ru.samtakoy.core.business.CoursesPlanner;
@@ -105,25 +106,25 @@ public class NCoursesInteractorImpl implements NCoursesInteractor {
 
     @NotNull
     @Override
-    public Single<List<LearnCourseEntity>> getAllCourses() {
+    public Flowable<List<LearnCourseEntity>> getAllCourses() {
         return mCoursesRepository.getAllCourses();
     }
 
     @NotNull
     @Override
-    public Single<List<LearnCourseEntity>> getCoursesByIds(@NotNull Long[] targetCourseIds) {
+    public Flowable<List<LearnCourseEntity>> getCoursesByIds(@NotNull Long[] targetCourseIds) {
         return mCoursesRepository.getCoursesByIds(targetCourseIds);
     }
 
     @NotNull
     @Override
-    public Single<List<LearnCourseEntity>> getCoursesByModes(@NotNull List<LearnCourseMode> targetModes) {
+    public Flowable<List<LearnCourseEntity>> getCoursesByModes(@NotNull List<LearnCourseMode> targetModes) {
         return mCoursesRepository.getCoursesByModes(targetModes);
     }
 
     @NotNull
     @Override
-    public Single<List<LearnCourseEntity>> getCoursesForQPack(@NotNull Long qPackId) {
+    public Flowable<List<LearnCourseEntity>> getCoursesForQPack(@NotNull Long qPackId) {
         return mCoursesRepository.getCoursesForQPack(qPackId);
     }
 

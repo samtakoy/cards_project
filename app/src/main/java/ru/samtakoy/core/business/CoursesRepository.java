@@ -36,17 +36,19 @@ public interface CoursesRepository {
 
     Single<LearnCourseEntity> addNewCourse(LearnCourseEntity newCourse);
 
-    Single<List<LearnCourseEntity>> getAllCourses();
+    Flowable<List<LearnCourseEntity>> getAllCourses();
 
-    Single<List<LearnCourseEntity>> getCoursesByIds(Long[] targetCourseIds);
+    Single<List<LearnCourseEntity>> getAllCoursesSingle();
 
-    Single<List<LearnCourseEntity>> getCoursesByModes(List<LearnCourseMode> targetModes);
+    Flowable<List<LearnCourseEntity>> getCoursesByIds(Long[] targetCourseIds);
+
+    Flowable<List<LearnCourseEntity>> getCoursesByModes(List<LearnCourseMode> targetModes);
 
     Flowable<List<LearnCourseEntity>> getCoursesByModes(LearnCourseMode... mode);
 
     List<LearnCourseEntity> getCoursesByModesNow(LearnCourseMode... mode);
 
-    Single<List<LearnCourseEntity>> getCoursesForQPack(Long qPackId);
+    Flowable<List<LearnCourseEntity>> getCoursesForQPack(Long qPackId);
 
 
     List<LearnCourseEntity> getCoursesLessThan(LearnCourseMode mode, Date repeatDate);

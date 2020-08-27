@@ -32,7 +32,7 @@ class SelectCoursePresenter(
 
     init {
 
-        updateCurCourses(targetQPackId)
+        bindCourses(targetQPackId)
     }
 
     override fun onDestroy() {
@@ -41,7 +41,7 @@ class SelectCoursePresenter(
         super.onDestroy()
     }
 
-    private fun updateCurCourses(targetQPackId: Long?) {
+    private fun bindCourses(targetQPackId: Long?) {
         val curCourses = if (targetQPackId == null) {
             coursesInteractor.getAllCourses();
         } else {
@@ -54,11 +54,16 @@ class SelectCoursePresenter(
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
-                                { t -> viewState.showCourses(t) },
+                                { t -> onCoursesReceived(t) },
                                 { t: Throwable? -> onCoursesGetError(t) }
                         )
         )
 
+    }
+
+    private fun onCoursesReceived(coursesList: List<LearnCourseEntity>) {
+        // TODO DiffUtil (тут или в ui)
+        viewState.showCourses(coursesList);
     }
 
     private fun onCoursesGetError(t: Throwable?) {

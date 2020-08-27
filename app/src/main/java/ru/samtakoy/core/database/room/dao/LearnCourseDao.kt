@@ -2,6 +2,7 @@ package ru.samtakoy.core.database.room.dao
 
 import androidx.room.*
 import io.reactivex.Flowable
+import io.reactivex.Single
 import ru.samtakoy.core.database.room.converters.CourseTypeConverter
 import ru.samtakoy.core.database.room.converters.DateLongConverter
 import ru.samtakoy.core.database.room.converters.LearnCourseModeConverter
@@ -37,6 +38,10 @@ interface LearnCourseDao {
     @TypeConverters(CourseTypeConverter::class)
     //fun getAllCoursesExcept(courseType: CourseType): Flowable<List<LearnCourseEntity>>
     fun getAllCourses(): Flowable<List<LearnCourseEntity>>
+
+    @Query("SELECT * FROM $table")
+    @TypeConverters(CourseTypeConverter::class)
+    fun getAllCoursesSingle(): Single<List<LearnCourseEntity>>
 
     @Query("SELECT * FROM $table WHERE $_mode IN (:modes) ")
     @TypeConverters(LearnCourseModeConverter::class)

@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
 import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
@@ -30,16 +31,16 @@ public interface NCoursesInteractor {
     Single<LearnCourseEntity> addNewCourse(@Nullable LearnCourseEntity newCourse);
 
     @NotNull
-    Single<List<LearnCourseEntity>> getAllCourses();
+    Flowable<List<LearnCourseEntity>> getAllCourses();
 
     @NotNull
-    Single<List<LearnCourseEntity>> getCoursesByIds(@NotNull Long[] targetCourseIds);
+    Flowable<List<LearnCourseEntity>> getCoursesByIds(@NotNull Long[] targetCourseIds);
 
     @NotNull
-    Single<List<LearnCourseEntity>> getCoursesByModes(@NotNull List<LearnCourseMode> targetModes);
+    Flowable<List<LearnCourseEntity>> getCoursesByModes(@NotNull List<LearnCourseMode> targetModes);
 
     @NotNull
-    Single<List<LearnCourseEntity>> getCoursesForQPack(@NotNull Long qPackId);
+    Flowable<List<LearnCourseEntity>> getCoursesForQPack(@NotNull Long qPackId);
 
     LearnCourseEntity getTempCourseFor(Long qPackId, List<Long> cardIds, boolean shuffleCards);
 

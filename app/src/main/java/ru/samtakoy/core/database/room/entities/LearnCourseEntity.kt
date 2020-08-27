@@ -240,12 +240,14 @@ class LearnCourseEntity(
     }
 
     private fun setNextRepeatDateFrom(currentTime: Date) {
-        if (restSchedule.isEmpty()) {
+        if (!restSchedule.isEmpty()) {
             val currentSystemTimeMillis = DateUtils.getTimeLong(currentTime)
             realizedSchedule.addItem(restSchedule.getFirstItem())
             val nextDateLong: Long = restSchedule.extractFirstItemInMillis() + currentSystemTimeMillis
             repeatDate = DateUtils.dateFromDbSerialized(nextDateLong)
             MyLog.add("setNextRepeatDateFrom, cur:" + currentSystemTimeMillis / 1000 + ", newD:" + getRepeatDateDebug(this))
+        } else {
+            MyLog.add("restSchedule is Empty");
         }
     }
 
