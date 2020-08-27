@@ -1,2 +1,1 @@
-# cards_project
-# this is just code demonstration
+this is just code demonstration
