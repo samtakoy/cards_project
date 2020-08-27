@@ -59,8 +59,8 @@ public class UncompletedTaskApi {
     protected CoursesRepository mCoursesRepository;
 
     private UncompletedTaskSettings mS = new UncompletedTaskSettings(
-            1 * ScheduleTimeUnit.MINUTE.getMillis(),
-            1 * ScheduleTimeUnit.MINUTE.getMillis()
+            60 * ScheduleTimeUnit.MINUTE.getMillis(),
+            60 * ScheduleTimeUnit.MINUTE.getMillis()
     );
 
     @Inject

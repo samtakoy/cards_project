@@ -21,6 +21,7 @@ import ru.samtakoy.core.business.NCoursesInteractor;
 import ru.samtakoy.core.database.room.entities.CardEntity;
 import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
 import ru.samtakoy.core.database.room.entities.elements.Schedule;
+import ru.samtakoy.core.database.room.entities.types.CourseType;
 import ru.samtakoy.core.screens.cards.types.CardViewMode;
 import ru.samtakoy.core.screens.log.MyLog;
 import ru.samtakoy.core.utils.DateUtils;
@@ -108,7 +109,11 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
     }
 
     private void saveResult() {
-        mCoursesInteractor.saveCourse(mCourse);
+        if (mCoursesInteractor.saveCourse(mCourse)) {
+            MyLog.add("Course " + mCourse.getId() + " saved");
+        } else {
+            MyLog.add("Course " + mCourse.getId() + " save error!");
+        }
     }
 
     private void onAfterCardComplete() {
@@ -133,7 +138,8 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
         mCardsInteractor.saveQPackLastViewDate(mCourse.getQPackId(), currentTime, true);
 
         // перепланировать следующий курс
-        if (mCourse.hasRealId()) {
+        //if (mCourse.hasRealId()) {
+        if (mCourse.getCourseType() != CourseType.TEMPORARY) {
             mCoursesPlanner.reScheduleLearnCourses();
         }
 

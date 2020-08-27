@@ -128,8 +128,8 @@ public class NCoursesInteractorImpl implements NCoursesInteractor {
         return mCoursesRepository.getCoursesForQPack(qPackId);
     }
 
-    public void saveCourse(LearnCourseEntity learnCourse) {
-        mCoursesRepository.updateCourse(learnCourse);
+    public boolean saveCourse(LearnCourseEntity learnCourse) {
+        return mCoursesRepository.updateCourse(learnCourse);
     }
 
     @Override

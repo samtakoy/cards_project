@@ -26,7 +26,7 @@ public interface NCoursesInteractor {
 
     Long addCourseForQPack(String courseTitle, Long qPackId);
 
-    void saveCourse(LearnCourseEntity learnCourse);
+    boolean saveCourse(LearnCourseEntity learnCourse);
 
     Single<LearnCourseEntity> addNewCourse(@Nullable LearnCourseEntity newCourse);
 

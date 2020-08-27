@@ -245,7 +245,7 @@ class LearnCourseEntity(
             realizedSchedule.addItem(restSchedule.getFirstItem())
             val nextDateLong: Long = restSchedule.extractFirstItemInMillis() + currentSystemTimeMillis
             repeatDate = DateUtils.dateFromDbSerialized(nextDateLong)
-            MyLog.add("setNextRepeatDateFrom, cur:" + currentSystemTimeMillis / 1000 + ", newD:" + getRepeatDateDebug(this))
+            MyLog.add(id.toString() + ": " + "setNextRepeatDateFrom, cur:" + currentSystemTimeMillis / 1000 + ", newD:" + getRepeatDateDebug(this))
         } else {
             MyLog.add("restSchedule is Empty");
         }
@@ -253,10 +253,6 @@ class LearnCourseEntity(
 
     fun getRepeatDateDebug(learnCourse: LearnCourseEntity): Long {
         return DateUtils.dateToDbSerialized(learnCourse.repeatDate) / 1000
-    }
-
-    fun hasRealId(): Boolean {
-        return id > 0
     }
 
     fun peekCurCardToView(): Long? {

@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
-import android.util.Log;
 
 import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
@@ -163,10 +162,11 @@ public abstract class CoursesApi {
     private void planLearnCoursesAlarm(LearnCourseEntity learnCourse) {
         PendingIntent pIntent = getLearnCoursesAlarmPendingIntent(false);
 
-        Log.e(TAG, String.valueOf(System.currentTimeMillis() / 1000) + "_" + String.valueOf(learnCourse.getRepeatDateUTCMillis() / 1000));
+        MyLog.add(learnCourse.getId() + ": " + String.valueOf(System.currentTimeMillis() / 1000) + "_" + String.valueOf(learnCourse.getRepeatDateUTCMillis() / 1000));
         MyLog.add("planLearnCoursesAlarm, time:" + learnCourse.getRepeatDateDebug(learnCourse));
 
         long targetTime = SystemClock.elapsedRealtime() + (learnCourse.getRepeatDateUTCMillis() - System.currentTimeMillis());
+
         //AlarmManagerCompat.setExact(getAlarmManager(), AlarmManager.RTC, learnCourse.getRepeatDateUTCMillis(), pIntent);
         getAlarmManager().set(AlarmManager.ELAPSED_REALTIME, targetTime, pIntent);
     }
