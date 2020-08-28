@@ -16,7 +16,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import io.reactivex.Observable;
-import ru.samtakoy.core.screens.log.MyLog;
+import ru.samtakoy.core.presentation.log.MyLog;
 import ru.samtakoy.features.import_export.utils.FromZipEntryStreamFactory;
 import ru.samtakoy.features.import_export.utils.ImportUtilsKt;
 

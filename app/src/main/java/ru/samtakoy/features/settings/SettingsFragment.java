@@ -6,7 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceFragmentCompat;
 
 import ru.samtakoy.R;
-import ru.samtakoy.core.screens.log.MyLog;
+import ru.samtakoy.core.presentation.log.MyLog;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 

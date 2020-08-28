@@ -23,7 +23,7 @@ import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
 import ru.samtakoy.core.database.room.entities.elements.ScheduleTimeUnit;
 import ru.samtakoy.core.database.room.entities.other.LearnCourseHelper;
 import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
-import ru.samtakoy.core.screens.log.MyLog;
+import ru.samtakoy.core.presentation.log.MyLog;
 import ru.samtakoy.core.services.NotificationsHelper;
 import ru.samtakoy.core.services.NotificationsPlannerService;
 import ru.samtakoy.core.utils.DateUtils;

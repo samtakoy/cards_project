@@ -5,7 +5,7 @@ import ru.samtakoy.core.database.room.converters.*
 import ru.samtakoy.core.database.room.entities.elements.Schedule
 import ru.samtakoy.core.database.room.entities.types.CourseType
 import ru.samtakoy.core.database.room.entities.types.LearnCourseMode
-import ru.samtakoy.core.screens.log.MyLog
+import ru.samtakoy.core.presentation.log.MyLog
 import ru.samtakoy.core.utils.DateUtils
 import java.io.Serializable
 import java.util.*

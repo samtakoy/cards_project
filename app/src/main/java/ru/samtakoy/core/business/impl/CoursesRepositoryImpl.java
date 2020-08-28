@@ -15,7 +15,7 @@ import ru.samtakoy.core.database.room.MyRoomDb;
 import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
 import ru.samtakoy.core.database.room.entities.types.CourseType;
 import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
-import ru.samtakoy.core.screens.log.MyLog;
+import ru.samtakoy.core.presentation.log.MyLog;
 
 public class CoursesRepositoryImpl implements CoursesRepository {
 

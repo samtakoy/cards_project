@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         tools:replace="android:theme"
         android:theme="@style/AppTheme">
-        <activity android:name=".core.screens.MainActivity">
+        <activity android:name=".core.presentation.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -32,8 +32,8 @@
             android:name=".core.screens.courses.list.CoursesListActivity"
             android:label="@string/fragment_courses_title" /-->
         <!--activity android:name=".core.screens.courses.info.CourseInfoActivity" /-->
-        <activity android:name=".core.screens.ScheduleEditActivity" />
-        <activity android:name=".core.screens.log.LogActivity" />
+        <activity android:name=".core.presentation.ScheduleEditActivity" />
+        <activity android:name=".core.presentation.log.LogActivity" />
 
         <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
 

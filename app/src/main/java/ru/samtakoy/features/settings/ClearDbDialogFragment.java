@@ -12,10 +12,10 @@ import io.reactivex.Completable;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.business.CardsInteractor;
-import ru.samtakoy.core.screens.MainActivity;
-import ru.samtakoy.core.screens.RouterHolder;
-import ru.samtakoy.core.screens.progress_dialog.ProgressDialogFragment;
-import ru.samtakoy.core.screens.progress_dialog.ProgressDialogPresenter;
+import ru.samtakoy.core.presentation.MainActivity;
+import ru.samtakoy.core.presentation.RouterHolder;
+import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogFragment;
+import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogPresenter;
 
 public class ClearDbDialogFragment extends ProgressDialogFragment {
 

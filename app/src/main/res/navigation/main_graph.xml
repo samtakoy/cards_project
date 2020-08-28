@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/themesListFragment"
-        android:name="ru.samtakoy.core.screens.themes.ThemesListFragment"
+        android:name="ru.samtakoy.core.presentation.themes.ThemesListFragment"
         android:label="ThemesListFragment">
 
         <action
@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/qPacksListFragment"
-        android:name="ru.samtakoy.core.screens.qpacks.QPacksListFragment"
+        android:name="ru.samtakoy.core.presentation.qpacks.QPacksListFragment"
         android:label="QPacksListFragment">
         <action
             android:id="@+id/action_qPacksListFragment_to_qPackInfoFragment"
@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/coursesListFragment"
-        android:name="ru.samtakoy.core.screens.courses.list.CoursesListFragment"
+        android:name="ru.samtakoy.core.presentation.courses.list.CoursesListFragment"
         android:label="CoursesListFragment">
         <argument
             android:name="ARG_TARGET_QPACK_ID"
@@ -59,7 +59,7 @@
         android:label="SettingsFragment" />
     <fragment
         android:id="@+id/courseInfoFragment"
-        android:name="ru.samtakoy.core.screens.courses.info.CourseInfoFragment"
+        android:name="ru.samtakoy.core.presentation.courses.info.CourseInfoFragment"
         android:label="CourseInfoFragment">
         <argument
             android:name="ARG_LEARN_COURSE_ID"
@@ -70,7 +70,7 @@
     </fragment>
     <fragment
         android:id="@+id/qPackInfoFragment"
-        android:name="ru.samtakoy.core.screens.qpack.QPackInfoFragment"
+        android:name="ru.samtakoy.core.presentation.qpack.QPackInfoFragment"
         android:label="QPackInfoFragment">
         <argument
             android:name="ARG_QPACK_ID"
@@ -81,11 +81,11 @@
     </fragment>
     <fragment
         android:id="@+id/onlineImportFragment"
-        android:name="ru.samtakoy.core.screens.online_import.OnlineImportFragment"
+        android:name="ru.samtakoy.core.presentation.online_import.OnlineImportFragment"
         android:label="OnlineImportFragment" />
     <fragment
         android:id="@+id/cardsViewFragment"
-        android:name="ru.samtakoy.core.screens.cards.CardsViewFragment"
+        android:name="ru.samtakoy.core.presentation.cards.CardsViewFragment"
         android:label="CardsViewFragment">
         <argument
             android:name="ARG_COURSE_ID"

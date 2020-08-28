@@ -25,7 +25,7 @@ import ru.samtakoy.core.business.ThemesRepository;
 import ru.samtakoy.core.database.room.entities.QPackEntity;
 import ru.samtakoy.core.database.room.entities.ThemeEntity;
 import ru.samtakoy.core.database.room.entities.other.CardWithTags;
-import ru.samtakoy.core.screens.log.MyLog;
+import ru.samtakoy.core.presentation.log.MyLog;
 import ru.samtakoy.core.utils.DateUtils;
 import ru.samtakoy.core.utils.FileUtils;
 import ru.samtakoy.features.import_export.helpers.QPackExportHelper;

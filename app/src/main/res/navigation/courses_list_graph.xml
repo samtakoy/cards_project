@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/coursesListFragment"
-        android:name="ru.samtakoy.core.screens.courses.list.CoursesListFragment"
+        android:name="ru.samtakoy.core.presentation.courses.list.CoursesListFragment"
         android:label="CoursesListFragment">
         <argument
             android:name="ARG_TARGET_QPACK_ID"
@@ -24,7 +24,7 @@
     </fragment>
     <fragment
         android:id="@+id/courseInfoFragment"
-        android:name="ru.samtakoy.core.screens.courses.info.CourseInfoFragment"
+        android:name="ru.samtakoy.core.presentation.courses.info.CourseInfoFragment"
         android:label="CourseInfoFragment">
         <argument
             android:name="ARG_LEARN_COURSE_ID"
@@ -35,7 +35,7 @@
     </fragment>
     <fragment
         android:id="@+id/cardsViewFragment"
-        android:name="ru.samtakoy.core.screens.cards.CardsViewFragment"
+        android:name="ru.samtakoy.core.presentation.cards.CardsViewFragment"
         android:label="CardsViewFragment">
         <argument
             android:name="ARG_COURSE_ID"

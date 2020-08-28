@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import ru.samtakoy.core.screens.log.MyLog;
+import ru.samtakoy.core.presentation.log.MyLog;
 import ru.samtakoy.features.import_export.ExportConst;
 
 public class FromZipEntryStreamFactory implements StreamFactory{
