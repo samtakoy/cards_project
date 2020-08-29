@@ -11,7 +11,8 @@ class CardsViewState(
 ) : Parcelable {
 
     companion object {
-        @JvmStatic
+
+        @JvmField
         val CREATOR = object : Parcelable.Creator<CardsViewState> {
             override fun createFromParcel(source: Parcel?): CardsViewState = CardsViewState(source)
             override fun newArray(size: Int) = arrayOfNulls<CardsViewState>(size)
