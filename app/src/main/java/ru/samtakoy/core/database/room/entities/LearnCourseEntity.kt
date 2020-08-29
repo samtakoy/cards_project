@@ -27,7 +27,7 @@ class LearnCourseEntity(
         @ColumnInfo(name = LearnCourseEntity._id) var id: Long,
 
         // пока привязываем к паку
-        @ColumnInfo(name = LearnCourseEntity._qpack_id) var qPackId: Long,
+        @ColumnInfo(name = LearnCourseEntity._qpack_id, index = true) var qPackId: Long,
         @field:TypeConverters(CourseTypeConverter::class)
         @ColumnInfo(name = LearnCourseEntity._course_type) var courseType: CourseType,
 

@@ -22,7 +22,7 @@ interface CardDao {
     @Query("SELECT * FROM ${table} WHERE ${_id}=:id")
     fun getCardRx(id: Long): Flowable<CardEntity>
 
-    @Query("SELECT * FROM ${table} WHERE ${_id}=:id")
+    @Query("SELECT $_id, $_qpack_id FROM ${table} WHERE ${_id}=:id")
     fun getCardIds(id: Long): CardIds
 
     @Query("SELECT * FROM ${table} WHERE ${_qpack_id}=:qPackId")

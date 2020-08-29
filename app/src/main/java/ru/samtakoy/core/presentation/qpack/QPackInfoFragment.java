@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,9 +20,13 @@ import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.AutoTransition;
+import androidx.transition.TransitionManager;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -88,8 +94,8 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
     private Button mAddToCourseBtn;
     private Button mViewCoursesBtn;
 
-    private ViewGroup mExternalContainer;
-    private ViewGroup mInnerContainer;
+    //private ViewGroup mExternalContainer;
+    private ConstraintLayout mConstraintLayout;
 
     private BottomSheetBehavior mBottomSheetBehavior;
     private LinearLayout mLinearLayoutBSheet;
@@ -150,18 +156,46 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
         mViewCoursesBtn = v.findViewById(R.id.qpack_btn_view_courses);
         mViewCoursesBtn.setOnClickListener(view -> mQPackInfoPresenter.onShowPackCourses());
 
+        if (savedInstanceState == null) {
+            prepareAnim();
+            new Handler().post(() -> startAnim());
+        }
+
         return v;
     }
 
+    private void prepareAnim() {
+        ConstraintSet cs = new ConstraintSet();
+        cs.clone(getContext(), R.layout.fragment_qpack_info_frame1);
+        cs.applyTo(mConstraintLayout);
+    }
+
+    private void startAnim() {
+
+        ConstraintSet cs = new ConstraintSet();
+        cs.clone(getContext(), R.layout.fragment_qpack_info_frame2);
+
+
+        AutoTransition transition = new AutoTransition();
+        transition.setDuration(300);
+        transition.setInterpolator(new DecelerateInterpolator());
+        //transition.setInterpolator(new BounceInterpolator());
+
+
+        TransitionManager.beginDelayedTransition(mConstraintLayout, transition);
+        cs.applyTo(mConstraintLayout);
+
+    }
+
     private void initAnimationContainers(View v) {
-        mExternalContainer = v.findViewById(R.id.externalContainer);
-        mInnerContainer = v.findViewById(R.id.innerContainer);
+        //mExternalContainer = v.findViewById(R.id.externalContainer);
+        mConstraintLayout = v.findViewById(R.id.innerContainer);
     }
 
     @Override
     public void onDestroyView() {
 
-        if(mBottomSheetCallback != null){
+        if (mBottomSheetCallback != null) {
             mBottomSheetBehavior.removeBottomSheetCallback(mBottomSheetCallback);
             mBottomSheetCallback = null;
         }

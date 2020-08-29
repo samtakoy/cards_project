@@ -6,8 +6,6 @@ import ru.samtakoy.core.database.room.converters.ImageListConverter
 import ru.samtakoy.core.database.room.entities.CardEntity.Companion._qpack_id
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.List
-import kotlin.collections.emptyList
 
 @Entity(tableName = CardEntity.table,
         foreignKeys = [
@@ -22,7 +20,7 @@ class CardEntity(
 
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = CardEntity._id) public var id: Long,
-        @ColumnInfo(name = CardEntity._qpack_id) var qPackId: Long,
+        @ColumnInfo(name = CardEntity._qpack_id, index = true) var qPackId: Long,
         @ColumnInfo(name = CardEntity._question) var question: String,
         @ColumnInfo(name = CardEntity._answer) var answer: String,
 

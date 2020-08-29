@@ -4,7 +4,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 
-const val DB_VERSION = 3
+const val DB_VERSION = 4
 const val DB_NAME = "cards.db"
 
 

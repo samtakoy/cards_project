@@ -24,7 +24,7 @@ import androidx.room.ForeignKey
 class ThemeTagEntity(
         @ColumnInfo(name = ThemeTagEntity._theme_id)
         var themeId: Long,
-        @ColumnInfo(name = ThemeTagEntity._tag_id)
+        @ColumnInfo(name = ThemeTagEntity._tag_id, index = true)
         var tagId: Long
 ) {
 

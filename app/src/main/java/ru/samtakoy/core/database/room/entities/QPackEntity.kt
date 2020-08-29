@@ -22,7 +22,7 @@ class QPackEntity(
 
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name = QPackEntity._id) var id: Long,
-        @ColumnInfo(name = QPackEntity._theme_id) var themeId: Long,
+        @ColumnInfo(name = QPackEntity._theme_id, index = true) var themeId: Long,
         @ColumnInfo(name = QPackEntity._path) var path: String,
         @ColumnInfo(name = QPackEntity._file_name) var fileName: String,
         @ColumnInfo(name = QPackEntity._title) var title: String,

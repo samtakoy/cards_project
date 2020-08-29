@@ -28,7 +28,7 @@ class CardTagEntity(
 
         @ColumnInfo(name = _card_id)
         var cardId: Long,
-        @ColumnInfo(name = _tag_id)
+        @ColumnInfo(name = _tag_id, index = true)
         var tagId: Long
 ) {
 
