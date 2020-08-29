@@ -23,6 +23,7 @@ import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.database.room.entities.elements.Schedule;
+import ru.samtakoy.core.presentation.FragmentHelperKt;
 import ru.samtakoy.core.presentation.ScheduleEditFragment;
 import ru.samtakoy.core.presentation.cards.types.CardViewMode;
 
@@ -154,7 +155,7 @@ public class CardsViewResultFragment extends MvpAppCompatFragment implements Car
     public void showScheduleEditDialog(Schedule schedule) {
         ScheduleEditFragment dialog = ScheduleEditFragment.newFragment(schedule);
         dialog.setTargetFragment(this, REQ_SCHEDULE_EDIT);
-        dialog.show(getActivity().getSupportFragmentManager(), ScheduleEditFragment.TAG);
+        FragmentHelperKt.showDialogFragment(dialog, this, ScheduleEditFragment.TAG);
     }
 
     @Override

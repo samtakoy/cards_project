@@ -32,6 +32,7 @@ import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
 import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
+import ru.samtakoy.core.presentation.FragmentHelperKt;
 import ru.samtakoy.core.presentation.RouterHolder;
 import ru.samtakoy.core.presentation.courses.CourseEditDialogFragment;
 import ru.samtakoy.core.presentation.courses.info.CourseInfoFragment;
@@ -203,14 +204,14 @@ public class CoursesListFragment extends MvpAppCompatFragment
         BatchExportDialogFragment dialog = BatchExportDialogFragment.newCoursesFragment(
                 "", this, REQ_CODE_EXPORT_COURSES
         );
-        dialog.show(getActivity().getSupportFragmentManager(), TAG_DIALOG_EXPORT_COURSES);
+        FragmentHelperKt.showDialogFragment(dialog, this, TAG_DIALOG_EXPORT_COURSES);
     }
 
     @Override
     public void showAddCourseDialog(String defaultTitle) {
         CourseEditDialogFragment dialog = CourseEditDialogFragment.newDialog(defaultTitle);
         dialog.setTargetFragment(this, REQ_CODE_ADD_COURSE);
-        dialog.show(getActivity().getSupportFragmentManager(), TAG_DIALOG_ADD_COURSE);
+        FragmentHelperKt.showDialogFragment(dialog, this, TAG_DIALOG_ADD_COURSE);
     }
 
     @Override

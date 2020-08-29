@@ -3,9 +3,11 @@ package ru.samtakoy.features.settings;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceFragmentCompat;
 
 import ru.samtakoy.R;
+import ru.samtakoy.core.presentation.FragmentHelperKt;
 import ru.samtakoy.core.presentation.log.MyLog;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
@@ -49,9 +51,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         MyLog.add("-- showClearDbDialog");
 
-        ClearDbDialogFragment.newFragment().show(
-                getActivity().getSupportFragmentManager(), ClearDbDialogFragment.TAG
-        );
+        DialogFragment dialog =
+                ClearDbDialogFragment.newFragment();
+        FragmentHelperKt.showDialogFragment(dialog, this, ClearDbDialogFragment.TAG);
     }
 
 }

@@ -51,6 +51,7 @@ import ru.samtakoy.core.Const;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.database.room.entities.QPackEntity;
 import ru.samtakoy.core.database.room.entities.ThemeEntity;
+import ru.samtakoy.core.presentation.FragmentHelperKt;
 import ru.samtakoy.core.presentation.RouterHolder;
 import ru.samtakoy.core.presentation.export_cards.BatchExportDialogFragment;
 import ru.samtakoy.core.presentation.import_cards.BatchImportDialogFragment;
@@ -251,7 +252,7 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
     public void showInputThemeTitleDialog() {
         ThemeEditDialogFragment dialog = ThemeEditDialogFragment.newDialog("");
         dialog.setTargetFragment(this, REQ_CODE_INPUT_THEME_TITLE);
-        dialog.show(getActivity().getSupportFragmentManager(), TAG_DIALOG_ADD_THEME);
+        FragmentHelperKt.showDialogFragment(dialog, this, TAG_DIALOG_ADD_THEME);
     }
 
     public void showImportPackFileSelection(boolean isZip) {
@@ -550,7 +551,7 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
                 selectedFileUri, parentThemeId, opts,
                 this, REQ_CODE_IMPORT_SOME_DIALOG
         );
-        dialog.show(getActivity().getSupportFragmentManager(), ImportPackDialogFragment.TAG);
+        FragmentHelperKt.showDialogFragment(dialog, this, ImportPackDialogFragment.TAG);
     }
 
 
@@ -561,7 +562,7 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
                 opts,
                 this, REQ_CODE_IMPORT_SOME_DIALOG
         );
-        dialog.show(getActivity().getSupportFragmentManager(), ImportZipDialogFragment.TAG);
+        FragmentHelperKt.showDialogFragment(dialog, this, ImportZipDialogFragment.TAG);
     }
 
     private boolean checkDirSelected(String dirPath){
@@ -580,7 +581,7 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         BatchImportDialogFragment dialog = BatchImportDialogFragment.newFragment(
                 dirPath, parentThemeId, opts, this, REQ_CODE_IMPORT_SOME_DIALOG
         );
-        dialog.show(getActivity().getSupportFragmentManager(), BatchImportDialogFragment.TAG);
+        FragmentHelperKt.showDialogFragment(dialog, this, BatchImportDialogFragment.TAG);
     }
 
     @Override
@@ -591,7 +592,7 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         BatchExportDialogFragment dialog = BatchExportDialogFragment.newQPacksFragment(
                 dirPath, this, REQ_CODE_EXPORT_SOME_DIALOG
         );
-        dialog.show(getActivity().getSupportFragmentManager(), BatchImportDialogFragment.TAG);
+        FragmentHelperKt.showDialogFragment(dialog, this, BatchImportDialogFragment.TAG);
     }
 
     @Override
@@ -599,7 +600,7 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         BatchExportDialogFragment dialog = BatchExportDialogFragment.newQPacksFragment(
                 "", this, REQ_CODE_EXPORT_SOME_DIALOG
         );
-        dialog.show(getActivity().getSupportFragmentManager(), BatchImportDialogFragment.TAG);
+        FragmentHelperKt.showDialogFragment(dialog, this, BatchImportDialogFragment.TAG);
     }
 
     private void navigateToTheme(ThemeEntity theme) {

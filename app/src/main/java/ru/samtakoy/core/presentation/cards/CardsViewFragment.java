@@ -33,6 +33,7 @@ import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.database.room.entities.elements.Schedule;
+import ru.samtakoy.core.presentation.FragmentHelperKt;
 import ru.samtakoy.core.presentation.RouterHolder;
 import ru.samtakoy.core.presentation.cards.answer.CardAnswerFragment;
 import ru.samtakoy.core.presentation.cards.answer.CardAnswerPresenter;
@@ -238,10 +239,14 @@ public class CardsViewFragment extends MvpAppCompatFragment
 
     @Override
     public void showEditTextDialog(String text, boolean question) {
-        EditTextBlockDialogFragment.newInstance(text,
-                this,
-                question ? REQ_CODE_EDIT_Q_TEXT : REQ_CODE_EDIT_A_TEXT)
-                .show(getActivity().getSupportFragmentManager(), EditTextBlockDialogFragment.TAG);
+
+        FragmentHelperKt.showDialogFragment(
+                EditTextBlockDialogFragment.newInstance(
+                        text,
+                        this,
+                        question ? REQ_CODE_EDIT_Q_TEXT : REQ_CODE_EDIT_A_TEXT),
+                this, EditTextBlockDialogFragment.TAG
+        );
     }
 
     @Override
@@ -335,11 +340,7 @@ public class CardsViewFragment extends MvpAppCompatFragment
 
     @Override
     public void closeScreen() {
-        //getActivity().getActivity().getSupportFragmentManager().popBackStack();
-        //finish();
-
         mRouterHolder.getNavController().navigateUp();
-        //mRouterHolder.getRouter().exit();
     }
 
     @Override

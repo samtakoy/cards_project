@@ -41,6 +41,7 @@ import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.database.room.entities.CardEntity;
+import ru.samtakoy.core.presentation.FragmentHelperKt;
 import ru.samtakoy.core.presentation.RouterHolder;
 import ru.samtakoy.core.presentation.cards.CardsViewFragment;
 import ru.samtakoy.core.presentation.cards.types.CardViewMode;
@@ -345,20 +346,21 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
     public void requestNewCourseCreation(String title) {
         CourseEditDialogFragment dialog = CourseEditDialogFragment.newDialog(title);
         dialog.setTargetFragment(this, AREQUEST_NEW_COURSE);
-        dialog.show(getActivity().getSupportFragmentManager(), TAG);
+        FragmentHelperKt.showDialogFragment(dialog, this, TAG);
     }
 
     @Override
     public void requestsSelectCourseToAdd(@Nullable Long qPackId) {
-        SelectCourseDialogFragment.newFragment(
+        DialogFragment dialog = SelectCourseDialogFragment.newFragment(
                 qPackId, this, AREQUEST_SELECT_COURSE_TO_ADD_TO
-        ).show(getActivity().getSupportFragmentManager(), "SelectCourseDialogFragment");
+        );
+        FragmentHelperKt.showDialogFragment(dialog, this, "SelectCourseDialogFragment");
     }
 
     @Override
     public void showLearnCourseCardsViewingType() {
         DialogFragment dialogFragment = CardViewingTypeSelector.newFragment(this, AREQUEST_SELECT_VIEWING_TYPE);
-        dialogFragment.show(getActivity().getSupportFragmentManager(), "CardViewingTypeSelector");
+        FragmentHelperKt.showDialogFragment(dialogFragment, this, "CardViewingTypeSelector");
     }
 
     public void showLearnCourseCards(Long learnCourseId) {
