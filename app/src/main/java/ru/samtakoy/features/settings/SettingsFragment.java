@@ -50,7 +50,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         MyLog.add("-- showClearDbDialog");
 
         ClearDbDialogFragment.newFragment().show(
-                getFragmentManager(), ClearDbDialogFragment.TAG
+                getActivity().getSupportFragmentManager(), ClearDbDialogFragment.TAG
         );
     }
 

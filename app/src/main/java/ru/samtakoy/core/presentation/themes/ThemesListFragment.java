@@ -550,7 +550,7 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
                 selectedFileUri, parentThemeId, opts,
                 this, REQ_CODE_IMPORT_SOME_DIALOG
         );
-        dialog.show(getFragmentManager(), ImportPackDialogFragment.TAG);
+        dialog.show(getActivity().getSupportFragmentManager(), ImportPackDialogFragment.TAG);
     }
 
 
@@ -561,7 +561,7 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
                 opts,
                 this, REQ_CODE_IMPORT_SOME_DIALOG
         );
-        dialog.show(getFragmentManager(), ImportZipDialogFragment.TAG);
+        dialog.show(getActivity().getSupportFragmentManager(), ImportZipDialogFragment.TAG);
     }
 
     private boolean checkDirSelected(String dirPath){
@@ -580,7 +580,7 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         BatchImportDialogFragment dialog = BatchImportDialogFragment.newFragment(
                 dirPath, parentThemeId, opts, this, REQ_CODE_IMPORT_SOME_DIALOG
         );
-        dialog.show(getFragmentManager(), BatchImportDialogFragment.TAG);
+        dialog.show(getActivity().getSupportFragmentManager(), BatchImportDialogFragment.TAG);
     }
 
     @Override
@@ -591,7 +591,7 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         BatchExportDialogFragment dialog = BatchExportDialogFragment.newQPacksFragment(
                 dirPath, this, REQ_CODE_EXPORT_SOME_DIALOG
         );
-        dialog.show(getFragmentManager(), BatchImportDialogFragment.TAG);
+        dialog.show(getActivity().getSupportFragmentManager(), BatchImportDialogFragment.TAG);
     }
 
     @Override
@@ -599,7 +599,7 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         BatchExportDialogFragment dialog = BatchExportDialogFragment.newQPacksFragment(
                 "", this, REQ_CODE_EXPORT_SOME_DIALOG
         );
-        dialog.show(getFragmentManager(), BatchImportDialogFragment.TAG);
+        dialog.show(getActivity().getSupportFragmentManager(), BatchImportDialogFragment.TAG);
     }
 
     private void navigateToTheme(ThemeEntity theme) {

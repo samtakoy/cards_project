@@ -345,20 +345,20 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
     public void requestNewCourseCreation(String title) {
         CourseEditDialogFragment dialog = CourseEditDialogFragment.newDialog(title);
         dialog.setTargetFragment(this, AREQUEST_NEW_COURSE);
-        dialog.show(getFragmentManager(), TAG);
+        dialog.show(getActivity().getSupportFragmentManager(), TAG);
     }
 
     @Override
     public void requestsSelectCourseToAdd(@Nullable Long qPackId) {
         SelectCourseDialogFragment.newFragment(
                 qPackId, this, AREQUEST_SELECT_COURSE_TO_ADD_TO
-        ).show(getFragmentManager(), "SelectCourseDialogFragment");
+        ).show(getActivity().getSupportFragmentManager(), "SelectCourseDialogFragment");
     }
 
     @Override
     public void showLearnCourseCardsViewingType() {
         DialogFragment dialogFragment = CardViewingTypeSelector.newFragment(this, AREQUEST_SELECT_VIEWING_TYPE);
-        dialogFragment.show(getFragmentManager(), "CardViewingTypeSelector");
+        dialogFragment.show(getActivity().getSupportFragmentManager(), "CardViewingTypeSelector");
     }
 
     public void showLearnCourseCards(Long learnCourseId) {

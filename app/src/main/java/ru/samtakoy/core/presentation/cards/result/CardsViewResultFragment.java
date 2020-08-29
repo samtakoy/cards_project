@@ -154,7 +154,7 @@ public class CardsViewResultFragment extends MvpAppCompatFragment implements Car
     public void showScheduleEditDialog(Schedule schedule) {
         ScheduleEditFragment dialog = ScheduleEditFragment.newFragment(schedule);
         dialog.setTargetFragment(this, REQ_SCHEDULE_EDIT);
-        dialog.show(getFragmentManager(), ScheduleEditFragment.TAG);
+        dialog.show(getActivity().getSupportFragmentManager(), ScheduleEditFragment.TAG);
     }
 
     @Override

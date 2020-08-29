@@ -241,7 +241,7 @@ public class CardsViewFragment extends MvpAppCompatFragment
         EditTextBlockDialogFragment.newInstance(text,
                 this,
                 question ? REQ_CODE_EDIT_Q_TEXT : REQ_CODE_EDIT_A_TEXT)
-                .show(getFragmentManager(), EditTextBlockDialogFragment.TAG);
+                .show(getActivity().getSupportFragmentManager(), EditTextBlockDialogFragment.TAG);
     }
 
     @Override
@@ -335,7 +335,7 @@ public class CardsViewFragment extends MvpAppCompatFragment
 
     @Override
     public void closeScreen() {
-        //getActivity().getFragmentManager().popBackStack();
+        //getActivity().getActivity().getSupportFragmentManager().popBackStack();
         //finish();
 
         mRouterHolder.getNavController().navigateUp();
