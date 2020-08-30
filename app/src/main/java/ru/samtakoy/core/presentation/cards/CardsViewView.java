@@ -11,13 +11,19 @@ public interface CardsViewView extends MvpView {
 
 
     @StateStrategyType(value = AddToEndSingleTagStrategy.class, tag = "changeScreen")
-    void switchScreenToCard(Long qPackId, Long cardId, CardViewMode viewMode, boolean onAnswer, boolean back, boolean lastCard);
+    void switchScreenToCard(Long qPackId, Long cardId, CardViewMode viewMode, boolean onAnswer, CardsViewPresenter.AnimationType aType, boolean lastCard);
+
+    //@StateStrategyType(value = AddToEndSingleTagStrategy.class, tag = "changeScreen")
+    //void switchScreenToCard(Long qPackId, Long cardId, CardViewMode viewMode, boolean onAnswer, boolean back, boolean lastCard);
     @StateStrategyType(value = AddToEndSingleTagStrategy.class)
     void showProgress(int viewedCardCount, int totalCardCount, boolean onAnswer);
+
     @StateStrategyType(value = AddToEndSingleTagStrategy.class, tag = "changeScreen")
-    void switchScreenToResults(Long learnCourseId, CardViewMode viewMode);
+    void switchScreenToResults(Long learnCourseId, CardViewMode viewMode, CardsViewPresenter.AnimationType aType);
+
     @StateStrategyType(value = OneExecutionStateStrategy.class)
     void showError(int stringId);
+
     @StateStrategyType(value = OneExecutionStateStrategy.class)
     void closeScreen();
 

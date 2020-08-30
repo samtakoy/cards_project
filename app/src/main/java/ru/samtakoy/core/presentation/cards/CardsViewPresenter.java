@@ -29,6 +29,12 @@ import ru.samtakoy.core.utils.DateUtils;
 @InjectViewState
 public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
 
+    public enum AnimationType {
+        DIRECT,
+        BACK,
+        OFF
+    }
+
     CardsInteractor mCardsInteractor;
     NCoursesInteractor mCoursesInteractor;
     CoursesPlanner mCoursesPlanner;
@@ -100,12 +106,17 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
 
     public void onRestoreState(Parcelable state) {
         mState = (CardsViewState) state;
-        switchScreenToCurCard(false);
-    }
 
+        if (mCourse.hasTodoCards()) {
+            switchScreenToCurCard(AnimationType.OFF);
+        } else {
+            getViewState().switchScreenToResults(mCourse.getId(), mViewMode, AnimationType.OFF);
+        }
+
+    }
     public void onNoRestoreState() {
         mState = new CardsViewState();
-        switchScreenToCurCard(false);
+        switchScreenToCurCard(AnimationType.DIRECT);
     }
 
     private void saveResult() {
@@ -122,7 +133,7 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
         } else {
             mState.setOnAnswer(false);
             saveResult();
-            switchScreenToCurCard(false);
+            switchScreenToCurCard(AnimationType.DIRECT);
         }
     }
 
@@ -132,6 +143,7 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
 
         Date currentTime = DateUtils.getCurrentTimeDate();
 
+        // TODO - эта логика должна уехать в interactor
         mCourse.finishLearnOrRepeat(currentTime);
         saveResult();
 
@@ -143,10 +155,10 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
             mCoursesPlanner.reScheduleLearnCourses();
         }
 
-        getViewState().switchScreenToResults(mCourse.getId(), mViewMode);
+        getViewState().switchScreenToResults(mCourse.getId(), mViewMode, AnimationType.DIRECT);
     }
 
-    private void switchScreenToCurCard(boolean backAnimation) {
+    private void switchScreenToCurCard(AnimationType aType) {
 
         mRequestCurCardDisposable.clear();
         mRequestCurCardDisposable.add(
@@ -157,7 +169,7 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
                         .subscribe(
                                 cardEntity -> {
                                     mCurCard = cardEntity;
-                                    switchScreenToCurCardNow(backAnimation);
+                                    switchScreenToCurCardNow(aType);
                                 },
                                 throwable -> onGetError(throwable)
                         )
@@ -169,11 +181,11 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
         getViewState().showError(R.string.db_request_err_message);
     }
 
-    private void switchScreenToCurCardNow(boolean backAnimation) {
+    private void switchScreenToCurCardNow(AnimationType aType) {
 
         getViewState().switchScreenToCard(
                 mCourse.getQPackId(), mCourse.peekCurCardToView(),
-                mViewMode, mState.isOnAnswer(), backAnimation,
+                mViewMode, mState.isOnAnswer(), aType,
                 mCourse.isLastCard()
         );
 
@@ -197,13 +209,13 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
         if (mCourse.rollback(mState.getViewedCardIds())) {
             mState.setOnAnswer(false);
             saveResult();
-            switchScreenToCurCard(true);
+            switchScreenToCurCard(AnimationType.BACK);
         }
     }
 
     void onUiViewAnswer() {
         mState.setOnAnswer(true);
-        switchScreenToCurCard(false);
+        switchScreenToCurCard(AnimationType.DIRECT);
     }
 
     void onUiNextCard(){
@@ -229,7 +241,7 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
 
     void onUiBackToQuestion(){
         mState.setOnAnswer(false);
-        switchScreenToCurCard(true);
+        switchScreenToCurCard(AnimationType.BACK);
     }
 
     void onUiResultOk(Schedule newSchedule) {

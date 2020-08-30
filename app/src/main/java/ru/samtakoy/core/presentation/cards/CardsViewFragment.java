@@ -174,22 +174,57 @@ public class CardsViewFragment extends MvpAppCompatFragment
     }
 
     private void switchScreen(
-            Fragment newF, @AnimatorRes @AnimRes int enter, @AnimatorRes @AnimRes int exit
-    ){
+            Fragment newFragment,
+            boolean allowAnimations,
+            @AnimatorRes @AnimRes int enter, @AnimatorRes @AnimRes int exit
+    ) {
 
         FragmentManager fm = getChildFragmentManager();
-        if(fm.findFragmentById(R.id.fragment_cont) == null){
+        boolean firstTimeFragmentAdding = fm.findFragmentById(R.id.fragment_cont) == null;
+
+        if (firstTimeFragmentAdding) {
             fm.beginTransaction()
-                    .add(R.id.fragment_cont, newF)
+                    .add(R.id.fragment_cont, newFragment)
                     .commit();
         } else {
-            fm.beginTransaction()
-                    .setCustomAnimations(enter, exit)
-                    .replace(R.id.fragment_cont, newF)
-                    .commit();
+            if (allowAnimations) {
+                fm.beginTransaction()
+                        .setCustomAnimations(enter, exit)
+                        .replace(R.id.fragment_cont, newFragment)
+                        .commit();
+            } else {
+                fm.beginTransaction()
+                        .replace(R.id.fragment_cont, newFragment)
+                        .commit();
+            }
+
         }
     }
 
+    @Override
+    public void switchScreenToCard(
+            Long qPackId,
+            Long cardId,
+            CardViewMode viewMode,
+            boolean onAnswer,
+            CardsViewPresenter.AnimationType aType,
+            boolean lastCard
+    ) {
+        Fragment newF = createCardFragment(qPackId, cardId, viewMode, onAnswer, lastCard);
+
+        switch (aType) {
+            case DIRECT:
+                switchScreen(newF, true, R.animator.slide_in_left, R.animator.slide_out_right);
+                break;
+            case BACK:
+                switchScreen(newF, true, R.animator.slide_in_right, R.animator.slide_out_left);
+                break;
+            case OFF:
+                switchScreen(newF, false, 0, 0);
+                break;
+        }
+    }
+/*
     @Override
     public void switchScreenToCard(
             Long qPackId,
@@ -200,11 +235,8 @@ public class CardsViewFragment extends MvpAppCompatFragment
             boolean lastCard
     ) {
         Fragment newF = createCardFragment(qPackId, cardId, viewMode, onAnswer, lastCard);
-        switchScreen(newF,
-                back ? R.animator.slide_in_right : R.animator.slide_in_left,
-                back ? R.animator.slide_out_left : R.animator.slide_out_right
-        );
-    }
+        switchScreen(newF);
+    }*/
 
     @Override
     public void showProgress(int viewedCardCount, int totalCardCount, boolean onAnswer) {
@@ -229,12 +261,13 @@ public class CardsViewFragment extends MvpAppCompatFragment
     }
 
     @Override
-    public void switchScreenToResults(Long learnCourseId, CardViewMode viewMode){
+    public void switchScreenToResults(Long learnCourseId, CardViewMode viewMode, CardsViewPresenter.AnimationType aType) {
 
         showProgress(100);
 
         Fragment newF = CardsViewResultFragment.newFragment(learnCourseId, viewMode);
-        switchScreen(newF, R.animator.slide_in_down, R.animator.slide_out_right);
+
+        switchScreen(newF, aType != CardsViewPresenter.AnimationType.OFF, R.animator.slide_in_down, R.animator.slide_out_right);
     }
 
     @Override
