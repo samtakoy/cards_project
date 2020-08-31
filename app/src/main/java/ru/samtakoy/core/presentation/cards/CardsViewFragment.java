@@ -213,7 +213,7 @@ public class CardsViewFragment extends MvpAppCompatFragment
         Fragment newF = createCardFragment(qPackId, cardId, viewMode, onAnswer, lastCard);
 
         switch (aType) {
-            case DIRECT:
+            case FORWARD:
                 switchScreen(newF, true, R.animator.slide_in_left, R.animator.slide_out_right);
                 break;
             case BACK:

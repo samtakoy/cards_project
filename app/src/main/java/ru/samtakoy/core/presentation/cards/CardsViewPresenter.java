@@ -30,7 +30,7 @@ import ru.samtakoy.core.utils.DateUtils;
 public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
 
     public enum AnimationType {
-        DIRECT,
+        FORWARD,
         BACK,
         OFF
     }
@@ -68,8 +68,9 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
     private HashMap<Long, BackupInfo> mBackups;
 
     private CardsViewState mState;
-    private CardEntity mCurCard;
-    private CompositeDisposable mRequestCurCardDisposable = new CompositeDisposable();
+    private CardEntity mCardOnScreen;
+    private CompositeDisposable mGetCardSubscription = new CompositeDisposable();
+    private CompositeDisposable mOperationDisposable = new CompositeDisposable();
 
     public CardsViewPresenter(
 
@@ -96,7 +97,8 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
     @Override
     public void onDestroy() {
 
-        mRequestCurCardDisposable.dispose();
+        mGetCardSubscription.dispose();
+        mOperationDisposable.dispose();
         super.onDestroy();
     }
 
@@ -108,7 +110,7 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
         mState = (CardsViewState) state;
 
         if (mCourse.hasTodoCards()) {
-            switchScreenToCurCard(AnimationType.OFF);
+            switchScreenToCurCard(AnimationType.OFF, mState.isOnAnswer());
         } else {
             getViewState().switchScreenToResults(mCourse.getId(), mViewMode, AnimationType.OFF);
         }
@@ -116,7 +118,7 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
     }
     public void onNoRestoreState() {
         mState = new CardsViewState();
-        switchScreenToCurCard(AnimationType.DIRECT);
+        switchScreenToCurCard(AnimationType.FORWARD, mState.isOnAnswer());
     }
 
     private void saveResult() {
@@ -131,9 +133,8 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
         if (!mCourse.hasTodoCards()) {
             finishCards();
         } else {
-            mState.setOnAnswer(false);
             saveResult();
-            switchScreenToCurCard(AnimationType.DIRECT);
+            switchScreenToCurCard(AnimationType.FORWARD, false);
         }
     }
 
@@ -155,29 +156,43 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
             mCoursesPlanner.reScheduleLearnCourses();
         }
 
-        getViewState().switchScreenToResults(mCourse.getId(), mViewMode, AnimationType.DIRECT);
+        getViewState().switchScreenToResults(mCourse.getId(), mViewMode, AnimationType.FORWARD);
     }
 
-    private void switchScreenToCurCard(AnimationType aType) {
+    private void switchScreenToCurCard(AnimationType aType, boolean onAnswer) {
 
-        mRequestCurCardDisposable.clear();
-        mRequestCurCardDisposable.add(
+
+        mGetCardSubscription.clear();
+        mGetCardSubscription.add(
                 mCardsInteractor.getCardRx(mCourse.peekCurCardToView())
                         .onBackpressureLatest()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
-                                cardEntity -> {
-                                    mCurCard = cardEntity;
-                                    switchScreenToCurCardNow(aType);
-                                },
+                                cardEntity -> onCardUpdated(aType, onAnswer, cardEntity),
                                 throwable -> onGetError(throwable)
                         )
         );
     }
 
+    private void onCardUpdated(AnimationType aType, boolean onAnswer, CardEntity cardEntity) {
+        boolean isNewState =
+                mCardOnScreen == null
+                        || (mCardOnScreen.getId() != cardEntity.getId())
+                        || (onAnswer != mState.isOnAnswer());
+
+        mCardOnScreen = cardEntity;
+        mState.setOnAnswer(onAnswer);
+
+        if (!isNewState) {
+            aType = AnimationType.OFF;
+        }
+
+        switchScreenToCurCardNow(aType);
+    }
+
     private void onGetError(Throwable t) {
-        MyLog.add(ExceptionUtils.getMessage(t));
+        MyLog.add(ExceptionUtils.getMessage(t), t);
         getViewState().showError(R.string.db_request_err_message);
     }
 
@@ -207,15 +222,13 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
 
     void onUiPrevCard() {
         if (mCourse.rollback(mState.getViewedCardIds())) {
-            mState.setOnAnswer(false);
             saveResult();
-            switchScreenToCurCard(AnimationType.BACK);
+            switchScreenToCurCard(AnimationType.BACK, false);
         }
     }
 
     void onUiViewAnswer() {
-        mState.setOnAnswer(true);
-        switchScreenToCurCard(AnimationType.DIRECT);
+        switchScreenToCurCard(AnimationType.FORWARD, true);
     }
 
     void onUiNextCard(){
@@ -240,8 +253,7 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
     }
 
     void onUiBackToQuestion(){
-        mState.setOnAnswer(false);
-        switchScreenToCurCard(AnimationType.BACK);
+        switchScreenToCurCard(AnimationType.BACK, false);
     }
 
     void onUiResultOk(Schedule newSchedule) {
@@ -257,11 +269,11 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
     }
 
     private String getCurCardQuestionText(){
-        return mCurCard.getQuestion();
+        return mCardOnScreen.getQuestion();
     }
 
     private String getCurCardAnswerText(){
-        return mCurCard.getAnswer();
+        return mCardOnScreen.getAnswer();
     }
 
     public void onUiQuestionEditTextClick() {
@@ -282,38 +294,86 @@ public class CardsViewPresenter extends MvpPresenter<CardsViewView> {
         return backupInfo;
     }
 
-    public void onNewQuestionText(String text) {
+    public void onNewQuestionText(String newText) {
 
-        BackupInfo backupInfo = getOrCreateBackupInfo();
-        backupInfo.setQuestionIfEmpty(mCurCard.getQuestion());
+        String prevText = mCardOnScreen.getQuestion();
 
-        mCardsInteractor.setCardNewQuestionText(mCourse.peekCurCardToView(), text);
-        updateRevertButton();
+        mOperationDisposable.clear();
+        mOperationDisposable.add(
+                mCardsInteractor
+                        .setCardNewQuestionText(mCourse.peekCurCardToView(), newText)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                () -> {
+                                    getOrCreateBackupInfo().setQuestionIfEmpty(prevText);
+                                    updateRevertButton();
+                                },
+                                throwable -> onGetError(throwable)
+                        )
+        );
     }
 
-    public void onNewAnswerText(String text) {
+    public void onNewAnswerText(String newText) {
 
-        BackupInfo backupInfo = getOrCreateBackupInfo();
-        backupInfo.setAnswerIfEmpty(mCurCard.getAnswer());
+        String prevText = mCardOnScreen.getAnswer();
 
-        mCardsInteractor.setCardNewAnswerText(mCourse.peekCurCardToView(), text);
-        updateRevertButton();
+        mOperationDisposable.clear();
+        mOperationDisposable.add(
+                mCardsInteractor
+                        .setCardNewAnswerText(mCourse.peekCurCardToView(), newText)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                () -> {
+                                    getOrCreateBackupInfo().setAnswerIfEmpty(prevText);
+                                    updateRevertButton();
+                                },
+                                throwable -> onGetError(throwable)
+                        )
+        );
     }
 
     public void onUiRevertClick() {
+
 
         BackupInfo backupInfo = getOrCreateBackupInfo();
 
         if (backupInfo.hasBackup(mState.isOnAnswer())) {
 
             if (mState.isOnAnswer()) {
-                mCardsInteractor.setCardNewAnswerText(mCourse.peekCurCardToView(), backupInfo.getAnswer());
-                backupInfo.resetAnswer();
+
+                mOperationDisposable.clear();
+                mOperationDisposable.add(
+                        mCardsInteractor.setCardNewAnswerText(mCourse.peekCurCardToView(), backupInfo.getAnswer())
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                        () -> {
+                                            backupInfo.resetAnswer();
+                                            updateRevertButton();
+                                        },
+                                        throwable -> onGetError(throwable)
+                                )
+                );
+
             } else {
-                mCardsInteractor.setCardNewQuestionText(mCourse.peekCurCardToView(), backupInfo.getQuestion());
-                backupInfo.resetQuestion();
+
+                mOperationDisposable.clear();
+                mOperationDisposable.add(
+                        mCardsInteractor.setCardNewQuestionText(mCourse.peekCurCardToView(), backupInfo.getQuestion())
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                        () -> {
+                                            backupInfo.resetQuestion();
+                                            updateRevertButton();
+                                        },
+                                        throwable -> onGetError(throwable)
+                                )
+                );
             }
         }
-        updateRevertButton();
+
     }
 }

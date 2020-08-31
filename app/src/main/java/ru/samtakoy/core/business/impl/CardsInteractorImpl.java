@@ -54,10 +54,11 @@ public class CardsInteractorImpl implements CardsInteractor {
     }
 
 
+    /*
     @Override
     public CardEntity getCard(Long cardId) {
         return mCardsRepository.getCard(cardId);
-    }
+    }*/
 
     @Override
     public Flowable<CardEntity> getCardRx(Long cardId) {
@@ -71,17 +72,29 @@ public class CardsInteractorImpl implements CardsInteractor {
     }
 
     @Override
-    public void setCardNewQuestionText(Long cardId, String text) {
-        CardEntity card = mCardsRepository.getCard(cardId);
-        card.setQuestion(text);
-        mCardsRepository.updateCard(card);
+    public Completable setCardNewQuestionText(Long cardId, String text) {
+
+        return Completable.fromCallable(
+                () -> {
+                    CardEntity card = mCardsRepository.getCard(cardId);
+                    card.setQuestion(text);
+                    mCardsRepository.updateCard(card);
+                    return true;
+                }
+        );
     }
 
     @Override
-    public void setCardNewAnswerText(Long cardId, String text) {
-        CardEntity card = mCardsRepository.getCard(cardId);
-        card.setAnswer(text);
-        mCardsRepository.updateCard(card);
+    public Completable setCardNewAnswerText(Long cardId, String text) {
+
+        return Completable.fromCallable(
+                () -> {
+                    CardEntity card = mCardsRepository.getCard(cardId);
+                    card.setAnswer(text);
+                    mCardsRepository.updateCard(card);
+                    return true;
+                }
+        );
     }
 
     public boolean hasPackCards(Long qPackId) {
@@ -107,7 +120,7 @@ public class CardsInteractorImpl implements CardsInteractor {
     }
 
     @Override
-    public List<CardEntity> getQPackCards(Long qPackId) {
+    public Flowable<List<CardEntity>> getQPackCards(Long qPackId) {
         return mCardsRepository.getQPackCards(qPackId);
     }
 

@@ -102,6 +102,7 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
     private LinearLayout mLinearLayoutBSheet;
     private ToggleButton mTbUpDown;
     private RecyclerView mCardsFastViewList;
+    private CardsFastViewAdapter mCardsFastViewAdapter;
 
     private BottomSheetBehavior.BottomSheetCallback mBottomSheetCallback;
 
@@ -365,7 +366,6 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
 
     public void showLearnCourseCards(Long learnCourseId) {
 
-
         mRouterHolder.getNavController().navigate(
                 R.id.action_qPackInfoFragment_to_cardsViewFragment,
                 CardsViewFragment.buildBundle(
@@ -374,9 +374,6 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
                         CardViewMode.LEARNING
                 )
         );
-
-
-        //mRouterHolder.getRouter().navigateTo(new Screens.CardsViewScreen(learnCourseId, CardViewSource.SIMPLE_VIEW, CardViewMode.LEARNING));
     }
 
     @Override
@@ -402,9 +399,16 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
 
     @Override
     public void setFastViewCards(List<CardEntity> cards) {
-        CardsFastViewAdapter adapter = new CardsFastViewAdapter(cards);
-        mCardsFastViewList.setHasFixedSize(false);
-        mCardsFastViewList.setAdapter(adapter);
-        mCardsFastViewList.setLayoutManager(new LinearLayoutManager(getContext()));
+        setFastCardsViewAdapter();
+        mCardsFastViewAdapter.setCards(cards);
+    }
+
+    private void setFastCardsViewAdapter() {
+        if (mCardsFastViewAdapter == null) {
+            mCardsFastViewAdapter = new CardsFastViewAdapter();
+            mCardsFastViewList.setHasFixedSize(false);
+            mCardsFastViewList.setAdapter(mCardsFastViewAdapter);
+            mCardsFastViewList.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
     }
 }

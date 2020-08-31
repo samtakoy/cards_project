@@ -26,7 +26,7 @@ interface CardDao {
     fun getCardIds(id: Long): CardIds
 
     @Query("SELECT * FROM ${table} WHERE ${_qpack_id}=:qPackId")
-    fun getCardsFromQPack(qPackId: Long): List<CardEntity>
+    fun getCardsFromQPack(qPackId: Long): Flowable<List<CardEntity>>
 
     @Query("SELECT $_id FROM ${table} WHERE ${_qpack_id}=:qPackId")
     fun getCardsIdsFromQPack(qPackId: Long): List<Long>

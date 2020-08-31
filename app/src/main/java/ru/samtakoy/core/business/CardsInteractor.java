@@ -13,15 +13,15 @@ public interface CardsInteractor {
 
     Completable clearDb();
 
-    CardEntity getCard(Long cardId);
+    //CardEntity getCard(Long cardId);
 
     Flowable<CardEntity> getCardRx(Long cardId);
 
     void deleteCardWithRelations(Long cardId);
 
-    void setCardNewQuestionText(Long cardId, String text);
+    Completable setCardNewQuestionText(Long cardId, String text);
 
-    void setCardNewAnswerText(Long cardId, String text);
+    Completable setCardNewAnswerText(Long cardId, String text);
 
     boolean hasPackCards(Long qPackId);
 
@@ -33,7 +33,7 @@ public interface CardsInteractor {
 
     boolean hasAnyQPack();
 
-    List<CardEntity> getQPackCards(Long qPackId);
+    Flowable<List<CardEntity>> getQPackCards(Long qPackId);
 
     int getQPackCardCount(Long qPackId);
 

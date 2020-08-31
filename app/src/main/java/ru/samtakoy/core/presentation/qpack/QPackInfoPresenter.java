@@ -1,16 +1,16 @@
 package ru.samtakoy.core.presentation.qpack;
 
 
-import java.util.List;
-
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import moxy.InjectViewState;
 import moxy.MvpPresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.business.CardsInteractor;
 import ru.samtakoy.core.business.NCoursesInteractor;
-import ru.samtakoy.core.database.room.entities.CardEntity;
 import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
 import ru.samtakoy.core.database.room.entities.QPackEntity;
 
@@ -21,6 +21,8 @@ public class QPackInfoPresenter extends MvpPresenter<QPackInfoView> {
 
     public CardsInteractor mCardsInteractor;
     public NCoursesInteractor mCoursesInteractor;
+
+    private Disposable mFastCardsSubscribe;
 
     public static class Factory {
 
@@ -53,6 +55,16 @@ public class QPackInfoPresenter extends MvpPresenter<QPackInfoView> {
         setup(qPackId);
     }
 
+    @Override
+    public void onDestroy() {
+
+        if (mFastCardsSubscribe != null) {
+            mFastCardsSubscribe.dispose();
+        }
+
+        super.onDestroy();
+    }
+
     private QPackInfoPresenter setup(Long qPackId) {
         mQPack = mCardsInteractor.getQPack(qPackId);
 
@@ -60,7 +72,7 @@ public class QPackInfoPresenter extends MvpPresenter<QPackInfoView> {
         return this;
     }
 
-    private boolean hasPackCards(){
+    private boolean hasPackCards() {
         return mCardsInteractor.hasPackCards(mQPack.getId());
     }
 
@@ -130,8 +142,18 @@ public class QPackInfoPresenter extends MvpPresenter<QPackInfoView> {
     }
 
     public void onUiCardsFastView() {
-        List<CardEntity> cards = mCardsInteractor.getQPackCards(mQPack.getId());
-        getViewState().setFastViewCards(cards);
+
+        if (mFastCardsSubscribe == null) {
+
+            mFastCardsSubscribe = mCardsInteractor.getQPackCards(mQPack.getId())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            cardEntities -> {
+                                getViewState().setFastViewCards(cardEntities);
+                            }
+                    );
+        }
     }
 
 

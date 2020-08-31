@@ -19,7 +19,7 @@ interface CardsRepository {
     fun getCardIds(cardId: Long): CardIds?
 
 
-    fun getQPackCards(qPackId: Long): List<CardEntity>
+    fun getQPackCards(qPackId: Long): Flowable<List<CardEntity>>
     fun getCardsIdsFromQPack(qPackId: Long): List<Long>
 
     fun getQPackCardsWithTagsRx(qPackId: Long): Single<List<CardWithTags>>

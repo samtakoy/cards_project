@@ -35,5 +35,6 @@ public interface QPackInfoView extends MvpView {
     void showLearnCourseCards(Long learnCourseId);
     void showLearnCourseCardsInList(Long learnCourseId);
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void setFastViewCards(List<CardEntity> cards);
 }

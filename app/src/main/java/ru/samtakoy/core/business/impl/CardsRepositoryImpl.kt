@@ -24,7 +24,6 @@ class CardsRepositoryImpl(private val db: MyRoomDb) : CardsRepository {
 
     override fun getCard(cardId: Long): CardEntity? =
             db.cardDao().getCard(cardId)
-    //return ContentProviderHelper.getConcreteCard(mCtx.getContentResolver(), cardId);
 
     override fun getCardRx(cardId: Long): Flowable<CardEntity> =
             db.cardDao().getCardRx(cardId)
@@ -33,28 +32,23 @@ class CardsRepositoryImpl(private val db: MyRoomDb) : CardsRepository {
             db.cardDao().getCardIds(cardId)
 
     override fun updateCard(card: CardEntity) {
-        //ContentProviderHelper.updateCard(mCtx.getContentResolver(), card);
         db.cardDao().updateCard(card)
-        //mEventBus.post(CardUpdateEvent(card))
     }
 
     override fun deleteCard(cardId: Long) {
         db.cardDao().deleteCard(cardId)
     }
 
-    override fun getQPackCards(qPackId: Long): List<CardEntity> =
+    override fun getQPackCards(qPackId: Long): Flowable<List<CardEntity>> =
             db.cardDao().getCardsFromQPack(qPackId)
-    ///return ContentProviderHelper.getQPackCards(mCtx, qPack.getId());
 
     override fun getCardsIdsFromQPack(qPackId: Long): List<Long> =
             db.cardDao().getCardsIdsFromQPack(qPackId)
 
     override fun getQPackCardCount(qPackId: Long): Int =
             db.cardDao().getCardCountInQPack(qPackId)
-    //return ContentProviderHelper.getQPackCardCount(mCtx.getContentResolver(), qPackId)
 
 
     override fun getQPackCardsWithTagsRx(qPackId: Long): Single<List<CardWithTags>> =
             db.cardDao().getCardsWithTagsFRomQPackRx(qPackId)
-    //return ContentProviderHelper.getQPackCardsWithTags(mCtx, qPack.getId());
 }

@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.samtakoy.R;
@@ -19,9 +20,13 @@ public class CardsFastViewAdapter extends RecyclerView.Adapter<CardsFastViewAdap
 
     private List<CardEntity> mCards;
 
-    public CardsFastViewAdapter(List<CardEntity> cards) {
+    public CardsFastViewAdapter() {
+        mCards = new ArrayList<>();
+    }
 
+    public void setCards(List<CardEntity> cards) {
         mCards = cards;
+        notifyDataSetChanged();
     }
 
     @NonNull
