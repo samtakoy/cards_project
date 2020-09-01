@@ -58,7 +58,7 @@
     <string name="fragment_dialog_batch_export_error_msg">Error on batch exporting</string>
 
     <string name="msg_there_is_no_cards_in_pack">Нет ни одной карточки в наборе</string>
-    <string name="msg_there_is_no_cards_to_learn">Нет карточек для изучения</string>
+    <string name="msg_there_is_no_new_cards_to_learn">Нет новых карточек для изучения</string>
     <string name="qpack_btn_view_cards">view cards</string>
     <string name="qpack_btn_add_to_new_course">a new course</string>
     <string name="qpack_btn_add_to_course">add to course</string>

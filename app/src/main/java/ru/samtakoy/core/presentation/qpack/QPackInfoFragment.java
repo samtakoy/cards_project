@@ -95,7 +95,6 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
     private Button mAddToCourseBtn;
     private Button mViewCoursesBtn;
 
-    //private ViewGroup mExternalContainer;
     private ConstraintLayout mConstraintLayout;
 
     private BottomSheetBehavior mBottomSheetBehavior;
@@ -147,16 +146,16 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
         mQPackCardsCount = v.findViewById(R.id.qpack_cards_count);
 
         mViewCardsBtn = v.findViewById(R.id.qpack_btn_view_cards);
-        mViewCardsBtn.setOnClickListener(view -> mQPackInfoPresenter.onViewPackCards());
+        mViewCardsBtn.setOnClickListener(view -> mQPackInfoPresenter.onUiViewPackCards());
 
         mAddToNewCourseBtn = v.findViewById(R.id.qpack_btn_add_to_new_course);
-        mAddToNewCourseBtn.setOnClickListener(view -> mQPackInfoPresenter.onAddToNewCourse());
+        mAddToNewCourseBtn.setOnClickListener(view -> mQPackInfoPresenter.onUiAddToNewCourse());
 
         mAddToCourseBtn = v.findViewById(R.id.qpack_btn_add_to_course);
-        mAddToCourseBtn.setOnClickListener(view -> mQPackInfoPresenter.onAddToExistsCourse());
+        mAddToCourseBtn.setOnClickListener(view -> mQPackInfoPresenter.onUiAddToExistsCourse());
 
         mViewCoursesBtn = v.findViewById(R.id.qpack_btn_view_courses);
-        mViewCoursesBtn.setOnClickListener(view -> mQPackInfoPresenter.onShowPackCourses());
+        mViewCoursesBtn.setOnClickListener(view -> mQPackInfoPresenter.onUiShowPackCourses());
 
         if (savedInstanceState == null) {
             prepareAnim();
@@ -181,8 +180,6 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
         AutoTransition transition = new AutoTransition();
         transition.setDuration(300);
         transition.setInterpolator(new DecelerateInterpolator());
-        //transition.setInterpolator(new BounceInterpolator());
-
 
         TransitionManager.beginDelayedTransition(mConstraintLayout, transition);
         cs.applyTo(mConstraintLayout);
@@ -253,24 +250,10 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
     }
 
     private void setInnerContainerPercent(float percent){
-
-        /*
-        float realPercent = 0.5f + 0.5f * percent;
-
-        //*
-        int srcH = mExternalContainer.getHeight();
-        int targetH = (int)(srcH * realPercent);
-
-        ViewGroup.LayoutParams targetLayoutParams = mInnerContainer.getLayoutParams();
-        targetLayoutParams.height = Math.max(targetH, 1);
-        mInnerContainer.setLayoutParams(targetLayoutParams);
-        /***/
-
         final float invisiblePercent = 0.1f;
         float alpha = Math.max((percent-invisiblePercent)/(1-invisiblePercent), 0);
         mQPackTitle.setAlpha(alpha);
         mQPackCardsCount.setAlpha(alpha);
-        /**/
     }
 
     @Override
@@ -281,10 +264,14 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_item_delete:
-                mQPackInfoPresenter.onDeletePack();
+                mQPackInfoPresenter.onUiDeletePack();
                 return true;
+            case R.id.menu_item_add_fake_card:
+                mQPackInfoPresenter.onUiAddFakeCard();
+                return true;
+
         }
         return false;
     }
@@ -296,22 +283,20 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
             case AREQUEST_NEW_COURSE:
                 if(resultCode == Activity.RESULT_OK){
                     String courseName = data.getStringExtra(CourseEditDialogFragment.RESULT_EXTRA_TEXT);
-                    mQPackInfoPresenter.onNewCourseCommit(courseName);
+                    mQPackInfoPresenter.onUiNewCourseCommit(courseName);
                 }
                 break;
             case AREQUEST_SELECT_COURSE_TO_ADD_TO:
                 if(resultCode == Activity.RESULT_OK){
                     Long courseId = data.getLongExtra(SelectCourseDialogFragment.RESULT_EXTRA_COURSE_ID, -1);
-                    mQPackInfoPresenter.onAddCardsToCourseCommit(courseId);
+                    mQPackInfoPresenter.onUiAddCardsToCourseCommit(courseId);
                 }
                 break;
         }
     }
 
     public void showCourseScreen(Long courseId) {
-
         mRouterHolder.getNavController().navigate(R.id.courseInfoFragment, CourseInfoFragment.buildBundle(courseId));
-        //mRouterHolder.getRouter().navigateTo(new Screens.CourseInfoScreen(courseId));
     }
 
     public void showMessage(int messageId){
@@ -319,9 +304,7 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
     }
 
     public void closeScreen() {
-
         mRouterHolder.getNavController().navigateUp();
-        //mRouterHolder.getRouter().exit();
     }
 
     @Override
@@ -337,11 +320,10 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
     }
 
     @Override
-    public void showCourses(Long qPackId) {
+    public void navigateToPackCourses(Long qPackId) {
         mRouterHolder.getNavController().navigate(
                 R.id.coursesListFragment, CoursesListFragment.buildBundle(qPackId, null, null)
         );
-        //mRouterHolder.getRouter().navigateTo(Screens.CoursesListScreen.qPackCoursesScreen(qPackId));
     }
 
     public void requestNewCourseCreation(String title) {
@@ -364,7 +346,8 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
         FragmentHelperKt.showDialogFragment(dialogFragment, this, "CardViewingTypeSelector");
     }
 
-    public void showLearnCourseCards(Long learnCourseId) {
+    @Override
+    public void navigateToCardsView(Long learnCourseId) {
 
         mRouterHolder.getNavController().navigate(
                 R.id.action_qPackInfoFragment_to_cardsViewFragment,
@@ -377,7 +360,7 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
     }
 
     @Override
-    public void showLearnCourseCardsInList(Long learnCourseId) {
+    public void openLearnCourseCardsInList(Long learnCourseId) {
 
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
@@ -386,13 +369,13 @@ public class QPackInfoFragment extends MvpAppCompatFragment implements QPackInfo
     public void OnCardViewingTypeSelect(CardViewingTypeSelector.CardViewingType type) {
         switch (type){
             case RANDOM:
-                mQPackInfoPresenter.onViewPackCardsRandomly();
+                mQPackInfoPresenter.onUiViewPackCardsRandomly();
                 break;
             case SIMPLE:
-                mQPackInfoPresenter.onViewPackCardsOrdered();
+                mQPackInfoPresenter.onUiViewPackCardsOrdered();
                 break;
             case LIST:
-                mQPackInfoPresenter.onViewPackCardsInList();
+                mQPackInfoPresenter.onUiViewPackCardsInList();
                 break;
         }
     }

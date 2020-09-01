@@ -1,28 +1,39 @@
 package ru.samtakoy.core.presentation.qpack;
 
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import moxy.InjectViewState;
 import moxy.MvpPresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.business.CardsInteractor;
 import ru.samtakoy.core.business.NCoursesInteractor;
-import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
-import ru.samtakoy.core.database.room.entities.QPackEntity;
+import ru.samtakoy.core.business.utils.MessageException;
+import ru.samtakoy.core.database.room.entities.other.QPackWithCardIds;
+import ru.samtakoy.core.presentation.log.MyLog;
+
+import static ru.samtakoy.core.business.utils.TransformersKt.c_io_mainThread;
+import static ru.samtakoy.core.business.utils.TransformersKt.f_io_mainThread;
+import static ru.samtakoy.core.business.utils.TransformersKt.s_io_mainThread;
 
 @InjectViewState
 public class QPackInfoPresenter extends MvpPresenter<QPackInfoView> {
 
-    private QPackEntity mQPack;
+    private QPackWithCardIds mQPack;
+    //private int mQPackCardsCount = 0;
 
     public CardsInteractor mCardsInteractor;
     public NCoursesInteractor mCoursesInteractor;
 
-    private Disposable mFastCardsSubscribe;
+    private Disposable mQPackSubscribtion;
+    private Disposable mFastCardsSubscribtion;
+    private CompositeDisposable mLastOptSubscribtion = new CompositeDisposable();
+
 
     public static class Factory {
 
@@ -52,102 +63,160 @@ public class QPackInfoPresenter extends MvpPresenter<QPackInfoView> {
         mCardsInteractor = cardsInteractor;
         mCoursesInteractor = coursesInteractor;
 
-        setup(qPackId);
+        bindData(qPackId);
     }
 
     @Override
     public void onDestroy() {
 
-        if (mFastCardsSubscribe != null) {
-            mFastCardsSubscribe.dispose();
+        if (mFastCardsSubscribtion != null) {
+            mFastCardsSubscribtion.dispose();
         }
+        if (mQPackSubscribtion != null) {
+            mQPackSubscribtion.dispose();
+        }
+        mLastOptSubscribtion.dispose();
 
         super.onDestroy();
     }
 
-    private QPackInfoPresenter setup(Long qPackId) {
-        mQPack = mCardsInteractor.getQPack(qPackId);
+    private void bindData(Long qPackId) {
 
-        getViewState().initView(mQPack.getTitle(), String.valueOf(mCardsInteractor.getQPackCardCount(qPackId)));
-        return this;
+        mQPackSubscribtion = mCardsInteractor.getQPackWithCardIds(qPackId)
+                .compose(f_io_mainThread())
+                .subscribe(
+                        qPackWithCardIds -> {
+                            mQPack = qPackWithCardIds;
+                            getViewState().initView(mQPack.getQPack().getTitle(), String.valueOf(mQPack.getCardCount()));
+                        }
+                );
     }
 
     private boolean hasPackCards() {
-        return mCardsInteractor.hasPackCards(mQPack.getId());
+        return mQPack != null && mQPack.getCardCount() > 0;
     }
 
 
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++
-    // from UI
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++
+    public void onUiDeletePack() {
 
-    public void onDeletePack(){
-
-        mCardsInteractor.deleteQPack(mQPack.getId());
-        getViewState().closeScreen();
+        // TODO вынести куда-то контроль комплексного удаления
+        runOpt(
+                mCoursesInteractor.deleteQPackCourses(mQPack.getId())
+                        .andThen(mCardsInteractor.deleteQPack(mQPack.getId()))
+                        .compose(c_io_mainThread())
+                        .subscribe(
+                                () -> getViewState().closeScreen(),
+                                throwable -> onGetError(throwable)
+                        )
+        );
     }
 
-    public void onNewCourseCommit(String courseTitle) {
-        Long courseId = mCoursesInteractor.addCourseForQPack(courseTitle, mQPack.getId());
+    public void onUiNewCourseCommit(String courseTitle) {
+        runOpt(
+                mCoursesInteractor.addCourseForQPack(courseTitle, mQPack.getId())
+                        .compose(s_io_mainThread())
+                        .subscribe(
+                                courseEntity -> onCourseAdded(courseEntity.getId()),
+                                throwable -> onGetError(throwable)
+                        )
+        );
+    }
+
+    private void onCourseAdded(Long courseId) {
         getViewState().showCourseScreen(courseId);
     }
 
-    public void onShowPackCourses(){
-        getViewState().showCourses(mQPack.getId());
+    public void onUiShowPackCourses() {
+        getViewState().navigateToPackCourses(mQPack.getId());
     }
 
-    public void onAddToNewCourse() {
-        if(!hasPackCards()){
+    public void onUiAddToNewCourse() {
+        if (!hasPackCards()) {
             getViewState().showMessage(R.string.msg_there_is_no_cards_in_pack);
             return;
         }
-        getViewState().requestNewCourseCreation(mQPack.getTitle());
+        getViewState().requestNewCourseCreation(mQPack.getQPack().getTitle());
     }
 
-    public void onAddToExistsCourse() {
-        if(!hasPackCards()){
+    public void onUiAddToExistsCourse() {
+        if (!hasPackCards()) {
             getViewState().showMessage(R.string.msg_there_is_no_cards_in_pack);
             return;
         }
         getViewState().requestsSelectCourseToAdd(mQPack.getId());
     }
 
-    public void onAddCardsToCourseCommit(Long courseId) {
+    public void onUiAddCardsToCourseCommit(Long courseId) {
 
-        LearnCourseEntity learnCourse = mCoursesInteractor.getCourse(courseId);
-        if (mCoursesInteractor.hasMissedCards(learnCourse, mQPack.getId())) {
-            getViewState().showMessage(R.string.msg_there_is_no_cards_to_learn);
-            return;
-        }
-        mCoursesInteractor.addCardsToCourse(courseId, mCoursesInteractor.getNotInCards(learnCourse, mQPack.getId()));
+        runOpt(
+                mCoursesInteractor.onAddCardsToCourseFromQPack(mQPack.getId(), courseId)
+                        .compose(c_io_mainThread())
+                        .subscribe(
+                                () -> onCardsToCourseAdded(courseId),
+                                throwable -> onGetError(throwable)
+                        )
+        );
+    }
+
+    private void onCardsToCourseAdded(Long courseId) {
         getViewState().showCourseScreen(courseId);
     }
 
-    public void onViewPackCards(){
+    private void runOpt(@NonNull Disposable disposable) {
+        mLastOptSubscribtion.clear();
+        mLastOptSubscribtion.add(disposable);
+    }
+
+    private void onGetError(Throwable t) {
+
+        if (t instanceof MessageException) {
+            getViewState().showMessage(((MessageException) t).getMsgId());
+        } else {
+            MyLog.add(ExceptionUtils.getMessage(t), t);
+            getViewState().showMessage(R.string.db_request_err_message);
+        }
+    }
+
+    public void onUiViewPackCards() {
         getViewState().showLearnCourseCardsViewingType();
     }
 
-    public void onViewPackCardsRandomly(){
-        getViewState().showLearnCourseCards(
-                mCoursesInteractor.getTempCourseFor(mQPack.getId(), true).getId());
+    private void onViewPackCards(boolean shuffleCards) {
+        runOpt(
+                mCoursesInteractor.getTempCourseFor_rx(mQPack.getId(), shuffleCards)
+                        .compose(s_io_mainThread())
+                        .subscribe(
+                                learnCourseEntity -> getViewState().navigateToCardsView(learnCourseEntity.getId()),
+                                throwable -> onGetError(throwable)
+                        )
+        );
     }
 
-    public void onViewPackCardsOrdered(){
-        getViewState().showLearnCourseCards(
-                mCoursesInteractor.getTempCourseFor(mQPack.getId(), false).getId() );
+    public void onUiViewPackCardsRandomly() {
+        onViewPackCards(true);
     }
 
-    public void onViewPackCardsInList(){
-        getViewState().showLearnCourseCardsInList( mCoursesInteractor.getTempCourseFor(mQPack.getId(), false).getId() );
+    public void onUiViewPackCardsOrdered() {
+        onViewPackCards(false);
+    }
+
+    public void onUiViewPackCardsInList() {
+        runOpt(
+                mCoursesInteractor.getTempCourseFor_rx(mQPack.getId(), false)
+                        .compose(s_io_mainThread())
+                        .subscribe(
+                                learnCourseEntity -> getViewState().openLearnCourseCardsInList(learnCourseEntity.getId()),
+                                throwable -> onGetError(throwable)
+                        )
+        );
     }
 
     public void onUiCardsFastView() {
 
-        if (mFastCardsSubscribe == null) {
+        if (mFastCardsSubscribtion == null) {
 
-            mFastCardsSubscribe = mCardsInteractor.getQPackCards(mQPack.getId())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+            mFastCardsSubscribtion = mCardsInteractor.getQPackCards(mQPack.getId())
+                    .compose(f_io_mainThread())
                     .subscribe(
                             cardEntities -> {
                                 getViewState().setFastViewCards(cardEntities);
@@ -156,9 +225,16 @@ public class QPackInfoPresenter extends MvpPresenter<QPackInfoView> {
         }
     }
 
+    public void onUiAddFakeCard() {
+        runOpt(
+                mCardsInteractor.addFakeCard(mQPack.getId())
+                        .compose(c_io_mainThread())
+                        .subscribe(
+                                () -> getViewState().showMessage(R.string.btn_ok),
+                                throwable -> onGetError(throwable)
+                        )
+        );
+    }
 
-
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 }

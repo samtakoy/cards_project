@@ -29,7 +29,7 @@ interface CardDao {
     fun getCardsFromQPack(qPackId: Long): Flowable<List<CardEntity>>
 
     @Query("SELECT $_id FROM ${table} WHERE ${_qpack_id}=:qPackId")
-    fun getCardsIdsFromQPack(qPackId: Long): List<Long>
+    fun getCardsIdsFromQPack(qPackId: Long): Single<List<Long>>
 
 
     @Transaction
@@ -42,6 +42,9 @@ interface CardDao {
 
     @Query("DELETE FROM $table WHERE $_id = :cardId")
     fun deleteCard(cardId: Long)
+
+    @Query("DELETE FROM $table WHERE $_qpack_id = :qPackId")
+    fun deleteQPackCards(qPackId: Long): Int
 
     @Query("SELECT COUNT(*) FROM ${table} WHERE ${_qpack_id}=:qPackId")
     fun getCardCountInQPack(qPackId: Long): Int

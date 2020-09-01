@@ -39,10 +39,17 @@ class CardsRepositoryImpl(private val db: MyRoomDb) : CardsRepository {
         db.cardDao().deleteCard(cardId)
     }
 
+    override fun deleteQPackCards(qPackId: Long): Completable {
+        return Completable.fromCallable() {
+            db.cardDao().deleteQPackCards(qPackId)
+            return@fromCallable true;
+        }
+    }
+
     override fun getQPackCards(qPackId: Long): Flowable<List<CardEntity>> =
             db.cardDao().getCardsFromQPack(qPackId)
 
-    override fun getCardsIdsFromQPack(qPackId: Long): List<Long> =
+    override fun getCardsIdsFromQPack(qPackId: Long): Single<List<Long>> =
             db.cardDao().getCardsIdsFromQPack(qPackId)
 
     override fun getQPackCardCount(qPackId: Long): Int =

@@ -12,6 +12,7 @@ import ru.samtakoy.core.database.room.entities.QPackEntity.Companion._id
 import ru.samtakoy.core.database.room.entities.QPackEntity.Companion._last_view_date
 import ru.samtakoy.core.database.room.entities.QPackEntity.Companion._theme_id
 import ru.samtakoy.core.database.room.entities.QPackEntity.Companion.table
+import ru.samtakoy.core.database.room.entities.other.QPackWithCardIds
 
 @Dao
 interface QPackDao {
@@ -21,6 +22,9 @@ interface QPackDao {
 
     @Query("SELECT * FROM $table WHERE $_id=:id")
     fun getQPackRx(id: Long): Flowable<QPackEntity>
+
+    @Query("SELECT * FROM $table WHERE $_id=:id")
+    fun getQPackWithCardIds(id: Long): Flowable<QPackWithCardIds>
 
     @Query("SELECT * FROM $table WHERE ${_theme_id}=:themeId")
     fun getQPacksFromTheme(themeId: Long): List<QPackEntity>

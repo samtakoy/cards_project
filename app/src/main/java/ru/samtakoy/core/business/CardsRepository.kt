@@ -12,6 +12,7 @@ interface CardsRepository {
     fun clearDb(): Completable
     fun updateCard(card: CardEntity)
     fun deleteCard(cardId: Long)
+    fun deleteQPackCards(qPackId: Long): Completable
 
     fun addCard(card: CardEntity): Long
     fun getCard(cardId: Long): CardEntity?
@@ -20,7 +21,7 @@ interface CardsRepository {
 
 
     fun getQPackCards(qPackId: Long): Flowable<List<CardEntity>>
-    fun getCardsIdsFromQPack(qPackId: Long): List<Long>
+    fun getCardsIdsFromQPack(qPackId: Long): Single<List<Long>>
 
     fun getQPackCardsWithTagsRx(qPackId: Long): Single<List<CardWithTags>>
     fun getQPackCardCount(qPackId: Long): Int

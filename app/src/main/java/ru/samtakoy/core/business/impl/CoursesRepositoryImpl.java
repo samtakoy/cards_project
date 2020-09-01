@@ -1,5 +1,7 @@
 package ru.samtakoy.core.business.impl;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -7,6 +9,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import ru.samtakoy.core.business.CoursesRepository;
@@ -39,6 +42,11 @@ public class CoursesRepositoryImpl implements CoursesRepository {
     }
 
     @Override
+    public Single<LearnCourseEntity> getCourseRx(@NotNull Long learnCourseId) {
+        return db.courseDao().getLearnCourseRx(learnCourseId);
+    }
+
+    @Override
     public LearnCourseEntity getTempCourseFor(Long qPackId, List<Long> cardIds, Boolean shuffleCards) {
         return mTempCourseRepository.getTempCourseFor(qPackId, cardIds, shuffleCards);
     }
@@ -65,16 +73,24 @@ public class CoursesRepositoryImpl implements CoursesRepository {
     }
 
     @Override
-    public Long addNewCourseNow(LearnCourseEntity newCourse) {
+    public Completable deleteQPackCourses(Long qPackId) {
+        return Completable.fromCallable(() -> {
+            db.courseDao().deleteQPackCourses(qPackId);
+            return true;
+        });
+    }
+
+    @Override
+    public LearnCourseEntity addNewCourseNow(LearnCourseEntity newCourse) {
 
         if (newCourse.getCourseType() == CourseType.TEMPORARY) {
             MyLog.add(TAG + ", CourseType.TEMPORARY cant be added to Database");
-            return 0L;
+            return null;
         }
 
         Long id = db.courseDao().addLearnCourse(newCourse);
         newCourse.setId(id);
-        return id;
+        return newCourse;
     }
 
     @Override

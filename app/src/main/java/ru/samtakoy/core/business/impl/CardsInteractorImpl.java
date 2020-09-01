@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -17,6 +18,7 @@ import ru.samtakoy.core.business.ThemesRepository;
 import ru.samtakoy.core.database.room.entities.CardEntity;
 import ru.samtakoy.core.database.room.entities.QPackEntity;
 import ru.samtakoy.core.database.room.entities.ThemeEntity;
+import ru.samtakoy.core.database.room.entities.other.QPackWithCardIds;
 
 public class CardsInteractorImpl implements CardsInteractor {
 
@@ -97,12 +99,13 @@ public class CardsInteractorImpl implements CardsInteractor {
         );
     }
 
-    public boolean hasPackCards(Long qPackId) {
-        return mCardsRepository.getQPackCardCount(qPackId) > 0;
-    }
-
     public QPackEntity getQPack(Long qPackId) {
         return mQPacksRepository.getQPack(qPackId);
+    }
+
+    @Override
+    public Flowable<QPackWithCardIds> getQPackWithCardIds(Long qPackId) {
+        return mQPacksRepository.getQPackWithCardIdsRx(qPackId);
     }
 
     @Override
@@ -110,8 +113,16 @@ public class CardsInteractorImpl implements CardsInteractor {
         return mQPacksRepository.getQPackRx(qPackId);
     }
 
-    public void deleteQPack(Long qPackId) {
-        mQPacksRepository.deletePack(qPackId);
+    @Override
+    public Completable deleteQPack(Long qPackId) {
+
+        // TODO transactions
+        return mCardsRepository
+
+                .deleteQPackCards(qPackId)
+                .andThen(
+                        mQPacksRepository.deletePack(qPackId)
+                );
     }
 
     @Override
@@ -124,9 +135,11 @@ public class CardsInteractorImpl implements CardsInteractor {
         return mCardsRepository.getQPackCards(qPackId);
     }
 
-    public int getQPackCardCount(Long qPackId) {
-        return  mCardsRepository.getQPackCardCount(qPackId);
-    }
+    /*
+    @Override
+    public Single<List<Long>> getCardsIdsFromQPack(Long qPackId){
+        return mCardsRepository.getCardsIdsFromQPack(qPackId);
+    }*/
 
     @Override
     public Long addNewTheme(Long parentThemeId, String title) {
@@ -155,15 +168,17 @@ public class CardsInteractorImpl implements CardsInteractor {
         return parentTheme;
     }
 
+    /*
     @Override
     public List<ThemeEntity> getChildThemes(Long themeId) {
         return mThemesRepository.getChildThemes(themeId);
-    }
+    }*/
 
+    /*
     @Override
     public List<QPackEntity> getChildQPacks(Long themeId) {
         return mQPacksRepository.getQPacksFromTheme(themeId);
-    }
+    }*/
 
     @Override
     public Flowable<List<ThemeEntity>> getChildThemesRx(Long themeId) {
@@ -196,5 +211,18 @@ public class CardsInteractorImpl implements CardsInteractor {
         return mQPacksRepository.getAllQPacksByCreationDateDesc();
     }
 
+    @Override
+    public Completable addFakeCard(Long qPackId) {
 
+        return Completable.fromCallable(() -> {
+
+            int num = new Random().nextInt(10000);
+
+            CardEntity card = CardEntity.Companion.initNew(
+                    qPackId, "fake question " + num, "fake answer " + num, "comment"
+            );
+            mCardsRepository.addCard(card);
+            return true;
+        });
+    }
 }

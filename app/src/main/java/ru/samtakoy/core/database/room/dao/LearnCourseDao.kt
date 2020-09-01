@@ -21,6 +21,9 @@ interface LearnCourseDao {
     @Query("SELECT * FROM $table WHERE $_id=:id")
     fun getLearnCourse(id: Long): LearnCourseEntity
 
+    @Query("SELECT * FROM $table WHERE $_id=:id")
+    fun getLearnCourseRx(id: Long): Single<LearnCourseEntity>
+
     @Query("SELECT * FROM $table WHERE $_mode = :modeId")
     fun getLearnCourseByMode(modeId: Int): LearnCourseEntity?
 
@@ -33,6 +36,8 @@ interface LearnCourseDao {
     @Query("DELETE FROM $table WHERE $_id=:id")
     fun deleteCourseById(id: Long): Int
 
+    @Query("DELETE FROM $table WHERE $_qpack_id=:qPackId")
+    fun deleteQPackCourses(qPackId: Long)
 
     @Query("SELECT * FROM $table")
     @TypeConverters(CourseTypeConverter::class)
@@ -67,4 +72,5 @@ interface LearnCourseDao {
     @Query("SELECT * FROM $table WHERE $_mode = :mode AND $_repeat_date > :repeatDate ORDER BY $_repeat_date ASC")
     @TypeConverters(LearnCourseModeConverter::class, DateLongConverter::class)
     fun getOrderedCoursesMoreThan(mode: LearnCourseMode, repeatDate: Date): List<LearnCourseEntity>
+
 }

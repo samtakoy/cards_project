@@ -163,7 +163,7 @@ class LearnCourseEntity(
         return false
     }
 
-    fun getNotInCards(cardIds: List<Long>): List<Long>? {
+    fun getNotInCards(cardIds: List<Long>): List<Long> {
         val result: MutableList<Long> = ArrayList()
         for (cardId in cardIds) {
             if (!this.cardIds.contains(cardId)) {

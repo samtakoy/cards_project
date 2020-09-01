@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
@@ -12,20 +13,21 @@ import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
 
 public interface NCoursesInteractor {
 
+    //TODO  -> RxJava
     LearnCourseEntity getCourse(Long courseId);
 
-    void deleteCourse(long courseId);
+    //TODO  -> RxJava
+    void deleteCourse(Long courseId);
 
-    boolean hasMissedCards(LearnCourseEntity learnCourse, Long qPackId);
+    Completable deleteQPackCourses(Long qPackId);
 
-    List<Long> getNotInCards(LearnCourseEntity learnCourse, Long qPackId);
+    Completable onAddCardsToCourseFromQPack(Long qPackId, Long learnCourseId);
 
-    void addCardsToCourse(Long courseId, List<Long> newCardsToAdd);
+    Completable addCardsToCourseRx(LearnCourseEntity learnCourse, List<Long> newCardsToAdd);
 
-    void addCardsToCourse(LearnCourseEntity learnCourse, List<Long> newCardsToAdd);
+    Single<LearnCourseEntity> addCourseForQPack(String courseTitle, Long qPackId);
 
-    Long addCourseForQPack(String courseTitle, Long qPackId);
-
+    //TODO  -> RxJava
     boolean saveCourse(LearnCourseEntity learnCourse);
 
     Single<LearnCourseEntity> addNewCourse(@Nullable LearnCourseEntity newCourse);
@@ -42,9 +44,11 @@ public interface NCoursesInteractor {
     @NotNull
     Flowable<List<LearnCourseEntity>> getCoursesForQPack(@NotNull Long qPackId);
 
+    //TODO  -> RxJava
     LearnCourseEntity getTempCourseFor(Long qPackId, List<Long> cardIds, boolean shuffleCards);
 
-    LearnCourseEntity getTempCourseFor(Long qPackId, boolean shuffleCards);
+    @NotNull
+    Single<LearnCourseEntity> getTempCourseFor_rx(Long qPackId, boolean shuffleCards);
 
 
 }

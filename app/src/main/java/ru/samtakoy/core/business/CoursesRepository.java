@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Date;
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
@@ -15,8 +16,10 @@ import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
 
 public interface CoursesRepository {
 
-    @Nullable
     LearnCourseEntity getCourse(@NotNull Long learnCourseId);
+
+    @Nullable
+    Single<LearnCourseEntity> getCourseRx(@NotNull Long learnCourseId);
 
     @NotNull
     LearnCourseEntity getTempCourseFor(Long qPackId, List<Long> cardIds, Boolean shuffleCards);
@@ -29,8 +32,10 @@ public interface CoursesRepository {
 
     boolean deleteCourse(long courseId);
 
+    Completable deleteQPackCourses(Long qPackId);
+
     // TODO TEMP
-    Long addNewCourseNow(LearnCourseEntity newCourse);
+    LearnCourseEntity addNewCourseNow(LearnCourseEntity newCourse);
 
     // TODO Single вернуть к Flowable, для возможности update данных
 
@@ -54,5 +59,6 @@ public interface CoursesRepository {
     List<LearnCourseEntity> getOrderedCoursesLessThan(LearnCourseMode mode, Date repeatDate);
 
     List<LearnCourseEntity> getOrderedCoursesMoreThan(LearnCourseMode mode, Date repeatDate);
+
 
 }
