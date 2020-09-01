@@ -3,17 +3,17 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_packs_themes"
+            android:id="@+id/themesListFragment"
             android:title="@string/main_drawer_themes"
             android:checked="true" />
         <item
-            android:id="@+id/nav_packs_raw_list"
+            android:id="@+id/qPacksListFragment"
             android:title="@string/main_drawer_qpacks" />
         <item
-            android:id="@+id/nav_courses"
+            android:id="@+id/coursesListFragment"
             android:title="@string/main_drawer_courses" />
         <item
-            android:id="@+id/nav_settings"
+            android:id="@+id/settingsFragment"
             android:title="@string/main_drawer_settings" />
     </group>
 

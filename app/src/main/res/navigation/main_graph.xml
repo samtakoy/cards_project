@@ -7,19 +7,19 @@
     <fragment
         android:id="@+id/themesListFragment"
         android:name="ru.samtakoy.core.presentation.themes.ThemesListFragment"
-        android:label="ThemesListFragment">
+        android:label="@string/main_drawer_themes">
 
         <action
             android:id="@+id/action_themesListFragment_self"
             app:destination="@id/themesListFragment" />
         <argument
             android:name="ARG_KEY_THEME_ID"
-            app:argType="long"
-            android:defaultValue="0L" />
+            android:defaultValue="0L"
+            app:argType="long" />
         <argument
             android:name="ARG_KEY_THEME_TITLE"
-            app:argType="string"
-            android:defaultValue='""' />
+            android:defaultValue='""'
+            app:argType="string" />
         <action
             android:id="@+id/action_themesListFragment_to_qPackInfoFragment"
             app:destination="@id/qPackInfoFragment" />
@@ -30,7 +30,7 @@
     <fragment
         android:id="@+id/qPacksListFragment"
         android:name="ru.samtakoy.core.presentation.qpacks.QPacksListFragment"
-        android:label="QPacksListFragment">
+        android:label="@string/main_drawer_qpacks">
         <action
             android:id="@+id/action_qPacksListFragment_to_qPackInfoFragment"
             app:destination="@id/qPackInfoFragment" />
@@ -38,7 +38,7 @@
     <fragment
         android:id="@+id/coursesListFragment"
         android:name="ru.samtakoy.core.presentation.courses.list.CoursesListFragment"
-        android:label="CoursesListFragment">
+        android:label="@string/main_drawer_courses">
         <argument
             android:name="ARG_TARGET_QPACK_ID"
             android:defaultValue="0L"
@@ -56,7 +56,7 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="ru.samtakoy.features.settings.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="@string/main_drawer_settings" />
     <fragment
         android:id="@+id/courseInfoFragment"
         android:name="ru.samtakoy.core.presentation.courses.info.CourseInfoFragment"

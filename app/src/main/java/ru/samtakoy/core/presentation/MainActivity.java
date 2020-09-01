@@ -2,6 +2,7 @@ package ru.samtakoy.core.presentation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -10,10 +11,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -21,11 +22,12 @@ import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
 import ru.samtakoy.core.presentation.log.MyLog;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RouterHolder {
+public class MainActivity extends AppCompatActivity implements RouterHolder {
 
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
+    private ActionBarDrawerToggle mActionBarDrawerToggle;
 
     private NavController mNavController;
 
@@ -35,14 +37,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         aIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         return aIntent;
     }
-    // --
-
 
     @Override
     protected void onDestroy() {
 
-MyLog.add(" %% DESTROY_ACTIVITY___ " );
-
+        MyLog.add(" %% DESTROY_ACTIVITY___ ");
         super.onDestroy();
     }
 
@@ -53,94 +52,63 @@ MyLog.add(" %% DESTROY_ACTIVITY___ " );
 
         super.onCreate(savedInstanceState);
 
-
         setContentView(R.layout.activity_main);
 
 
         mNavController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
 
-
         mToolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(mToolbar);
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
-
         mNavigationView = findViewById(R.id.navigation_view);
 
-
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.main_drawer_open_nav_drawer, R.string.main_drawer_close_nav_drawer
         );
-        mDrawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
+        mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
+        mActionBarDrawerToggle.syncState();
 
-        mNavigationView.setNavigationItemSelectedListener(this);
-
+        NavigationUI.setupActionBarWithNavController(this, mNavController, mDrawerLayout);
+        NavigationUI.setupWithNavController(mNavigationView, mNavController);
 
         if (savedInstanceState == null) {
             setupInitialFragment();
         }
 
-        //test();
-
     }
-
 
     private void setupInitialFragment() {
 
-        //mRouter.newRootScreen(new Screens.ThemeListScreen());
+    }
 
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mActionBarDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mActionBarDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mNavController.popBackStack();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public NavController getNavController() {
         return mNavController;
-    }
-
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.nav_packs_themes:
-                mNavController.popBackStack(R.id.themesListFragment, false);
-                //mRouter.newRootScreen(new Screens.ThemeListScreen());
-                //mRouter.;
-                break;
-            case R.id.nav_packs_raw_list:
-                mNavController.navigate(R.id.qPacksListFragment);
-                //mRouter.newRootScreen(new Screens.QPacksListScreen());
-                break;
-            case R.id.nav_courses:
-                mNavController.navigate(R.id.coursesListFragment);
-                //mRouter.newRootScreen(Screens.CoursesListScreen.allCoursesScreen());
-                break;
-            case R.id.nav_settings:
-                changeTitle(item.getTitle());
-                mNavController.navigate(R.id.settingsFragment);
-                //mRouter.navigateTo(new Screens.SettingsScreen());
-                break;
-        }
-
-        mDrawerLayout.closeDrawer(GravityCompat.START);
-
-        return true;
-    }
-
-    private void changeTitle(CharSequence title) {
-
-        MyLog.add("new title: " + title);
-
-        getSupportActionBar().setTitle(title);
-    }
-
-    @Override
-    public void onBackPressed() {
-
-        //if(!mNavController.navigateUp()){
-        super.onBackPressed();
-        //}
-
     }
 
     @Override
