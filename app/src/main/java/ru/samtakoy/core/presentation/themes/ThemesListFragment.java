@@ -146,7 +146,6 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         });
         fab.setOnClickListener(view -> mPresenter.onUiAddNewThemeRequest());
 
-
         setHasOptionsMenu(true);
         registerForContextMenu(mThemesRecycler);
 
@@ -180,7 +179,6 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
     public void onDestroyView() {
 
         unregisterForContextMenu(mThemesRecycler);
-
         super.onDestroyView();
     }
 
@@ -236,7 +234,6 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
 
     public void setListData(List<ThemeEntity> themes, List<QPackEntity> qPacks) {
         mThemesAdapter.updateData(themes, qPacks);
-
     }
 
     public void updateList(){
@@ -283,7 +280,6 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.fragment_themes, menu);
-
         MenuCompat.setGroupDividerEnabled(menu, true);
     }
 
@@ -510,10 +506,7 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
 
     @Override
     public void navigateToSettings() {
-
         mRouterHolder.getNavController().navigate(R.id.settingsFragment);
-
-        //mRouterHolder.getRouter().navigateTo(new Screens.SettingsScreen());
     }
 
     @Override
