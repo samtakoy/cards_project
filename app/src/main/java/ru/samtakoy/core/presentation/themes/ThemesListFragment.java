@@ -10,14 +10,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,7 +36,7 @@ import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.Collections;
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -85,22 +83,10 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
     //private static final int REQ_CODE_BATCH_IMPORT_DIALOG = 8;
     private static final String TAG_DIALOG_ADD_THEME = "TAG_DIALOG_ADD_THEME";
 
-    private static int ITEM_TYPE_THEME = 1;
-    private static int ITEM_TYPE_QPACK = 2;
 
     public static String getBackStackName(Long themeId){
         return ThemesListFragment.class.getName()+"_"+ themeId;
     }
-
-    /*
-    public static ThemesListFragment newFragment(){
-        ThemesListFragment result = new ThemesListFragment();
-        Bundle args = new Bundle();
-        args.putLong(ARG_KEY_THEME_ID, Const.NO_PARENT_THEME_ID);
-        args.putString(ARG_KEY_THEME_TITLE, "");
-        result.setArguments(args);
-        return result;
-    }/***/
 
     public static ThemesListFragment newFragment(Long themeId, String themeTitle) {
         ThemesListFragment result = new ThemesListFragment();
@@ -117,20 +103,10 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         return args;
     }
 
-    // TODO вместо этого NavigationHolder
-    /*public interface Callbacks{
-        void onThemeSelected(Theme theme);
-        void onQPackSelected(QPack qPack);
-        void onNavigateToOnlineImport();
-        void onNavigateToSettings();
-    }/***/
-
     private RecyclerView mThemesRecycler;
     private ThemesAdapter mThemesAdapter;
 
     private RouterHolder mRouterHolder;
-
-    //private NavController mNavController;
 
     @InjectPresenter
     ThemesListPresenter mPresenter;
@@ -147,12 +123,10 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_themes, container, false);
 
-        //mNavController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_container);
-
         mThemesRecycler = v.findViewById(R.id.themes_list_recycler);
         mThemesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mThemesAdapter = new ThemesAdapter();
+        mThemesAdapter = new ThemesAdapter(createThemesAdapterCallback());
         mThemesRecycler.setAdapter(mThemesAdapter);
 
         final FloatingActionButton fab = v.findViewById(R.id.fab);
@@ -173,11 +147,33 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         fab.setOnClickListener(view -> mPresenter.onUiAddNewThemeRequest());
 
 
-
         setHasOptionsMenu(true);
         registerForContextMenu(mThemesRecycler);
 
         return v;
+    }
+
+    private ThemesAdapter.Callback createThemesAdapterCallback() {
+        return new ThemesAdapter.Callback() {
+
+            private WeakReference<MenuInflater> mInflater = new WeakReference(getActivity().getMenuInflater());
+
+            @NotNull
+            @Override
+            public MenuInflater getMenuInflater() {
+                return mInflater.get();
+            }
+
+            @Override
+            public void navigateToTheme(@NotNull ThemeEntity theme) {
+                ThemesListFragment.this.navigateToTheme(theme);
+            }
+
+            @Override
+            public void navigateToQPack(@NotNull QPackEntity qPack) {
+                ThemesListFragment.this.navigateToQPack(qPack);
+            }
+        };
     }
 
     @Override
@@ -191,14 +187,12 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        //mCallbacks = (Callbacks)context;
         mRouterHolder = (RouterHolder) context;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        ///mCallbacks = null;
         mRouterHolder = null;
     }
 
@@ -264,8 +258,6 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
                 isZip ? "*/*" : "text/plain"
                 //isZip ? "application/zip, application/octet-stream" : "text/plain"
                 //isZip ? "application/zip, application/octet-stream, application/x-zip-compressed, multipart/x-zip" : "text/plain"
-
-
          );
     }
 
@@ -279,10 +271,7 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
 
     @Override
     public void navigateToOnlineImport() {
-        //mCallbacks.onNavigateToOnlineImport();
-
         mRouterHolder.getNavController().navigate(R.id.action_themesListFragment_to_onlineImportFragment);
-        //mRouterHolder.getRouter().navigateTo(new Screens.OnlineImportScreen());
     }
 
     public void showMessage(int resourceId){
@@ -296,10 +285,6 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         inflater.inflate(R.menu.fragment_themes, menu);
 
         MenuCompat.setGroupDividerEnabled(menu, true);
-        /*if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
-            menu.setGroupDividerEnabled(true);
-        }/***/
-
     }
 
     @Override
@@ -371,9 +356,6 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
             case R.id.menu_item_export_all_to_email:
                 mPresenter.onUiExportAllToEmailRequest();
                 return true;
-            /*case R.id.fragment_themes_menu_item_show_courses:
-                //mPresenter.onUiAllCoursesClick();
-                return true;/**/
             case R.id.menu_item_log:
                 // пока тут
                 startActivity(LogActivity.newActivityIntent(getContext()));
@@ -389,15 +371,6 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){
-
-
-            /* убрал как устаревшее
-            case R.id.menu_item_export_cards:
-                if(mThemesAdapter.isQPackLongClicked()){
-                    mPresenter.onUiExportQPackCards(mThemesAdapter.getLongClickedQPack());
-                }else{}
-
-                return true;*/
 
             case R.id.menu_item_send_cards:
                 if(mThemesAdapter.isQPackLongClicked()){
@@ -417,8 +390,6 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         }
         return super.onContextItemSelected(item);
     }
-
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -604,26 +575,14 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
     }
 
     private void navigateToTheme(ThemeEntity theme) {
-        //mCallbacks.onThemeSelected(theme);
-
-        //mRouterHolder.getRouter().navigateTo(new Screens.ThemeListScreen(theme.getId(), theme.getTitle()));
-
-        /*
-        ThemesListFragmentDirections.ActionThemesListFragmentSelf action = ThemesListFragmentDirections.actionThemesListFragmentSelf();
-        action.setARGKEYTHEMEID(theme.getId());
-        action.setARGKEYTHEMETITLE(theme.getTitle());*/
-
         mRouterHolder.getNavController().navigate(R.id.action_themesListFragment_self, buildBundle(theme.getId(), theme.getTitle()));
     }
 
     private void navigateToQPack(QPackEntity qPack) {
-        //mCallbacks.onQPackSelected(qPack);
-
         mRouterHolder.getNavController().navigate(
                 R.id.action_themesListFragment_to_qPackInfoFragment,
                 QPackInfoFragment.buildBundle(qPack.getId())
         );
-        //mRouterHolder.getRouter().navigateTo(new Screens.QPackInfoScreen(qPack.getId()));
     }
 
     @Override
@@ -652,148 +611,6 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
 
 
 
-    // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-    class ThemesItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
-            View.OnCreateContextMenuListener {
-
-        private int mViewType;
-        private ThemeEntity mTheme;
-        private QPackEntity mQPack;
-        private TextView mText;
-
-
-        public ThemesItemHolder(@NonNull View itemView, int viewType) {
-            super(itemView);
-            mViewType = viewType;
-            mText = itemView.findViewById(R.id.list_item_text);
-            itemView.setOnClickListener(this);
-
-        }
-
-        public void bindTheme(ThemeEntity t) {
-            mTheme = t;
-            mQPack = null;
-            mText.setText(t.getTitle());
-
-        }
-
-        public void bindQPack(QPackEntity qPack) {
-            mTheme = null;
-            mQPack = qPack;
-
-
-            mText.setText(qPack.getTitle());
-
-            TextView dateText = itemView.findViewById(R.id.creation_date);
-            dateText.setText(qPack.getCreationDateAsString());
-        }
-
-        @Override
-        public void onClick(View view) {
-            if(mTheme != null) {
-                navigateToTheme(mTheme);
-            } else {
-                navigateToQPack(mQPack);
-            }
-        }
-
-        @Override
-        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-            MenuInflater mi = getActivity().getMenuInflater();
-
-            if(mTheme != null){
-                mi.inflate(R.menu.fragment_themes_tctx, contextMenu);
-            } else {
-                mi.inflate(R.menu.fragment_themes_ctx, contextMenu);
-            }
-
-        }
-    }
-
-    class ThemesAdapter extends RecyclerView.Adapter<ThemesItemHolder> {
-
-        private int mLongClickPosition;
-
-        private List<ThemeEntity> mCurThemes;
-        private List<QPackEntity> mCurQPacks;
-
-        public ThemesAdapter() {
-
-            mCurThemes = Collections.EMPTY_LIST;
-            mCurQPacks = Collections.EMPTY_LIST;
-        }
-
-        public void updateData(List<ThemeEntity> themes, List<QPackEntity> qPacks) {
-            mCurThemes = themes;
-            mCurQPacks = qPacks;
-            notifyDataSetChanged();
-        }
-
-        @NonNull
-        @Override
-        public ThemesItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater li = LayoutInflater.from(getActivity());
-            int layoutId = viewType == ITEM_TYPE_THEME ? R.layout.themes_list_item : R.layout.themes_list_qpack_item;
-            return new ThemesItemHolder(li.inflate(layoutId, parent, false), viewType);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ThemesItemHolder holder, final int position) {
-
-            if(getItemViewType(position) == ITEM_TYPE_THEME){
-                holder.bindTheme(mCurThemes.get(position));
-
-                //holder.itemView.setOnCreateContextMenuListener(null);
-                //holder.itemView.setOnLongClickListener(null);
-            } else
-            if(getItemViewType(position) == ITEM_TYPE_QPACK){
-                holder.bindQPack(mCurQPacks.get(position-mCurThemes.size()));
-
-
-            }
-
-            holder.itemView.setOnCreateContextMenuListener(holder);
-            holder.itemView.setOnLongClickListener(view -> {
-                mLongClickPosition = position;
-                return false;
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return mCurThemes.size()+mCurQPacks.size();
-        }
-
-        @Override
-        public void onViewRecycled(@NonNull ThemesItemHolder holder) {
-            holder.itemView.setOnLongClickListener(null);
-            holder.itemView.setOnCreateContextMenuListener(null);
-            super.onViewRecycled(holder);
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return position >= mCurThemes.size() ? ITEM_TYPE_QPACK : ITEM_TYPE_THEME;
-        }
-
-        public boolean isQPackLongClicked(){
-            return  mLongClickPosition-mCurThemes.size() >= 0;
-        }
-
-        public QPackEntity getLongClickedQPack() {
-            return mCurQPacks.get(mLongClickPosition - mCurThemes.size());
-        }
-
-        public ThemeEntity getLongClickedTheme() {
-            return mCurThemes.get(mLongClickPosition);
-        }
-
-
-
-
-    }
 
 
 }
