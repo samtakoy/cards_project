@@ -13,7 +13,7 @@ import ru.samtakoy.core.database.room.entities.CardTagEntity.Companion._tag_id
                     entity = CardEntity::class,
                     parentColumns = ["_id"],
                     childColumns = [_card_id],
-                    onDelete = ForeignKey.RESTRICT
+                    onDelete = ForeignKey.CASCADE
             ),
             ForeignKey(
                     entity = TagEntity::class,

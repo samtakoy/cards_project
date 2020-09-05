@@ -118,7 +118,9 @@ public class CardsInteractorImpl implements CardsInteractor {
 
         // TODO transactions
         return mCardsRepository
-
+                // TODO придумать, что делать с НЕИСПОЛЬЗУЕМЫМИ тегами карточек, когда удаляется карточка
+                // пока связь тег-карточка удаляется каскадно, а теги остаются,
+                // получается, надо чистить поштучно
                 .deleteQPackCards(qPackId)
                 .andThen(
                         mQPacksRepository.deletePack(qPackId)
