@@ -1,7 +1,6 @@
 package ru.samtakoy.core.business.impl;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 import java.util.List;
@@ -20,8 +19,8 @@ import ru.samtakoy.core.business.QPacksRepository;
 import ru.samtakoy.core.business.utils.LearnCourseCardsIdsPair;
 import ru.samtakoy.core.business.utils.MessageException;
 import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
-import ru.samtakoy.core.database.room.entities.QPackEntity;
 import ru.samtakoy.core.database.room.entities.elements.Schedule;
+import ru.samtakoy.core.database.room.entities.types.CourseType;
 import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
 
 public class NCoursesInteractorImpl implements NCoursesInteractor {
@@ -40,29 +39,26 @@ public class NCoursesInteractorImpl implements NCoursesInteractor {
     @Inject
     public NCoursesInteractorImpl() {
     }
-            /*Context ctx,
-            QPacksRepository cardsRepository,
-            CoursesRepository corsesRepository
-    ) {
-        mCtx = ctx;
-        mQPacksRepository = cardsRepository;
-        mCoursesRepository = corsesRepository;
-    }*/
 
-    public LearnCourseEntity getCourse(Long courseId) {
-        return mCoursesRepository.getCourse(courseId);
-    }
-
+    @NotNull
     @Override
-    public void deleteCourse(Long courseId) {
-        mCoursesRepository.deleteCourse(courseId);
+    public Single<LearnCourseEntity> getCourse(Long courseId) {
+        return mCoursesRepository.getCourseRx(courseId);
     }
 
+    @NotNull
+    @Override
+    public Completable deleteCourse(Long courseId) {
+        return mCoursesRepository.deleteCourse(courseId);
+    }
+
+    @NotNull
     @Override
     public Completable deleteQPackCourses(Long qPackId) {
         return mCoursesRepository.deleteQPackCourses(qPackId);
     }
 
+    @NotNull
     @Override
     public Completable onAddCardsToCourseFromQPack(Long qPackId, Long learnCourseId) {
         return
@@ -85,41 +81,40 @@ public class NCoursesInteractorImpl implements NCoursesInteractor {
         return learnCourseCardsIdsPair;
     }
 
+    @NotNull
+    @Override
     public Completable addCardsToCourseRx(LearnCourseEntity learnCourse, List<Long> newCardsToAdd) {
         return Completable.fromCallable(() -> {
-            addCardsToCourseOld(learnCourse, newCardsToAdd);
+
+            // TODO проверить - происходит ли добавление, 2) добавляется ли в список активного курса (в процессе повтороения)
+            learnCourse.addCardsToCourse(newCardsToAdd);
+            mCoursesRepository.updateCourse(learnCourse);
             return true;
-        });
+        }).andThen(
+                // additional
+                // TODO надо спрашивать пользователя отдельно после добавления карточек курс
+                planAdditionalCourseAfterCardsAdding(learnCourse, newCardsToAdd)
+        );
     }
 
-    // TODO refactor
-    private void addCardsToCourseOld(LearnCourseEntity learnCourse, List<Long> newCardsToAdd) {
+    @NotNull
+    private Completable planAdditionalCourseAfterCardsAdding(LearnCourseEntity learnCourse, List<Long> newCardsToAdd) {
+        return Completable.fromCallable(
+                () -> {
+                    if (learnCourse.hasRealizedSchedule()) {
 
-        // TODO проверить - происходит ли добавление, 2) добавляется ли в список активного курса (в процессе повтороения)
-
-        learnCourse.addCardsToCourse(newCardsToAdd);
-        mCoursesRepository.updateCourse(learnCourse);
-
-        //
-        // additional
-        // TODO надо спрашивать пользователя отдельно после добавления карточек курс
-        if (learnCourse.hasRealizedSchedule()) {
-
-            Schedule addSchedule = learnCourse.getRealizedSchedule().copy();
-            if (learnCourse.hasRestSchedule()) {
-                addSchedule.addItem(learnCourse.getRestSchedule().getFirstItem());
-            }
-
-            String qPackTitle = null;
-            if (learnCourse.hasQPackId()) {
-                QPackEntity qPack = mQPacksRepository.getQPack(learnCourse.getQPackId());
-                qPackTitle = qPack.getTitle();
-            }
-
-            mCoursesPlanner.planAdditionalCards(learnCourse.getQPackId(), qPackTitle, newCardsToAdd, addSchedule);
-        }
+                        Schedule addSchedule = learnCourse.getRealizedSchedule().copy();
+                        if (learnCourse.hasRestSchedule()) {
+                            addSchedule.addItem(learnCourse.getRestSchedule().getFirstItem());
+                        }
+                        mCoursesPlanner.planAdditionalCards(learnCourse.getQPackId(), learnCourse.getTitle() + "+", newCardsToAdd, addSchedule);
+                    }
+                    return true;
+                }
+        );
     }
 
+    @NotNull
     @Override
     public Single<LearnCourseEntity> addCourseForQPack(String courseTitle, Long qPackId) {
         return mCardsRepository.getCardsIdsFromQPack(qPackId)
@@ -161,20 +156,26 @@ public class NCoursesInteractorImpl implements NCoursesInteractor {
         return mCoursesRepository.getCoursesForQPack(qPackId);
     }
 
-    public boolean saveCourse(LearnCourseEntity learnCourse) {
-        return mCoursesRepository.updateCourse(learnCourse);
+    @NotNull
+    @Override
+    public Completable saveCourse(LearnCourseEntity learnCourse) {
+        return Completable.fromCallable(() -> mCoursesRepository.updateCourse(learnCourse));
     }
 
+    @NotNull
     @Override
-    public Single<LearnCourseEntity> addNewCourse(@Nullable LearnCourseEntity newCourse) {
+    public Single<LearnCourseEntity> addNewCourse(@NotNull LearnCourseEntity newCourse) {
         return mCoursesRepository.addNewCourse(newCourse);
     }
 
     // ---
 
+    @NotNull
     @Override
-    public LearnCourseEntity getTempCourseFor(Long qPackId, List<Long> cardIds, boolean shuffleCards) {
-        return mCoursesRepository.getTempCourseFor(qPackId, cardIds, shuffleCards);
+    public Single<LearnCourseEntity> getTempCourseFor(Long qPackId, List<Long> cardIds, boolean shuffleCards) {
+        return Single.fromCallable(
+                () -> mCoursesRepository.getTempCourseFor(qPackId, cardIds, shuffleCards)
+        );
     }
 
     @NotNull
@@ -182,10 +183,30 @@ public class NCoursesInteractorImpl implements NCoursesInteractor {
     public Single<LearnCourseEntity> getTempCourseFor_rx(Long qPackId, boolean shuffleCards) {
         return mCardsRepository
                 .getCardsIdsFromQPack(qPackId)
-                .flatMap(
-                        cardIds ->
-                                Single.fromCallable(() -> getTempCourseFor(qPackId, cardIds, shuffleCards))
-                );
+                .flatMap(cardIds -> getTempCourseFor(qPackId, cardIds, shuffleCards));
     }
 
+    @NotNull
+    @Override
+    public Completable finishCourseCardsViewing(LearnCourseEntity course, Date currentTime) {
+        return Completable.fromCallable(
+                () -> {
+                    course.finishLearnOrRepeat(currentTime);
+                    if (course.getCourseType() != CourseType.TEMPORARY) {
+                        mQPacksRepository.updateQPackViewCount(course.getQPackId(), currentTime);
+                    }
+                    return true;
+                }
+        )
+                .andThen(saveCourse(course))
+                .andThen(Completable.fromCallable(
+                        () -> {
+                            // перепланировать следующий курс
+                            if (course.getCourseType() != CourseType.TEMPORARY) {
+                                mCoursesPlanner.reScheduleLearnCourses();
+                            }
+                            return true;
+                        }
+                ));
+    }
 }

@@ -1,16 +1,15 @@
 package ru.samtakoy.core.database.room.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import io.reactivex.Flowable
 import io.reactivex.Single
+import ru.samtakoy.core.database.room.converters.DateLongConverter
 import ru.samtakoy.core.database.room.entities.QPackEntity
 import ru.samtakoy.core.database.room.entities.QPackEntity.Companion._creation_date
 import ru.samtakoy.core.database.room.entities.QPackEntity.Companion._id
 import ru.samtakoy.core.database.room.entities.QPackEntity.Companion._last_view_date
 import ru.samtakoy.core.database.room.entities.QPackEntity.Companion._theme_id
+import ru.samtakoy.core.database.room.entities.QPackEntity.Companion._view_counter
 import ru.samtakoy.core.database.room.entities.QPackEntity.Companion.table
 import ru.samtakoy.core.database.room.entities.other.QPackWithCardIds
 
@@ -18,7 +17,7 @@ import ru.samtakoy.core.database.room.entities.other.QPackWithCardIds
 interface QPackDao {
 
     @Query("SELECT * FROM $table WHERE $_id=:id")
-    fun getQPack(id: Long): QPackEntity
+    fun getQPack(id: Long): Single<QPackEntity>
 
     @Query("SELECT * FROM $table WHERE $_id=:id")
     fun getQPackRx(id: Long): Flowable<QPackEntity>
@@ -48,6 +47,10 @@ interface QPackDao {
 
     @Update
     fun updateQPack(qPack: QPackEntity)
+
+    @Query("UPDATE $table SET ${_view_counter}=${_view_counter}+1, $_last_view_date=:currentTime WHERE ${_id}=:qPackId")
+    @TypeConverters(DateLongConverter::class)
+    fun updateQPackViewCount(qPackId: Long, currentTime: java.util.Date)
 
     @Query("DELETE FROM $table WHERE ${_id}=:id")
     fun deleteQPackById(id: Long): Int

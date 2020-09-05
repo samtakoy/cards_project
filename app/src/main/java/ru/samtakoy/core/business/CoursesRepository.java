@@ -16,9 +16,9 @@ import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
 
 public interface CoursesRepository {
 
-    LearnCourseEntity getCourse(@NotNull Long learnCourseId);
+    //LearnCourseEntity getCourse(@NotNull Long learnCourseId);
 
-    @Nullable
+    @NotNull
     Single<LearnCourseEntity> getCourseRx(@NotNull Long learnCourseId);
 
     @NotNull
@@ -30,14 +30,12 @@ public interface CoursesRepository {
 
     boolean updateCourse(LearnCourseEntity course);
 
-    boolean deleteCourse(long courseId);
+    Completable deleteCourse(long courseId);
 
     Completable deleteQPackCourses(Long qPackId);
 
     // TODO TEMP
     LearnCourseEntity addNewCourseNow(LearnCourseEntity newCourse);
-
-    // TODO Single вернуть к Flowable, для возможности update данных
 
     Single<LearnCourseEntity> addNewCourse(LearnCourseEntity newCourse);
 

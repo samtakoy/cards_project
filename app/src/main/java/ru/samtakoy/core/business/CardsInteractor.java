@@ -1,6 +1,5 @@
 package ru.samtakoy.core.business;
 
-import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -16,15 +15,11 @@ public interface CardsInteractor {
 
     Flowable<CardEntity> getCardRx(Long cardId);
 
-    //TODO  -> RxJava
     void deleteCardWithRelations(Long cardId);
 
-    Completable setCardNewQuestionText(Long cardId, String text);
+    Completable setCardNewQuestionTextRx(Long cardId, String text);
 
-    Completable setCardNewAnswerText(Long cardId, String text);
-
-    //TODO  -> RxJava
-    QPackEntity getQPack(Long qPackId);
+    Completable setCardNewAnswerTextRx(Long cardId, String text);
 
     Flowable<QPackWithCardIds> getQPackWithCardIds(Long qPackId);
 
@@ -50,8 +45,6 @@ public interface CardsInteractor {
 
     Flowable<List<QPackEntity>> getChildQPacksRx(Long themeId);
 
-    //TODO  -> RxJava
-    void saveQPackLastViewDate(Long qPackId, Date currentTime, boolean incrementViewCounter);
     Flowable<List<QPackEntity>> getAllQPacksByLastViewDateAsc();
 
     Flowable<List<QPackEntity>> getAllQPacksByCreationDateDesc();

@@ -1,10 +1,16 @@
 package ru.samtakoy.core.presentation.cards.result
 
+import io.reactivex.disposables.CompositeDisposable
 import moxy.InjectViewState
 import moxy.MvpPresenter
+import org.apache.commons.lang3.exception.ExceptionUtils
+import ru.samtakoy.R
 import ru.samtakoy.core.business.NCoursesInteractor
+import ru.samtakoy.core.business.utils.s_io_mainThread
+import ru.samtakoy.core.database.room.entities.LearnCourseEntity
 import ru.samtakoy.core.database.room.entities.elements.Schedule
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
+import ru.samtakoy.core.presentation.log.MyLog
 import javax.inject.Inject
 
 @InjectViewState
@@ -12,7 +18,7 @@ class CardsViewResultPresenter(
         coursesInteractor: NCoursesInteractor,
         val callbacks: Callbacks,
         val learnCourseId: Long,
-        cardViewMode: CardViewMode
+        val cardViewMode: CardViewMode
 ) : MvpPresenter<CardsViewResultView>() {
 
     interface Callbacks {
@@ -30,33 +36,56 @@ class CardsViewResultPresenter(
         ) = CardsViewResultPresenter(coursesInteractor, callbacks, learnCourseId, cardViewMode)
     }
 
-    private var newSchedule: Schedule = Schedule()
+    private var newErrorCardsSchedule: Schedule = Schedule()
+    private val operationDisposable = CompositeDisposable()
 
     init {
-        val learnCourse = coursesInteractor.getCourse(learnCourseId)
 
+        operationDisposable.add(
+                coursesInteractor.getCourse(learnCourseId)
+                        .compose(s_io_mainThread())
+                        .subscribe(
+                                { learnCourse -> initView(learnCourse) },
+                                { t: Throwable? -> onGetError(t) }
+                        )
+        );
+    }
+
+    private fun initView(learnCourse: LearnCourseEntity) {
         viewState.setLearnView(cardViewMode === CardViewMode.LEARNING)
         viewState.setViewedCardsCount(learnCourse.getViewedCardsCount())
         viewState.setErrorCardsCount(learnCourse.getErrorCardsCount())
-        viewState.showNewScheduleString(newSchedule)
+        viewState.showNewScheduleString(newErrorCardsSchedule)
+    }
+
+    override fun onDestroy() {
+
+        operationDisposable.dispose()
+
+        super.onDestroy()
     }
 
     fun getStateToSave(): String {
-        return newSchedule.toString()
+        return newErrorCardsSchedule.toString()
     }
 
     fun onRestoreState(state: String) {
-        newSchedule.initFromString(state)
-        viewState.showNewScheduleString(newSchedule)
+        newErrorCardsSchedule.initFromString(state)
+        viewState.showNewScheduleString(newErrorCardsSchedule)
     }
 
-    fun onUiScheduleClick() = viewState.showScheduleEditDialog(newSchedule)
+    fun onUiScheduleClick() = viewState.showScheduleEditDialog(newErrorCardsSchedule)
     fun onNewScheduleSet(schedule: Schedule) {
-        newSchedule = schedule
-        viewState.showNewScheduleString(newSchedule)
+        newErrorCardsSchedule = schedule
+        viewState.showNewScheduleString(newErrorCardsSchedule)
     }
 
-    fun onUiOkClick() = callbacks.onResultOk(newSchedule);
+    fun onUiOkClick() = callbacks.onResultOk(newErrorCardsSchedule);
 
+    private fun onGetError(t: Throwable?) {
+
+        MyLog.add(ExceptionUtils.getMessage(t), t)
+        viewState.showError(R.string.db_request_err_message)
+    }
 
 }

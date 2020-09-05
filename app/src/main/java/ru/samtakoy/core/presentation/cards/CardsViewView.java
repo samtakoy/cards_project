@@ -22,9 +22,6 @@ public interface CardsViewView extends MvpView {
     void switchScreenToResults(Long learnCourseId, CardViewMode viewMode, CardsViewPresenter.AnimationType aType);
 
     @StateStrategyType(value = OneExecutionStateStrategy.class)
-    void showError(int stringId);
-
-    @StateStrategyType(value = OneExecutionStateStrategy.class)
     void closeScreen();
 
     @StateStrategyType(value = OneExecutionStateStrategy.class)
@@ -32,4 +29,14 @@ public interface CardsViewView extends MvpView {
 
     @StateStrategyType(value = AddToEndSingleStrategy.class)
     void showRevertButton(boolean visibility);
+
+    @StateStrategyType(value = OneExecutionStateStrategy.class)
+    void showError(int stringId);
+
+    @StateStrategyType(value = AddToEndSingleStrategy.class, tag = "loading")
+    void blockScreenOnOperation();
+
+    @StateStrategyType(value = AddToEndSingleStrategy.class, tag = "loading")
+    void unblockScreenOnOperation();
+
 }

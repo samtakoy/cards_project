@@ -9,7 +9,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
 import ru.samtakoy.core.business.CardsInteractor
 import ru.samtakoy.core.database.room.entities.CardEntity
-import ru.samtakoy.core.database.room.entities.QPackEntity
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.core.presentation.log.MyLog
 import javax.inject.Inject
@@ -45,12 +44,10 @@ class CardAnswerPresenter constructor(
     }
 
 
-    private val mQPack: QPackEntity
     private var card: CardEntity? = null
     private val mCompositeDisposable: CompositeDisposable = CompositeDisposable()
 
     init {
-        mQPack = cardsInteractor.getQPack(qPackId)
         updateButtonsVisibility()
         bindData(cardId)
     }

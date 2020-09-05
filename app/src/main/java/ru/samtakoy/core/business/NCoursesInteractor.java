@@ -1,8 +1,8 @@
 package ru.samtakoy.core.business;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -13,24 +13,29 @@ import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
 
 public interface NCoursesInteractor {
 
-    //TODO  -> RxJava
-    LearnCourseEntity getCourse(Long courseId);
+    @NotNull
+    Single<LearnCourseEntity> getCourse(@NotNull Long courseId);
 
-    //TODO  -> RxJava
-    void deleteCourse(Long courseId);
+    @NotNull
+    Completable deleteCourse(@NotNull Long courseId);
 
-    Completable deleteQPackCourses(Long qPackId);
+    @NotNull
+    Completable deleteQPackCourses(@NotNull Long qPackId);
 
-    Completable onAddCardsToCourseFromQPack(Long qPackId, Long learnCourseId);
+    @NotNull
+    Completable onAddCardsToCourseFromQPack(@NotNull Long qPackId, @NotNull Long learnCourseId);
 
-    Completable addCardsToCourseRx(LearnCourseEntity learnCourse, List<Long> newCardsToAdd);
+    @NotNull
+    Completable addCardsToCourseRx(@NotNull LearnCourseEntity learnCourse, @NotNull List<Long> newCardsToAdd);
 
-    Single<LearnCourseEntity> addCourseForQPack(String courseTitle, Long qPackId);
+    @NotNull
+    Single<LearnCourseEntity> addCourseForQPack(String courseTitle, @NotNull Long qPackId);
 
-    //TODO  -> RxJava
-    boolean saveCourse(LearnCourseEntity learnCourse);
+    @NotNull
+    Completable saveCourse(@NotNull LearnCourseEntity learnCourse);
 
-    Single<LearnCourseEntity> addNewCourse(@Nullable LearnCourseEntity newCourse);
+    @NotNull
+    Single<LearnCourseEntity> addNewCourse(@NotNull LearnCourseEntity newCourse);
 
     @NotNull
     Flowable<List<LearnCourseEntity>> getAllCourses();
@@ -44,11 +49,12 @@ public interface NCoursesInteractor {
     @NotNull
     Flowable<List<LearnCourseEntity>> getCoursesForQPack(@NotNull Long qPackId);
 
-    //TODO  -> RxJava
-    LearnCourseEntity getTempCourseFor(Long qPackId, List<Long> cardIds, boolean shuffleCards);
+    @NotNull
+    Single<LearnCourseEntity> getTempCourseFor(@NotNull Long qPackId, @NotNull List<Long> cardIds, boolean shuffleCards);
 
     @NotNull
-    Single<LearnCourseEntity> getTempCourseFor_rx(Long qPackId, boolean shuffleCards);
+    Single<LearnCourseEntity> getTempCourseFor_rx(@NotNull Long qPackId, boolean shuffleCards);
 
-
+    @NotNull
+    Completable finishCourseCardsViewing(@NotNull LearnCourseEntity course, @NotNull Date currentTime);
 }

@@ -13,13 +13,14 @@ interface QPacksRepository {
     fun addQPack(qPack: QPackEntity): Long
 
     //TODO  -> RxJava
-    fun getQPack(qPackId: Long): QPackEntity?
+    fun getQPack(qPackId: Long): Single<QPackEntity>
     fun getQPackRx(qPackId: Long): Flowable<QPackEntity>
     fun getQPackWithCardIdsRx(qPackId: Long): Flowable<QPackWithCardIds>;
     fun deletePack(qPackId: Long): Completable
 
     //TODO  -> RxJava
     fun updateQPack(qPack: QPackEntity)
+    fun updateQPackViewCount(qPackId: Long, currentTime: java.util.Date)
 
     //TODO  -> RxJava
     fun isPackExists(qPackId: Long): Boolean

@@ -33,15 +33,17 @@ public class CoursesRepositoryImpl implements CoursesRepository {
     public CoursesRepositoryImpl() {
     }
 
+    /*
     public LearnCourseEntity getCourse(Long learnCourseId) {
 
         if (learnCourseId == mTempCourseRepository.getTempCourseId()) {
             return mTempCourseRepository.getTempCourse();
         }
         return db.courseDao().getLearnCourse(learnCourseId);
-    }
+    }*/
 
     @Override
+    @NotNull
     public Single<LearnCourseEntity> getCourseRx(@NotNull Long learnCourseId) {
         return db.courseDao().getLearnCourseRx(learnCourseId);
     }
@@ -68,8 +70,8 @@ public class CoursesRepositoryImpl implements CoursesRepository {
     }
 
     @Override
-    public boolean deleteCourse(long courseId) {
-        return db.courseDao().deleteCourseById(courseId) > 0;
+    public Completable deleteCourse(long courseId) {
+        return Completable.fromCallable(() -> db.courseDao().deleteCourseById(courseId) > 0);
     }
 
     @Override

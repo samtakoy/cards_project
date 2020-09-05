@@ -367,11 +367,6 @@ public class CardsViewFragment extends MvpAppCompatFragment
     }
 
     @Override
-    public void showError(int stringId){
-        Toast.makeText(getContext(), stringId, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void closeScreen() {
         mRouterHolder.getNavController().navigateUp();
     }
@@ -381,6 +376,19 @@ public class CardsViewFragment extends MvpAppCompatFragment
         mFab.setVisibility(
                 visibility ? View.VISIBLE : View.INVISIBLE
         );
+    }
+
+    @Override
+    public void showError(int stringId) {
+        Toast.makeText(getContext(), stringId, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void blockScreenOnOperation() {
+    }
+
+    @Override
+    public void unblockScreenOnOperation() {
     }
 
     // -----------------------------------------------------

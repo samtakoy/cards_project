@@ -2,7 +2,6 @@ package ru.samtakoy.core.business.impl;
 
 import android.content.Context;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -74,7 +73,7 @@ public class CardsInteractorImpl implements CardsInteractor {
     }
 
     @Override
-    public Completable setCardNewQuestionText(Long cardId, String text) {
+    public Completable setCardNewQuestionTextRx(Long cardId, String text) {
 
         return Completable.fromCallable(
                 () -> {
@@ -87,7 +86,7 @@ public class CardsInteractorImpl implements CardsInteractor {
     }
 
     @Override
-    public Completable setCardNewAnswerText(Long cardId, String text) {
+    public Completable setCardNewAnswerTextRx(Long cardId, String text) {
 
         return Completable.fromCallable(
                 () -> {
@@ -97,10 +96,6 @@ public class CardsInteractorImpl implements CardsInteractor {
                     return true;
                 }
         );
-    }
-
-    public QPackEntity getQPack(Long qPackId) {
-        return mQPacksRepository.getQPack(qPackId);
     }
 
     @Override
@@ -190,17 +185,6 @@ public class CardsInteractorImpl implements CardsInteractor {
     @Override
     public Flowable<List<QPackEntity>> getChildQPacksRx(Long themeId) {
         return mQPacksRepository.getQPacksFromThemeRx(themeId);
-    }
-
-
-    @Override
-    public void saveQPackLastViewDate(Long qPackId, Date currentTime, boolean incrementViewCounter) {
-        QPackEntity qPack = getQPack(qPackId);
-        qPack.setLastViewDate(currentTime);
-        if (incrementViewCounter) {
-            qPack.setViewCount(qPack.getViewCount() + 1);
-        }
-        mQPacksRepository.updateQPack(qPack);
     }
 
     @Override

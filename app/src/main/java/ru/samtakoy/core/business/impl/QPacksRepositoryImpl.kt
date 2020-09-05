@@ -18,7 +18,7 @@ class QPacksRepositoryImpl(
         return qPackId
     }
 
-    override fun getQPack(qPackId: Long): QPackEntity? =
+    override fun getQPack(qPackId: Long): Single<QPackEntity> =
             db.qPackDao().getQPack(qPackId)
 
     override fun getQPackRx(qPackId: Long): Flowable<QPackEntity> =
@@ -33,6 +33,9 @@ class QPacksRepositoryImpl(
 
     override fun updateQPack(qPack: QPackEntity) =
             db.qPackDao().updateQPack(qPack)
+
+    override fun updateQPackViewCount(qPackId: Long, currentTime: java.util.Date) =
+            db.qPackDao().updateQPackViewCount(qPackId, currentTime)
 
     override fun isPackExists(qPackId: Long): Boolean =
             db.qPackDao().isPackExists(qPackId) > 0

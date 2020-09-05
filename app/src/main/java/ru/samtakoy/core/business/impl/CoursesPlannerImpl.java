@@ -9,14 +9,18 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import ru.samtakoy.R;
 import ru.samtakoy.core.business.CoursesPlanner;
 import ru.samtakoy.core.business.CoursesRepository;
 import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
 import ru.samtakoy.core.database.room.entities.elements.Schedule;
 import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
+import ru.samtakoy.core.presentation.log.MyLog;
 import ru.samtakoy.core.services.NotificationsConst;
 import ru.samtakoy.core.services.NotificationsPlannerService;
+
+import static ru.samtakoy.core.business.utils.TransformersKt.c_io_mainThread;
 
 public class CoursesPlannerImpl implements CoursesPlanner {
 
@@ -44,7 +48,15 @@ public class CoursesPlannerImpl implements CoursesPlanner {
 
     @Override
     public void planAdditionalCards(Long qPackId, List<Long> errorCardIds, Schedule schedule) {
-        planAdditionalCards(qPackId, null, errorCardIds, schedule);
+        Completable.fromCallable(
+                () -> {
+                    planAdditionalCards(qPackId, null, errorCardIds, schedule);
+                    return true;
+                }
+        )
+                .compose(c_io_mainThread())
+                .subscribe(() -> {
+                }, throwable -> onError(throwable));
     }
 
     @Override
@@ -70,6 +82,10 @@ public class CoursesPlannerImpl implements CoursesPlanner {
         mCtx.startService(NotificationsPlannerService.getLearnCoursesReSchedulingIntent(
                 mCtx, LearnCourseMode.LEARN_WAITING
         ));
+    }
+
+    private void onError(Throwable t) {
+        MyLog.add("CoursesPlannerImpl", t);
     }
 
 }
