@@ -1,11 +1,9 @@
 package ru.samtakoy.core.presentation.themes;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,7 +19,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.view.MenuCompat;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,7 +28,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.misc.RealPathUtil;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
-import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -118,6 +114,28 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         return mPresenterFactory.create(readThemeId(), readThemeTitle());
     }
 
+    private ThemesListFileIntentsHelper mFileIntentsHelper;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+
+        MyApp.getInstance().getAppComponent().inject(this);
+
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mPresenter.onRestoreState(savedInstanceState.getSerializable(SAVE_KEY_PRESENTER_STATE));
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(SAVE_KEY_PRESENTER_STATE, mPresenter.getStateToSave());
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -148,6 +166,12 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
 
         setHasOptionsMenu(true);
         registerForContextMenu(mThemesRecycler);
+
+        mFileIntentsHelper = new ThemesListFileIntentsHelper(
+                new WeakReference<>(this),
+                new WeakReference<>(getContext()),
+                REQ_CODE_PERMISSIONS
+        );
 
         return v;
     }
@@ -246,31 +270,21 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         FragmentHelperKt.showDialogFragment(dialog, this, TAG_DIALOG_ADD_THEME);
     }
 
+    @Override
     public void showImportPackFileSelection(boolean isZip) {
-        fileIntent(
-                REQ_CODE_OPEN_FILE_TO_IMPORT,
-                //isZip ? "*/*" : "text/plain"
-                //isZip ? "multipart/x-zip" : "text/plain"
-                //isZip ? "application/zip" : "text/plain"
-                isZip ? "*/*" : "text/plain"
-                //isZip ? "application/zip, application/octet-stream" : "text/plain"
-                //isZip ? "application/zip, application/octet-stream, application/x-zip-compressed, multipart/x-zip" : "text/plain"
-         );
+        mFileIntentsHelper.fileIntent(REQ_CODE_OPEN_FILE_TO_IMPORT, isZip ? "*/*" : "text/plain");
     }
 
+    @Override
     public void showFolderSelectionDialog(){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            folderIntent21(REQ_CODE_OPEN_DIRECTORY_TO_IMPORT21);
+            mFileIntentsHelper.folderIntent21(REQ_CODE_OPEN_DIRECTORY_TO_IMPORT21);
         } else{
-            folderIntent(REQ_CODE_OPEN_DIRECTORY_TO_IMPORT);
+            mFileIntentsHelper.folderIntent(REQ_CODE_OPEN_DIRECTORY_TO_IMPORT);
         }
     }
 
     @Override
-    public void navigateToOnlineImport() {
-        mRouterHolder.getNavController().navigate(R.id.action_themesListFragment_to_onlineImportFragment);
-    }
-
     public void showMessage(int resourceId){
         Toast.makeText(getActivity(), resourceId, Toast.LENGTH_SHORT).show();
     }
@@ -307,8 +321,8 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.fragment_themes_menu_item_add:
                 mPresenter.onUiAddNewThemeRequest();
                 return true;
@@ -365,13 +379,14 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+    public boolean onContextItemSelected(@NotNull MenuItem item) {
+        switch (item.getItemId()) {
 
             case R.id.menu_item_send_cards:
-                if(mThemesAdapter.isQPackLongClicked()){
+                if (mThemesAdapter.isQPackLongClicked()) {
                     mPresenter.onUiSendQPackCards(mThemesAdapter.getLongClickedQPack());
-                }else{}
+                } else {
+                }
 
                 return true;
 
@@ -430,79 +445,22 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
     @SuppressLint("NewApi")
     private void onBatchImportFromTreeUri(Uri uri) {
         DocumentFile pickedDir = DocumentFile.fromTreeUri(getContext(), uri);
-        if(pickedDir.isDirectory()){
+        if (pickedDir.isDirectory()) {
             Uri docUri = DocumentsContract.buildDocumentUriUsingTree(uri, DocumentsContract.getTreeDocumentId(uri));
             String path = RealPathUtil.getRealPath(getContext(), docUri);
             mPresenter.onUiPathSelected(path);
         }
     }
 
-    private boolean isSamsung() {
-        return Build.MANUFACTURER.toLowerCase().contains("samsung");
-    }
-
-    private boolean checkFilesReadPermission(){
-        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-        ){
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQ_CODE_PERMISSIONS);
-            return  false;
-        }
-        return true;
-    }
-
-    private void fileIntent(int reqCode, String MIME_TYPE){
-
-        //final String MIME_TYPE = "text/plain";
-        //final String MIME_TYPE = "*/*";
-        //final String MIME_TYPE = "file/*";
-
-        if(checkFilesReadPermission()) {
-            if(isSamsung()){
-                selectFileOrFolderOnSamsung(reqCode, MIME_TYPE);
-            } else {
-                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-                i.setType(MIME_TYPE);
-                i.addCategory(Intent.CATEGORY_OPENABLE);
-                startActivityForResult(Intent.createChooser(i, "Select File To Import"), reqCode);
-            }
-        }
-    }
-
-    private void folderIntent21(int reqCode){
-
-        if(checkFilesReadPermission()) {
-            if(isSamsung()){
-                selectFileOrFolderOnSamsung(reqCode, "file/*");
-            } else {
-                Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-                startActivityForResult(i, reqCode);
-            }
-        }
-    }
-
-    private void folderIntent(int reqCode){
-
-        final Intent chooserIntent = new Intent(getContext(), DirectoryChooserActivity.class);
-        final DirectoryChooserConfig config = DirectoryChooserConfig.builder()
-                .newDirectoryName("new directory")
-                .allowReadOnlyDirectory(true)
-                .allowNewDirectoryNameModification(true)
-                //.TODO
-                .build();
-        chooserIntent.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
-        startActivityForResult(chooserIntent, reqCode);
-    }
-
-    private void selectFileOrFolderOnSamsung(int reqCode, String MIME_TYPE) {
-        Intent intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
-        intent.putExtra("CONTENT_TYPE", MIME_TYPE);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        startActivityForResult(intent, reqCode);
-    }
-
 
     // //////////////////////////////////////////////////////////////////////////////
+    // navigation
+
+    @Override
+    public void navigateToOnlineImport() {
+        mRouterHolder.getNavController().navigate(R.id.action_themesListFragment_to_onlineImportFragment);
+    }
+
 
     @Override
     public void navigateToSettings() {
@@ -567,40 +525,17 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         FragmentHelperKt.showDialogFragment(dialog, this, BatchImportDialogFragment.TAG);
     }
 
-    private void navigateToTheme(ThemeEntity theme) {
+    private void navigateToTheme(@NotNull ThemeEntity theme) {
         mRouterHolder.getNavController().navigate(R.id.action_themesListFragment_self, buildBundle(theme.getId(), theme.getTitle()));
     }
 
-    private void navigateToQPack(QPackEntity qPack) {
+    private void navigateToQPack(@NotNull QPackEntity qPack) {
         mRouterHolder.getNavController().navigate(
                 R.id.action_themesListFragment_to_qPackInfoFragment,
                 QPackInfoFragment.buildBundle(qPack.getId())
         );
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-
-        MyApp.getInstance().getAppComponent().inject(this);
-
-        super.onCreate(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            mPresenter.onRestoreState(savedInstanceState.getSerializable(SAVE_KEY_PRESENTER_STATE));
-        }
-
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(SAVE_KEY_PRESENTER_STATE, mPresenter.getStateToSave());
-    }
 
 
 
