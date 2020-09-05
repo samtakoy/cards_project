@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuCompat;
 import androidx.documentfile.provider.DocumentFile;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -177,14 +178,17 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
     }
 
     private ThemesAdapter.Callback createThemesAdapterCallback() {
+
+        WeakReference<FragmentActivity> inflaterHolder = new WeakReference(getActivity());
+
         return new ThemesAdapter.Callback() {
 
-            private WeakReference<MenuInflater> mInflater = new WeakReference(getActivity().getMenuInflater());
+            private WeakReference<FragmentActivity> mInflaterHolder = inflaterHolder;
 
             @NotNull
             @Override
             public MenuInflater getMenuInflater() {
-                return mInflater.get();
+                return mInflaterHolder.get().getMenuInflater();
             }
 
             @Override

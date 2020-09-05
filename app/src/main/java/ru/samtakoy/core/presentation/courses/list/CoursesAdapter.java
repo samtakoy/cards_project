@@ -72,7 +72,7 @@ public class CoursesAdapter extends RecyclerView.Adapter <CoursesAdapter.Courses
     @Override
     public void onBindViewHolder(@NonNull CoursesItemHolder holder, final int position) {
         holder.bindCourse(mCurCourses.get(position));
-        holder.itemView.setOnCreateContextMenuListener(null);
+        //holder.itemView.setOnCreateContextMenuListener(null);
         holder.itemView.setOnLongClickListener(null);
     }
 

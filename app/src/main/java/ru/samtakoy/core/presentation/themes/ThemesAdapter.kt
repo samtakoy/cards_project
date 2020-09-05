@@ -49,7 +49,7 @@ internal class ThemesItemHolder(
         }
     }
 
-    override fun onCreateContextMenu(contextMenu: ContextMenu, view: View, contextMenuInfo: ContextMenuInfo) {
+    override fun onCreateContextMenu(contextMenu: ContextMenu, view: View, contextMenuInfo: ContextMenuInfo?) {
         val mi: MenuInflater = callback.getMenuInflater()
         if (mTheme != null) {
             mi.inflate(R.menu.fragment_themes_tctx, contextMenu)
