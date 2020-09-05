@@ -354,7 +354,7 @@ public class NotificationsPlannerService extends IntentService {
         PendingIntent pIntent = new NavDeepLinkBuilder(this)
                 .setGraph(R.navigation.main_graph)
                 .setDestination(R.id.coursesListFragment)
-                .setArguments(CoursesListFragment.buildBundle(null, modes, courseIds))
+                .setArguments(CoursesListFragment.buildBundle(0L, modes, courseIds))
                 .createPendingIntent();
 
         try {

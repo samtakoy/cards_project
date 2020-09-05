@@ -64,7 +64,7 @@ public class CoursesListFragment extends MvpAppCompatFragment
         return result;
     }
 
-    public static Bundle buildBundle(@Nullable Long targetQPackId, @Nullable List<LearnCourseMode> targetModes, @Nullable Long[] targetCourseIds) {
+    public static Bundle buildBundle(@NotNull Long targetQPackId, @Nullable List<LearnCourseMode> targetModes, @Nullable Long[] targetCourseIds) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_TARGET_QPACK_ID, targetQPackId);
         args.putIntArray(ARG_TARGET_MODES, LearnCourseMode.listToPrimitiveArray(targetModes));

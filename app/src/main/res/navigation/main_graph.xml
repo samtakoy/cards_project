@@ -45,10 +45,14 @@
             app:argType="long" />
         <argument
             android:name="ARG_TARGET_MODES"
-            app:argType="integer[]" />
+            app:argType="integer[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <argument
             android:name="ARG_TARGET_COURSE_IDS"
-            app:argType="long[]" />
+            app:argType="long[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <action
             android:id="@+id/action_coursesListFragment_to_courseInfoFragment"
             app:destination="@id/courseInfoFragment" />
