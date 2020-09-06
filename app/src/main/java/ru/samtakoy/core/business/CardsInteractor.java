@@ -4,6 +4,7 @@ import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 import ru.samtakoy.core.database.room.entities.CardEntity;
 import ru.samtakoy.core.database.room.entities.QPackEntity;
 import ru.samtakoy.core.database.room.entities.ThemeEntity;
@@ -27,19 +28,13 @@ public interface CardsInteractor {
 
     Completable deleteQPack(Long qPackId);
 
-    //TODO  -> RxJava
-    boolean hasAnyQPack();
-
     Flowable<List<CardEntity>> getQPackCards(Long qPackId);
 
-    //TODO  -> RxJava
-    Long addNewTheme(Long parentThemeId, String title);
+    Single<ThemeEntity> addNewTheme(Long parentThemeId, String title);
 
-    //TODO  -> RxJava
-    boolean deleteTheme(Long themeId);
+    Completable deleteTheme(Long themeId);
 
-    //TODO  -> RxJava
-    ThemeEntity getParentTheme(Long themeId);
+    Single<ThemeEntity> getTheme(Long themeId);
 
     Flowable<List<ThemeEntity>> getChildThemesRx(Long themeId);
 

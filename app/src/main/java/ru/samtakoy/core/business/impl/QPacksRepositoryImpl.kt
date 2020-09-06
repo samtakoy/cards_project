@@ -40,9 +40,6 @@ class QPacksRepositoryImpl(
     override fun isPackExists(qPackId: Long): Boolean =
             db.qPackDao().isPackExists(qPackId) > 0
 
-    override fun hasAnyQPack(): Boolean =
-            db.qPackDao().getAllQPackCount() > 0
-
     override fun getQPacksFromTheme(themeId: Long): List<QPackEntity> =
             db.qPackDao().getQPacksFromTheme(themeId)
 

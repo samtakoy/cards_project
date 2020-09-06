@@ -21,4 +21,8 @@ class ThemeEntity(
         const val _title = "title"
         const val _parent = "parent"
     }
+
+    public fun hasParent(): Boolean {
+        return parentId > 0;
+    }
 }

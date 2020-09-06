@@ -73,11 +73,9 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
     private static final int REQ_CODE_OPEN_FILE_TO_IMPORT = 3;
     private static final int REQ_CODE_OPEN_DIRECTORY_TO_IMPORT = 5;
     private static final int REQ_CODE_OPEN_DIRECTORY_TO_IMPORT21 = 6;
-
     private static final int REQ_CODE_IMPORT_SOME_DIALOG = 7;
     private static final int REQ_CODE_EXPORT_SOME_DIALOG = 8;
-    //private static final int REQ_CODE_IMPORT_PACK_DIALOG = 7;
-    //private static final int REQ_CODE_BATCH_IMPORT_DIALOG = 8;
+
     private static final String TAG_DIALOG_ADD_THEME = "TAG_DIALOG_ADD_THEME";
 
 
@@ -112,10 +110,13 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
 
     @ProvidePresenter
     ThemesListPresenter providePresenter() {
-        return mPresenterFactory.create(readThemeId(), readThemeTitle());
+        return mPresenterFactory.create(readThemeId());
     }
 
     private ThemesListFileIntentsHelper mFileIntentsHelper;
+    private Boolean mIsExportAllMenuItemVisible = false;
+    private Boolean mIsToBlankDbMenuItemVisible = false;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -254,17 +255,24 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
 
     @Override
     public void updateToolbarSubtitle(String title) {
-        if(title != null){
+        if (title != null) {
             AppCompatActivity activity = (AppCompatActivity) getActivity();
             activity.getSupportActionBar().setSubtitle(title);
         }
+    }
+
+    @Override
+    public void updateMenuState(Boolean isExportAllMenuItemVisible, Boolean isToBlankDbMenuItemVisible) {
+        mIsExportAllMenuItemVisible = isExportAllMenuItemVisible;
+        mIsToBlankDbMenuItemVisible = isToBlankDbMenuItemVisible;
+        getActivity().invalidateOptionsMenu();
     }
 
     public void setListData(List<ThemeEntity> themes, List<QPackEntity> qPacks) {
         mThemesAdapter.updateData(themes, qPacks);
     }
 
-    public void updateList(){
+    public void updateList() {
         mThemesRecycler.getAdapter().notifyDataSetChanged();
     }
 
@@ -306,21 +314,19 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         super.onPrepareOptionsMenu(menu);
 
         MenuItem mi = menu.findItem(R.id.menu_item_export_all_to_dir);
-        mi.setVisible(mPresenter.isExportAllMenuItemVisible());
+        mi.setVisible(mIsExportAllMenuItemVisible);
         mi = menu.findItem(R.id.menu_item_export_all_to_email);
-        mi.setVisible(mPresenter.isExportAllMenuItemVisible());
-
-        boolean isToBlankDbMenuItems = mPresenter.isToBlankDbMenuItemsCalculate();
+        mi.setVisible(mIsExportAllMenuItemVisible);
 
         mi = menu.findItem(R.id.menu_item_import_from_zip_all);
-        mi.setVisible(isToBlankDbMenuItems);
+        mi.setVisible(mIsToBlankDbMenuItemVisible);
         mi = menu.findItem(R.id.menu_item_from_zip);
-        mi.setVisible(!isToBlankDbMenuItems);
+        mi.setVisible(!mIsToBlankDbMenuItemVisible);
 
         mi = menu.findItem(R.id.menu_item_import_from_folder_all);
-        mi.setVisible(isToBlankDbMenuItems);
+        mi.setVisible(mIsToBlankDbMenuItemVisible);
         mi = menu.findItem(R.id.menu_item_from_folder);
-        mi.setVisible(!isToBlankDbMenuItems);
+        mi.setVisible(!mIsToBlankDbMenuItemVisible);
     }
 
 
@@ -540,9 +546,13 @@ public class ThemesListFragment extends MvpAppCompatFragment implements ThemeLis
         );
     }
 
+    @Override
+    public void blockScreenOnOperation() {
+    }
 
-
-
+    @Override
+    public void unblockScreenOnOperation() {
+    }
 
 
 }

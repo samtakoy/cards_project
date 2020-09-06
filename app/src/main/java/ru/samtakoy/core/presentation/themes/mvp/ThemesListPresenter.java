@@ -2,14 +2,19 @@ package ru.samtakoy.core.presentation.themes.mvp;
 
 import android.net.Uri;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import moxy.InjectViewState;
 import moxy.MvpPresenter;
@@ -17,17 +22,22 @@ import ru.samtakoy.R;
 import ru.samtakoy.core.business.CardsInteractor;
 import ru.samtakoy.core.database.room.entities.QPackEntity;
 import ru.samtakoy.core.database.room.entities.ThemeEntity;
+import ru.samtakoy.core.presentation.log.MyLog;
 import ru.samtakoy.features.import_export.QPacksExporter;
 import ru.samtakoy.features.import_export.utils.ImportCardsOpts;
+import ru.samtakoy.features.import_export.utils.cbuild.CBuilderConst;
+
+import static ru.samtakoy.core.business.utils.TransformersKt.c_io_mainThread;
+import static ru.samtakoy.core.business.utils.TransformersKt.s_io_mainThread;
 
 @InjectViewState
 public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
 
+    private static final int DEBOUNCE_MILLI = 1000;
+
     CardsInteractor mCardsInteractor;
     QPacksExporter mQPacksExporter;
 
-    private Long mThemeId;
-    private String mThemeTitle;
 
     public static class Factory {
 
@@ -41,9 +51,9 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
         }
 
 
-        public ThemesListPresenter create(Long themeId, String themeTitle) {
+        public ThemesListPresenter create(Long themeId) {
             return new ThemesListPresenter(
-                    mCardsInteractor, mQPacksExporter, themeId, themeTitle
+                    mCardsInteractor, mQPacksExporter, themeId
             );
         }
     }
@@ -51,8 +61,11 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
     private List<ThemeEntity> mCurThemes;
     private List<QPackEntity> mCurQPacks;
 
+    private ThemeEntity mParentTheme;
+
+
     private CompositeDisposable mDataGettersDisposable;
-    private CompositeDisposable mCurrentTaskDisposable;
+    private CompositeDisposable mOperationDisposable;
 
     enum OPENED_DIALOG_TYPE implements Serializable {
         NONE,
@@ -79,63 +92,95 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
     public ThemesListPresenter(
             CardsInteractor cardsInteractor,
             QPacksExporter qPacksExporter,
-            Long themeId, String themeTitle
+            Long themeId
     ) {
 
         mCardsInteractor = cardsInteractor;
         mQPacksExporter = qPacksExporter;
 
-
-        mThemeId = themeId;
-        mThemeTitle = themeTitle;
-
         mLastDialogState = new DialogState();
 
         mDataGettersDisposable = new CompositeDisposable();
-        mCurrentTaskDisposable = new CompositeDisposable();
+        mOperationDisposable = new CompositeDisposable();
 
-        updateTitles();
+        bindTheme(themeId);
 
         mCurThemes = new ArrayList<>();
         mCurQPacks = new ArrayList<>();
-        bindData();
+        bindData(themeId);
 
     }
 
     @Override
     public void onDestroy() {
 
-        mCurrentTaskDisposable.dispose();
+        mOperationDisposable.dispose();
         mDataGettersDisposable.dispose();
         super.onDestroy();
     }
 
-    private void updateTitles() {
+    private void bindTheme(Long themeId) {
 
-        ThemeEntity parentTheme = mCardsInteractor.getParentTheme(mThemeId);
-        if (parentTheme == null) {
-            getViewState().updateToolbarTitle(null);
-        } else {
-            getViewState().updateToolbarTitle("../" + parentTheme.getTitle());
-        }
+        getViewState().updateToolbarTitle(null);
+        getViewState().updateToolbarSubtitle("");
 
-        getViewState().updateToolbarSubtitle(mThemeTitle);
+        blockUiAndRunOpt(
+                mCardsInteractor.getTheme(themeId)
+                        .compose(s_io_mainThread())
+                        .subscribe(
+                                themeEntity -> {
+                                    unblockUi();
+                                    onParentThemeInit(themeEntity);
+                                },
+                                throwable -> onGetError(throwable)
+                        )
+        );
     }
 
-    public Serializable getStateToSave(){
+    private void onParentThemeInit(ThemeEntity themeEntity) {
+
+        mParentTheme = themeEntity;
+        if (mParentTheme != null) {
+
+            getViewState().updateToolbarSubtitle(themeEntity.getTitle());
+
+            updateThemesPath();
+            getViewState().updateMenuState(isExportAllMenuItemVisible(), isToBlankDbMenuItemsVisible());
+        }
+    }
+
+    private void updateThemesPath() {
+
+        if (mParentTheme.hasParent()) {
+            blockUiAndRunOpt(
+                    mCardsInteractor.getTheme(mParentTheme.getParentId())
+                            .compose(s_io_mainThread())
+                            .subscribe(
+                                    themeEntity -> {
+                                        unblockUi();
+                                        getViewState().updateToolbarTitle("../" + themeEntity.getTitle());
+                                    },
+                                    throwable -> onGetError(throwable)
+                            )
+            );
+        }
+    }
+
+    public Serializable getStateToSave() {
         return mLastDialogState;
     }
 
-    public void onRestoreState(Serializable state){
-        mLastDialogState = (DialogState)state;
+    public void onRestoreState(Serializable state) {
+        mLastDialogState = (DialogState) state;
     }
 
-    private void bindData() {
+    private void bindData(Long themeId) {
 
         mDataGettersDisposable.clear();
-
         mDataGettersDisposable.add(
-                mCardsInteractor.getChildThemesRx(mThemeId)
+                mCardsInteractor.getChildThemesRx(themeId)
+                        .throttleLatest(DEBOUNCE_MILLI, TimeUnit.MILLISECONDS)
+                        .onBackpressureLatest()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(themeEntities -> {
@@ -145,7 +190,9 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
         );
 
         mDataGettersDisposable.add(
-                mCardsInteractor.getChildQPacksRx(mThemeId)
+                mCardsInteractor.getChildQPacksRx(themeId)
+                        .throttleLatest(DEBOUNCE_MILLI, TimeUnit.MILLISECONDS)
+                        .onBackpressureLatest()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(qPackEntities -> {
@@ -157,21 +204,20 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
     }
 
     private void setDataToView() {
-        // TODO через DiffUtil
+        // TODO через DiffUtil или сменить адаптер
         getViewState().setListData(mCurThemes, mCurQPacks);
+
+        getViewState().updateMenuState(isExportAllMenuItemVisible(), isToBlankDbMenuItemsVisible());
     }
 
-
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // menu
-
-    public boolean isExportAllMenuItemVisible(){
-        return  mThemeId <= 0;
+    private boolean isExportAllMenuItemVisible() {
+        return mParentTheme == null;
     }
 
-    public boolean isToBlankDbMenuItemsCalculate(){
-        return !mCardsInteractor.hasAnyQPack();
+    private boolean isToBlankDbMenuItemsVisible() {
+        return mParentTheme == null
+                && mCurThemes.size() == 0
+                && mCurQPacks.size() == 0;
     }
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -179,7 +225,7 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
     // from ui
 
     // TODO убрать и сделать через отслеживание изменений модели
-    public void onUiSomeDialogClosed(){
+    public void onUiSomeDialogClosed() {
     }
 
     public void onUiAddNewThemeRequest(){
@@ -191,29 +237,35 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
     }
 
     public void onUiNewThemeTitleEntered(String title) {
-        mCardsInteractor.addNewTheme(mThemeId, title);
-
-        // TODO проверить
-        //updateListData();
+        blockUiAndRunOpt(
+                mCardsInteractor.addNewTheme(getParentThemeId(), title)
+                        .compose(s_io_mainThread())
+                        .subscribe(
+                                themeEntity -> unblockUi(),
+                                throwable -> onGetError(throwable)
+                        )
+        );
     }
 
-    public void onUiImportPackRequest(){
+    private long getParentThemeId() {
+        return mParentTheme == null ? CBuilderConst.NO_ID : mParentTheme.getId();
+    }
+
+    public void onUiImportPackRequest() {
         mLastDialogState.mDialogType = OPENED_DIALOG_TYPE.SELECT_FILE_TO_IMPORT;
         getViewState().showImportPackFileSelection(false);
     }
 
-    public void onUiImportFromZipRequest(ImportCardsOpts opts){
+    public void onUiImportFromZipRequest(ImportCardsOpts opts) {
         mLastDialogState.mDialogType = OPENED_DIALOG_TYPE.SELECT_ZIP_TO_IMPORT;
         mLastDialogState.mImportCardOpts = opts;
         getViewState().showImportPackFileSelection(true);
     }
 
     public void onUiImportFileSelected(Uri selectedFileUri){
-
-
         switch (mLastDialogState.mDialogType){
             case SELECT_FILE_TO_IMPORT:
-                getViewState().navigateToImportPackDialog(selectedFileUri, mThemeId, ImportCardsOpts.IMPORT_ONLY_NEW);
+                getViewState().navigateToImportPackDialog(selectedFileUri, getParentThemeId(), ImportCardsOpts.IMPORT_ONLY_NEW);
                 return;
             case SELECT_ZIP_TO_IMPORT:
                 getViewState().navigateToImportFromZipDialog(selectedFileUri, mLastDialogState.mImportCardOpts);
@@ -227,7 +279,7 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
 
         switch (mLastDialogState.mDialogType){
             case SELECT_DIR_TO_BATCH_IMPORT:
-                getViewState().navigateToBatchImportFromDirDialog(selectedPath, mThemeId, mLastDialogState.mImportCardOpts);
+                getViewState().navigateToBatchImportFromDirDialog(selectedPath, getParentThemeId(), mLastDialogState.mImportCardOpts);
                 return;
             case SELECT_DIR_TO_BATCH_EXPORT:
                 // export all path!
@@ -259,14 +311,15 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
     //TODO больше не использую
     public void onUiExportQPackCards(QPackEntity qPack) {
 
-        mCurrentTaskDisposable.clear();
-
-        mCurrentTaskDisposable.add(
+        blockUiAndRunOpt(
                 mQPacksExporter.exportQPack(qPack)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
-                                () -> getViewState().showMessage(R.string.fragment_themes_list_cards_export_ok),
+                                () -> {
+                                    unblockUi();
+                                    getViewState().showMessage(R.string.fragment_themes_list_cards_export_ok);
+                                },
                                 throwable -> getViewState().showMessage(R.string.fragment_themes_list_cant_save_file_msg)
                         )
         );
@@ -274,14 +327,13 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
 
     public void onUiSendQPackCards(QPackEntity qPack) {
 
-        mCurrentTaskDisposable.clear();
-
-        mCurrentTaskDisposable.add(
+        blockUiAndRunOpt(
                 mQPacksExporter.exportQPackToEmailRx(qPack)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 () -> {
+                                    unblockUi();
                                 },
                                 throwable -> getViewState().showMessage(R.string.fragment_themes_list_cant_send_file_msg)
                         )
@@ -290,12 +342,50 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
     }
 
     public void onThemeDeleteClick(ThemeEntity theme) {
-        if (mCardsInteractor.deleteTheme(theme.getId())) {
-        }
 
+        blockUiAndRunOpt(
+                mCardsInteractor.deleteTheme(theme.getId())
+                        .compose(c_io_mainThread())
+                        .subscribe(
+                                () -> unblockUi(),
+                                throwable -> onGetError(throwable)
+                        )
+        );
     }
 
-
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    private void onGetError(Throwable t) {
+        unblockUi();
+        MyLog.add(ExceptionUtils.getMessage(t), t);
+        getViewState().showMessage(R.string.db_request_err_message);
+    }
+
+    private boolean isOperationInProgress() {
+        return mOperationDisposable.size() > 0;
+    }
+
+    private void blockUi() {
+        getViewState().blockScreenOnOperation();
+    }
+
+    private void unblockUi() {
+        getViewState().unblockScreenOnOperation();
+        mOperationDisposable.clear();
+    }
+
+    private void blockUiAndRunOpt(@NonNull Disposable disposable) {
+
+        if (isOperationInProgress()) {
+            MyLog.add("CardsViewPresenter: wrong ui logic");
+            disposable.dispose();
+            return;
+        }
+
+        blockUi();
+        mOperationDisposable.clear();
+        mOperationDisposable.add(disposable);
+    }
+
 
 }

@@ -16,8 +16,6 @@ import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
 
 public interface CoursesRepository {
 
-    //LearnCourseEntity getCourse(@NotNull Long learnCourseId);
-
     @NotNull
     Single<LearnCourseEntity> getCourseRx(@NotNull Long learnCourseId);
 

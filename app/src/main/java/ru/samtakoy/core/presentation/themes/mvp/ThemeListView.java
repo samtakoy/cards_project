@@ -21,8 +21,12 @@ public interface ThemeListView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void updateToolbarTitle(@Nullable String title);
+
     @StateStrategyType(AddToEndSingleStrategy.class)
     void updateToolbarSubtitle(@Nullable String title);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void updateMenuState(Boolean isExportAllMenuItemVisible, Boolean isToBlankDbMenuItemVisible);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setListData(List<ThemeEntity> themes, List<QPackEntity> qPacks);
@@ -51,14 +55,22 @@ public interface ThemeListView extends MvpView {
     void navigateToImportPackDialog(Uri selectedFileUri, Long parentThemeId, ImportCardsOpts opts);
     @StateStrategyType(OneExecutionStateStrategy.class)
     void navigateToImportFromZipDialog(Uri selectedFileUri, ImportCardsOpts opts);
+
     @StateStrategyType(OneExecutionStateStrategy.class)
     void navigateToBatchImportFromDirDialog(String dirPath, Long parentThemeId, ImportCardsOpts opts);
+
     @StateStrategyType(OneExecutionStateStrategy.class)
     void navigateToBatchExportDirDialog(String dirPath);
+
     @StateStrategyType(OneExecutionStateStrategy.class)
     void navigateToBatchExportToEmailDialog();
 
     @StateStrategyType(OneExecutionStateStrategy.class)
     void showMessage(int resourceId);
 
+    @StateStrategyType(value = AddToEndSingleStrategy.class, tag = "loading")
+    void blockScreenOnOperation();
+
+    @StateStrategyType(value = AddToEndSingleStrategy.class, tag = "loading")
+    void unblockScreenOnOperation();
 }

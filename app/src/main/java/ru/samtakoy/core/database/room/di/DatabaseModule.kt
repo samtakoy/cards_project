@@ -12,15 +12,13 @@ import javax.inject.Singleton
 @Module(includes = [AppModule::class])
 class DatabaseModule {
 
-    //*
     @Provides
     @Singleton
     fun getDataBase(ctx: Context): MyRoomDb {
         return Room.databaseBuilder(ctx, MyRoomDb::class.java, DB_NAME)
                 //.addMigrations(MIGRATION_1_2)
                 .fallbackToDestructiveMigration()
-                .allowMainThreadQueries()
                 .build()
-    }//*/
+    }
 
 }

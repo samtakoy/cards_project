@@ -309,7 +309,7 @@ class ImportApiImpl @Inject constructor(
             childThemeId = if (childTheme != null) {
                 childTheme.id
             } else {
-                themesRepository.addNewTheme(parentThemeId, f.name)
+                themesRepository.addNewTheme(parentThemeId, f.name)?.id ?: 0L
             }
             return Observable.fromArray(*f.listFiles()).flatMap { file: File -> listFiles(resolver, file, childThemeId, opts) }
         }
@@ -337,7 +337,7 @@ class ImportApiImpl @Inject constructor(
                 parentThemeId = theme.id
             } else {
                 newTheme = true
-                parentThemeId = themesRepository.addNewTheme(parentThemeId, themeName)
+                parentThemeId = themesRepository.addNewTheme(parentThemeId, themeName)?.id ?: 0L
             }
         }
         streamFactory.themeId = parentThemeId

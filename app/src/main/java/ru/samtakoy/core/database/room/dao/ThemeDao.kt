@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import io.reactivex.Flowable
+import io.reactivex.Single
 import ru.samtakoy.core.database.room.entities.ThemeEntity
 import ru.samtakoy.core.database.room.entities.ThemeEntity.Companion._id
 import ru.samtakoy.core.database.room.entities.ThemeEntity.Companion._parent
@@ -15,6 +16,9 @@ interface ThemeDao {
 
     @Query("SELECT * FROM ${table} WHERE $_id=:id")
     fun getTheme(id: Long): ThemeEntity?
+
+    @Query("SELECT * FROM ${table} WHERE $_id=:id")
+    fun getThemeSingle(id: Long): Single<ThemeEntity>
 
     @Query("SELECT * FROM ${table} WHERE $_parent = :parentThemeId AND $_title = :title")
     fun getThemeWithTitle(parentThemeId: Long, title: String): ThemeEntity?
