@@ -124,17 +124,19 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
         getViewState().updateToolbarTitle(null);
         getViewState().updateToolbarSubtitle("");
 
-        blockUiAndRunOpt(
-                mCardsInteractor.getTheme(themeId)
-                        .compose(s_io_mainThread())
-                        .subscribe(
-                                themeEntity -> {
-                                    unblockUi();
-                                    onParentThemeInit(themeEntity);
-                                },
-                                throwable -> onGetError(throwable)
-                        )
-        );
+        if (themeId > 0) {
+            blockUiAndRunOpt(
+                    mCardsInteractor.getTheme(themeId)
+                            .compose(s_io_mainThread())
+                            .subscribe(
+                                    themeEntity -> {
+                                        unblockUi();
+                                        onParentThemeInit(themeEntity);
+                                    },
+                                    throwable -> onGetError(throwable)
+                            )
+            );
+        }
     }
 
     private void onParentThemeInit(ThemeEntity themeEntity) {
