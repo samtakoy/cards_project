@@ -45,6 +45,14 @@ public class CoursesRepositoryImpl implements CoursesRepository {
     @Override
     @NotNull
     public Single<LearnCourseEntity> getCourseRx(@NotNull Long learnCourseId) {
+
+
+        if (learnCourseId == mTempCourseRepository.getTempCourseId()) {
+            return Single.fromCallable(
+                    () -> mTempCourseRepository.getTempCourse()
+            );
+        }
+
         return db.courseDao().getLearnCourseRx(learnCourseId);
     }
 
