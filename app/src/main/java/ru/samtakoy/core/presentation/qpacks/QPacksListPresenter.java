@@ -13,8 +13,8 @@ import io.reactivex.schedulers.Schedulers;
 import moxy.InjectViewState;
 import moxy.MvpPresenter;
 import ru.samtakoy.R;
-import ru.samtakoy.core.business.CardsInteractor;
-import ru.samtakoy.core.database.room.entities.QPackEntity;
+import ru.samtakoy.core.data.local.database.room.entities.QPackEntity;
+import ru.samtakoy.core.domain.CardsInteractor;
 import ru.samtakoy.core.presentation.log.MyLog;
 
 @InjectViewState

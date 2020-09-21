@@ -10,7 +10,7 @@ import moxy.viewstate.strategy.AddToEndSingleStrategy;
 import moxy.viewstate.strategy.OneExecutionStateStrategy;
 import moxy.viewstate.strategy.SingleStateStrategy;
 import moxy.viewstate.strategy.StateStrategyType;
-import ru.samtakoy.core.database.room.entities.CardEntity;
+import ru.samtakoy.core.data.local.database.room.entities.CardEntity;
 
 @StateStrategyType(OneExecutionStateStrategy.class)
 public interface QPackInfoView extends MvpView {

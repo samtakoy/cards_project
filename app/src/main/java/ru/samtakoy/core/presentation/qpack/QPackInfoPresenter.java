@@ -11,15 +11,15 @@ import io.reactivex.disposables.Disposable;
 import moxy.InjectViewState;
 import moxy.MvpPresenter;
 import ru.samtakoy.R;
-import ru.samtakoy.core.business.CardsInteractor;
-import ru.samtakoy.core.business.NCoursesInteractor;
-import ru.samtakoy.core.business.utils.MessageException;
-import ru.samtakoy.core.database.room.entities.other.QPackWithCardIds;
+import ru.samtakoy.core.data.local.database.room.entities.other.QPackWithCardIds;
+import ru.samtakoy.core.domain.CardsInteractor;
+import ru.samtakoy.core.domain.NCoursesInteractor;
+import ru.samtakoy.core.domain.utils.MessageException;
 import ru.samtakoy.core.presentation.log.MyLog;
 
-import static ru.samtakoy.core.business.utils.TransformersKt.c_io_mainThread;
-import static ru.samtakoy.core.business.utils.TransformersKt.f_io_mainThread;
-import static ru.samtakoy.core.business.utils.TransformersKt.s_io_mainThread;
+import static ru.samtakoy.core.domain.utils.TransformersKt.c_io_mainThread;
+import static ru.samtakoy.core.domain.utils.TransformersKt.f_io_mainThread;
+import static ru.samtakoy.core.domain.utils.TransformersKt.s_io_mainThread;
 
 @InjectViewState
 public class QPackInfoPresenter extends MvpPresenter<QPackInfoView> {

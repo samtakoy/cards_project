@@ -11,8 +11,8 @@ import moxy.viewstate.strategy.AddToEndSingleStrategy;
 import moxy.viewstate.strategy.OneExecutionStateStrategy;
 import moxy.viewstate.strategy.SkipStrategy;
 import moxy.viewstate.strategy.StateStrategyType;
-import ru.samtakoy.core.database.room.entities.QPackEntity;
-import ru.samtakoy.core.database.room.entities.ThemeEntity;
+import ru.samtakoy.core.data.local.database.room.entities.QPackEntity;
+import ru.samtakoy.core.data.local.database.room.entities.ThemeEntity;
 import ru.samtakoy.features.import_export.utils.ImportCardsOpts;
 
 

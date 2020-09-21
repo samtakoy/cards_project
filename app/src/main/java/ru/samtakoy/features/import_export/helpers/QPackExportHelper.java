@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
-import ru.samtakoy.core.database.room.entities.CardEntity;
-import ru.samtakoy.core.database.room.entities.QPackEntity;
-import ru.samtakoy.core.database.room.entities.TagEntity;
-import ru.samtakoy.core.database.room.entities.other.CardWithTags;
+import ru.samtakoy.core.data.local.database.room.entities.CardEntity;
+import ru.samtakoy.core.data.local.database.room.entities.QPackEntity;
+import ru.samtakoy.core.data.local.database.room.entities.TagEntity;
+import ru.samtakoy.core.data.local.database.room.entities.other.CardWithTags;
 import ru.samtakoy.features.import_export.utils.cbuild.CBuilderConst;
 
 public class QPackExportHelper {

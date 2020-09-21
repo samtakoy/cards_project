@@ -5,7 +5,7 @@ import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.SkipStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import ru.samtakoy.core.database.room.entities.elements.Schedule
+import ru.samtakoy.core.data.local.database.room.entities.elements.Schedule
 
 interface CardsViewResultView : MvpView {
 

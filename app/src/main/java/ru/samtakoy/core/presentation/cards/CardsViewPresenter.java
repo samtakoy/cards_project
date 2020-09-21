@@ -15,19 +15,19 @@ import io.reactivex.disposables.Disposable;
 import moxy.InjectViewState;
 import moxy.MvpPresenter;
 import ru.samtakoy.R;
-import ru.samtakoy.core.business.CardsInteractor;
-import ru.samtakoy.core.business.CoursesPlanner;
-import ru.samtakoy.core.business.NCoursesInteractor;
-import ru.samtakoy.core.database.room.entities.CardEntity;
-import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
-import ru.samtakoy.core.database.room.entities.elements.Schedule;
+import ru.samtakoy.core.app.utils.DateUtils;
+import ru.samtakoy.core.data.local.database.room.entities.CardEntity;
+import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity;
+import ru.samtakoy.core.data.local.database.room.entities.elements.Schedule;
+import ru.samtakoy.core.domain.CardsInteractor;
+import ru.samtakoy.core.domain.CoursesPlanner;
+import ru.samtakoy.core.domain.NCoursesInteractor;
 import ru.samtakoy.core.presentation.cards.types.CardViewMode;
 import ru.samtakoy.core.presentation.log.MyLog;
-import ru.samtakoy.core.utils.DateUtils;
 
-import static ru.samtakoy.core.business.utils.TransformersKt.c_io_mainThread;
-import static ru.samtakoy.core.business.utils.TransformersKt.f_io_mainThread;
-import static ru.samtakoy.core.business.utils.TransformersKt.s_io_mainThread;
+import static ru.samtakoy.core.domain.utils.TransformersKt.c_io_mainThread;
+import static ru.samtakoy.core.domain.utils.TransformersKt.f_io_mainThread;
+import static ru.samtakoy.core.domain.utils.TransformersKt.s_io_mainThread;
 
 @InjectViewState
 public class CardsViewPresenter extends MvpPresenter<CardsViewView> {

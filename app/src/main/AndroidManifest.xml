@@ -38,17 +38,17 @@
 
 
         <!--provider android:name=".core.database.old.DbContentProvider"
-            android:authorities="ru.samtakoy.core.database.old.DbContentProvider"
+            android:authorities="ru.samtakoy.core.data.local.database.old.DbContentProvider"
             android:exported="false" /-->
 
-        <receiver android:name=".core.services.StartupReceiver">
+        <receiver android:name=".features.notifications.StartupReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <service
-            android:name=".core.services.NotificationsPlannerService"
+            android:name=".features.notifications.NotificationsPlannerService"
             android:exported="false" />
 
 

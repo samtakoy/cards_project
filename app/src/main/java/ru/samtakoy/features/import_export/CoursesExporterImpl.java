@@ -14,8 +14,8 @@ import java.io.Writer;
 import java.util.List;
 
 import io.reactivex.Completable;
-import ru.samtakoy.core.business.CoursesRepository;
-import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
+import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity;
+import ru.samtakoy.core.domain.CoursesRepository;
 import ru.samtakoy.core.presentation.log.MyLog;
 import ru.samtakoy.features.import_export.helpers.SendEmailHelper;
 

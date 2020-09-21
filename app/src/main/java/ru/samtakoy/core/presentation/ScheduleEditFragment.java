@@ -19,9 +19,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import ru.samtakoy.R;
-import ru.samtakoy.core.database.room.entities.elements.Schedule;
-import ru.samtakoy.core.database.room.entities.elements.ScheduleItem;
-import ru.samtakoy.core.database.room.entities.elements.ScheduleTimeUnit;
+import ru.samtakoy.core.data.local.database.room.entities.elements.Schedule;
+import ru.samtakoy.core.data.local.database.room.entities.elements.ScheduleItem;
+import ru.samtakoy.core.data.local.database.room.entities.elements.ScheduleTimeUnit;
 
 public class ScheduleEditFragment extends DialogFragment {
 

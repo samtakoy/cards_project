@@ -2,7 +2,7 @@ package ru.samtakoy.core.presentation.courses.info
 
 import moxy.MvpView
 import moxy.viewstate.strategy.*
-import ru.samtakoy.core.database.room.entities.LearnCourseEntity
+import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.core.presentation.cards.types.CardViewSource
 

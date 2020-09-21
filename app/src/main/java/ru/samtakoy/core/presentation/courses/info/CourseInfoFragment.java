@@ -28,15 +28,15 @@ import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
-import ru.samtakoy.core.database.room.entities.types.LearnCourseMode;
+import ru.samtakoy.core.app.utils.TimeViewUtils;
+import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity;
+import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode;
 import ru.samtakoy.core.presentation.DialogHelper;
 import ru.samtakoy.core.presentation.RouterHolder;
 import ru.samtakoy.core.presentation.cards.CardsViewFragment;
 import ru.samtakoy.core.presentation.cards.types.CardViewMode;
 import ru.samtakoy.core.presentation.cards.types.CardViewSource;
 import ru.samtakoy.core.presentation.log.LogActivity;
-import ru.samtakoy.core.utils.TimeViewUtils;
 
 public class CourseInfoFragment extends MvpAppCompatFragment implements CourseInfoView {
 

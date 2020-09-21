@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.samtakoy.R;
-import ru.samtakoy.core.api.network.pojo.RemoteFile;
+import ru.samtakoy.core.data.network.pojo.RemoteFile;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>{
 

@@ -59,7 +59,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="ru.samtakoy.features.settings.SettingsFragment"
+        android:name="ru.samtakoy.core.presentation.settings.SettingsFragment"
         android:label="@string/main_drawer_settings" />
     <fragment
         android:id="@+id/courseInfoFragment"

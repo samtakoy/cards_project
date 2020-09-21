@@ -5,8 +5,6 @@ import android.net.Uri;
 
 import java.io.InputStream;
 
-import ru.samtakoy.core.database.UriUtils;
-
 public class FromUriStreamFactory implements StreamFactory{
 
 

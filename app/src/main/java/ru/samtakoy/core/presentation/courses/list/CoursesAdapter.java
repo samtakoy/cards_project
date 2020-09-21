@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.samtakoy.R;
-import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
+import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity;
 
 public class CoursesAdapter extends RecyclerView.Adapter <CoursesAdapter.CoursesItemHolder>{
 

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.samtakoy.R;
-import ru.samtakoy.core.database.room.entities.CardEntity;
+import ru.samtakoy.core.data.local.database.room.entities.CardEntity;
 
 
 public class CardsFastViewAdapter extends RecyclerView.Adapter<CardsFastViewAdapter.MyViewHolder> {

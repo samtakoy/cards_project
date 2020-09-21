@@ -7,11 +7,11 @@ import moxy.InjectViewState
 import moxy.MvpPresenter
 import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
-import ru.samtakoy.core.business.CardsInteractor
-import ru.samtakoy.core.business.NCoursesInteractor
-import ru.samtakoy.core.database.room.entities.LearnCourseEntity
-import ru.samtakoy.core.database.room.entities.elements.Schedule
-import ru.samtakoy.core.database.room.entities.types.LearnCourseMode
+import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity
+import ru.samtakoy.core.data.local.database.room.entities.elements.Schedule
+import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode
+import ru.samtakoy.core.domain.CardsInteractor
+import ru.samtakoy.core.domain.NCoursesInteractor
 import ru.samtakoy.core.presentation.log.MyLog
 import java.util.*
 import javax.inject.Inject

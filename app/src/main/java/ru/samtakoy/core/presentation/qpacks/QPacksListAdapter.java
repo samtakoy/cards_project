@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.samtakoy.R;
-import ru.samtakoy.core.database.room.entities.QPackEntity;
+import ru.samtakoy.core.data.local.database.room.entities.QPackEntity;
 
 public class QPacksListAdapter extends RecyclerView.Adapter<QPacksListAdapter.QPacksListViewHolder>{
 

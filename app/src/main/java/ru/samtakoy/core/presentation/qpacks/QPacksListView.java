@@ -7,7 +7,7 @@ import moxy.viewstate.strategy.AddToEndSingleStrategy;
 import moxy.viewstate.strategy.AddToEndSingleTagStrategy;
 import moxy.viewstate.strategy.OneExecutionStateStrategy;
 import moxy.viewstate.strategy.StateStrategyType;
-import ru.samtakoy.core.database.room.entities.QPackEntity;
+import ru.samtakoy.core.data.local.database.room.entities.QPackEntity;
 
 public interface QPacksListView extends MvpView {
 

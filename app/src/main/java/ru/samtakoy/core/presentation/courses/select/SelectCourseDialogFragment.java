@@ -27,7 +27,7 @@ import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.database.room.entities.LearnCourseEntity;
+import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity;
 import ru.samtakoy.core.presentation.courses.list.CoursesAdapter;
 import ru.samtakoy.core.presentation.qpack.QPackInfoFragment;
 

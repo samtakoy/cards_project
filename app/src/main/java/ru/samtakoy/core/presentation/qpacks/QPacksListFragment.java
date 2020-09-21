@@ -28,7 +28,7 @@ import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.MyApp;
-import ru.samtakoy.core.database.room.entities.QPackEntity;
+import ru.samtakoy.core.data.local.database.room.entities.QPackEntity;
 import ru.samtakoy.core.presentation.RouterHolder;
 import ru.samtakoy.core.presentation.qpack.QPackInfoFragment;
 

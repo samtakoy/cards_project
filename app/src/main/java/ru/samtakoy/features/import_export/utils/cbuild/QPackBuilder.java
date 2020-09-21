@@ -3,8 +3,8 @@ package ru.samtakoy.features.import_export.utils.cbuild;
 import java.util.HashMap;
 import java.util.List;
 
-import ru.samtakoy.core.database.room.entities.QPackEntityKt;
-import ru.samtakoy.core.database.room.entities.TagEntity;
+import ru.samtakoy.core.data.local.database.room.entities.QPackEntityKt;
+import ru.samtakoy.core.data.local.database.room.entities.TagEntity;
 import ru.samtakoy.features.import_export.utils.ImportCardsException;
 
 public class QPackBuilder {

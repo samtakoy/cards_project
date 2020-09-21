@@ -4,7 +4,7 @@ import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import ru.samtakoy.core.database.room.entities.LearnCourseEntity
+import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity
 
 interface CoursesListView : MvpView {
 

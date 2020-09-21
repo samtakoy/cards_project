@@ -19,8 +19,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ru.samtakoy.R;
-import ru.samtakoy.core.api.network.ServiceGenerator;
-import ru.samtakoy.core.api.network.pojo.RemoteFilesInfo;
+import ru.samtakoy.core.data.network.ServiceGenerator;
+import ru.samtakoy.core.data.network.pojo.RemoteFilesInfo;
 
 public class OnlineImportFragment extends Fragment {
 

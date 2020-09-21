@@ -4,9 +4,9 @@ import androidx.multidex.MultiDexApplication;
 
 import com.facebook.stetho.Stetho;
 
-import ru.samtakoy.core.di.components.AppComponent;
-import ru.samtakoy.core.di.components.DaggerAppComponent;
-import ru.samtakoy.core.di.modules.AppModule;
+import ru.samtakoy.core.app.di.components.AppComponent;
+import ru.samtakoy.core.app.di.components.DaggerAppComponent;
+import ru.samtakoy.core.app.di.modules.AppModule;
 import ru.samtakoy.core.presentation.log.MyLog;
 
 //public class MyApp extends Application {

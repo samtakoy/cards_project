@@ -2,7 +2,7 @@ package ru.samtakoy.features.import_export.utils.cbuild;
 
 import java.util.HashMap;
 
-import ru.samtakoy.core.database.room.entities.TagEntity;
+import ru.samtakoy.core.data.local.database.room.entities.TagEntity;
 
 
 public class OneCardParser {

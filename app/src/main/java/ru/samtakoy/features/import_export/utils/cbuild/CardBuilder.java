@@ -3,8 +3,8 @@ package ru.samtakoy.features.import_export.utils.cbuild;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.samtakoy.core.database.room.entities.TagEntity;
-import ru.samtakoy.core.database.room.entities.other.CardWithTags;
+import ru.samtakoy.core.data.local.database.room.entities.TagEntity;
+import ru.samtakoy.core.data.local.database.room.entities.other.CardWithTags;
 
 public class CardBuilder {
 
