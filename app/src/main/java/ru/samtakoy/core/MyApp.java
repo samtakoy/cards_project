@@ -4,24 +4,17 @@ import androidx.multidex.MultiDexApplication;
 
 import com.facebook.stetho.Stetho;
 
-import ru.samtakoy.core.app.di.components.AppComponent;
+import ru.samtakoy.core.app.di.Di;
 import ru.samtakoy.core.app.di.components.DaggerAppComponent;
 import ru.samtakoy.core.app.di.modules.AppModule;
 import ru.samtakoy.core.presentation.log.MyLog;
 
-//public class MyApp extends Application {
+
 public class MyApp extends MultiDexApplication {
 
 
-    private static MyApp sInstance;
-    public static MyApp getInstance(){ return sInstance; }
-
     private static final String TAG = "MyApp";
 
-
-    //private AppPreferencesImpl mPreferences;
-
-    private AppComponent mAppComponent;
 
     @Override
     public void onTerminate() {
@@ -35,12 +28,10 @@ public class MyApp extends MultiDexApplication {
 
         MyLog.add("MyApp.onCreate(), "+android.os.Process.myPid());
 
-        sInstance = this;
 
         Stetho.initializeWithDefaults(this);
-        //mPreferences = new AppPreferencesImpl(this);
 
-        mAppComponent = DaggerAppComponent.builder()
+        Di.appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();
 
@@ -48,10 +39,6 @@ public class MyApp extends MultiDexApplication {
             // TODO
             //deleteDatabase(MyDb.DB_NAME);
         }catch(Throwable ignore){}
-    }
-
-    public AppComponent getAppComponent() {
-        return mAppComponent;
     }
 
 

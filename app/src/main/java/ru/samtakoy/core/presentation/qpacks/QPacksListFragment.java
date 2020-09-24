@@ -27,7 +27,7 @@ import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
-import ru.samtakoy.core.MyApp;
+import ru.samtakoy.core.app.di.Di;
 import ru.samtakoy.core.data.local.database.room.entities.QPackEntity;
 import ru.samtakoy.core.presentation.RouterHolder;
 import ru.samtakoy.core.presentation.qpack.QPackInfoFragment;
@@ -66,7 +66,7 @@ public class QPacksListFragment extends MvpAppCompatFragment implements QPacksLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        MyApp.getInstance().getAppComponent().inject(this);
+        Di.appComponent.inject(this);
 
         super.onCreate(savedInstanceState);
 

@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import ru.samtakoy.R;
-import ru.samtakoy.core.MyApp;
+import ru.samtakoy.core.app.di.Di;
 import ru.samtakoy.core.domain.CardsInteractor;
 import ru.samtakoy.core.presentation.MainActivity;
 import ru.samtakoy.core.presentation.RouterHolder;
@@ -31,7 +31,7 @@ public class ClearDbDialogFragment extends ProgressDialogFragment {
     // TODO во все прогресс диалоги делаем инжект, ради инжекта presenter родительского класса, что неочевидно
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        MyApp.getInstance().getAppComponent().inject(this);
+        Di.appComponent.inject(this);
         super.onCreate(savedInstanceState);
     }
 

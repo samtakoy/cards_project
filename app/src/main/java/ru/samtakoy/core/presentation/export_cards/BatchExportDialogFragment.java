@@ -20,7 +20,7 @@ import moxy.MvpPresenter;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
-import ru.samtakoy.core.MyApp;
+import ru.samtakoy.core.app.di.Di;
 
 
 public class BatchExportDialogFragment extends MvpAppCompatDialogFragment implements BatchExportDialogView{
@@ -84,7 +84,7 @@ public class BatchExportDialogFragment extends MvpAppCompatDialogFragment implem
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        MyApp.getInstance().getAppComponent().inject(this);
+        Di.appComponent.inject(this);
 
         super.onCreate(savedInstanceState);
     }

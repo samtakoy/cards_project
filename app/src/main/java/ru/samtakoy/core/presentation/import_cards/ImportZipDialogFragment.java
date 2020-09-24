@@ -12,7 +12,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import ru.samtakoy.R;
-import ru.samtakoy.core.MyApp;
+import ru.samtakoy.core.app.di.Di;
 import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogFragment;
 import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogPresenter;
 import ru.samtakoy.features.import_export.ImportApi;
@@ -51,7 +51,7 @@ public class ImportZipDialogFragment extends ProgressDialogFragment {
     // TODO во все прогресс диалоги делаем инжект, ради инжекта presenter родительского класса, что неочевидно
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        MyApp.getInstance().getAppComponent().inject(this);
+        Di.appComponent.inject(this);
         super.onCreate(savedInstanceState);
     }
 

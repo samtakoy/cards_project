@@ -19,7 +19,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 
 import ru.samtakoy.R;
-import ru.samtakoy.core.MyApp;
+import ru.samtakoy.core.app.di.Di;
 import ru.samtakoy.core.presentation.log.MyLog;
 
 public class MainActivity extends AppCompatActivity implements RouterHolder {
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements RouterHolder {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
-        MyApp.getInstance().getAppComponent().inject(this);
+        Di.appComponent.inject(this);
 
         super.onCreate(savedInstanceState);
 

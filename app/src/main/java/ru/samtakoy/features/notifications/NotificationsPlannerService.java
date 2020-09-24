@@ -13,7 +13,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import ru.samtakoy.R;
-import ru.samtakoy.core.MyApp;
+import ru.samtakoy.core.app.di.Di;
 import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity;
 import ru.samtakoy.core.data.local.database.room.entities.other.LearnCourseHelper;
 import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode;
@@ -279,7 +279,7 @@ public class NotificationsPlannerService extends IntentService {
     @Override
     public void onCreate() {
 
-        MyApp.getInstance().getAppComponent().inject(this);
+        Di.appComponent.inject(this);
 
         super.onCreate();
     }
