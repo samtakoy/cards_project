@@ -29,14 +29,9 @@ public class ImportPackDialogFragment extends ProgressDialogFragment {
     public static ImportPackDialogFragment newFragment(
             Uri selectedFileUri,
             Long targetThemeId,
-            ImportCardsOpts opts,
-            Fragment targetFragmet,
-            int targetReqCode
+            ImportCardsOpts opts
     ){
         ImportPackDialogFragment result = new ImportPackDialogFragment();
-
-        result.setTargetFragment(targetFragmet, targetReqCode);
-
         Bundle args = new Bundle();
         args.putLong(ARG_THEME_ID, targetThemeId);
         args.putParcelable(ARG_FILE_URI, selectedFileUri);

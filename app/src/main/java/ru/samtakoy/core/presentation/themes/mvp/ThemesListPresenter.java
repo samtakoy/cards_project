@@ -51,9 +51,9 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
         }
 
 
-        public ThemesListPresenter create(Long themeId) {
+        public ThemesListPresenter create(Long themeId, String themeTitle) {
             return new ThemesListPresenter(
-                    mCardsInteractor, mQPacksExporter, themeId
+                    mCardsInteractor, mQPacksExporter, themeId, themeTitle
             );
         }
     }
@@ -92,7 +92,8 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
     public ThemesListPresenter(
             CardsInteractor cardsInteractor,
             QPacksExporter qPacksExporter,
-            Long themeId
+            Long themeId,
+            String themeTitle
     ) {
 
         mCardsInteractor = cardsInteractor;
@@ -103,7 +104,7 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
         mDataGettersDisposable = new CompositeDisposable();
         mOperationDisposable = new CompositeDisposable();
 
-        bindTheme(themeId);
+        bindTheme(themeId, themeTitle);
 
         mCurThemes = new ArrayList<>();
         mCurQPacks = new ArrayList<>();
@@ -119,9 +120,9 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
         super.onDestroy();
     }
 
-    private void bindTheme(Long themeId) {
+    private void bindTheme(Long themeId, String themeTilte) {
 
-        getViewState().updateToolbarTitle(null);
+        getViewState().updateToolbarTitle(themeTilte);
         getViewState().updateToolbarSubtitle("");
 
         if (themeId > 0) {
@@ -225,10 +226,6 @@ public class ThemesListPresenter extends MvpPresenter<ThemeListView> {
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // from ui
-
-    // TODO убрать и сделать через отслеживание изменений модели
-    public void onUiSomeDialogClosed() {
-    }
 
     public void onUiAddNewThemeRequest(){
         getViewState().showInputThemeTitleDialog();

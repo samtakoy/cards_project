@@ -34,9 +34,6 @@
         <!--activity android:name=".core.screens.courses.info.CourseInfoActivity" /-->
         <activity android:name=".core.presentation.log.LogActivity" />
 
-        <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
-
-
         <!--provider android:name=".core.database.old.DbContentProvider"
             android:authorities="ru.samtakoy.core.data.local.database.old.DbContentProvider"
             android:exported="false" /-->

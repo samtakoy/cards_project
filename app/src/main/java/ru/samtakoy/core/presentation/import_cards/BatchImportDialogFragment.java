@@ -29,18 +29,14 @@ public class BatchImportDialogFragment extends ProgressDialogFragment {
     public static BatchImportDialogFragment newFragment(
             String dirPath,
             Long targetThemeId,
-            ImportCardsOpts opts,
-            Fragment targetFragmet,
-            int targetReqCode
+            ImportCardsOpts opts
     ){
         BatchImportDialogFragment result = new BatchImportDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_DIR_PATH, dirPath);
         args.putLong(ARG_THEME_ID, targetThemeId);
         args.putSerializable(ARG_OPTS, opts);
-
         result.setArguments(args);
-        result.setTargetFragment(targetFragmet, targetReqCode);
         return result;
     }
 

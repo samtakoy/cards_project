@@ -30,14 +30,9 @@ public class ImportZipDialogFragment extends ProgressDialogFragment {
 
     public static ImportZipDialogFragment newFragment(
             Uri selectedFileUri,
-            ImportCardsOpts opts,
-            Fragment targetFragmet,
-            int targetReqCode
+            ImportCardsOpts opts
     ){
         ImportZipDialogFragment result = new ImportZipDialogFragment();
-
-        result.setTargetFragment(targetFragmet, targetReqCode);
-
         Bundle args = new Bundle();
         args.putParcelable(ARG_FILE_URI, selectedFileUri);
         args.putSerializable(ARG_OPTS, opts);
