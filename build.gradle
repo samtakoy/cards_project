@@ -8,7 +8,7 @@ buildscript {
         kotlin_version = '1.4.0'
         dagger_version = '2.27'
         cicerone_version = '5.1.1'
-        moxy_version = '2.1.2'
+        moxy_version = '1.5.3'
         nav_version = "2.3.0"
     }
     repositories {

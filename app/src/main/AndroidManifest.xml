@@ -28,15 +28,9 @@
             </intent-filter>
         </activity>
 
-        <!--activity
-            android:name=".core.screens.courses.list.CoursesListActivity"
-            android:label="@string/fragment_courses_title" /-->
-        <!--activity android:name=".core.screens.courses.info.CourseInfoActivity" /-->
         <activity android:name=".core.presentation.log.LogActivity" />
 
-        <!--provider android:name=".core.database.old.DbContentProvider"
-            android:authorities="ru.samtakoy.core.data.local.database.old.DbContentProvider"
-            android:exported="false" /-->
+        <activity android:name=".core.presentation.widget.WidgetSettingsActivity" />
 
         <receiver android:name=".features.notifications.StartupReceiver">
             <intent-filter>
@@ -59,6 +53,17 @@
                 android:resource="@xml/provider_paths"
                 />
         </provider>
+
+        <receiver android:name=".core.presentation.widget.WidgetProvider"
+            android:label="Мой тестовый Widget">
+            <intent-filter>
+                <action
+                    android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_metadata" />
+        </receiver>
 
     </application>
 

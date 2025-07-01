@@ -20,15 +20,28 @@ import ru.samtakoy.core.presentation.log.MyLog;
 @InjectViewState
 public class QPacksListPresenter extends MvpPresenter<QPacksListView> {
 
-    @Inject
-    CardsInteractor mCardsInteractor;
+    public static class Factory {
+        @Inject
+        CardsInteractor mCardsInteractor;
 
-    private CompositeDisposable mCompositeDisposable;
+        @Inject
+        Factory() {}
+
+        QPacksListPresenter create() {
+            return new QPacksListPresenter(mCardsInteractor);
+        }
+    }
+
+    protected CardsInteractor mCardsInteractor;
+
+    private final CompositeDisposable mCompositeDisposable;
 
     private QPackSortType mSortType;
 
     @Inject
-    public QPacksListPresenter() {
+    public QPacksListPresenter(CardsInteractor cardsInteractor) {
+
+        mCardsInteractor = cardsInteractor;
 
         mSortType = QPackSortType.LAST_VIEW_DATE_ASC;
 

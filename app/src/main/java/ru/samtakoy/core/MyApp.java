@@ -34,6 +34,7 @@ public class MyApp extends MultiDexApplication {
         Di.appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();
+        MyLog.add("DI init ok");
 
         try {
             // TODO

@@ -25,6 +25,7 @@ import ru.samtakoy.core.presentation.qpack.QPackInfoFragment;
 import ru.samtakoy.core.presentation.qpacks.QPacksListFragment;
 import ru.samtakoy.core.presentation.settings.ClearDbDialogFragment;
 import ru.samtakoy.core.presentation.themes.ThemesListFragment;
+import ru.samtakoy.core.presentation.widget.WidgetSettingsFragment;
 import ru.samtakoy.features.import_export.di.ExportModule;
 import ru.samtakoy.features.import_export.di.ImportModule;
 import ru.samtakoy.features.notifications.NotificationsPlannerService;
@@ -72,6 +73,8 @@ public interface AppComponent {
     void inject(CardsViewResultFragment f);
 
     void inject(QPacksListFragment f);
+
+    void inject(WidgetSettingsFragment f);
 
 
     // сервисы

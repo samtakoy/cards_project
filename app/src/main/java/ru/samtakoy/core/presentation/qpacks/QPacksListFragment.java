@@ -24,12 +24,14 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import moxy.MvpAppCompatFragment;
+import moxy.MvpPresenter;
 import moxy.presenter.InjectPresenter;
 import moxy.presenter.ProvidePresenter;
 import ru.samtakoy.R;
 import ru.samtakoy.core.app.di.Di;
 import ru.samtakoy.core.data.local.database.room.entities.QPackEntity;
 import ru.samtakoy.core.presentation.RouterHolder;
+import ru.samtakoy.core.presentation.log.MyLog;
 import ru.samtakoy.core.presentation.qpack.QPackInfoFragment;
 
 public class QPacksListFragment extends MvpAppCompatFragment implements QPacksListView{
@@ -56,21 +58,21 @@ public class QPacksListFragment extends MvpAppCompatFragment implements QPacksLi
     @InjectPresenter
     QPacksListPresenter mPresenter;
     @Inject
-    Provider<QPacksListPresenter> mPresenterProvider;
-
+    QPacksListPresenter.Factory mPresenterFactory;
     @ProvidePresenter
-    QPacksListPresenter providePresenter() {
-        return mPresenterProvider.get();
+    public QPacksListPresenter providePresenter() {
+        return mPresenterFactory.create();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
-        Di.appComponent.inject(this);
-
+        injectDependencies();
         super.onCreate(savedInstanceState);
-
         setHasOptionsMenu(true);
+    }
+
+    protected void injectDependencies() {
+        Di.appComponent.inject(this);
     }
 
     @Nullable

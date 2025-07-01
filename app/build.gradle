@@ -6,7 +6,7 @@ apply plugin: "androidx.navigation.safeargs"
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.0"
+    buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "ru.samtakoy"
         minSdkVersion 21
@@ -69,10 +69,10 @@ dependencies {
 
 
     //def moxy_version = "2.1.2"
-    implementation "com.github.moxy-community:moxy:$moxy_version"
-    annotationProcessor "com.github.moxy-community:moxy-compiler:$moxy_version"
-    kapt "com.github.moxy-community:moxy-compiler:$moxy_version"
-    implementation "com.github.moxy-community:moxy-androidx:$moxy_version"
+    implementation "com.arello-mobile:moxy:$moxy_version"
+    // annotationProcessor "com.github.moxy-community:moxy-compiler:$moxy_version"
+    kapt "com.arello-mobile:moxy-compiler:$moxy_version"
+    implementation "com.arello-mobile:moxy-app-compat:$moxy_version"
 
     // cicerone (removed)
     //implementation "ru.terrakok.cicerone:cicerone:$cicerone_version"
