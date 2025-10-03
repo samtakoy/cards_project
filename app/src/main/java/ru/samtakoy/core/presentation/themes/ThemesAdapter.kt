@@ -18,40 +18,34 @@ private const val ITEM_TYPE_QPACK = 2
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 internal class ThemesItemHolder(
         itemView: View,
-        private val mViewType: Int,
         private var callback: ThemesAdapter.Callback
 ) : RecyclerView.ViewHolder(itemView), View.OnClickListener, OnCreateContextMenuListener {
 
-    private var mTheme: ThemeEntity? = null
-    private var mQPack: QPackEntity? = null
+    private var mItem: ThemeUiItem? = null
     private var mText: TextView = itemView.findViewById(R.id.list_item_text)
 
 
-    fun bindTheme(t: ThemeEntity) {
-        mTheme = t
-        mQPack = null
-        mText.text = t.title
+    fun bindTheme(item: ThemeUiItem.Theme) {
+        mItem = item
+        mText.text = item.title
     }
 
-    fun bindQPack(qPack: QPackEntity) {
-        mTheme = null
-        mQPack = qPack
-        mText.text = qPack.title
+    fun bindQPack(item: ThemeUiItem.QPack) {
+        mItem = item
+        mText.text = item.title
         val dateText = itemView.findViewById<TextView>(R.id.creation_date)
-        dateText.text = qPack.getCreationDateAsString()
+        dateText.text = item.creationDate
     }
 
     override fun onClick(view: View) {
-        if (mTheme != null) {
-            callback.navigateToTheme(mTheme!!)
-        } else {
-            callback.navigateToQPack(mQPack!!)
+        mItem?.let {
+            callback.onListItemClick(it)
         }
     }
 
     override fun onCreateContextMenu(contextMenu: ContextMenu, view: View, contextMenuInfo: ContextMenuInfo?) {
         val mi: MenuInflater = callback.getMenuInflater()
-        if (mTheme != null) {
+        if (mItem is ThemeUiItem.Theme) {
             mi.inflate(R.menu.fragment_themes_tctx, contextMenu)
         } else {
             mi.inflate(R.menu.fragment_themes_ctx, contextMenu)
@@ -70,40 +64,39 @@ internal class ThemesAdapter(private val callback: Callback) : RecyclerView.Adap
 
     interface Callback {
         fun getMenuInflater(): MenuInflater
-        fun navigateToTheme(theme: ThemeEntity)
-        fun navigateToQPack(qPack: QPackEntity)
+        fun onListItemClick(item: ThemeUiItem)
+        fun onListItemLongClick(item: ThemeUiItem)
     }
 
-    private var mLongClickPosition = 0
-    private var mCurThemes: List<ThemeEntity>
-    private var mCurQPacks: List<QPackEntity>
-    fun updateData(themes: List<ThemeEntity>, qPacks: List<QPackEntity>) {
-        mCurThemes = themes
-        mCurQPacks = qPacks
+    private var mItems: List<ThemeUiItem> = emptyList()
+
+    fun updateData(items: List<ThemeUiItem>) {
+        mItems = items
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThemesItemHolder {
         val li = LayoutInflater.from(parent.context)
         val layoutId = if (viewType == ITEM_TYPE_THEME) R.layout.themes_list_item else R.layout.themes_list_qpack_item
-        return ThemesItemHolder(li.inflate(layoutId, parent, false), viewType, callback)
+        return ThemesItemHolder(li.inflate(layoutId, parent, false), callback)
     }
 
     override fun onBindViewHolder(holder: ThemesItemHolder, position: Int) {
+
         if (getItemViewType(position) == ITEM_TYPE_THEME) {
-            holder.bindTheme(mCurThemes[position]!!)
+            holder.bindTheme(mItems[position] as ThemeUiItem.Theme)
         } else if (getItemViewType(position) == ITEM_TYPE_QPACK) {
-            holder.bindQPack(mCurQPacks[position - mCurThemes.size]!!)
+            holder.bindQPack(mItems[position] as ThemeUiItem.QPack)
         }
         holder.itemView.setOnCreateContextMenuListener(holder)
         holder.itemView.setOnLongClickListener { view: View? ->
-            mLongClickPosition = position
+            callback.onListItemLongClick(mItems[position])
             false
         }
     }
 
     override fun getItemCount(): Int {
-        return mCurThemes.size + mCurQPacks.size
+        return mItems.size
     }
 
     override fun onViewRecycled(holder: ThemesItemHolder) {
@@ -113,18 +106,6 @@ internal class ThemesAdapter(private val callback: Callback) : RecyclerView.Adap
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position >= mCurThemes.size) ITEM_TYPE_QPACK else ITEM_TYPE_THEME
-    }
-
-    val isQPackLongClicked: Boolean
-        get() = mLongClickPosition - mCurThemes.size >= 0
-    val longClickedQPack: QPackEntity?
-        get() = mCurQPacks[mLongClickPosition - mCurThemes.size]
-    val longClickedTheme: ThemeEntity?
-        get() = mCurThemes[mLongClickPosition]
-
-    init {
-        mCurThemes = emptyList<ThemeEntity>()
-        mCurQPacks = emptyList<QPackEntity>()
+        return if (mItems.getOrNull(position) is ThemeUiItem.QPack) ITEM_TYPE_QPACK else ITEM_TYPE_THEME
     }
 }

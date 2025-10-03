@@ -1,81 +1,81 @@
-package ru.samtakoy.core.presentation.progress_dialog;
+package ru.samtakoy.core.presentation.progress_dialog
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.app.Activity
+import android.app.Dialog
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.viewModels
+import ru.samtakoy.R
+import ru.samtakoy.core.presentation.base.observe
+import ru.samtakoy.core.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.core.presentation.base.viewmodel.ViewModelOwner
+import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogPresenter.IProgressWorker
+import ru.samtakoy.core.presentation.progress_dialog.vm.ProgressDialogViewModel
+import ru.samtakoy.core.presentation.progress_dialog.vm.ProgressDialogViewModelFactory
+import ru.samtakoy.core.presentation.progress_dialog.vm.ProgressDialogViewModelImpl
+import javax.inject.Inject
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
+abstract class ProgressDialogFragment : AppCompatDialogFragment(), ViewModelOwner {
+    protected abstract fun createWorkerImpl(): IProgressWorker
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+    private var titleTextView: TextView? = null
 
-import moxy.MvpAppCompatDialogFragment;
-import moxy.presenter.InjectPresenter;
-import moxy.presenter.ProvidePresenter;
-import ru.samtakoy.R;
-
-public abstract class ProgressDialogFragment extends MvpAppCompatDialogFragment implements ProgressDialogView {
-
-    protected abstract ProgressDialogPresenter.WorkerImpl createWorkerImpl();
-
-    private TextView titleTextView;
-
-    @InjectPresenter
-    public ProgressDialogPresenter mPresenter;
     @Inject
-    Provider<ProgressDialogPresenter.Factory> mFactoryProvider;
+    internal lateinit var viewModelFactory: ProgressDialogViewModelFactory.Factory
+    private val viewModel: ProgressDialogViewModelImpl by viewModels {
+        viewModelFactory.create(worker = createWorkerImpl())
+    }
+    override fun getViewModel(): AbstractViewModel = viewModel
 
-    @ProvidePresenter
-    public ProgressDialogPresenter providePresenter() {
-        //return new ProgressDialogPresenter.Factory().create(createWorkerImpl());
-        return mFactoryProvider.get().create(createWorkerImpl());
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val v = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_dialog_progress, null)
+        initView(v)
+        return AlertDialog.Builder(requireContext())
+            .setView(v)
+            .setCancelable(false)
+            .create()
     }
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.fragment_dialog_progress, null);
-        initView(v);
-        return new AlertDialog.Builder(getContext())
-                .setView(v)
-                .setCancelable(false)
-                .create();
+    override fun onObserveViewModel() {
+        super.onObserveViewModel()
+        viewModel.getViewActionsAsFlow().observe(viewLifecycleOwner, ::onAction)
+        viewModel.getViewStateAsFlow().observe(viewLifecycleOwner, ::onViewState)
     }
 
-    protected void initView(View view) {
-        titleTextView = view.findViewById(R.id.title);
-    }
-
-    @Override
-    public void showTitle(int titleResId) {
-        titleTextView.setText(titleResId);
-    }
-
-    @Override
-    public void showError(int stringId) {
-        Toast.makeText(getContext(), stringId, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void exitCanceled() {
-        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, null);
-        dismiss();
-    }
-
-    @Override
-    public final void exitOk() {
-        if (getTargetFragment() != null) {
-            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
+    private fun onAction(action: ProgressDialogViewModel.Action) {
+        when (action) {
+            ProgressDialogViewModel.Action.ExitCanceled -> exitCanceled()
+            ProgressDialogViewModel.Action.ExitOk -> exitOk()
+            is ProgressDialogViewModel.Action.ShowErrorMessage -> showError(action.message)
         }
-        dismiss();
     }
 
+    private fun onViewState(state: ProgressDialogViewModel.State) {
+        titleTextView!!.setText(state.title)
+    }
 
+    protected fun initView(view: View) {
+        titleTextView = view.findViewById(R.id.title)
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun exitCanceled() {
+        getTargetFragment()?.onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, null)
+        dismiss()
+    }
+
+    private fun exitOk() {
+        if (getTargetFragment() != null) {
+            getTargetFragment()?.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null)
+        }
+        dismiss()
+    }
 }

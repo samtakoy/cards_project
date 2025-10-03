@@ -1,292 +1,201 @@
-package ru.samtakoy.core.presentation.courses.info;
+package ru.samtakoy.core.presentation.courses.info
 
-import android.content.Context;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.content.Context
+import android.content.DialogInterface
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import ru.samtakoy.R
+import ru.samtakoy.core.app.di.Di
+import ru.samtakoy.core.presentation.DialogHelper
+import ru.samtakoy.core.presentation.RouterHolder
+import ru.samtakoy.core.presentation.base.observe
+import ru.samtakoy.core.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.core.presentation.base.viewmodel.ViewModelOwner
+import ru.samtakoy.core.presentation.cards.CardsViewFragment.Companion.buildBundle
+import ru.samtakoy.core.presentation.cards.types.CardViewMode
+import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel
+import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.Event
+import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModelFactory
+import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModelImpl
+import ru.samtakoy.core.presentation.log.LogActivity
+import javax.inject.Inject
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.text.MessageFormat;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
-
-import moxy.MvpAppCompatFragment;
-import moxy.presenter.InjectPresenter;
-import moxy.presenter.ProvidePresenter;
-import ru.samtakoy.R;
-import ru.samtakoy.core.app.di.Di;
-import ru.samtakoy.core.app.utils.TimeViewUtils;
-import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity;
-import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode;
-import ru.samtakoy.core.presentation.DialogHelper;
-import ru.samtakoy.core.presentation.RouterHolder;
-import ru.samtakoy.core.presentation.cards.CardsViewFragment;
-import ru.samtakoy.core.presentation.cards.types.CardViewMode;
-import ru.samtakoy.core.presentation.cards.types.CardViewSource;
-import ru.samtakoy.core.presentation.log.LogActivity;
-
-public class CourseInfoFragment extends MvpAppCompatFragment implements CourseInfoView {
-
-    private static final String ARG_LEARN_COURSE_ID = "ARG_LEARN_COURSE_ID";
-
-
-    public static CourseInfoFragment newFragment(Long learnCourseId) {
-        CourseInfoFragment result = new CourseInfoFragment();
-        Bundle args = buildBundle(learnCourseId);
-        result.setArguments(args);
-        return result;
-    }
-
-    @NotNull
-    public static Bundle buildBundle(Long learnCourseId) {
-        Bundle args = new Bundle();
-        args.putLong(ARG_LEARN_COURSE_ID, learnCourseId);
-        return args;
-    }
-
+class CourseInfoFragment : Fragment(), ViewModelOwner {
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    private var mTitleText: TextView? = null
+    private var mCardCountText: TextView? = null
+    private var mStatusContentText: TextView? = null
+    private var mScheduleButton: Button? = null
+    private var mActionButton: Button? = null
 
-    private TextView mTitleText;
-    private TextView mCardCountText;
-    private TextView mStatusContentText;
-    private Button mScheduleButton;
-    private Button mActionButton;
+    private var mRouterHolder: RouterHolder? = null
 
-
-    private RouterHolder mRouterHolder;
-
-    @InjectPresenter
-    CourseInfoPresenter mPresenter;
     @Inject
-    Provider<CourseInfoPresenter.Factory> mFactoryProvider;
-
-    @ProvidePresenter
-    CourseInfoPresenter providePresenter() {
-        return mFactoryProvider.get().create(readLearnCourseId());
+    internal lateinit var viewModelFactory: CourseInfoViewModelFactory.Factory
+    private val viewModel: CourseInfoViewModelImpl by viewModels {
+        return@viewModels viewModelFactory.create(readLearnCourseId())
     }
+    override fun getViewModel(): AbstractViewModel = viewModel
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-
-        Di.appComponent.inject(this);
-
-        super.onCreate(savedInstanceState);
-
-        setHasOptionsMenu(true);
+    override fun onObserveViewModel() {
+        super.onObserveViewModel()
+        viewModel.getViewActionsAsFlow().observe(viewLifecycleOwner, ::onAction)
+        viewModel.getViewStateAsFlow().observe(viewLifecycleOwner, ::onViewState)
     }
 
-    private Long readLearnCourseId() {
-        return getArguments().getLong(ARG_LEARN_COURSE_ID, -1);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Di.appComponent.inject(this)
+
+        super.onCreate(savedInstanceState)
+
+        setHasOptionsMenu(true)
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-
-        mRouterHolder = (RouterHolder) context;
+    private fun readLearnCourseId(): Long {
+        return requireArguments().getLong(ARG_LEARN_COURSE_ID, -1)
     }
 
-    @Override
-    public void onDetach() {
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
 
-        mRouterHolder = null;
-
-        super.onDetach();
+        mRouterHolder = context as RouterHolder
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+    override fun onDetach() {
+        mRouterHolder = null
 
-        inflater.inflate(R.menu.course_info, menu);
+        super.onDetach()
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_item_delete:
-                mPresenter.onUiDeleteCourse();
-                return true;
-            case R.id.menu_item_log:
-                startActivity(LogActivity.newActivityIntent(getContext()));
-                return true;
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        inflater.inflate(R.menu.course_info, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.getItemId()) {
+            R.id.menu_item_delete -> {
+                viewModel.onEvent(Event.DeleteCourseClick)
+                return true
+            }
+            R.id.menu_item_log -> {
+                startActivity(LogActivity.newActivityIntent(getContext()))
+                return true
+            }
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
     }
 
-    @Override
-    public void exit() {
-        mRouterHolder.getNavController().navigateUp();
+    private fun onAction(action: CourseInfoViewModel.Action) {
+        when (action) {
+            CourseInfoViewModel.Action.RequestExtraordinaryRepeating -> requestExtraordinaryRepeating()
+            is CourseInfoViewModel.Action.ShowErrorMessage -> showError(action.message)
+            CourseInfoViewModel.NavigationAction.Exit -> exit()
+            is CourseInfoViewModel.NavigationAction.NavigateToCardsViewScreen -> navigateToCardsViewScreen(
+                viewHistoryItemId = action.viewHistoryItemId,
+                viewMode = action.viewMode
+            )
+        }
+    }
+
+    private fun onViewState(viewState: CourseInfoViewModel.State) {
+        when (val type = viewState.type) {
+            is CourseInfoViewModel.State.Type.Data -> showLearnCourseInfo(type)
+            CourseInfoViewModel.State.Type.Initialization -> Unit
+        }
+    }
+
+    private fun exit() {
+        mRouterHolder!!.getNavController().navigateUp()
         //mRouterHolder.getRouter().exit();
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_course_info, container, false);
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val v = inflater.inflate(R.layout.fragment_course_info, container, false)
 
         // android:id="@+id/title"
-        mTitleText = v.findViewById(R.id.title);
+        mTitleText = v.findViewById<TextView>(R.id.title)
         // android:id="@+id/cards_count"
-        mCardCountText = v.findViewById(R.id.cards_count);
+        mCardCountText = v.findViewById<TextView>(R.id.cards_count)
         // android:id="@+id/status_content"
-        mStatusContentText = v.findViewById(R.id.status_content);
+        mStatusContentText = v.findViewById<TextView>(R.id.status_content)
         // android:id="@+id/schedule"
-        mScheduleButton = v.findViewById(R.id.schedule);
-        mScheduleButton.setOnClickListener(view -> {
-        });
+        mScheduleButton = v.findViewById<Button>(R.id.schedule)
+        mScheduleButton!!.setOnClickListener(View.OnClickListener { view: View? -> })
         // android:id="@+id/action_button"
-        mActionButton = v.findViewById(R.id.action_button);
-        mActionButton.setOnClickListener(view -> mPresenter.onUiActionButtonClick());
-
-        return v;
-    }
-
-    @Override
-    public void navigateToCardsViewScreen(
-            long learnCourseId,
-            CardViewSource viewSource,
-            @NotNull CardViewMode viewMode
-    ) {
-
-        mRouterHolder.getNavController().navigate(
-                R.id.action_courseInfoFragment_to_cardsViewFragment,
-                CardsViewFragment.buildBundle(learnCourseId, viewSource, viewMode)
-        );
-        //mRouterHolder.getRouter().navigateTo(new Screens.CardsViewScreen(learnCourseId, viewSource, viewMode));
-    }
-
-    @Override
-    public void requestExtraordinaryRepeating() {
-        DialogHelper.showYesNoDialog(
-                getContext(),
-                getResources().getString(R.string.confirm_dialog_title),
-                getResources().getString(R.string.course_info_extra_repeating_confirm),
-                (dialogInterface, i) -> mPresenter.onUiStartRepeatingExtraConfirm(),
-                null
-        );
-    }
-
-    @Override
-    public void showLearnCourseInfo(LearnCourseEntity learnCourse) {
-
-        mTitleText.setText(learnCourse.getTitle());
-        mCardCountText.setText(
-                MessageFormat.format(getResources().getString(R.string.course_info_card_count), learnCourse.getCardsCount())
-        );
-        mStatusContentText.setText(getStatusString(learnCourse));
-        mScheduleButton.setText(getScheduleButtonText(learnCourse));
-        mActionButton.setText(getActionButtonText(learnCourse));
-    }
-
-    private String getScheduleButtonText(LearnCourseEntity learnCourse) {
-        if (learnCourse.getMode() == LearnCourseMode.COMPLETED) {
-            return getResources().getString(R.string.course_info_schedule_is_completed);
-        }
-        if (learnCourse.getMode() == LearnCourseMode.PREPARING) {
-            if (learnCourse.getRestSchedule().isEmpty()) {
-                return getResources().getString(R.string.course_info_schedule_is_empty);
-            } else {
-                return learnCourse.getRestSchedule().toStringView(getResources());
+        mActionButton = v.findViewById<Button>(R.id.action_button)
+        mActionButton!!.setOnClickListener(
+            View.OnClickListener { view: View? ->
+                viewModel.onEvent(Event.ActionButtonClick)
             }
+        )
+
+        return v
+    }
+
+    private fun navigateToCardsViewScreen(
+        viewHistoryItemId: Long,
+        viewMode: CardViewMode
+    ) {
+        mRouterHolder!!.getNavController().navigate(
+            R.id.action_courseInfoFragment_to_cardsViewFragment,
+            buildBundle(viewHistoryItemId, viewMode)
+        )
+    }
+
+    private fun requestExtraordinaryRepeating() {
+        DialogHelper.showYesNoDialog(
+            getContext(),
+            getResources().getString(R.string.confirm_dialog_title),
+            getResources().getString(R.string.course_info_extra_repeating_confirm),
+            DialogInterface.OnClickListener { dialogInterface: DialogInterface?, i: Int ->
+                viewModel.onEvent(Event.StartRepeatingExtraConfirm)
+            },
+            null
+        )
+    }
+
+    private fun showLearnCourseInfo(dataState: CourseInfoViewModel.State.Type.Data) {
+        mTitleText!!.setText(dataState.titleText)
+        mCardCountText!!.setText(dataState.cardsCountText)
+        mStatusContentText!!.setText(dataState.statusString)
+        mScheduleButton!!.setText(dataState.scheduleButtonText)
+        mActionButton!!.setText(dataState.actionButtonText)
+    }
+
+    private fun showError(string: String) {
+        Toast.makeText(getContext(), string, Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
+        private const val ARG_LEARN_COURSE_ID = "ARG_LEARN_COURSE_ID"
+
+        fun newFragment(learnCourseId: Long): CourseInfoFragment {
+            val result = CourseInfoFragment()
+            val args: Bundle = buildBundle(learnCourseId)
+            result.setArguments(args)
+            return result
         }
-        if (learnCourse.getMode() == LearnCourseMode.REPEATING || learnCourse.getMode() == LearnCourseMode.REPEAT_WAITING) {
-            return learnCourse.getRestSchedule().toStringViewWithPrev(getResources(), learnCourse.getRealizedSchedule());
-        }
-        return learnCourse.getRestSchedule().toStringView(getResources());
-    }
 
-    private String getStatusString(LearnCourseEntity learnCourse) {
-
-        String resString;
-
-        switch (learnCourse.getMode()) {
-            case PREPARING:
-                return getResources().getString(R.string.course_info_status_preparing);
-            case LEARN_WAITING:
-                resString = getResources().getString(R.string.course_info_status_learn_waiting);
-                return MessageFormat.format(resString, TimeViewUtils.getTimeView(getResources(), (int) learnCourse.getMillisToStart()));
-            case LEARNING:
-                resString = getResources().getString(R.string.course_info_status_learning);
-                return MessageFormat.format(resString, learnCourse.getViewedCardsCount() + "/" + learnCourse.getCardsCount());
-            case REPEAT_WAITING:
-                resString = getResources().getString(R.string.course_info_status_repeat_waiting);
-                return MessageFormat.format(resString, TimeViewUtils.getTimeView(getResources(), (int) learnCourse.getMillisToStart()));
-            case REPEATING:
-                resString = getResources().getString(R.string.course_info_status_repeating);
-                return MessageFormat.format(resString, learnCourse.getViewedCardsCount() + "/" + learnCourse.getCardsCount());
-            case COMPLETED:
-                return getResources().getString(R.string.course_info_status_completed);
-            default:
-                return "...";
+        @JvmStatic fun buildBundle(learnCourseId: Long): Bundle {
+            val args = Bundle()
+            args.putLong(ARG_LEARN_COURSE_ID, learnCourseId)
+            return args
         }
     }
-
-    private String getActionButtonText(LearnCourseEntity learnCourse) {
-
-        @StringRes int resId;
-        switch (learnCourse.getMode()) {
-            case PREPARING:
-                resId = R.string.course_info_btn_complete_preparing;
-                break;
-            case LEARN_WAITING:
-                resId = R.string.course_info_btn_start_learning;
-                break;
-            case LEARNING:
-                if (learnCourse.getViewedCardsCount() > 0) {
-                    resId = R.string.course_info_btn_continue_learning;
-                } else {
-                    resId = R.string.course_info_btn_learn;
-                }
-                break;
-            case REPEAT_WAITING:
-                resId = R.string.course_info_btn_repeat_now;
-                break;
-            case REPEATING:
-                if (learnCourse.getViewedCardsCount() > 0) {
-                    resId = R.string.course_info_btn_continue_repeating;
-                } else {
-                    resId = R.string.course_info_btn_repeat;
-                }
-                break;
-            case COMPLETED:
-                return getResources().getString(R.string.course_info_btn_repeat);
-            default:
-                return "...";
-        }
-        return getResources().getString(resId);
-    }
-
-
-    @Override
-    public void showError(int stringId) {
-        Toast.makeText(getContext(), stringId, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void blockScreenOnOperation() {
-    }
-
-    @Override
-    public void unblockScreenOnOperation() {
-    }
-
 }

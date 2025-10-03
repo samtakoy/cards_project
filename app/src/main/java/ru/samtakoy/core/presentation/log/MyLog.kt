@@ -1,30 +1,27 @@
-package ru.samtakoy.core.presentation.log;
+package ru.samtakoy.core.presentation.log
 
-import android.util.Log;
+import android.util.Log
+import org.apache.commons.lang3.exception.ExceptionUtils
+import java.util.Collections
+import java.util.LinkedList
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
+object MyLog {
+    private val sLog: MutableList<String?> = LinkedList<String?>()
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-public class MyLog {
-
-
-    private static List<String> sLog = new LinkedList<>();
-
-    public static void add(String source, Throwable t) {
-        String s = source + ": " + t.getMessage() + "\n" + ExceptionUtils.getStackTrace(t);
-        sLog.add(s);
-        Log.e("MyLog", s);
+    @JvmStatic
+    fun add(source: String?, t: Throwable?) {
+        val s = source + ": " + t?.message + "\n" + t?.stackTraceToString()
+        sLog.add(s)
+        Log.e("MyLog", s)
     }
 
-    public static void add(String s) {
-        sLog.add(s);
-        Log.e("MyLog", s);
+    @JvmStatic
+    fun add(s: String) {
+        sLog.add(s)
+        Log.e("MyLog", s)
     }
 
-    public static List<String> getStrings() {
-        return Collections.unmodifiableList(sLog);
-    }
+    @JvmStatic
+    val strings: MutableList<String?>
+        get() = Collections.unmodifiableList<String?>(sLog)
 }

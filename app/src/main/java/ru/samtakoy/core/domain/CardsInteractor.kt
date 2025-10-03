@@ -1,48 +1,60 @@
-package ru.samtakoy.core.domain;
+package ru.samtakoy.core.domain
 
-import java.util.List;
+import io.reactivex.Flowable
+import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
+import ru.samtakoy.core.data.local.database.room.entities.CardEntity
+import ru.samtakoy.core.data.local.database.room.entities.QPackEntity
+import ru.samtakoy.core.data.local.database.room.entities.ThemeEntity
+import ru.samtakoy.core.data.local.database.room.entities.other.QPackWithCardIds
+import java.util.Date
 
-import io.reactivex.Completable;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
-import ru.samtakoy.core.data.local.database.room.entities.CardEntity;
-import ru.samtakoy.core.data.local.database.room.entities.QPackEntity;
-import ru.samtakoy.core.data.local.database.room.entities.ThemeEntity;
-import ru.samtakoy.core.data.local.database.room.entities.other.QPackWithCardIds;
+interface CardsInteractor {
+    suspend fun clearDb()
 
-public interface CardsInteractor {
+    fun getCardAsFlow(cardId: Long): Flow<CardEntity?>
 
-    Completable clearDb();
+    fun deleteCardWithRelations(cardId: Long)
 
-    Flowable<CardEntity> getCardRx(Long cardId);
+    suspend fun setCardNewQuestionText(cardId: Long, text: String)
 
-    void deleteCardWithRelations(Long cardId);
+    suspend fun setCardNewAnswerText(cardId: Long, text: String)
 
-    Completable setCardNewQuestionTextRx(Long cardId, String text);
+    fun getQPackWithCardIdsAsFlow(qPackId: Long): Flow<QPackWithCardIds>
 
-    Completable setCardNewAnswerTextRx(Long cardId, String text);
+    fun getQPackRx(qPackId: Long): Flowable<QPackEntity>
 
-    Flowable<QPackWithCardIds> getQPackWithCardIds(Long qPackId);
+    suspend fun getQPack(qPackId: Long): QPackEntity?
 
-    Flowable<QPackEntity> getQPackRx(Long qPackId);
+    suspend fun deleteQPack(qPackId: Long)
 
-    Completable deleteQPack(Long qPackId);
+    suspend fun getQPackCards(qPackId: Long): List<CardEntity>
 
-    Flowable<List<CardEntity>> getQPackCards(Long qPackId);
+    suspend fun getQPackCardIds(qPackId: Long): List<Long>
 
-    Single<ThemeEntity> addNewTheme(Long parentThemeId, String title);
+    suspend fun updateQPackViewCount(qPackId: Long, currentTime: Date)
 
-    Completable deleteTheme(Long themeId);
+    fun addNewTheme(parentThemeId: Long, title: String): Single<ThemeEntity>
 
-    Single<ThemeEntity> getTheme(Long themeId);
+    suspend fun deleteTheme(themeId: Long): Boolean
 
-    Flowable<List<ThemeEntity>> getChildThemesRx(Long themeId);
+    suspend fun getTheme(themeId: Long): ThemeEntity?
 
-    Flowable<List<QPackEntity>> getChildQPacksRx(Long themeId);
+    fun getChildThemesAsFlow(themeId: Long): Flow<List<ThemeEntity>>
 
-    Flowable<List<QPackEntity>> getAllQPacksByLastViewDateAsc();
+    fun getChildQPacksAsFlow(themeId: Long): Flow<List<QPackEntity>>
 
-    Flowable<List<QPackEntity>> getAllQPacksByCreationDateDesc();
+    fun getAllQPacksByLastViewDateAscAsFlow(
+        searchString: String?,
+        onlyFavorites: Boolean
+    ): Flow<List<QPackEntity>>
 
-    Completable addFakeCard(Long qPackId);
+    fun getAllQPacksByCreationDateDescAsFlow(
+        searchString: String?,
+        onlyFavorites: Boolean
+    ): Flow<List<QPackEntity>>
+
+    suspend fun getQPacksByIds(ids: List<Long>): List<QPackEntity>
+
+    suspend fun addFakeCard(qPackId: Long)
 }

@@ -33,13 +33,14 @@ public class CardBuilder {
 
     public CardWithTags build() {
         CardWithTags result = CardWithTags.Companion.initNew(
-                mQPackId, mQuestion, mAnswer, ""
+            getCardId(),
+            mQPackId,
+            mQuestion,
+            mAnswer,
+            mImages,
+            "",
+            mTags
         );
-        if (hasId()) {
-            result.getCard().setId(getCardId());
-        }
-        result.getCard().setAImages(mImages);
-        result.addTagsFrom(mTags);
         return result;
     }
 

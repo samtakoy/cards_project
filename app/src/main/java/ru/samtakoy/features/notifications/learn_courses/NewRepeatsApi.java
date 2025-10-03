@@ -17,6 +17,8 @@ import static ru.samtakoy.features.notifications.NotificationsConst.REQ_CODE_NEW
 
 public class NewRepeatsApi extends CoursesApi {
 
+
+
     @Inject
     public NewRepeatsApi() {
     }
@@ -38,8 +40,8 @@ public class NewRepeatsApi extends CoursesApi {
         LearnCourseMode lcMode =   getLearnCourseMode();
         int notificationId =       NOTIFICATION_ID_NEW_REPEATING_AVAILABLE;
         int notificationIconId =   android.R.drawable.ic_menu_report_image;
-        String notificationTitle = getString(R.string.notifications_new_repeats_title);
-        String notificationText =  getString(R.string.notifications_new_repeats_text);
+        String notificationTitle = mResources.getString(R.string.notifications_new_repeats_title);
+        String notificationText =  mResources.getString(R.string.notifications_new_repeats_text);
         PendingIntent clickIntent = PendingIntent.getService(mContext, REQ_CODE_NEW_REPEATINGS_CLICK,  getShowUiIntent(), 0);
         PendingIntent cancelIntent = PendingIntent.getService(mContext, REQ_CODE_NEW_REPEATINGS_CANCEL, getShiftIntent(), 0);
 

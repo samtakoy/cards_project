@@ -40,13 +40,12 @@
         tools:text="Карточек: 10" />
 
     <com.google.android.material.button.MaterialButton
-
         android:id="@+id/qpack_btn_view_cards"
         style="@style/AppTheme.controlButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/qpack_btn_view_cards"
-        app:layout_constraintBottom_toTopOf="@+id/qpack_btn_add_to_course"
+        app:layout_constraintBottom_toTopOf="@+id/qpack_btn_view_uncompleted"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
@@ -54,30 +53,27 @@
         tools:layout_conversion_absoluteWidth="146dp" />
 
     <com.google.android.material.button.MaterialButton
-
-        android:id="@+id/qpack_btn_view_courses"
+        android:id="@+id/qpack_btn_view_uncompleted"
         style="@style/AppTheme.controlButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/qpack_btn_view_courses"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/qpack_btn_view_uncompleted"
+        app:layout_constraintBottom_toTopOf="@+id/qpack_btn_add_to_course"
         app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qpack_btn_add_to_new_course"
-        app:layout_constraintVertical_bias="0"
+        app:layout_constraintTop_toBottomOf="@id/qpack_btn_view_cards"
         tools:layout_conversion_absoluteHeight="52dp"
-        tools:layout_conversion_absoluteWidth="171dp" />
+        tools:layout_conversion_absoluteWidth="146dp" />
 
     <com.google.android.material.button.MaterialButton
-
         android:id="@+id/qpack_btn_add_to_course"
         style="@style/AppTheme.controlButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/qpack_btn_add_to_course"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/qpack_btn_add_to_new_course"
-        app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qpack_btn_view_cards"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/qpack_btn_view_uncompleted"
         tools:layout_conversion_absoluteHeight="52dp"
         tools:layout_conversion_absoluteWidth="179dp" />
 
@@ -89,10 +85,25 @@
         android:layout_height="wrap_content"
         android:text="@string/qpack_btn_add_to_new_course"
         app:layout_constraintBottom_toTopOf="@+id/qpack_btn_view_courses"
-        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/qpack_btn_add_to_course"
         tools:layout_conversion_absoluteHeight="52dp"
         tools:layout_conversion_absoluteWidth="174dp" />
+
+
+    <com.google.android.material.button.MaterialButton
+
+        android:id="@+id/qpack_btn_view_courses"
+        style="@style/AppTheme.controlButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/qpack_btn_view_courses"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/qpack_btn_add_to_new_course"
+        app:layout_constraintVertical_bias="0"
+        tools:layout_conversion_absoluteHeight="52dp"
+        tools:layout_conversion_absoluteWidth="171dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

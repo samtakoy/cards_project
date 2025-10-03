@@ -1,170 +1,165 @@
-package ru.samtakoy.core.domain.impl;
+package ru.samtakoy.core.domain.impl
 
-import android.content.Context;
+import android.content.Context
+import io.reactivex.Flowable
+import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
+import ru.samtakoy.core.data.local.database.room.entities.CardEntity
+import ru.samtakoy.core.data.local.database.room.entities.CardEntity.Companion.initNew
+import ru.samtakoy.core.data.local.database.room.entities.QPackEntity
+import ru.samtakoy.core.data.local.database.room.entities.ThemeEntity
+import ru.samtakoy.core.data.local.database.room.entities.other.QPackWithCardIds
+import ru.samtakoy.core.domain.CardsInteractor
+import ru.samtakoy.core.data.local.reps.CardsRepository
+import ru.samtakoy.core.data.local.reps.QPacksRepository
+import ru.samtakoy.core.data.local.reps.TagsRepository
+import ru.samtakoy.core.data.local.reps.ThemesRepository
+import java.util.Date
+import java.util.Random
+import javax.inject.Inject
 
-import java.util.List;
-import java.util.Random;
-
-import javax.inject.Inject;
-
-import io.reactivex.Completable;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
-import ru.samtakoy.core.data.local.database.room.entities.CardEntity;
-import ru.samtakoy.core.data.local.database.room.entities.QPackEntity;
-import ru.samtakoy.core.data.local.database.room.entities.ThemeEntity;
-import ru.samtakoy.core.data.local.database.room.entities.other.QPackWithCardIds;
-import ru.samtakoy.core.domain.CardsInteractor;
-import ru.samtakoy.core.domain.CardsRepository;
-import ru.samtakoy.core.domain.QPacksRepository;
-import ru.samtakoy.core.domain.TagsRepository;
-import ru.samtakoy.core.domain.ThemesRepository;
-
-public class CardsInteractorImpl implements CardsInteractor {
+class CardsInteractorImpl @Inject constructor() : CardsInteractor {
+    @Inject
+    internal lateinit var mCtx: Context
 
     @Inject
-    Context mCtx;
-    @Inject
-    TagsRepository mTagsRepository;
-    @Inject
-    CardsRepository mCardsRepository;
-    @Inject
-    ThemesRepository mThemesRepository;
-    @Inject
-    QPacksRepository mQPacksRepository;
+    internal lateinit var mTagsRepository: TagsRepository
 
     @Inject
-    public CardsInteractorImpl() {
+    internal lateinit var mCardsRepository: CardsRepository
+
+    @Inject
+    internal lateinit var mThemesRepository: ThemesRepository
+
+    @Inject
+    internal lateinit var mQPacksRepository: QPacksRepository
+
+    override suspend fun clearDb() {
+        return mCardsRepository.clearDb()
     }
 
-    @Override
-    public Completable clearDb() {
-        return mCardsRepository.clearDb();
+    override fun getCardAsFlow(cardId: Long): Flow<CardEntity?> {
+        return mCardsRepository.getCardAsFlow(cardId)
     }
 
-    @Override
-    public Flowable<CardEntity> getCardRx(Long cardId) {
-        return mCardsRepository.getCardRx(cardId);
+    override fun deleteCardWithRelations(cardId: Long) {
+        mTagsRepository.deleteAllTagsFromCard(cardId)
+        mCardsRepository.deleteCard(cardId)
     }
 
-    @Override
-    public void deleteCardWithRelations(Long cardId) {
-        mTagsRepository.deleteAllTagsFromCard(cardId);
-        mCardsRepository.deleteCard(cardId);
+    override suspend fun setCardNewQuestionText(cardId: Long, text: String) {
+        mCardsRepository.getCard(cardId)?.copy(
+            question = text
+        )?.let {
+            mCardsRepository.updateCard(it)
+        }
     }
 
-    @Override
-    public Completable setCardNewQuestionTextRx(Long cardId, String text) {
-
-        return Completable.fromCallable(
-                () -> {
-                    CardEntity card = mCardsRepository.getCard(cardId);
-                    card.setQuestion(text);
-                    mCardsRepository.updateCard(card);
-                    return true;
-                }
-        );
+    override suspend fun setCardNewAnswerText(cardId: Long, text: String) {
+        mCardsRepository.getCard(cardId)?.copy(
+            answer = text
+        )?.let {
+            mCardsRepository.updateCard(it)
+        }
     }
 
-    @Override
-    public Completable setCardNewAnswerTextRx(Long cardId, String text) {
-
-        return Completable.fromCallable(
-                () -> {
-                    CardEntity card = mCardsRepository.getCard(cardId);
-                    card.setAnswer(text);
-                    mCardsRepository.updateCard(card);
-                    return true;
-                }
-        );
+    override fun getQPackWithCardIdsAsFlow(qPackId: Long): Flow<QPackWithCardIds> {
+        return mQPacksRepository.getQPackWithCardIdsAsFlow(qPackId)
     }
 
-    @Override
-    public Flowable<QPackWithCardIds> getQPackWithCardIds(Long qPackId) {
-        return mQPacksRepository.getQPackWithCardIdsRx(qPackId);
+    override fun getQPackRx(qPackId: Long): Flowable<QPackEntity> {
+        return mQPacksRepository.getQPackRx(qPackId)
     }
 
-    @Override
-    public Flowable<QPackEntity> getQPackRx(Long qPackId) {
-        return mQPacksRepository.getQPackRx(qPackId);
+    override suspend fun getQPack(qPackId: Long): QPackEntity? {
+        return mQPacksRepository.getQPack(qPackId)
     }
 
-    @Override
-    public Completable deleteQPack(Long qPackId) {
-
+    override suspend fun deleteQPack(qPackId: Long) {
         // TODO transactions
-        return mCardsRepository
-                // TODO придумать, что делать с НЕИСПОЛЬЗУЕМЫМИ тегами карточек, когда удаляется карточка
-                // пока связь тег-карточка удаляется каскадно, а теги остаются,
-                // получается, надо чистить поштучно
-                .deleteQPackCards(qPackId)
-                .andThen(
-                        mQPacksRepository.deletePack(qPackId)
-                );
+        // TODO придумать, что делать с НЕИСПОЛЬЗУЕМЫМИ тегами карточек, когда удаляется карточка
+        // пока связь тег-карточка удаляется каскадно, а теги остаются,
+        // получается, надо чистить поштучно
+        mCardsRepository.deleteQPackCards(qPackId)
+        mQPacksRepository.deletePack(qPackId)
     }
 
-    @Override
-    public Flowable<List<CardEntity>> getQPackCards(Long qPackId) {
-        return mCardsRepository.getQPackCards(qPackId);
+    override suspend fun getQPackCards(qPackId: Long): List<CardEntity> {
+        return mCardsRepository.getQPackCards(qPackId)
     }
 
-    @Override
-    public Single<ThemeEntity> addNewTheme(Long parentThemeId, String title) {
-        return Single.fromCallable(() -> mThemesRepository.addNewTheme(parentThemeId, title));
+    override suspend fun getQPackCardIds(qPackId: Long): List<Long> {
+        return mCardsRepository.getCardsIdsFromQPack(qPackId)
+    }
+
+    override suspend fun updateQPackViewCount(qPackId: Long, currentTime: Date) {
+        mQPacksRepository.updateQPackViewCount(qPackId, currentTime)
+    }
+
+    override fun addNewTheme(parentThemeId: Long, title: String): Single<ThemeEntity> {
+        return Single.fromCallable { mThemesRepository.addNewTheme(parentThemeId, title) }
     }
 
     // TODO пока удаление, только если тема пустая, работает молча
-    @Override
-    public Completable deleteTheme(Long themeId) {
-
-        // TODO optimize to count check
-        return Completable.fromCallable(
-                () -> {
-                    if (mQPacksRepository.getQPacksFromTheme(themeId).size() > 0 || mThemesRepository.getChildThemes(themeId).size() > 0) {
-                        return false;
-                    }
-                    return mThemesRepository.deleteTheme(themeId);
-                }
-        );
+    override suspend fun deleteTheme(themeId: Long): Boolean {
+        if (
+            mQPacksRepository.getQPacksFromTheme(themeId).size > 0 ||
+            mThemesRepository.getChildThemes(themeId).size > 0
+        ) {
+            return false
+        }
+        return mThemesRepository.deleteTheme(themeId)
     }
 
-    @Override
-    public Single<ThemeEntity> getTheme(Long themeId) {
-        return mThemesRepository.getThemeRx(themeId);
+    override suspend fun getTheme(themeId: Long): ThemeEntity? {
+        return mThemesRepository.getTheme(themeId)
     }
 
-    @Override
-    public Flowable<List<ThemeEntity>> getChildThemesRx(Long themeId) {
-        return mThemesRepository.getChildThemesRx(themeId);
+    override fun getChildThemesAsFlow(themeId: Long): Flow<List<ThemeEntity>> {
+        return mThemesRepository.getChildThemesAsFlow(themeId)
     }
 
-    @Override
-    public Flowable<List<QPackEntity>> getChildQPacksRx(Long themeId) {
-        return mQPacksRepository.getQPacksFromThemeRx(themeId);
+    override fun getChildQPacksAsFlow(themeId: Long): Flow<List<QPackEntity>> {
+        return mQPacksRepository.getQPacksFromThemeAsFlow(themeId)
     }
 
-    @Override
-    public Flowable<List<QPackEntity>> getAllQPacksByLastViewDateAsc() {
-        return mQPacksRepository.getAllQPacksByLastViewDateAsc();
+    override fun getAllQPacksByLastViewDateAscAsFlow(
+        searchString: String?,
+        onlyFavorites: Boolean
+    ): Flow<List<QPackEntity>> {
+        return if (searchString.isNullOrBlank()) {
+            mQPacksRepository.getAllQPacksByLastViewDateAscAsFlow(onlyFavorites = onlyFavorites)
+        } else {
+            mQPacksRepository.getAllQPacksByLastViewDateAscFilteredAsFlow(searchString, onlyFavorites = onlyFavorites)
+        }
     }
 
-    @Override
-    public Flowable<List<QPackEntity>> getAllQPacksByCreationDateDesc() {
-        return mQPacksRepository.getAllQPacksByCreationDateDesc();
+    override fun getAllQPacksByCreationDateDescAsFlow(
+        searchString: String?,
+        onlyFavorites: Boolean
+    ): Flow<List<QPackEntity>> {
+        return if (searchString.isNullOrBlank()) {
+            mQPacksRepository.getAllQPacksByCreationDateDescAsFlow(onlyFavorites = onlyFavorites)
+        } else {
+            mQPacksRepository.getAllQPacksByCreationDateDescFilteredAsFlow(searchString, onlyFavorites = onlyFavorites)
+        }
     }
 
-    @Override
-    public Completable addFakeCard(Long qPackId) {
+    override suspend fun getQPacksByIds(ids: List<Long>): List<QPackEntity> {
+        return mQPacksRepository.getQPacksByIds(ids)
+    }
 
-        return Completable.fromCallable(() -> {
-
-            int num = new Random().nextInt(10000);
-
-            CardEntity card = CardEntity.Companion.initNew(
-                    qPackId, "fake question " + num, "fake answer " + num, "comment"
-            );
-            mCardsRepository.addCard(card);
-            return true;
-        });
+    override suspend fun addFakeCard(qPackId: Long) {
+        val num = Random().nextInt(10000)
+        val card = initNew(
+            id = 0L,
+            qPackId = qPackId,
+            question = "fake question $num",
+            answer = "fake answer $num",
+            aImages = listOf(),
+            comment = "comment",
+            favorite = 0
+        )
+        mCardsRepository.addCard(card)
     }
 }

@@ -12,11 +12,7 @@ public enum CourseType {
     // курс, для новодобавленных карточек, догоняет обычный
     SECONDARY(2),
     // дополнительное повторение, заланированное по желанию пользователя
-    ADDITIONAL(3),
-
-    // временный курс для служебных целей, не видимый пользователю
-    TEMPORARY(4);
-
+    ADDITIONAL(3);
 
     private static final Map<Integer, CourseType> sIdToEnumMap = new HashMap();
 

@@ -5,14 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.progressindicator.ProgressIndicator
+
+    <!--ProgressIndicator
         android:id="@+id/progress_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:indicatorType="linear"
         android:indeterminate="false"
         app:layout_constraintBottom_toBottomOf="parent"
-        />
+        /-->
 
     <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -21,7 +22,6 @@
         android:id="@+id/fragment_cont"
 
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/progress_indicator"
         />
 
 

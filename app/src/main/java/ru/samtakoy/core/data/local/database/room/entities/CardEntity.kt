@@ -5,7 +5,6 @@ import ru.samtakoy.core.data.local.database.room.converters.DateLongConverter
 import ru.samtakoy.core.data.local.database.room.converters.ImageListConverter
 import ru.samtakoy.core.data.local.database.room.entities.CardEntity.Companion._qpack_id
 import java.util.*
-import kotlin.collections.ArrayList
 
 @Entity(tableName = CardEntity.table,
         foreignKeys = [
@@ -16,32 +15,52 @@ import kotlin.collections.ArrayList
                     onDelete = ForeignKey.RESTRICT)
         ])
 //@TypeConverters(ImageListConverter::class, DateLongConverter::class)
-class CardEntity(
+data class CardEntity(
 
-        @PrimaryKey(autoGenerate = true)
-        @ColumnInfo(name = CardEntity._id) public var id: Long,
-        @ColumnInfo(name = CardEntity._qpack_id, index = true) var qPackId: Long,
-        @ColumnInfo(name = CardEntity._question) var question: String,
-        @ColumnInfo(name = CardEntity._answer) var answer: String,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = _id)
+    val id: Long,
+    @ColumnInfo(name = _qpack_id, index = true)
+    val qPackId: Long,
+    @ColumnInfo(name = _question)
+    val question: String,
+    @ColumnInfo(name = _answer)
+    val answer: String,
 
-        @field:TypeConverters(ImageListConverter::class)
-        @ColumnInfo(name = CardEntity._aimages)
-        var aImages: List<String>,
-        @ColumnInfo(name = CardEntity._comment) var comment: String,
-        @ColumnInfo(name = CardEntity._views) var views: Int,
-        @ColumnInfo(name = CardEntity._errors) var errors: Int,
-        @ColumnInfo(name = CardEntity._last_good_views) var lastGoodViews: Int,
-        @ColumnInfo(name = CardEntity._last_errors) var lastErros: Int,
-
-        @ColumnInfo(name = CardEntity._last_view_date)
-        @field:TypeConverters(DateLongConverter::class)
-        var lastViewDate: Date
+    @field:TypeConverters(ImageListConverter::class)
+    @ColumnInfo(name = _aimages)
+    val aImages: List<String>,
+    @ColumnInfo(name = _comment)
+    val comment: String,
+    @ColumnInfo(name = _views)
+    val views: Int,
+    @ColumnInfo(name = _errors)
+    val errors: Int,
+    @ColumnInfo(name = _last_good_views)
+    val lastGoodViews: Int,
+    @ColumnInfo(name = _last_errors)
+    val lastErros: Int,
+    @ColumnInfo(name = _last_view_date)
+    @field:TypeConverters(DateLongConverter::class)
+    val lastViewDate: Date,
+    @ColumnInfo(name = _favorite, defaultValue = "0")
+    val favorite: Int
 
 ) {
 
     constructor() : this(
-            0L, 0L, "", "", emptyList<String>(), "",
-            0, 0, 0, 0, Date(0)
+        id = 0L,
+        qPackId = 0L,
+        question = "",
+        answer = "",
+        aImages = emptyList<String>(),
+        comment = "",
+        views = 0,
+        errors = 0,
+        lastGoodViews = 0,
+        lastErros = 0,
+        lastViewDate = Date(0),
+        favorite = 0
     )
 
     companion object {
@@ -58,12 +77,31 @@ class CardEntity(
         const val _last_good_views = "last_good_views"
         const val _last_errors = "last_errors"
         const val _last_view_date = "last_view_date"
+        const val _favorite = "favorite"
 
-        fun initNew(qPackId: Long, question: String, answer: String, comment: String): CardEntity {
+        fun initNew(
+            id: Long,
+            qPackId: Long,
+            question: String,
+            answer: String,
+            aImages: List<String>,
+            comment: String,
+            favorite: Int = 0
+        ): CardEntity {
 
             return CardEntity(
-                    0L, qPackId, question, answer, ArrayList<String>(), comment,
-                    0, 0, 0, 0, Date(0)
+                id = id,
+                qPackId = qPackId,
+                question = question,
+                answer = answer,
+                aImages = aImages,
+                comment = comment,
+                views = 0,
+                errors = 0,
+                lastGoodViews = 0,
+                lastErros = 0,
+                lastViewDate = Date(0),
+                favorite = favorite
             )
         }
 

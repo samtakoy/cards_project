@@ -3,6 +3,7 @@ package ru.samtakoy.core.data.local.database.room.dao
 import androidx.room.*
 import io.reactivex.Flowable
 import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 import ru.samtakoy.core.data.local.database.room.converters.CourseTypeConverter
 import ru.samtakoy.core.data.local.database.room.converters.DateLongConverter
 import ru.samtakoy.core.data.local.database.room.converters.LearnCourseModeConverter
@@ -19,10 +20,16 @@ import java.util.*
 interface LearnCourseDao {
 
     @Query("SELECT * FROM $table WHERE $_id=:id")
-    fun getLearnCourse(id: Long): LearnCourseEntity
+    fun getLearnCourseSync(id: Long): LearnCourseEntity?
 
     @Query("SELECT * FROM $table WHERE $_id=:id")
-    fun getLearnCourseRx(id: Long): Single<LearnCourseEntity>
+    suspend fun getLearnCourse(id: Long): LearnCourseEntity?
+
+    @Query("SELECT * FROM $table WHERE $_id=:id")
+    fun getLearnCourseAsFlow(id: Long): Flow<LearnCourseEntity?>
+
+    @Query("SELECT * FROM $table WHERE $_id=:id")
+    fun getLearnCourseFlowableRx(id: Long): Flowable<LearnCourseEntity>
 
     @Query("SELECT * FROM $table WHERE $_mode = :modeId")
     fun getLearnCourseByMode(modeId: Int): LearnCourseEntity?
@@ -31,22 +38,25 @@ interface LearnCourseDao {
     fun addLearnCourse(course: LearnCourseEntity): Long
 
     @Update
-    fun updateCourse(course: LearnCourseEntity): Int
+    suspend fun updateCourse(course: LearnCourseEntity): Int
 
     @Query("DELETE FROM $table WHERE $_id=:id")
-    fun deleteCourseById(id: Long): Int
+    suspend fun deleteCourseById(id: Long): Int
 
     @Query("DELETE FROM $table WHERE $_qpack_id=:qPackId")
-    fun deleteQPackCourses(qPackId: Long)
+    suspend fun deleteQPackCourses(qPackId: Long)
 
     @Query("SELECT * FROM $table")
     @TypeConverters(CourseTypeConverter::class)
-    //fun getAllCoursesExcept(courseType: CourseType): Flowable<List<LearnCourseEntity>>
-    fun getAllCourses(): Flowable<List<LearnCourseEntity>>
+    fun getAllCoursesRx(): Flowable<List<LearnCourseEntity>>
 
     @Query("SELECT * FROM $table")
     @TypeConverters(CourseTypeConverter::class)
-    fun getAllCoursesSingle(): Single<List<LearnCourseEntity>>
+    fun getAllCoursesAsFlow(): Flow<List<LearnCourseEntity>>
+
+    @Query("SELECT * FROM $table")
+    @TypeConverters(CourseTypeConverter::class)
+    suspend fun getAllCourses(): List<LearnCourseEntity>
 
     @Query("SELECT * FROM $table WHERE $_mode IN (:modes) ")
     @TypeConverters(LearnCourseModeConverter::class)
@@ -59,11 +69,20 @@ interface LearnCourseDao {
     @Query("SELECT * FROM $table WHERE $_id IN (:coursesIds) ")
     fun getCoursesByIds(coursesIds: List<Long>): Flowable<List<LearnCourseEntity>>
 
+    @Query("SELECT * FROM $table WHERE $_id IN (:coursesIds) ")
+    fun getCoursesByIdsAsFlow(coursesIds: List<Long>): Flow<List<LearnCourseEntity>>
+
     @Query("SELECT * FROM $table WHERE $_mode IN (:modes) ")
     fun getCoursesByModes(modes: List<Int>): Flowable<List<LearnCourseEntity>>
 
+    @Query("SELECT * FROM $table WHERE $_mode IN (:modes) ")
+    fun getCoursesByModesAsFlow(modes: List<Int>): Flow<List<LearnCourseEntity>>
+
     @Query("SELECT * FROM $table WHERE $_qpack_id = :qPackId ")
-    fun getCoursesForQPack(qPackId: Long): Flowable<List<LearnCourseEntity>>
+    fun getCoursesForQPackRx(qPackId: Long): Flowable<List<LearnCourseEntity>>
+
+    @Query("SELECT * FROM $table WHERE $_qpack_id = :qPackId ")
+    fun getCoursesForQPackAsFlow(qPackId: Long): Flow<List<LearnCourseEntity>>
 
     @Query("SELECT * FROM $table WHERE $_mode = :mode AND $_repeat_date <= :repeatDate ORDER BY $_repeat_date ASC")
     @TypeConverters(LearnCourseModeConverter::class, DateLongConverter::class)

@@ -1,212 +1,187 @@
-package ru.samtakoy.core.domain.impl;
+package ru.samtakoy.core.domain.impl
 
-import org.jetbrains.annotations.NotNull;
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.rx2.rxCompletable
+import kotlinx.coroutines.rx2.rxSingle
+import ru.samtakoy.R
+import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity
+import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity.Companion.initNew
+import ru.samtakoy.core.data.local.database.room.entities.elements.Schedule
+import ru.samtakoy.core.data.local.database.room.entities.getNotInCards
+import ru.samtakoy.core.data.local.database.room.entities.hasNotInCards
+import ru.samtakoy.core.data.local.database.room.entities.hasRealizedSchedule
+import ru.samtakoy.core.data.local.database.room.entities.hasRestSchedule
+import ru.samtakoy.core.data.local.database.room.entities.types.CourseType
+import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode
+import ru.samtakoy.core.data.local.reps.CardsRepository
+import ru.samtakoy.core.data.local.reps.CourseViewRepository
+import ru.samtakoy.core.data.local.reps.CoursesRepository
+import ru.samtakoy.core.domain.CoursesPlanner
+import ru.samtakoy.core.domain.NCoursesInteractor
+import ru.samtakoy.core.domain.utils.LearnCourseCardsIdsPair
+import ru.samtakoy.core.domain.utils.MessageException
+import javax.inject.Inject
 
-import java.util.Date;
-import java.util.List;
+class NCoursesInteractorImpl @Inject constructor(
+    private val mCardsRepository: CardsRepository,
+    private val mCourseViewRepository: CourseViewRepository,
+    private val mCoursesRepository: CoursesRepository,
+    private val mCoursesPlanner: CoursesPlanner
+) : NCoursesInteractor {
 
-import javax.inject.Inject;
-
-import io.reactivex.Completable;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
-import ru.samtakoy.R;
-import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity;
-import ru.samtakoy.core.data.local.database.room.entities.elements.Schedule;
-import ru.samtakoy.core.data.local.database.room.entities.types.CourseType;
-import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode;
-import ru.samtakoy.core.domain.CardsRepository;
-import ru.samtakoy.core.domain.CoursesPlanner;
-import ru.samtakoy.core.domain.CoursesRepository;
-import ru.samtakoy.core.domain.NCoursesInteractor;
-import ru.samtakoy.core.domain.QPacksRepository;
-import ru.samtakoy.core.domain.utils.LearnCourseCardsIdsPair;
-import ru.samtakoy.core.domain.utils.MessageException;
-
-public class NCoursesInteractorImpl implements NCoursesInteractor {
-
-    @Inject
-    CardsRepository mCardsRepository;
-    @Inject
-    QPacksRepository mQPacksRepository;
-    @Inject
-    CoursesRepository mCoursesRepository;
-    @Inject
-    CoursesPlanner mCoursesPlanner;
-
-    private static final Date SOME_DATE = new Date(0);
-
-    @Inject
-    public NCoursesInteractorImpl() {
+    override suspend fun getCourse(courseId: Long): LearnCourseEntity? {
+        return mCoursesRepository.getCourse(courseId)
     }
 
-    @NotNull
-    @Override
-    public Single<LearnCourseEntity> getCourse(Long courseId) {
-        return mCoursesRepository.getCourseRx(courseId);
+    override fun getCourseAsFlow(courseId: Long): Flow<LearnCourseEntity?> {
+        return mCoursesRepository.getCourseAsFlow(courseId)
     }
 
-    @NotNull
-    @Override
-    public Completable deleteCourse(Long courseId) {
-        return mCoursesRepository.deleteCourse(courseId);
+    override fun getCourseFlowableRx(courseId: Long): Flowable<LearnCourseEntity> {
+        return mCoursesRepository.getCourseFlowableRx(courseId)
     }
 
-    @NotNull
-    @Override
-    public Completable deleteQPackCourses(Long qPackId) {
-        return mCoursesRepository.deleteQPackCourses(qPackId);
+    override suspend fun deleteCourse(courseId: Long) {
+        return mCoursesRepository.deleteCourse(courseId)
     }
 
-    @NotNull
-    @Override
-    public Completable onAddCardsToCourseFromQPack(Long qPackId, Long learnCourseId) {
-        return
-                Single.zip(
-                        mCoursesRepository.getCourseRx(learnCourseId),
-                        mCardsRepository.getCardsIdsFromQPack(qPackId),
-                        (learnCourse, cardIds) -> new LearnCourseCardsIdsPair(learnCourse, cardIds)
-                )
-                        .map(courseCardsIdsPair -> validateAddingCardsToCourse(courseCardsIdsPair))
-                        .flatMapCompletable(
-                                courseCardsIdsPair ->
-                                        addCardsToCourseRx(courseCardsIdsPair.getLearnCourse(), courseCardsIdsPair.getNotInCards())
-                        );
+    override suspend fun deleteQPackCourses(qPackId: Long) {
+        return mCoursesRepository.deleteQPackCourses(qPackId)
     }
 
-    private LearnCourseCardsIdsPair validateAddingCardsToCourse(LearnCourseCardsIdsPair learnCourseCardsIdsPair) throws MessageException {
-        if (!learnCourseCardsIdsPair.hasNotInCards()) {
-            throw new MessageException(R.string.msg_there_is_no_new_cards_to_learn);
+    override suspend fun onAddCardsToCourseFromQPack(qPackId: Long, learnCourseId: Long) {
+        val learnCourse = mCoursesRepository.getCourse(learnCourseId)!!
+        val cardIds = mCardsRepository.getCardsIdsFromQPack(qPackId)
+        if (!learnCourse.hasNotInCards(cardIds)) {
+            throw MessageException(R.string.msg_there_is_no_new_cards_to_learn)
         }
-        return learnCourseCardsIdsPair;
-    }
-
-    @NotNull
-    @Override
-    public Completable addCardsToCourseRx(LearnCourseEntity learnCourse, List<Long> newCardsToAdd) {
-        return Completable.fromCallable(() -> {
-
-            // TODO проверить - происходит ли добавление, 2) добавляется ли в список активного курса (в процессе повтороения)
-            learnCourse.addCardsToCourse(newCardsToAdd);
-            mCoursesRepository.updateCourse(learnCourse);
-            return true;
-        }).andThen(
-                // additional
-                // TODO надо спрашивать пользователя отдельно после добавления карточек курс
-                planAdditionalCourseAfterCardsAdding(learnCourse, newCardsToAdd)
-        );
-    }
-
-    @NotNull
-    private Completable planAdditionalCourseAfterCardsAdding(LearnCourseEntity learnCourse, List<Long> newCardsToAdd) {
-        return Completable.fromCallable(
-                () -> {
-                    if (learnCourse.hasRealizedSchedule()) {
-
-                        Schedule addSchedule = learnCourse.getRealizedSchedule().copy();
-                        if (learnCourse.hasRestSchedule()) {
-                            addSchedule.addItem(learnCourse.getRestSchedule().getFirstItem());
-                        }
-                        mCoursesPlanner.planAdditionalCards(learnCourse.getQPackId(), learnCourse.getTitle() + "+", newCardsToAdd, addSchedule);
-                    }
-                    return true;
-                }
-        );
-    }
-
-    @NotNull
-    @Override
-    public Single<LearnCourseEntity> addCourseForQPack(String courseTitle, Long qPackId) {
-        return mCardsRepository.getCardsIdsFromQPack(qPackId)
-                .flatMap(cardIds -> addCourseForQPack(courseTitle, qPackId, cardIds));
-    }
-
-    private Single<LearnCourseEntity> addCourseForQPack(String courseTitle, Long qPackId, List<Long> cardIds) {
-
-        Schedule schedule = Schedule.DEFAULT;
-
-        LearnCourseEntity course = LearnCourseEntity.Companion.initNew(
-                qPackId, courseTitle, LearnCourseMode.PREPARING,
-                cardIds, schedule, null
-        );
-        return mCoursesRepository.addNewCourse(course);
-    }
-
-    @NotNull
-    @Override
-    public Flowable<List<LearnCourseEntity>> getAllCourses() {
-        return mCoursesRepository.getAllCourses();
-    }
-
-    @NotNull
-    @Override
-    public Flowable<List<LearnCourseEntity>> getCoursesByIds(@NotNull Long[] targetCourseIds) {
-        return mCoursesRepository.getCoursesByIds(targetCourseIds);
-    }
-
-    @NotNull
-    @Override
-    public Flowable<List<LearnCourseEntity>> getCoursesByModes(@NotNull List<LearnCourseMode> targetModes) {
-        return mCoursesRepository.getCoursesByModes(targetModes);
-    }
-
-    @NotNull
-    @Override
-    public Flowable<List<LearnCourseEntity>> getCoursesForQPack(@NotNull Long qPackId) {
-        return mCoursesRepository.getCoursesForQPack(qPackId);
-    }
-
-    @NotNull
-    @Override
-    public Completable saveCourse(LearnCourseEntity learnCourse) {
-        return Completable.fromCallable(() -> mCoursesRepository.updateCourse(learnCourse));
-    }
-
-    @NotNull
-    @Override
-    public Single<LearnCourseEntity> addNewCourse(@NotNull LearnCourseEntity newCourse) {
-        return mCoursesRepository.addNewCourse(newCourse);
-    }
-
-    // ---
-
-    @NotNull
-    @Override
-    public Single<LearnCourseEntity> getTempCourseFor(Long qPackId, List<Long> cardIds, boolean shuffleCards) {
-        return Single.fromCallable(
-                () -> mCoursesRepository.getTempCourseFor(qPackId, cardIds, shuffleCards)
-        );
-    }
-
-    @NotNull
-    @Override
-    public Single<LearnCourseEntity> getTempCourseFor_rx(Long qPackId, boolean shuffleCards) {
-        return mCardsRepository
-                .getCardsIdsFromQPack(qPackId)
-                .flatMap(cardIds -> getTempCourseFor(qPackId, cardIds, shuffleCards));
-    }
-
-    @NotNull
-    @Override
-    public Completable finishCourseCardsViewing(LearnCourseEntity course, Date currentTime) {
-        return Completable.fromCallable(
-                () -> {
-                    course.finishLearnOrRepeat(currentTime);
-                    if (course.getCourseType() != CourseType.TEMPORARY) {
-                        mQPacksRepository.updateQPackViewCount(course.getQPackId(), currentTime);
-                    }
-                    return true;
-                }
+        addCardsToCourseRx(
+            learnCourse = learnCourse,
+            newCardsToAdd = learnCourse.getNotInCards(cardIds)
         )
-                .andThen(saveCourse(course))
-                .andThen(Completable.fromCallable(
-                        () -> {
-                            // перепланировать следующий курс
-                            if (course.getCourseType() != CourseType.TEMPORARY) {
-                                mCoursesPlanner.reScheduleLearnCourses();
-                            }
-                            return true;
-                        }
-                ));
+    }
+
+    override fun addCardsToCourseRx(learnCourse: LearnCourseEntity, newCardsToAdd: List<Long>): Completable {
+        return rxCompletable {
+            // TODO проверить - происходит ли добавление, 2) добавляется ли в список активного курса (в процессе повтороения)
+            mCoursesRepository.updateCourse(
+                learnCourse.copy(
+                    cardIds = learnCourse.cardIds + newCardsToAdd
+                )
+            )
+            true
+        }.andThen( // additional
+            // TODO надо спрашивать пользователя отдельно после добавления карточек курс
+            planAdditionalCourseAfterCardsAdding(learnCourse, newCardsToAdd)
+        )
+    }
+
+    private fun planAdditionalCourseAfterCardsAdding(
+        learnCourse: LearnCourseEntity,
+        newCardsToAdd: List<Long?>
+    ): Completable {
+        return Completable.fromCallable {
+            if (learnCourse.hasRealizedSchedule()) {
+                mCoursesPlanner.planAdditionalCards(
+                    learnCourse.qPackId,
+                    learnCourse.title + "+",
+                    newCardsToAdd,
+                    if (learnCourse.hasRestSchedule()) {
+                        Schedule(learnCourse.realizedSchedule.mItems + learnCourse.restSchedule.firstItem!!)
+                    } else {
+                        learnCourse.realizedSchedule
+                    }
+                )
+            }
+            true
+        }
+    }
+
+    override suspend fun addCourseForQPack(courseTitle: String, qPackId: Long): LearnCourseEntity {
+        val cardIds =  mCardsRepository.getCardsIdsFromQPack(qPackId)
+        return addCourseForQPack(
+            courseTitle,
+            qPackId,
+            cardIds
+        )
+    }
+
+    private suspend fun addCourseForQPack(courseTitle: String, qPackId: Long, cardIds: List<Long>): LearnCourseEntity {
+        return mCoursesRepository.addNewCourse(
+            initNew(
+                qPackId,
+                CourseType.PRIMARY,
+                courseTitle,
+                LearnCourseMode.PREPARING,
+                cardIds,
+                Schedule.DEFAULT,
+                null
+            )
+        )
+    }
+
+    override fun getAllCoursesRx(): Flowable<List<LearnCourseEntity>> {
+        return mCoursesRepository.getAllCoursesRx()
+    }
+
+    override fun getAllCoursesAsFlow(): Flow<List<LearnCourseEntity>> {
+        return mCoursesRepository.getAllCoursesAsFlow()
+    }
+
+    override fun getCoursesByIds(targetCourseIds: Array<Long>): Flowable<List<LearnCourseEntity>> {
+        return mCoursesRepository.getCoursesByIds(targetCourseIds)
+    }
+
+    override fun getCoursesByIdsAsFlow(targetCourseIds: Array<Long>): Flow<List<LearnCourseEntity>> {
+        return mCoursesRepository.getCoursesByIdsAsFlow(targetCourseIds)
+    }
+
+    override fun getCoursesByModes(targetModes: List<LearnCourseMode>): Flowable<List<LearnCourseEntity>> {
+        return mCoursesRepository.getCoursesByModes(targetModes)
+    }
+
+    override fun getCoursesByModesAsFlow(targetModes: List<LearnCourseMode>): Flow<List<LearnCourseEntity>> {
+        return mCoursesRepository.getCoursesByModesAsFlow(targetModes)
+    }
+
+    override fun getCoursesForQPackRx(qPackId: Long): Flowable<List<LearnCourseEntity>> {
+        return mCoursesRepository.getCoursesForQPackRx(qPackId)
+    }
+
+    override fun getCoursesForQPackAsFlow(qPackId: Long): Flow<List<LearnCourseEntity>> {
+        return mCoursesRepository.getCoursesForQPackAsFlow(qPackId)
+    }
+
+    override suspend fun saveCourse(learnCourse: LearnCourseEntity) {
+        mCoursesRepository.updateCourse(learnCourse)
+    }
+
+    override fun getCourseViewIdRx(learnCourseId: Long): Single<Long> {
+        return rxSingle {
+            mCourseViewRepository.getCourseLastViewId(learnCourseId)!!
+        }
+    }
+
+    override suspend fun getCourseViewId(learnCourseId: Long): Long? {
+        return mCourseViewRepository.getCourseLastViewId(learnCourseId)
+    }
+
+    override fun getCourseLastViewIdAsFlow(learnCourseId: Long): Flow<Long?> {
+        return mCourseViewRepository.getCourseLastViewIdAsFlow(learnCourseId)
+    }
+
+    override suspend fun getCourseIdForViewId(viewId: Long): Long? {
+        return mCourseViewRepository.getCourseIdForViewId(viewId = viewId)
+    }
+
+    override suspend fun addCourseView(courseId: Long, viewId: Long) {
+        mCourseViewRepository.addCourseView(courseId = courseId, viewId = viewId)
+    }
+
+    override suspend fun addNewCourse(newCourse: LearnCourseEntity): LearnCourseEntity {
+        return mCoursesRepository.addNewCourse(newCourse)
     }
 }

@@ -1,60 +1,56 @@
-package ru.samtakoy.core.domain;
+package ru.samtakoy.core.domain
 
-import org.jetbrains.annotations.NotNull;
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
+import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity
+import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode
 
-import java.util.Date;
-import java.util.List;
+interface NCoursesInteractor {
+    suspend fun getCourse(courseId: Long): LearnCourseEntity?
 
-import io.reactivex.Completable;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
-import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity;
-import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode;
+    fun getCourseAsFlow(courseId: Long): Flow<LearnCourseEntity?>
 
-public interface NCoursesInteractor {
+    fun getCourseFlowableRx(courseId: Long): Flowable<LearnCourseEntity>
 
-    @NotNull
-    Single<LearnCourseEntity> getCourse(@NotNull Long courseId);
+    suspend fun deleteCourse(courseId: Long)
 
-    @NotNull
-    Completable deleteCourse(@NotNull Long courseId);
+    suspend fun deleteQPackCourses(qPackId: Long)
 
-    @NotNull
-    Completable deleteQPackCourses(@NotNull Long qPackId);
+    suspend fun onAddCardsToCourseFromQPack(qPackId: Long, learnCourseId: Long)
 
-    @NotNull
-    Completable onAddCardsToCourseFromQPack(@NotNull Long qPackId, @NotNull Long learnCourseId);
+    fun addCardsToCourseRx(learnCourse: LearnCourseEntity, newCardsToAdd: List<Long>): Completable
 
-    @NotNull
-    Completable addCardsToCourseRx(@NotNull LearnCourseEntity learnCourse, @NotNull List<Long> newCardsToAdd);
+    suspend fun addCourseForQPack(courseTitle: String, qPackId: Long): LearnCourseEntity
 
-    @NotNull
-    Single<LearnCourseEntity> addCourseForQPack(String courseTitle, @NotNull Long qPackId);
+    suspend fun saveCourse(learnCourse: LearnCourseEntity)
 
-    @NotNull
-    Completable saveCourse(@NotNull LearnCourseEntity learnCourse);
+    fun getCourseViewIdRx(learnCourseId: Long): Single<Long>
 
-    @NotNull
-    Single<LearnCourseEntity> addNewCourse(@NotNull LearnCourseEntity newCourse);
+    suspend fun getCourseViewId(learnCourseId: Long): Long?
 
-    @NotNull
-    Flowable<List<LearnCourseEntity>> getAllCourses();
+    fun getCourseLastViewIdAsFlow(learnCourseId: Long): Flow<Long?>
 
-    @NotNull
-    Flowable<List<LearnCourseEntity>> getCoursesByIds(@NotNull Long[] targetCourseIds);
+    suspend fun getCourseIdForViewId(viewId: Long): Long?
 
-    @NotNull
-    Flowable<List<LearnCourseEntity>> getCoursesByModes(@NotNull List<LearnCourseMode> targetModes);
+    suspend fun addCourseView(courseId: Long, viewId: Long)
 
-    @NotNull
-    Flowable<List<LearnCourseEntity>> getCoursesForQPack(@NotNull Long qPackId);
+    suspend fun addNewCourse(newCourse: LearnCourseEntity): LearnCourseEntity
 
-    @NotNull
-    Single<LearnCourseEntity> getTempCourseFor(@NotNull Long qPackId, @NotNull List<Long> cardIds, boolean shuffleCards);
+    fun getAllCoursesRx(): Flowable<List<LearnCourseEntity>>
 
-    @NotNull
-    Single<LearnCourseEntity> getTempCourseFor_rx(@NotNull Long qPackId, boolean shuffleCards);
+    fun getAllCoursesAsFlow(): Flow<List<LearnCourseEntity>>
 
-    @NotNull
-    Completable finishCourseCardsViewing(@NotNull LearnCourseEntity course, @NotNull Date currentTime);
+    fun getCoursesByIds(targetCourseIds: Array<Long>): Flowable<List<LearnCourseEntity>>
+
+    fun getCoursesByIdsAsFlow(targetCourseIds: Array<Long>): Flow<List<LearnCourseEntity>>
+
+    fun getCoursesByModes(targetModes: List<LearnCourseMode>): Flowable<List<LearnCourseEntity>>
+
+    fun getCoursesByModesAsFlow(targetModes: List<LearnCourseMode>): Flow<List<LearnCourseEntity>>
+
+    fun getCoursesForQPackRx(qPackId: Long): Flowable<List<LearnCourseEntity>>
+
+    fun getCoursesForQPackAsFlow(qPackId: Long): Flow<List<LearnCourseEntity>>
 }

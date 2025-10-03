@@ -1,0 +1,129 @@
+[versions]
+kotlin_version="2.2.20"
+kotlin_coroutines_version="1.9.0"
+ksp_version="2.2.0-2.0.2"
+dagger_version="2.57.1"
+nav_version="2.5.2"
+agp_version="8.9.2"
+room_version="2.7.2"
+work_version="2.10.2"
+compose_bom_version="2025.06.01"
+
+[libraries]
+androidx-appcompat = "androidx.appcompat:appcompat:1.7.1"
+androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.2.1"
+androidx-recyclerview = "androidx.recyclerview:recyclerview:1.4.0"
+androidx-preference = "androidx.preference:preference-ktx:1.2.1"
+
+androidx-core-ktx = "androidx.core:core-ktx:1.16.0"
+
+# (Java only)
+androidx-work = { group = "androidx.work", name = "work-runtime", version.ref = "work_version" }
+
+# navigation
+androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "nav_version" }
+androidx-navigation-ui = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "nav_version" }
+
+# result api
+androidx-activity-ktx = "androidx.activity:activity-ktx:1.10.1"
+androidx-fragment-ktx = "androidx.fragment:fragment-ktx:1.8.8"
+
+# room
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room_version" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room_version" }
+# optional - Kotlin Extensions and Coroutines support for Room
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room_version" }
+# optional - RxJava support for Room
+androidx-room-rxjava = { group = "androidx.room", name = "room-rxjava2", version.ref = "room_version" }
+
+# Compose
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose_bom_version" }
+androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
+androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-compose-ui-util = { group = "androidx.compose.ui", name = "ui-util" }
+androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose" }
+
+
+# Android misc
+android-support-multidex = "com.android.support:multidex:1.0.3"
+google-android-material = "com.google.android.material:material:1.4.0"
+
+# TODO еще актуально?
+apache-commons = "org.apache.commons:commons-lang3:3.9"
+
+# kotlinx
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlin_coroutines_version" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlin_coroutines_version" }
+kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.3.3"
+kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
+
+# Stetho core
+facebook-stetho = "com.facebook.stetho:stetho:1.5.1"
+
+# rxjava
+reactivex-rxjava = "io.reactivex.rxjava2:rxjava:2.2.17"
+reactivex-rxjava-rxandroid = "io.reactivex.rxjava2:rxandroid:2.1.1"
+reactivex-rxjava-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.10.2"
+
+# log
+jakewharton-timber = "com.jakewharton.timber:timber:5.0.1"
+
+# dagger
+google-dagger = { group = "com.google.dagger", name = "dagger-android", version.ref = "dagger_version" }
+google-dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger_version" }
+
+# retrofit
+squareup-retrofit = "com.squareup.retrofit2:retrofit:2.9.0"
+squareup-retrofit-converter-gson = "com.squareup.retrofit2:converter-gson:2.9.0"
+squareup-okhttp = "com.squareup.okhttp3:okhttp:4.12.0"
+squareup-okhttp-logging-interceptor = "com.squareup.okhttp:logging-interceptor:2.6.0"
+squareup-retrofit-adapter-rxjava = "com.squareup.retrofit2:adapter-rxjava2:2.4.0"
+
+
+[plugins]
+# androidApplication = { id = "com.android.application", version.ref = "agp" }
+# jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-application = { id = "com.android.application", version.ref = "agp_version" }
+kotlin-gradle = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin_version" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin_version" }
+androidx-navigation-safeargs = { id="androidx.navigation.safeargs", version.ref="nav_version" }
+#kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin_version" }
+# TODO после выпила Java
+# androidx.navigation.safeargs.kotlin
+
+[bundles]
+room = [
+    "androidx-room-runtime",
+    "androidx-room-ktx",
+    "androidx-room-rxjava"
+]
+compose = [
+    "androidx-compose-bom",
+    "androidx-compose-runtime",
+    "androidx-compose-foundation",
+    "androidx-compose-ui",
+    "androidx-compose-ui-util",
+    "androidx-compose-ui-graphics",
+    "androidx-compose-ui-tooling",
+    "androidx-compose-ui-tooling-preview",
+    "androidx-compose-material3",
+    "androidx-lifecycle-runtime-compose"
+]
+kotlinx = [
+    "kotlinx-coroutines-core",
+    "kotlinx-coroutines-android",
+    "kotlinx-datetime",
+    "kotlinx-collections-immutable"
+]
+squareup = [
+    "squareup-retrofit",
+    "squareup-retrofit-converter-gson",
+    "squareup-okhttp",
+    "squareup-okhttp-logging-interceptor",
+    "squareup-retrofit-adapter-rxjava"
+]

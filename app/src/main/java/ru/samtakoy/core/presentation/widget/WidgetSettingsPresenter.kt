@@ -1,12 +1,6 @@
 package ru.samtakoy.core.presentation.widget
 
-import moxy.InjectViewState
-import ru.samtakoy.core.data.local.database.room.entities.QPackEntity
-import ru.samtakoy.core.domain.CardsInteractor
-import ru.samtakoy.core.presentation.log.MyLog
-import ru.samtakoy.core.presentation.qpacks.QPacksListPresenter
-import javax.inject.Inject
-
+/* TODO
 @InjectViewState
 class WidgetSettingsPresenter(
     private val widgetId: Int,
@@ -27,4 +21,4 @@ class WidgetSettingsPresenter(
     override fun onUiPackClick(qPack: QPackEntity?) {
         // todo
     }
-}
+}*/

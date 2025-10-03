@@ -5,10 +5,11 @@
     <string name="btn_ok">OK</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_save">Сохранить</string>
-    <string name="confirm_dialog_title">?</string>
+    <string name="confirm_dialog_title">\?</string>
 
 
-    <string name="db_request_err_message">Ощибка при запросе к базе данных</string>
+    <string name="db_request_err_message">Ошибка при запросе к базе данных</string>
+    <string name="common_err_message">Что-то пошло не так</string>
 
     <string name="fragment_themes_menu_item_add">add</string>
     <string name="fragment_themes_menu_item_import_cards">import</string>
@@ -43,6 +44,7 @@
     <string name="fragment_themes_list_cant_open_file_msg">File open error</string>
     <string name="fragment_themes_list_cant_save_file_msg">File save error</string>
     <string name="fragment_themes_list_cant_send_file_msg">File sending error</string>
+    <string name="fragment_themes_list_cant_delete_theme_msg">Theme deleting error</string>
     <!--string name="fragment_themes_list_cant_save_file_msg2">File save error 2</string-->
     <string name="fragment_themes_list_cards_export_ok">File export is successful</string>
     <string name="fragment_themes_list_cards_cards_loading_error">Cards loading error</string>
@@ -60,11 +62,13 @@
     <string name="msg_there_is_no_cards_in_pack">Нет ни одной карточки в наборе</string>
     <string name="msg_there_is_no_new_cards_to_learn">Нет новых карточек для изучения</string>
     <string name="qpack_btn_view_cards">view cards</string>
+    <string name="qpack_btn_view_uncompleted">view uncompleted: %1$s</string>
     <string name="qpack_btn_add_to_new_course">a new course</string>
     <string name="qpack_btn_add_to_course">add to course</string>
     <string name="qpack_btn_view_courses">view courses</string>
     <string name="qpack_menu_delete">удалить</string>
-    <string name="qpack_cards_count">Карточек: {0}</string>
+    <string name="qpack_cards_count">Карточек: $s</string>
+    <string name="qpack_favorites_box">Важно</string>
 
     <string-array name="qpack_viewing_types">
         <item>Карточки произволньно</item>
@@ -76,6 +80,8 @@
     <string name="cards_view_no_course_msg">Some error</string>
     <string name="cards_view_some_err_msg">Some error</string>
     <string name="cards_view_no_cards_msg">Empty pack</string>
+
+    <string name="cards_view_favorite_box">Важно</string>
 
 
     <string name="cards_view_previous_btn">prev</string>
@@ -91,6 +97,19 @@
     <string name="cards_view_res_schedule_text">repeat error cards after:</string>
     <string name="cards_view_res_schedule_none">(=none)</string>
 
+    <!-- favorites -->
+    <string name="favorites_view_all_cards_button">все избранные карточки</string>
+    <string name="favorites_view_all_cards_button_arg">все избранные карточки (%s)</string>
+    <string name="favorites_view_from_packs_button">избранные из наборов</string>
+
+    <!-- views history -->
+    <string name="views_history_empty_theme_title">..</string>
+    <string name="views_history_empty_viewed_count">Просмотрено: %1$s/%2$s</string>
+    <string name="views_history_empty_errors_count">Ошибок: %s</string>
+
+    <!-- packs with favorite cards -->
+    <string name="qpacks_with_favs_action_button_title">Смотреть</string>
+    <string name="qpacks_with_favs_no_selected_packs">Не выбрано ни одного набора</string>
 
     <string name="schedule_edit_title">Schedule:</string>
     <string name="schedule_none">--</string>
@@ -172,6 +191,9 @@
 
     <string name="main_drawer_themes">по темам</string>
     <string name="main_drawer_qpacks">списком</string>
+    <string name="main_drawer_favorites">избранные карточки</string>
+    <string name="main_drawer_views_history">история просмотров</string>
+    <string name="main_drawer_qpacks_selection">выбор из наборов</string>
     <string name="main_drawer_courses">расписания</string>
     <string name="main_drawer_settings">настройки</string>
 
@@ -188,6 +210,8 @@
     <string name="qpacks_menu_item_by_last_view_date">давно просмотренные</string>
     <string name="qpacks_menu_item_by_creation_date">недавно созданные</string>
     <string name="qpacks_request_error">Ошибка при запросе списка</string>
+    <string name="qpacks_search_hint">Поиск</string>
+    <string name="qpacks_favorites_check_box_title">Избранные</string>
 
 
 </resources>

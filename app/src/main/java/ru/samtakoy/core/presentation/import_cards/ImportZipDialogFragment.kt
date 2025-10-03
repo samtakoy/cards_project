@@ -1,86 +1,68 @@
-package ru.samtakoy.core.presentation.import_cards;
+package ru.samtakoy.core.presentation.import_cards
 
-import android.net.Uri;
-import android.os.Bundle;
+import android.net.Uri
+import android.os.Bundle
+import io.reactivex.Completable
+import kotlinx.coroutines.rx2.await
+import ru.samtakoy.R
+import ru.samtakoy.core.app.di.Di
+import ru.samtakoy.core.app.some.Resources
+import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogFragment
+import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogPresenter.IProgressWorker
+import ru.samtakoy.features.import_export.ImportApi
+import ru.samtakoy.features.import_export.utils.ImportCardsOpts
+import javax.inject.Inject
 
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-import org.jetbrains.annotations.NotNull;
-
-import javax.inject.Inject;
-
-import io.reactivex.Completable;
-import ru.samtakoy.R;
-import ru.samtakoy.core.app.di.Di;
-import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogFragment;
-import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogPresenter;
-import ru.samtakoy.features.import_export.ImportApi;
-import ru.samtakoy.features.import_export.utils.ImportCardsOpts;
-
-public class ImportZipDialogFragment extends ProgressDialogFragment {
-
-
-    public static final String TAG = "ImportZipDialogFragment";
-
-    private static final String ARG_FILE_URI = "ARG_FILE_URI";
-    private static final String ARG_OPTS = "ARG_OPTS";
-
-
-
-    public static ImportZipDialogFragment newFragment(
-            Uri selectedFileUri,
-            ImportCardsOpts opts
-    ){
-        ImportZipDialogFragment result = new ImportZipDialogFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_FILE_URI, selectedFileUri);
-        args.putSerializable(ARG_OPTS, opts);
-        result.setArguments(args);
-        return result;
-    }
+class ImportZipDialogFragment : ProgressDialogFragment() {
 
     @Inject
-    ImportApi mImportApi;
+    internal lateinit var mImportApi: ImportApi
 
-    // TODO во все прогресс диалоги делаем инжект, ради инжекта presenter родительского класса, что неочевидно
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        Di.appComponent.inject(this);
-        super.onCreate(savedInstanceState);
+    @Inject
+    internal lateinit var mResources: Resources
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Di.appComponent.inject(this)
+        super.onCreate(savedInstanceState)
     }
 
     // --
+    override fun createWorkerImpl(): IProgressWorker {
+        val args = requireArguments()
+        val selectedFileUri = args.getParcelable<Uri>(ARG_FILE_URI)!!
+        val opts = (args.getSerializable(ARG_OPTS)) as ImportCardsOpts
 
-    @Override
-    protected ProgressDialogPresenter.WorkerImpl createWorkerImpl() {
-
-        Bundle args = getArguments();
-        Uri selectedFileUri = args.getParcelable(ARG_FILE_URI);
-        ImportCardsOpts opts = (ImportCardsOpts) (args.getSerializable(ARG_OPTS));
-
-        return new ProgressDialogPresenter.WorkerImpl() {
-            @NotNull
-            @Override
-            public Completable createObservable() {
-                return mImportApi.batchUpdateFromZip(selectedFileUri, opts);
+        return object : IProgressWorker {
+            override suspend fun doWork() {
+                mImportApi.batchUpdateFromZip(selectedFileUri, opts).await()
             }
 
-            @Override
-            public int getTitleTextId() {
-                return R.string.fragment_dialog_pack_import_title;
+            override fun getTitle(): String {
+                return mResources.getString(R.string.fragment_dialog_pack_import_title)
             }
 
-            @Override
-            public int getErrorTextId() {
-                return R.string.fragment_dialog_pack_import_error_msg;
+            override fun getErrorText(): String {
+                return mResources.getString(R.string.fragment_dialog_pack_import_error_msg)
             }
+        }
+    } // --
 
-            @Override
-            public void onComplete() {
-            }
-        };
+    companion object {
+        const val TAG: String = "ImportZipDialogFragment"
+
+        private const val ARG_FILE_URI = "ARG_FILE_URI"
+        private const val ARG_OPTS = "ARG_OPTS"
+
+        fun newFragment(
+            selectedFileUri: Uri,
+            opts: ImportCardsOpts
+        ): ImportZipDialogFragment {
+            val result = ImportZipDialogFragment()
+            val args = Bundle()
+            args.putParcelable(ARG_FILE_URI, selectedFileUri)
+            args.putSerializable(ARG_OPTS, opts)
+            result.setArguments(args)
+            return result
+        }
     }
-
-    // --
 }

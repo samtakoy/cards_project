@@ -24,7 +24,7 @@ import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity;
 import ru.samtakoy.core.data.local.database.room.entities.elements.ScheduleTimeUnit;
 import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode;
 import ru.samtakoy.core.data.local.preferences.AppPreferences;
-import ru.samtakoy.core.domain.CoursesRepository;
+import ru.samtakoy.core.data.local.reps.CoursesRepository;
 import ru.samtakoy.features.notifications.NotificationsPlannerService;
 
 import static ru.samtakoy.features.notifications.NotificationsConst.NOTIFICATION_ID_UNCOMPLETED_TASKS;

@@ -6,14 +6,14 @@ import androidx.room.Relation
 import ru.samtakoy.core.data.local.database.room.entities.CardEntity
 import ru.samtakoy.core.data.local.database.room.entities.CardTagEntity
 import ru.samtakoy.core.data.local.database.room.entities.TagEntity
+import kotlin.String
 import java.util.*
 
-class CardWithTags(
+data class CardWithTags(
 
         @Embedded
         val card: CardEntity,
         @Relation(
-
                 parentColumn = CardEntity._id,
                 entityColumn = TagEntity._id,
                 associateBy = Junction(
@@ -21,7 +21,7 @@ class CardWithTags(
                         parentColumn = CardTagEntity._card_id,
                         entityColumn = CardTagEntity._tag_id)
         )
-        val tags: MutableList<TagEntity>
+        val tags: List<TagEntity>
 ) {
 
     companion object {
@@ -30,22 +30,26 @@ class CardWithTags(
             return ArrayList<TagEntity>()
         }
 
-        fun initNew(qPackId: Long, question: String, answer: String, comment: String): CardWithTags {
-
+        fun initNew(
+            cardId: Long,
+            qPackId: Long,
+            question: String,
+            answer: String,
+            aImages: List<String>,
+            comment: String,
+            tags: List<TagEntity>
+        ): CardWithTags {
             return CardWithTags(
-                    CardEntity.initNew(qPackId, question, answer, comment),
-                    createEmptyTags()
+                card = CardEntity.initNew(
+                    id = cardId,
+                    qPackId = qPackId,
+                    question = question,
+                    answer = answer,
+                    aImages = aImages,
+                    comment = comment
+                ),
+                tags = tags
             )
-        }
-    }
-
-    fun addTag(tag: TagEntity) {
-        tags.add(tag)
-    }
-
-    fun addTagsFrom(tagList: List<TagEntity>) {
-        for (tag in tagList) {
-            addTag(tag)
         }
     }
 }

@@ -5,56 +5,43 @@ import javax.inject.Singleton;
 
 import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
-import ru.samtakoy.core.data.local.database.room.MyRoomDb;
-import ru.samtakoy.core.data.local.reps.CardsRepositoryImpl;
-import ru.samtakoy.core.data.local.reps.QPacksRepositoryImpl;
-import ru.samtakoy.core.data.local.reps.TagsRepositoryImpl;
-import ru.samtakoy.core.data.local.reps.ThemesRepositoryImpl;
+import ru.samtakoy.core.data.local.reps.impl.CardsRepositoryImpl;
+import ru.samtakoy.core.data.local.reps.impl.QPacksRepositoryImpl;
+import ru.samtakoy.core.data.local.reps.impl.TagsRepositoryImpl;
+import ru.samtakoy.core.data.local.reps.impl.ThemesRepositoryImpl;
 import ru.samtakoy.core.domain.CardsInteractor;
-import ru.samtakoy.core.domain.CardsRepository;
-import ru.samtakoy.core.domain.QPacksRepository;
-import ru.samtakoy.core.domain.TagsRepository;
-import ru.samtakoy.core.domain.ThemesRepository;
+import ru.samtakoy.core.data.local.reps.CardsRepository;
+import ru.samtakoy.core.domain.FavoritesInteractor;
+import ru.samtakoy.core.data.local.reps.QPacksRepository;
+import ru.samtakoy.core.data.local.reps.TagsRepository;
+import ru.samtakoy.core.data.local.reps.ThemesRepository;
 import ru.samtakoy.core.domain.impl.CardsInteractorImpl;
+import ru.samtakoy.core.domain.impl.FavoritesInteractorImpl;
 
-@Module(includes = {AppModule.class})
+@Module
 public abstract class CardsModule {
 
     @Binds
     @Singleton
-    abstract TagsRepository provideTagsRepository(TagsRepositoryImpl impl);
-
-    @Provides
-    @Singleton
-    static CardsRepository provideCardsRepository(MyRoomDb db) {
-        return new CardsRepositoryImpl(db);
-    }
-
-    @Provides
-    @Singleton
-    static ThemesRepository provideThemesRepository(MyRoomDb db) {
-        return new ThemesRepositoryImpl(db);
-    }
-
-    @Provides
-    @Singleton
-    static QPacksRepository provideQPacksRepository(MyRoomDb db) {
-        return new QPacksRepositoryImpl(db);
-    }
+    abstract TagsRepository bindsTagsRepository(TagsRepositoryImpl impl);
 
     @Binds
     @Singleton
+    abstract CardsRepository bindsCardsRepository(CardsRepositoryImpl impl);
+
+    @Binds
+    @Singleton
+    abstract ThemesRepository bindsThemesRepository(ThemesRepositoryImpl impl);
+
+    @Binds
+    @Singleton
+    abstract QPacksRepository bindsQPacksRepository(QPacksRepositoryImpl impl);
+
+    @Binds
     abstract CardsInteractor bindsCardsInteractor(CardsInteractorImpl impl);
 
-    /*
-    static CardsInteractor provideCardsInteractor(
-            Context context, CardsRepository cardsRep, ThemesRepository themesRep,QPacksRepository qPacksRep
-    ) {
-        return new CardsInteractorImpl(
-                context, cardsRep, themesRep, qPacksRep
-        );
-    }*/
+    @Binds
+    abstract FavoritesInteractor bindsFavoritesInteractor(FavoritesInteractorImpl impl);
 
-
+    // Просмотр
 }

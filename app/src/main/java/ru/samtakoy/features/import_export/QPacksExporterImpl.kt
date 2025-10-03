@@ -1,255 +1,188 @@
-package ru.samtakoy.features.import_export;
+package ru.samtakoy.features.import_export
 
-import android.content.Context;
-import android.net.Uri;
+import android.content.Context
+import android.net.Uri
+import androidx.annotation.WorkerThread
+import androidx.core.content.FileProvider
+import ru.samtakoy.core.app.utils.DateUtils
+import ru.samtakoy.core.app.utils.FileUtils
+import ru.samtakoy.core.data.local.database.room.entities.QPackEntity
+import ru.samtakoy.core.data.local.database.room.entities.other.CardWithTags
+import ru.samtakoy.core.data.local.reps.CardsRepository
+import ru.samtakoy.core.data.local.reps.QPacksRepository
+import ru.samtakoy.core.data.local.reps.ThemesRepository
+import ru.samtakoy.core.presentation.log.MyLog.add
+import ru.samtakoy.features.import_export.helpers.QPackExportHelper
+import ru.samtakoy.features.import_export.helpers.SendEmailHelper
+import ru.samtakoy.features.import_export.helpers.ZipHelper
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStreamWriter
+import java.io.Writer
+import java.text.SimpleDateFormat
+import javax.inject.Inject
 
-import androidx.core.content.FileProvider;
+class QPacksExporterImpl @Inject constructor(
+    private val mContext: Context,
+    private val mCardsRepository: CardsRepository,
+    private val mQPacksRepository: QPacksRepository,
+    private val mThemesRepository: ThemesRepository
+) : QPacksExporter {
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.text.SimpleDateFormat;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import io.reactivex.Completable;
-import io.reactivex.Observable;
-import ru.samtakoy.core.app.utils.DateUtils;
-import ru.samtakoy.core.app.utils.FileUtils;
-import ru.samtakoy.core.data.local.database.room.entities.QPackEntity;
-import ru.samtakoy.core.data.local.database.room.entities.ThemeEntity;
-import ru.samtakoy.core.data.local.database.room.entities.other.CardWithTags;
-import ru.samtakoy.core.domain.CardsRepository;
-import ru.samtakoy.core.domain.QPacksRepository;
-import ru.samtakoy.core.domain.ThemesRepository;
-import ru.samtakoy.core.presentation.log.MyLog;
-import ru.samtakoy.features.import_export.helpers.QPackExportHelper;
-import ru.samtakoy.features.import_export.helpers.SendEmailHelper;
-import ru.samtakoy.features.import_export.helpers.ZipHelper;
-
-
-public class QPacksExporterImpl implements QPacksExporter {
-
-
-    private static final String SEND_FOLDER = "_send";
-    private static final String ZIP_FOLDER = "_zip";
-
-    @Inject
-    Context mContext;
-    @Inject
-    CardsRepository mCardsRepository;
-    @Inject
-    QPacksRepository mQPacksRepository;
-    @Inject
-    ThemesRepository mThemesRepository;
-
-    @Inject
-    public QPacksExporterImpl() {
+    @WorkerThread
+    override suspend fun exportQPackToEmail(qPackId: Long) {
+        exportQPackToEmail(
+            qPack = mQPacksRepository.getQPack(qPackId)!!,
+            cards = mCardsRepository.getQPackCardsWithTags(qPackId)
+        )
     }
 
-    private String getExportThemeLocalPath(Long themeId) {
+    @WorkerThread
+    override suspend fun exportQPack(qPack: QPackEntity) {
+        val defaultBaseFolder = mContext.getExternalFilesDir(null)!!.getAbsolutePath()
+        exportQPackToFolder(qPack, defaultBaseFolder)
+    }
 
-        StringBuilder sb = new StringBuilder();
+    @WorkerThread
+    override suspend fun exportAllToEmail() {
+        // with
+        add("__exportAllToEmail__")
+        val exportDirPath: String = recreateTempFolderFile(SEND_FOLDER).getAbsolutePath()
+        exportAllToFolder(exportDirPath)
+        val zipFile = File.createTempFile("all_packs_export", ".zip", recreateTempFolderFile(ZIP_FOLDER))
+        ZipHelper.zipDirectory(File(exportDirPath), zipFile)
+        val fileUri = FileProvider.getUriForFile(mContext, ExportConst.FILE_PROVIDER_AUTHORITY, zipFile)
+        SendEmailHelper.sendFileByEmail(mContext, "all qPacks archive", "", fileUri)
+    }
+
+    @WorkerThread
+    override suspend fun exportAllToFolder(exportDirPath: String) {
+        mQPacksRepository.getAllQPacks().forEach { qPack ->
+            exportQPackToFolder(qPack, exportDirPath)
+        }
+    }
+
+    private suspend fun getExportThemeLocalPath(themeId: Long): String {
+        var themeId = themeId
+        val sb = StringBuilder()
         while (themeId > 0) {
-            ThemeEntity theme = mThemesRepository.getTheme(themeId);
-            sb.insert(0, theme.getTitle());
-            sb.insert(0, "/");
-            themeId = theme.getParentId();
+            val theme = mThemesRepository.getTheme(themeId)!!
+            sb.insert(0, theme.title)
+            sb.insert(0, "/")
+            themeId = theme.parentId
         }
-        sb.insert(0, ExportConst.EXPORT_ROOT_FOLDER);
-        sb.insert(0, "/");
+        sb.insert(0, ExportConst.EXPORT_ROOT_FOLDER)
+        sb.insert(0, "/")
 
-        return sb.toString();
+        return sb.toString()
     }
 
-    public String getExportQPackLocalPath(QPackEntity qPack) {
-        return getExportThemeLocalPath(qPack.getThemeId());
+    suspend fun getExportQPackLocalPath(qPack: QPackEntity): String {
+        return getExportThemeLocalPath(qPack.themeId)
     }
 
-    /*
-    public void exportThemeTree(QPack qPack){
-        String localPath = getExportQPackLocalPath(qPack);
-        validateThemePath(localPath);
-    }/**/
-
-    @NotNull
-    private String validateThemePath(String baseFolder, String localPath) {
-
-        File file = new File(baseFolder, localPath);
-        if(!file.exists()) {
-            file.mkdirs();
+    private fun validateThemePath(baseFolder: String, localPath: String): String {
+        val file = File(baseFolder, localPath)
+        if (!file.exists()) {
+            file.mkdirs()
         }
-
-        /*
-        if(!file.exists()){
-            MyLog.add("-- file not created:"+baseFolder+", "+localPath);
-            return null;
-        }*/
-
-        return file.getAbsolutePath();
+        return file.getAbsolutePath()
     }
 
-
-    public Completable exportQPackToEmailRx(QPackEntity qPack) {
-
-        return mCardsRepository
-                .getQPackCardsWithTagsRx(qPack.getId())
-                .flatMapCompletable(
-                        cardWithTags -> Completable.fromCallable(() -> exportQPackToEmail(qPack, cardWithTags))
-                );
-    }
-
-    @NotNull
-    private Boolean exportQPackToEmail(QPackEntity qPack, List<CardWithTags> cards) {
-        File file;
+    private fun exportQPackToEmail(qPack: QPackEntity, cards: List<CardWithTags>): Boolean {
+        val file: File?
 
         try {
-            file = File.createTempFile("qpack", ".txt", recreateTempFolderFile(SEND_FOLDER));
-            exportQPackToFile(file, qPack, cards);
-            sendQPackFile(FileProvider.getUriForFile(mContext, ExportConst.FILE_PROVIDER_AUTHORITY, file), qPack);
-        } catch (Exception e) {
-            MyLog.add(e.toString());
-            return false;
+            file = File.createTempFile("qpack", ".txt", recreateTempFolderFile(SEND_FOLDER))
+            exportQPackToFile(
+                file = file,
+                qPack = qPack,
+                cards = cards
+            )
+            sendQPackFile(
+                FileProvider.getUriForFile(mContext, ExportConst.FILE_PROVIDER_AUTHORITY, file),
+                qPack
+            )
+        } catch (e: Exception) {
+            add(e.toString())
+            return false
         }
-        return  true;
+        return true
     }
 
-    private String getCurrentTimeString(){
-        SimpleDateFormat fmtOut = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        return fmtOut.format(DateUtils.getCurrentTimeDate());
-    }
+    private val currentTimeString: String
+        get() {
+            val fmtOut = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
+            return fmtOut.format(DateUtils.getCurrentTimeDate())
+        }
 
-    private void sendQPackFile(Uri fileUri, QPackEntity qPack) {
+    private fun sendQPackFile(fileUri: Uri?, qPack: QPackEntity) {
         SendEmailHelper.sendFileByEmail(
-                mContext,
-                "qpack: " + qPack.getTitle() + " (" + getCurrentTimeString() + ")",
-                "desc: " + qPack.getDesc(),
-                fileUri
-        );
+            mContext,
+            "qpack: " + qPack.title + " (" + this.currentTimeString + ")",
+            "desc: " + qPack.desc,
+            fileUri
+        )
     }
 
-    public Completable exportQPack(QPackEntity qPack) {
-        String defaultBaseFolder = mContext.getExternalFilesDir(null).getAbsolutePath();
-        return exportQPackToFolder(qPack, defaultBaseFolder);
-    }
+    private suspend fun exportQPackToFolder(qPack: QPackEntity, baseFolder: String) {
+        add("export qPack: " + qPack.title + ", to folder: " + baseFolder)
 
-    public Completable exportQPackToFolder(QPackEntity qPack, String baseFolder) {
-
-        MyLog.add("export qPack: " + qPack.getTitle() + ", to folder: " + baseFolder);
-
-        String path = validateThemePath(baseFolder, getExportQPackLocalPath(qPack));
+        val path = validateThemePath(baseFolder, getExportQPackLocalPath(qPack))
         // первый вариант макс. просто - в файл export.txt
-        //getFile
-        File file = new File(path, qPack.getExportFileName());
+        val file = File(path, qPack.getExportFileName())
         if (file.exists()) {
-            file.delete();
+            file.delete()
         }
 
-        //List<CardWithTags> cards =
-
-        return mCardsRepository.getQPackCardsWithTagsRx(qPack.getId())
-                .flatMapCompletable(
-                        cardWithTags -> Completable.fromCallable(
-                                () -> exportQPackToFile(file, qPack, cardWithTags)
-                        )
-                );
+        exportQPackToFile(
+            file = file,
+            qPack = qPack,
+            cards = mCardsRepository.getQPackCardsWithTags(qPack.id)
+        )
     }
 
-
-    private boolean exportQPackToFile(File file, QPackEntity qPack, List<CardWithTags> cards) {
-        Writer writer = null;
+    private fun exportQPackToFile(
+        file: File,
+        qPack: QPackEntity,
+        cards: List<CardWithTags>
+    ): Boolean {
+        var writer: Writer? = null
         try {
-            writer = new OutputStreamWriter(new FileOutputStream(file), ExportConst.FILES_CHARSET);
-            QPackExportHelper.export(qPack, cards, writer);
-        } catch (Exception e) {
-            return false;
+            writer = OutputStreamWriter(FileOutputStream(file), ExportConst.FILES_CHARSET)
+            QPackExportHelper.export(qPack, cards, writer)
+        } catch (e: Exception) {
+            return false
         } finally {
             try {
                 if (writer != null) {
-                    writer.flush();
-                    writer.close();
+                    writer.flush()
+                    writer.close()
                 }
-            } catch (Exception e) {
-                MyLog.add(e.toString());
-                return false;
+            } catch (e: Exception) {
+                add(e.toString())
             }
         }
 
-        MyLog.add("exportQPackToFile !OK! qPack: " + qPack.getTitle() + ", to folder: " + file.getAbsolutePath());
-        return true;
+        add("exportQPackToFile !OK! qPack: " + qPack.title + ", to folder: " + file.getAbsolutePath())
+        return true
     }
 
-    private File recreateTempFolderFile(String folderName) throws IOException {
-        File sendTmpDir = mContext.getCacheDir();
-        sendTmpDir = new File(sendTmpDir, folderName);
-        if(sendTmpDir.exists()){
-            FileUtils.deleteDirectoryRecursionJava6(sendTmpDir);
+    @Throws(IOException::class)
+    private fun recreateTempFolderFile(folderName: String): File {
+        var sendTmpDir = mContext.getCacheDir()
+        sendTmpDir = File(sendTmpDir, folderName)
+        if (sendTmpDir.exists()) {
+            FileUtils.deleteDirectoryRecursionJava6(sendTmpDir)
         }
-        sendTmpDir.mkdirs();
-        return sendTmpDir;
+        sendTmpDir.mkdirs()
+        return sendTmpDir
     }
 
-
-    @Override
-    public Completable exportAllToEmail() {
-
-        final String exportDirPath;
-
-        try {
-            exportDirPath = recreateTempFolderFile(SEND_FOLDER).getAbsolutePath();
-        } catch (IOException e) {
-            return Completable.fromCallable(() -> {throw e;});
-        }
-
-        MyLog.add("__exportAllToEmail__, callThread:"+Thread.currentThread().getName());
-
-        Completable zippingAndSending = Completable.fromCallable(
-                () -> {
-
-                    MyLog.add("__exportAllToEmail__, onComplete thread:" + Thread.currentThread().getName());
-
-                    File zipFile = File.createTempFile("all_packs_export", ".zip", recreateTempFolderFile(ZIP_FOLDER));
-                    ZipHelper.zipDirectory(new File(exportDirPath), zipFile);
-                    Uri fileUri = FileProvider.getUriForFile(mContext, ExportConst.FILE_PROVIDER_AUTHORITY, zipFile);
-                    SendEmailHelper.sendFileByEmail(mContext, "all qPacks archive", "", fileUri);
-
-                    return true;
-                }
-        );
-
-        return exportAllToFolder(exportDirPath).andThen(zippingAndSending);
+    companion object {
+        private const val SEND_FOLDER = "_send"
+        private const val ZIP_FOLDER = "_zip"
     }
-
-    @Override
-    public Completable exportAllToFolder(String exportDirPath) {
-
-        return mQPacksRepository
-                .getAllQPacks()
-                .flatMapObservable(list -> Observable.fromIterable(list))
-                .flatMap(
-                        qPack -> exportQPackToFolder(qPack, exportDirPath).toObservable()
-                )
-                /*
-                .map(qPack -> {
-                            if (exportQPackToFolder(qPack, exportDirPath)) {
-                                return qPack;
-                            } else {
-                                MyLog.add("!!!");
-                                throw new Exception("cant Export qPack:" + qPack.getId() + ", " + qPack.getTitle() + ", baseFolder: " + exportDirPath);
-                            }
-                        }
-                )*/
-                .toList()
-                .ignoreElement();
-    }
-
-
-
-
 }
 

@@ -1,168 +1,198 @@
-package ru.samtakoy.core.presentation.cards.answer;
+package ru.samtakoy.core.presentation.cards.answer
 
-import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.os.Bundle
+import android.view.ContextMenu
+import android.view.ContextMenu.ContextMenuInfo
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.CompoundButton
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import ru.samtakoy.R
+import ru.samtakoy.core.app.di.Di
+import ru.samtakoy.core.presentation.base.observe
+import ru.samtakoy.core.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.core.presentation.base.viewmodel.ViewModelOwner
+import ru.samtakoy.core.presentation.cards.CardsViewFragment
+import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModel
+import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModel.Event
+import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModelFactory
+import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModelImpl
+import ru.samtakoy.core.presentation.cards.types.CardViewMode
+import javax.inject.Inject
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+class CardAnswerFragment : Fragment(), ViewModelOwner {
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-
-import moxy.MvpAppCompatFragment;
-import moxy.presenter.InjectPresenter;
-import moxy.presenter.ProvidePresenter;
-import ru.samtakoy.R;
-import ru.samtakoy.core.app.di.Di;
-import ru.samtakoy.core.presentation.cards.types.CardViewMode;
-
-public class CardAnswerFragment extends MvpAppCompatFragment implements CardAnswerView {
-
-    public static final String TAG = "CardAnswerFragment";
-
-
-    private static final String ARG_QPACK_ID = "ARG_QPACK_ID";
-    private static final String ARG_CARD_ID = "ARG_CARD_ID";
-    private static final String ARG_LAST_CARD = "ARG_LAST_CARD";
-    private static final String ARG_VIEW_MODE = "ARG_VIEW_MODE";
-
-    public static CardAnswerFragment newFragment(Long qPackId, Long cardId, boolean lastCard, CardViewMode viewMode){
-        CardAnswerFragment result = new CardAnswerFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_QPACK_ID, qPackId);
-        args.putLong(ARG_CARD_ID, cardId);
-        args.putBoolean(ARG_LAST_CARD, lastCard);
-        args.putSerializable(ARG_VIEW_MODE, viewMode);
-        result.setArguments(args);
-        return result;
-    }
-
-    private TextView mText;
-
-    private Button mBackButton;
-    private Button mWrongButton;
-    private Button mNextCardButton;
-
-    private View mView;
-
-    @InjectPresenter
-    CardAnswerPresenter mPresenter;
     @Inject
-    Provider<CardAnswerPresenter.Factory> presenterFactoryProvider;
+    internal lateinit var viewModelFactory: CardAnswerViewModelFactory.Factory
+    private val viewModel: CardAnswerViewModelImpl by viewModels {
+        viewModelFactory.create(
+            qPackId = requireArguments().getLong(ARG_QPACK_ID, -1),
+            cardId = requireArguments().getLong(ARG_CARD_ID, -1),
+            viewMode = requireArguments().getSerializable(ARG_VIEW_MODE) as CardViewMode
+        )
+    }
+    override fun getViewModel(): AbstractViewModel = viewModel
 
-    @ProvidePresenter
-    CardAnswerPresenter providePresenter() {
-        return presenterFactoryProvider.get().create(
-                getCallbacks(), readQPackId(), readCardId(), readViewMode(), readIsLastCard()
-        );
+    private var mFavoriteCheckBox: CheckBox? = null
+    private var mText: TextView? = null
+    private var mBackButton: Button? = null
+    private var mWrongButton: Button? = null
+    private var mNextCardButton: Button? = null
+    private var mView: View? = null
+    private val mCheckListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+        viewModel.onEvent(Event.FavoriteChange(isChecked = isChecked))
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-
-        Di.appComponent.inject(this);
-        super.onCreate(savedInstanceState);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Di.appComponent.inject(this)
+        super.onCreate(savedInstanceState)
     }
 
-    private Long readCardId(){
-        return getArguments().getLong(ARG_CARD_ID, -1);
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val v = inflater.inflate(R.layout.fragment_card_answer, container, false)
+        mView = v
 
-    private Long readQPackId(){
-        return getArguments().getLong(ARG_QPACK_ID, -1);
-    }
+        mFavoriteCheckBox = v.findViewById(R.id.favorite_check_box)
+        mFavoriteCheckBox?.setOnCheckedChangeListener(mCheckListener)
 
-    private boolean readIsLastCard(){
-        return getArguments().getBoolean(ARG_LAST_CARD);
-    }
-
-    private CardViewMode readViewMode(){
-        return  (CardViewMode) getArguments().getSerializable(ARG_VIEW_MODE);
-    }
-
-    private CardAnswerPresenter.Callbacks getCallbacks(){
-        return (CardAnswerPresenter.Callbacks) getParentFragment();
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v;
-
-        v = inflater.inflate(R.layout.fragment_card_answer, container, false);
-        mView = v;
-
-        mBackButton = v.findViewById(R.id.back_btn);
-        mBackButton.setOnClickListener(view -> mPresenter.onUiBackToQuestion());
-
-        mWrongButton = v.findViewById(R.id.wrong_btn);
-        mWrongButton.setOnClickListener(view -> mPresenter.onUiWrongAnswer());
-
-        mNextCardButton = v.findViewById(R.id.next_card_btn);
-        mNextCardButton.setOnClickListener(view -> mPresenter.onUiNextCard());
-
-        mText = v.findViewById(R.id.text);
-        mText.setLongClickable(true);
-        registerForContextMenu(mView);
-
-        return v;
-    }
-
-    @Override
-    public void onDestroyView() {
-
-        unregisterForContextMenu(mView);
-        mView = null;
-
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
-        getActivity().getMenuInflater().inflate(R.menu.edit_text_context, menu);
-    }
-
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId()){
-            case R.id.menu_item_edit:
-                mPresenter.onUiEditAnswerText();
-                return true;
+        mBackButton = v.findViewById(R.id.back_btn)
+        mBackButton?.setOnClickListener { view: View? ->
+            viewModel.onEvent(Event.BackToQuestionClick)
         }
-        return super.onContextItemSelected(item);
+
+        mWrongButton = v.findViewById(R.id.wrong_btn)
+        mWrongButton?.setOnClickListener { view: View? ->
+            viewModel.onEvent(Event.WrongAnswerClick)
+        }
+
+        mNextCardButton = v.findViewById(R.id.next_card_btn)
+        mNextCardButton?.setOnClickListener { view: View? ->
+            viewModel.onEvent(Event.NextCardClick)
+        }
+
+        mText = v.findViewById(R.id.text)
+        mText?.setLongClickable(true)
+        registerForContextMenu(mView!!)
+
+        return v
     }
 
-    @Override
-    public void setAnswerText(String text) {
-        mText.setText(text);
+    override fun onDestroyView() {
+        unregisterForContextMenu(mView!!)
+        mView = null
+
+        super.onDestroyView()
     }
 
-    @Override
-    public void setBackButtonVisible(boolean visible) {
-        mBackButton.setVisibility(visible ? View.VISIBLE : View.GONE);
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo?) {
+        requireActivity().menuInflater.inflate(R.menu.edit_text_context, menu)
     }
 
-    @Override
-    public void setWrongButtonVisible(boolean visible) {
-        mWrongButton.setVisibility(visible ? View.VISIBLE : View.GONE);
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_item_edit -> {
+                viewModel.onEvent(Event.EditAnswerTextClick)
+                return true
+            }
+        }
+        return super.onContextItemSelected(item)
     }
 
-    @Override
-    public void setNextCardButtonVisible(boolean visible) {
-        mNextCardButton.setVisibility(visible ? View.VISIBLE : View.GONE);
+    override fun onObserveViewModel() {
+        super.onObserveViewModel()
+        viewModel.getViewActionsAsFlow().observe(viewLifecycleOwner, ::onAction)
+        viewModel.getViewStateAsFlow().observe(viewLifecycleOwner, ::onViewState)
     }
 
-    @Override
-    public void showError(int codeResId) {
-        Toast.makeText(getContext(), codeResId, Toast.LENGTH_SHORT).show();
+    private fun onAction(action: CardAnswerViewModel.Action) {
+        when (action) {
+            CardAnswerViewModel.Action.BackToQuestion -> getCallbacks()?.onBackToQuestion()
+            is CardAnswerViewModel.Action.ShowErrorMessage -> showError(action.message)
+            CardAnswerViewModel.Action.StartAnswerTextEdit -> getCallbacks()?.onEditAnswerText()
+            CardAnswerViewModel.Action.ToNextCard -> getCallbacks()?.onNextCard()
+            CardAnswerViewModel.Action.WrongAnswer -> getCallbacks()?.onWrongAnswer()
+        }
     }
 
+    private fun onViewState(state: CardAnswerViewModel.State) {
+        setAnswerText(state.answer.text)
+        setFavorite(state.isFavorite?.isChecked == true)
+        setBackButtonVisible(state.backButton != null)
+        setWrongButtonVisible(state.wrongButton != null)
+        setNextCardButtonVisible(state.nextCardButton != null)
+    }
+
+    private fun setAnswerText(text: String) {
+        mText!!.text = text
+    }
+
+    private fun setFavorite(isChecked: Boolean) {
+        mFavoriteCheckBox?.setOnCheckedChangeListener(null)
+        mFavoriteCheckBox?.isChecked = isChecked
+        mFavoriteCheckBox?.setOnCheckedChangeListener(mCheckListener)
+    }
+
+    private fun setBackButtonVisible(visible: Boolean) {
+        mBackButton!!.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
+    private fun setWrongButtonVisible(visible: Boolean) {
+        mWrongButton!!.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
+    private fun setNextCardButtonVisible(visible: Boolean) {
+        mNextCardButton!!.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun getCallbacks(): CardAnswerPresenter.Callbacks? {
+        return parentFragment as? CardAnswerPresenter.Callbacks
+    }
+
+    companion object {
+        const val TAG: String = "CardAnswerFragment"
+
+        private const val ARG_QPACK_ID = "ARG_QPACK_ID"
+        private const val ARG_CARD_ID = "ARG_CARD_ID"
+        private const val ARG_VIEW_MODE = "ARG_VIEW_MODE"
+
+        @JvmStatic
+        fun newFragment(
+            qPackId: Long?,
+            cardId: Long,
+            cardIndex: Int,
+            cardsCount: Int,
+            viewMode: CardViewMode?
+        ): CardAnswerFragment {
+            val result = CardAnswerFragment()
+            val args = Bundle()
+            args.putSerializable(ARG_QPACK_ID, qPackId)
+            args.putLong(ARG_CARD_ID, cardId)
+            args.putInt(CardsViewFragment.ARG_CARD_INDEX, cardIndex)
+            args.putInt(CardsViewFragment.ARG_CARDS_COUNT, cardsCount)
+            args.putSerializable(ARG_VIEW_MODE, viewMode)
+            result.arguments = args
+            return result
+        }
+
+        @JvmStatic
+        fun getCardIndexArg(fragment: Fragment): Int {
+            return fragment.requireArguments().getInt(CardsViewFragment.ARG_CARD_INDEX, -1)
+        }
+
+        @JvmStatic
+        fun getCardsCountArg(fragment: Fragment): Int {
+            return fragment.requireArguments().getInt(CardsViewFragment.ARG_CARDS_COUNT, 0)
+        }
+    }
 }

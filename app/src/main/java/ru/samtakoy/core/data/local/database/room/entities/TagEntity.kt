@@ -10,7 +10,8 @@ import androidx.room.PrimaryKey
 class TagEntity(
 
         @PrimaryKey(autoGenerate = true)
-        @ColumnInfo(name = TagEntity._id) var id: Long,
+        @ColumnInfo(name = TagEntity._id)
+        var id: Long,
         title: String
 
 ) {
@@ -23,7 +24,7 @@ class TagEntity(
         const val _title = "title"
 
         fun titleToKey(title: String): String {
-            return title.toLowerCase()
+            return title.lowercase()
         }
 
         fun initNew(title: String): TagEntity {
@@ -31,6 +32,7 @@ class TagEntity(
         }
     }
 
+    /** TODO key и titleToKey должны оказаться в маппере и домайн, а отсюда уехать */
     @ColumnInfo(name = TagEntity._title)
     var title: String = title
         set(value) {

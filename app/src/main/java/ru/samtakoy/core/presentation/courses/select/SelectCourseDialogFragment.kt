@@ -1,155 +1,147 @@
-package ru.samtakoy.core.presentation.courses.select;
+package ru.samtakoy.core.presentation.courses.select
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.app.Activity
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.DialogInterface
+import android.content.Intent
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import ru.samtakoy.R
+import ru.samtakoy.core.app.di.Di
+import ru.samtakoy.core.presentation.base.observe
+import ru.samtakoy.core.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.core.presentation.base.viewmodel.ViewModelOwner
+import ru.samtakoy.core.presentation.courses.model.CoursesAdapter
+import ru.samtakoy.core.presentation.courses.model.CoursesAdapter.CourseClickListener
+import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel
+import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel.Action
+import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel.State
+import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModelFactory
+import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModelImpl
+import ru.samtakoy.core.presentation.qpack.info.QPackInfoFragment
+import javax.inject.Inject
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+class SelectCourseDialogFragment : AppCompatDialogFragment(), ViewModelOwner {
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
-
-import moxy.MvpAppCompatDialogFragment;
-import moxy.presenter.InjectPresenter;
-import moxy.presenter.ProvidePresenter;
-import ru.samtakoy.R;
-import ru.samtakoy.core.app.di.Di;
-import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity;
-import ru.samtakoy.core.presentation.courses.list.CoursesAdapter;
-import ru.samtakoy.core.presentation.qpack.QPackInfoFragment;
-
-public class SelectCourseDialogFragment extends MvpAppCompatDialogFragment
-        implements CoursesAdapter.CourseClickListener, SelectCourseView {
-
-    private static final String ARG_TARGET_QPACK_ID = "ARG_TARGET_QPACK_ID";
-
-    public static final String RESULT_EXTRA_COURSE_ID = "RESULT_EXTRA_COURSE_ID";
-
-    public static SelectCourseDialogFragment newFragment(
-            @Nullable Long targetQPackId,
-            @NotNull QPackInfoFragment targetFragment,
-            int requestCode
-    ) {
-        SelectCourseDialogFragment result = new SelectCourseDialogFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_TARGET_QPACK_ID, targetQPackId);
-        result.setArguments(args);
-        result.setTargetFragment(targetFragment, requestCode);
-        return result;
-    }
-
-    private TextView mCoursesIsEmptyLabel;
-    private RecyclerView mCoursesRecycler;
-    private CoursesAdapter mCoursesAdapter;
-
-
-    @InjectPresenter
-    SelectCoursePresenter mPresenter;
     @Inject
-    Provider<SelectCoursePresenter.Factory> mFactoryProvider;
+    internal lateinit var viewModelFactory: SelectCourseViewModelFactory.Factory
+    private val viewModel: SelectCourseViewModelImpl by viewModels {
+        viewModelFactory.create(targetQPackId = requireArguments().getSerializable(ARG_TARGET_QPACK_ID) as? Long)
+    }
+    override fun getViewModel(): AbstractViewModel = viewModel
 
-    @ProvidePresenter
-    SelectCoursePresenter providePresenter() {
-        return mFactoryProvider.get().create(readQPackId());
+    private var mCoursesIsEmptyLabel: TextView? = null
+    private var mCoursesRecycler: RecyclerView? = null
+    private var mCoursesAdapter: CoursesAdapter? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Di.appComponent.inject(this)
+
+        super.onCreate(savedInstanceState)
     }
 
+    private fun initView(v: View) {
+        mCoursesIsEmptyLabel = v.findViewById<TextView>(R.id.courses_is_empty_label)
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+        mCoursesAdapter = CoursesAdapter(
+            clickListener = CourseClickListener {
+                viewModel.onEvent(SelectCourseViewModel.Event.CourseClick(it))
+            }
+        )
 
-        Di.appComponent.inject(this);
-
-        super.onCreate(savedInstanceState);
+        mCoursesRecycler = v.findViewById<RecyclerView>(R.id.courses_list_recycler)
+        mCoursesRecycler!!.setLayoutManager(LinearLayoutManager(getActivity()))
+        mCoursesRecycler!!.setAdapter(mCoursesAdapter)
     }
 
-    private void initView(View v) {
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val v = LayoutInflater.from(getContext()).inflate(R.layout.fragment_courses, null)
+        initView(v)
 
-        mCoursesIsEmptyLabel = v.findViewById(R.id.courses_is_empty_label);
-
-        mCoursesAdapter = new CoursesAdapter(this);
-
-        mCoursesRecycler = v.findViewById(R.id.courses_list_recycler);
-        mCoursesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mCoursesRecycler.setAdapter(mCoursesAdapter);
-
+        return AlertDialog.Builder(getContext())
+            .setTitle(R.string.courses_list_select_title)
+            .setView(v)
+            .setNegativeButton(
+                R.string.btn_cancel,
+                DialogInterface.OnClickListener { dialogInterface: DialogInterface?, i: Int -> exitCanceled() })
+            .create()
     }
 
-    @Nullable
-    private Long readQPackId() {
-        return (Long) getArguments().getSerializable(ARG_TARGET_QPACK_ID);
+    override fun onObserveViewModel() {
+        super.onObserveViewModel()
+        viewModel.getViewActionsAsFlow().observe(viewLifecycleOwner, ::onAction)
+        viewModel.getViewStateAsFlow().observe(viewLifecycleOwner, ::onViewState)
     }
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.fragment_courses, null);
-        initView(v);
-
-        return new AlertDialog.Builder(getContext())
-                .setTitle(R.string.courses_list_select_title)
-                .setView(v)
-                .setNegativeButton(R.string.btn_cancel, (dialogInterface, i) -> exitCanceled())
-                .create();
+    private fun onAction(action: Action) {
+        when (action) {
+            Action.ExitCanceled -> exitCanceled()
+            is Action.ExitOk -> exitOk(action.courseId)
+            is Action.ShowErrorMessage -> showError(action.message)
+        }
     }
 
-    @Override
-    public void showCourses(@NotNull List<LearnCourseEntity> curCourses) {
-        mCoursesAdapter.setCurCourses(curCourses);
-        updateListVisibility(curCourses.size() > 0);
+    private fun onViewState(state: State) {
+        mCoursesAdapter!!.setCurCourses(state.curCourses)
+        updateListVisibility(state.curCourses.isNotEmpty())
     }
 
-    @Override
-    public void showError(int codeResId) {
-        Toast.makeText(getContext(), codeResId, Toast.LENGTH_SHORT).show();
+    private fun showError(message: String) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show()
     }
 
-    private void updateListVisibility(boolean coursesIsVisible) {
+    private fun updateListVisibility(coursesIsVisible: Boolean) {
         if (coursesIsVisible) {
-            mCoursesRecycler.setVisibility(View.VISIBLE);
-            mCoursesIsEmptyLabel.setVisibility(View.GONE);
+            mCoursesRecycler!!.setVisibility(View.VISIBLE)
+            mCoursesIsEmptyLabel!!.setVisibility(View.GONE)
         } else {
-            mCoursesRecycler.setVisibility(View.GONE);
-            mCoursesIsEmptyLabel.setVisibility(View.VISIBLE);
+            mCoursesRecycler!!.setVisibility(View.GONE)
+            mCoursesIsEmptyLabel!!.setVisibility(View.VISIBLE)
         }
     }
 
-    @Override
-    public void exitCanceled() {
+    private fun exitCanceled() {
         if (getTargetFragment() != null) {
-
-            Intent result = new Intent();
-            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, result);
+            val result = Intent()
+            getTargetFragment()!!.onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, result)
         }
-        dismiss();
+        dismiss()
     }
 
-    @Override
-    public void exitOk(long courseId) {
+    private fun exitOk(courseId: Long) {
         if (getTargetFragment() != null) {
-            Intent result = new Intent();
-            result.putExtra(RESULT_EXTRA_COURSE_ID, courseId);
-            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, result);
+            val result = Intent()
+            result.putExtra(RESULT_EXTRA_COURSE_ID, courseId)
+            getTargetFragment()!!.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, result)
         }
 
-        dismiss();
+        dismiss()
     }
 
-    @Override
-    public void onCourseClick(LearnCourseEntity course) {
-        mPresenter.onUiCourseClick(course);
+    companion object {
+        private const val ARG_TARGET_QPACK_ID = "ARG_TARGET_QPACK_ID"
+
+        const val RESULT_EXTRA_COURSE_ID: String = "RESULT_EXTRA_COURSE_ID"
+
+        @JvmStatic fun newFragment(
+            targetQPackId: Long?,
+            targetFragment: QPackInfoFragment,
+            requestCode: Int
+        ): SelectCourseDialogFragment {
+            val result = SelectCourseDialogFragment()
+            val args = Bundle()
+            args.putSerializable(ARG_TARGET_QPACK_ID, targetQPackId)
+            result.setArguments(args)
+            result.setTargetFragment(targetFragment, requestCode)
+            return result
+        }
     }
 }

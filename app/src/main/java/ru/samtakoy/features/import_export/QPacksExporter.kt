@@ -1,18 +1,18 @@
-package ru.samtakoy.features.import_export;
+package ru.samtakoy.features.import_export
 
-import io.reactivex.Completable;
-import ru.samtakoy.core.data.local.database.room.entities.QPackEntity;
+import androidx.annotation.WorkerThread
+import ru.samtakoy.core.data.local.database.room.entities.QPackEntity
 
-public interface QPacksExporter {
+interface QPacksExporter {
+    @WorkerThread
+    suspend fun exportQPackToEmail(qPackId: Long)
 
-    //void exportThemeTree(QPack qPack);
-    Completable exportQPackToEmailRx(QPackEntity qPack);
+    @WorkerThread
+    suspend fun exportQPack(qPack: QPackEntity)
 
-    Completable exportQPack(QPackEntity qPack);
+    @WorkerThread
+    suspend fun exportAllToEmail()
 
-
-    Completable exportAllToEmail();
-
-    Completable exportAllToFolder(String exportDirPath);
-
+    @WorkerThread
+    suspend fun exportAllToFolder(exportDirPath: String)
 }

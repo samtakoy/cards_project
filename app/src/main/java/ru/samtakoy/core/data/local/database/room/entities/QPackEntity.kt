@@ -6,32 +6,42 @@ import ru.samtakoy.core.data.local.database.room.converters.DateLongConverter
 import java.text.ParseException
 import java.text.SimpleDateFormat
 
-private const val DATE_PATTERN = "dd-MM-yyyy HH:mm:ss"
 const val DEF_DATE = "01-01-2000 00:00:00"
-private val DATE_FORMAT = SimpleDateFormat(DATE_PATTERN)
+private val DATE_FORMAT = ru.samtakoy.core.utils.DateUtils.DATE_FORMAT
 
 @Entity(tableName = QPackEntity.table,
         foreignKeys = [
             ForeignKey(
-                    entity = ThemeEntity::class,
-                    parentColumns = ["_id"],
-                    childColumns = ["theme_id"],
-                    onDelete = ForeignKey.RESTRICT)
+                entity = ThemeEntity::class,
+                parentColumns = [QPackEntity._id],
+                childColumns = [QPackEntity._theme_id],
+                onDelete = ForeignKey.RESTRICT)
         ])
 class QPackEntity(
 
-        @PrimaryKey(autoGenerate = true)
-        @ColumnInfo(name = QPackEntity._id) var id: Long,
-        @ColumnInfo(name = QPackEntity._theme_id, index = true) var themeId: Long,
-        @ColumnInfo(name = QPackEntity._path) var path: String,
-        @ColumnInfo(name = QPackEntity._file_name) var fileName: String,
-        @ColumnInfo(name = QPackEntity._title) var title: String,
-        @ColumnInfo(name = QPackEntity._desc) var desc: String,
-        @field:TypeConverters(DateLongConverter::class)
-        @ColumnInfo(name = QPackEntity._creation_date) var creationDate: java.util.Date,
-        @ColumnInfo(name = QPackEntity._view_counter) var viewCount: Int,
-        @field:TypeConverters(DateLongConverter::class)
-        @ColumnInfo(name = QPackEntity._last_view_date) var lastViewDate: java.util.Date
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = _id)
+    val id: Long,
+    @ColumnInfo(name = _theme_id, index = true)
+    val themeId: Long,
+    @ColumnInfo(name = _path)
+    val path: String,
+    @ColumnInfo(name = _file_name)
+    val fileName: String,
+    @ColumnInfo(name = _title)
+    val title: String,
+    @ColumnInfo(name = _desc)
+    val desc: String,
+    @field:TypeConverters(DateLongConverter::class)
+    @ColumnInfo(name = _creation_date)
+    val creationDate: java.util.Date,
+    @ColumnInfo(name = _view_counter)
+    val viewCount: Int,
+    @field:TypeConverters(DateLongConverter::class)
+    @ColumnInfo(name = _last_view_date)
+    val lastViewDate: java.util.Date,
+    @ColumnInfo(name = _favorite, defaultValue = "0")
+    val favorite: Int
 ) {
 
     companion object {
@@ -46,23 +56,10 @@ class QPackEntity(
         const val _creation_date = "creation_date"
         const val _view_counter = "view_counter"
         const val _last_view_date = "last_view_date"
+        const val _favorite = "favorite"
 
-
-        fun initNew(themeId: Long, path: String, fileName: String, title: String, desc: String): QPackEntity {
-            val creationDate: java.util.Date = java.util.Date(DateUtils.getCurrentTimeLong())
-            return QPackEntity(0L, themeId, path, fileName, title, desc, creationDate, 0, creationDate)
-        }
     }
 
-
-    fun parseCreationDateFromString(src: String): Boolean {
-        try {
-            this.creationDate = DATE_FORMAT.parse(src)!!
-        } catch (e: ParseException) {
-            return false
-        }
-        return true
-    }
 
     fun getCreationDateAsString(): String {
         return DATE_FORMAT.format(creationDate)

@@ -5,8 +5,11 @@ import android.content.Context;
 
 import javax.inject.Singleton;
 
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
+import ru.samtakoy.core.app.some.Resources;
+import ru.samtakoy.core.app.some.ResourcesImpl;
 
 
 @Module
@@ -30,4 +33,9 @@ public class AppModule {
         return mContext.getContentResolver();
     }
 
+    @Provides
+    @Singleton
+    public Resources provideResources(ResourcesImpl resources) {
+        return resources;
+    }
 }

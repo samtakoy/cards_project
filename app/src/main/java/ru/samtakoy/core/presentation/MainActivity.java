@@ -20,7 +20,9 @@ import com.google.android.material.navigation.NavigationView;
 
 import ru.samtakoy.R;
 import ru.samtakoy.core.app.di.Di;
+import ru.samtakoy.core.presentation.base.viewmodel.FragmentViewModelLifecycleCallbacks;
 import ru.samtakoy.core.presentation.log.MyLog;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements RouterHolder {
 
@@ -52,6 +54,12 @@ public class MainActivity extends AppCompatActivity implements RouterHolder {
 
         super.onCreate(savedInstanceState);
 
+        // Подписка на данные вью моделей фрагментов
+        getSupportFragmentManager().registerFragmentLifecycleCallbacks(
+            new FragmentViewModelLifecycleCallbacks(),
+            true
+        );
+
         setContentView(R.layout.activity_main);
 
 
@@ -76,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements RouterHolder {
             setupInitialFragment();
         }
 
+        Timber.tag("mytest").e("MainActivity created");
     }
 
     private void setupInitialFragment() {

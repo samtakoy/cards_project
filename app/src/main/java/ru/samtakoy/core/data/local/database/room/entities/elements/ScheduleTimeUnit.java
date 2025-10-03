@@ -6,12 +6,12 @@ import ru.samtakoy.R;
 
 public enum ScheduleTimeUnit {
 
-    MINUTE(Seconds.MINUTE, "min", R.string.time_min, 0x990000),
-    HOUR(Seconds.HOUR, "h", R.string.time_hour, 0x009900),
-    DAY(Seconds.DAY, "d", R.string.time_day, 0x0000999),
-    WEEK(Seconds.WEEK, "w", R.string.time_week, 0x006666),
-    MONTH(Seconds.MONTH, "mon", R.string.time_month, 0x666600),
-    YEAR(Seconds.YEAR, "y", R.string.time_year, 0x660066);
+    MINUTE(Seconds.MINUTE, "min", R.string.time_min),
+    HOUR(Seconds.HOUR, "h", R.string.time_hour),
+    DAY(Seconds.DAY, "d", R.string.time_day),
+    WEEK(Seconds.WEEK, "w", R.string.time_week),
+    MONTH(Seconds.MONTH, "mon", R.string.time_month),
+    YEAR(Seconds.YEAR, "y", R.string.time_year);
 
     private static final HashMap<String, ScheduleTimeUnit> sMapById = new HashMap();
     static {
@@ -22,14 +22,12 @@ public enum ScheduleTimeUnit {
 
     private int mSeconds;
     private String mId;
-    private int mStringsId;
-    private int mColor;
+    private int mStringId;
 
-    ScheduleTimeUnit(int seconds, String id, int stringsId, int color){
+    ScheduleTimeUnit(int seconds, String id, int stringId){
         mSeconds = seconds;
         mId = id;
-        mStringsId = stringsId;
-        mColor = color;
+        mStringId = stringId;
     }
 
     public static ScheduleTimeUnit valueOfId(String s) {
@@ -44,12 +42,9 @@ public enum ScheduleTimeUnit {
         return mId;
     }
 
-    public int getStringsId() {
-        return mStringsId;
-    }
-
-    public int getColor() {
-        return mColor;
+    /** TODO используется для визуального отображения - убрать отсюда */
+    public int getStringId() {
+        return mStringId;
     }
 
     public int getMillis() {

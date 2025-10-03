@@ -6,31 +6,42 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.Single
+import ru.samtakoy.core.app.utils.DateUtils
 import ru.samtakoy.core.data.local.database.room.entities.QPackEntity
 import ru.samtakoy.core.data.local.database.room.entities.TagEntity
 import ru.samtakoy.core.data.local.database.room.entities.ThemeEntity
 import ru.samtakoy.core.data.local.database.room.entities.other.CardIds
 import ru.samtakoy.core.data.local.database.room.entities.other.CardWithTags
-import ru.samtakoy.core.domain.*
+import ru.samtakoy.core.data.local.reps.CardsRepository
+import ru.samtakoy.core.data.local.reps.QPacksRepository
+import ru.samtakoy.core.data.local.reps.TagsRepository
+import ru.samtakoy.core.data.local.reps.ThemesRepository
+import ru.samtakoy.core.domain.CardsInteractor
 import ru.samtakoy.features.import_export.helpers.ZipHelper
-import ru.samtakoy.features.import_export.utils.*
+import ru.samtakoy.features.import_export.utils.FromUriStreamFactory
+import ru.samtakoy.features.import_export.utils.FromZipEntryStreamFactory
+import ru.samtakoy.features.import_export.utils.ImportCardsException
+import ru.samtakoy.features.import_export.utils.ImportCardsOpts
+import ru.samtakoy.features.import_export.utils.StreamFactory
 import ru.samtakoy.features.import_export.utils.cbuild.CBuilderConst
 import ru.samtakoy.features.import_export.utils.cbuild.CardBuilder
 import ru.samtakoy.features.import_export.utils.cbuild.QPackBuilder
+import ru.samtakoy.features.import_export.utils.isPackFile
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.charset.Charset
+import java.util.Date
 import javax.inject.Inject
 
 class ImportApiImpl @Inject constructor(
-        val contentResolver: ContentResolver,
-        val cardsInteractor: CardsInteractor,
-        val tagsRepository: TagsRepository,
-        val cardsRepository: CardsRepository,
-        val qPacksRepository: QPacksRepository,
-        val themesRepository: ThemesRepository
+    val contentResolver: ContentResolver,
+    val cardsInteractor: CardsInteractor,
+    val tagsRepository: TagsRepository,
+    val cardsRepository: CardsRepository,
+    val qPacksRepository: QPacksRepository,
+    val themesRepository: ThemesRepository
         //
 ) : ImportApi {
 
@@ -203,29 +214,33 @@ class ImportApiImpl @Inject constructor(
 
             if (existingCard != null) {
                 // обновить
-                cardsRepository.updateCard(card.card)
+                cardsRepository.updateCardSync(card.card)
                 // будет обновлено ниже
                 tagsRepository.deleteAllTagsFromCard(cardBuilder.cardId)
             } else {
                 // создать
-                val cardId = cardsRepository.addCard(card.card)
+                val cardId = cardsRepository.addCardSync(card.card)
                 cardBuilder.cardId = cardId
             }
 
         } else {
 
-            val cardId = cardsRepository.addCard(card.card)
+            val cardId = cardsRepository.addCardSync(card.card)
             cardBuilder.cardId = cardId
         }
 
-        serializeCardTags(card)
+        serializeCardTags(cardBuilder.cardId, card)
 
-        return card
+        return card.copy(
+            card = card.card.copy(
+                id = cardBuilder.cardId
+            )
+        )
     }
 
-    private fun serializeCardTags(card: CardWithTags) {
+    private fun serializeCardTags(cardId: Long, card: CardWithTags) {
         serializeNewTags(card.tags)
-        tagsRepository.addCardTags(card.card.id, card.tags)
+        tagsRepository.addCardTags(cardId, card.tags)
     }
 
     private fun serializeNewTags(tags: List<TagEntity>) {
@@ -245,26 +260,37 @@ class ImportApiImpl @Inject constructor(
             opts: ImportCardsOpts
     ): QPackBuilder {
 
-        val qPack: QPackEntity = QPackEntity.initNew(
-                qPackBuilder.themeId,
-                qPackBuilder.srcFilePath,
-                qPackBuilder.fileName,
-                qPackBuilder.title,
-                qPackBuilder.desc
+        val creationDate: Date = if (qPackBuilder.hasCreationDate()) {
+            try {
+                ru.samtakoy.core.utils.DateUtils.DATE_FORMAT.parse(qPackBuilder.creationDate)!!
+            } catch (e: Throwable) {
+                DateUtils.getCurrentTimeDate()
+            }
+        } else {
+            DateUtils.getCurrentTimeDate()
+        }
+        val qPack = QPackEntity(
+            id = qPackBuilder.parsedId,
+            themeId = qPackBuilder.themeId,
+            path = qPackBuilder.srcFilePath,
+            fileName = qPackBuilder.fileName,
+            title = qPackBuilder.title,
+            desc = qPackBuilder.desc,
+            creationDate = creationDate,
+            viewCount = if (qPackBuilder.hasViewCount()) {
+                qPackBuilder.viewCount
+            } else {
+                0
+            },
+            lastViewDate = creationDate,
+            favorite = 0
         )
-        if (qPackBuilder.hasCreationDate()) {
-            qPack.parseCreationDateFromString(qPackBuilder.creationDate)
-            qPack.lastViewDate = qPack.creationDate
-        }
-        if (qPackBuilder.hasViewCount()) {
-            qPack.viewCount = qPackBuilder.viewCount
-        }
-        if (qPackBuilder.hasIncomingId()) {
-            qPack.id = qPackBuilder.parsedId
 
+        val resultPackId = if (qPackBuilder.hasIncomingId()) {
             if (qPacksRepository.isPackExists(qPackBuilder.parsedId)) {
                 // обновить
                 qPacksRepository.updateQPack(qPack);
+                qPack.id
             } else {
                 // создать новый, если разрешено
                 if (opts.isAllowWithIdCreation) {
@@ -273,11 +299,11 @@ class ImportApiImpl @Inject constructor(
                     throw ImportCardsException(ImportCardsException.ERR_PACK_WITH_ID_CREATION_NOT_ALLOWED, "")
                 }
             }
-
         } else {
             qPacksRepository.addQPack(qPack)
         }
-        qPackBuilder.setTargetQPack(qPack.id)
+
+        qPackBuilder.setTargetQPack(resultPackId)
         return qPackBuilder
     }
 

@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import io.reactivex.Flowable
 import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 import ru.samtakoy.core.data.local.database.room.entities.ThemeEntity
 import ru.samtakoy.core.data.local.database.room.entities.ThemeEntity.Companion._id
 import ru.samtakoy.core.data.local.database.room.entities.ThemeEntity.Companion._parent
@@ -15,7 +16,7 @@ import ru.samtakoy.core.data.local.database.room.entities.ThemeEntity.Companion.
 interface ThemeDao {
 
     @Query("SELECT * FROM ${table} WHERE $_id=:id")
-    fun getTheme(id: Long): ThemeEntity?
+    suspend fun getTheme(id: Long): ThemeEntity?
 
     @Query("SELECT * FROM ${table} WHERE $_id=:id")
     fun getThemeSingle(id: Long): Single<ThemeEntity>
@@ -27,7 +28,7 @@ interface ThemeDao {
     fun getChildThemes(parentId: Long): List<ThemeEntity>
 
     @Query("SELECT * FROM $table WHERE ${ThemeEntity._parent}=:parentId")
-    fun getChildThemesRx(parentId: Long): Flowable<List<ThemeEntity>>
+    fun getChildThemesAsFlow(parentId: Long): Flow<List<ThemeEntity>>
 
     @Insert
     fun addTheme(theme: ThemeEntity): Long

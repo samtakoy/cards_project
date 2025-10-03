@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="ru.samtakoy">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.SET_ALARM" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
 
@@ -21,7 +19,7 @@
         android:supportsRtl="true"
         tools:replace="android:theme"
         android:theme="@style/AppTheme">
-        <activity android:name=".core.presentation.MainActivity">
+        <activity android:name=".core.presentation.MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -32,7 +30,7 @@
 
         <activity android:name=".core.presentation.widget.WidgetSettingsActivity" />
 
-        <receiver android:name=".features.notifications.StartupReceiver">
+        <receiver android:name=".features.notifications.StartupReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -55,7 +53,8 @@
         </provider>
 
         <receiver android:name=".core.presentation.widget.WidgetProvider"
-            android:label="Мой тестовый Widget">
+            android:label="Мой тестовый Widget"
+            android:exported="true">
             <intent-filter>
                 <action
                     android:name="android.appwidget.action.APPWIDGET_UPDATE" />

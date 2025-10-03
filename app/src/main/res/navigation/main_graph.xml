@@ -26,15 +26,49 @@
         <action
             android:id="@+id/action_themesListFragment_to_onlineImportFragment"
             app:destination="@id/onlineImportFragment" />
+        <action
+            android:id="@+id/action_themesListFragment_to_favoritesFragment"
+            app:destination="@id/favoritesFragment" />
     </fragment>
     <fragment
         android:id="@+id/qPacksListFragment"
-        android:name="ru.samtakoy.core.presentation.qpacks.QPacksListFragment"
+        android:name="ru.samtakoy.core.presentation.qpack.list.QPacksListFragment"
         android:label="@string/main_drawer_qpacks">
         <action
             android:id="@+id/action_qPacksListFragment_to_qPackInfoFragment"
             app:destination="@id/qPackInfoFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="ru.samtakoy.core.presentation.favorites.onboarding.FavoritesFragment"
+        android:label="@string/main_drawer_favorites">
+        <action
+            android:id="@+id/action_favoritesFragment_to_cardsViewFragment"
+            app:destination="@id/cardsViewFragment" />
+        <action
+            android:id="@+id/action_favoritesFragment_to_qPackSelectionFragment"
+            app:destination="@id/qPackSelectionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/viewsHistoryFragment"
+        android:name="ru.samtakoy.features.views.presentation.history.ViewsHistoryFragment"
+        android:label="@string/main_drawer_views_history">
+        <action
+            android:id="@+id/action_viewsHistoryFragment_to_cardsViewFragment"
+            app:destination="@id/cardsViewFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/qPackSelectionFragment"
+        android:name="ru.samtakoy.core.presentation.favorites.qpacks_with_favs.QPackSelectionFragment"
+        android:label="@string/main_drawer_qpacks_selection">
+        <action
+            android:id="@+id/action_qPackSelectionFragment_to_cardsViewFragment"
+            app:destination="@id/cardsViewFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/coursesListFragment"
         android:name="ru.samtakoy.core.presentation.courses.list.CoursesListFragment"
@@ -73,22 +107,26 @@
     </fragment>
     <fragment
         android:id="@+id/qPackInfoFragment"
-        android:name="ru.samtakoy.core.presentation.qpack.QPackInfoFragment">
+        android:name="ru.samtakoy.core.presentation.qpack.info.QPackInfoFragment">
         <argument
             android:name="ARG_QPACK_ID"
             app:argType="long" />
         <action
             android:id="@+id/action_qPackInfoFragment_to_cardsViewFragment"
             app:destination="@id/cardsViewFragment" />
+        <action
+            android:id="@+id/action_qPackInfoFragment_to_coursesListFragment"
+            app:destination="@id/coursesListFragment" />
     </fragment>
     <fragment
         android:id="@+id/onlineImportFragment"
         android:name="ru.samtakoy.core.presentation.online_import.OnlineImportFragment" />
+
     <fragment
         android:id="@+id/cardsViewFragment"
         android:name="ru.samtakoy.core.presentation.cards.CardsViewFragment">
         <argument
-            android:name="ARG_COURSE_ID"
+            android:name="ARG_VIEW_HISTORY_ITEM_ID"
             app:argType="long" />
         <argument
             android:name="ARG_VIEW_MODE"

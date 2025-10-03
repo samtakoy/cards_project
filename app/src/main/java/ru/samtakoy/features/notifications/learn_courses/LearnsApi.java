@@ -37,8 +37,8 @@ public class LearnsApi extends CoursesApi {
         LearnCourseMode lcMode = getLearnCourseMode();
         int notificationId =       NOTIFICATION_ID_NEW_LEARNINGS_AVAILABLE;
         int notificationIconId =   android.R.drawable.ic_menu_report_image;
-        String notificationTitle = getString(R.string.notifications_learn_waitings_title);
-        String notificationText =  getString(R.string.notifications_learn_waitings_text);
+        String notificationTitle = mResources.getString(R.string.notifications_learn_waitings_title);
+        String notificationText =  mResources.getString(R.string.notifications_learn_waitings_text);
 
         PendingIntent clickIntent = PendingIntent.getService(mContext, REQ_CODE_NEW_LEARNINGS_CLICK, getShowUiIntent(), 0);
         PendingIntent cancelIntent = PendingIntent.getService(mContext, REQ_CODE_NEW_LEARNINGS_CANCEL, getShiftIntent(), 0);

@@ -25,11 +25,10 @@ import ru.samtakoy.core.data.local.database.room.entities.CardTagEntity.Companio
         primaryKeys = [_card_id, _tag_id]
 )
 class CardTagEntity(
-
         @ColumnInfo(name = _card_id)
-        var cardId: Long,
+        val cardId: Long,
         @ColumnInfo(name = _tag_id, index = true)
-        var tagId: Long
+        val tagId: Long
 ) {
 
     companion object {

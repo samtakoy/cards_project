@@ -3,8 +3,16 @@
 
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingHorizontal="8dp">
 
+    <CheckBox
+        android:id="@+id/favorite_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cards_view_favorite_box"
+        android:layout_gravity="end"
+        />
 
     <ScrollView
         android:layout_width="match_parent"

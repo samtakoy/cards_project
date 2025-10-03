@@ -1,71 +1,61 @@
-package ru.samtakoy.core.presentation.settings;
+package ru.samtakoy.core.presentation.settings
 
-import android.os.Bundle;
+import android.os.Bundle
+import ru.samtakoy.R
+import ru.samtakoy.core.app.di.Di
+import ru.samtakoy.core.app.some.Resources
+import ru.samtakoy.core.domain.CardsInteractor
+import ru.samtakoy.core.presentation.MainActivity
+import ru.samtakoy.core.presentation.RouterHolder
+import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogFragment
+import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogPresenter.IProgressWorker
+import javax.inject.Inject
 
-import androidx.annotation.Nullable;
+class ClearDbDialogFragment : ProgressDialogFragment() {
+    @Inject
+    internal lateinit var mCardsInteractor: CardsInteractor
 
-import org.jetbrains.annotations.NotNull;
+    @Inject
+    internal lateinit var mResources: Resources
 
-import javax.inject.Inject;
-
-import io.reactivex.Completable;
-import ru.samtakoy.R;
-import ru.samtakoy.core.app.di.Di;
-import ru.samtakoy.core.domain.CardsInteractor;
-import ru.samtakoy.core.presentation.MainActivity;
-import ru.samtakoy.core.presentation.RouterHolder;
-import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogFragment;
-import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogPresenter;
-
-public class ClearDbDialogFragment extends ProgressDialogFragment {
-
-    public static final String TAG = "ClearDbDialogFragment";
-
-    @Inject CardsInteractor mCardsInteractor;
-
-    public static ClearDbDialogFragment newFragment(){
-        ClearDbDialogFragment result = new ClearDbDialogFragment();
-        return result;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Di.appComponent.inject(this)
+        super.onCreate(savedInstanceState)
     }
 
-    // TODO во все прогресс диалоги делаем инжект, ради инжекта presenter родительского класса, что неочевидно
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        Di.appComponent.inject(this);
-        super.onCreate(savedInstanceState);
+    override fun createWorkerImpl(): IProgressWorker {
+        return object : IProgressWorker {
+            override suspend fun doWork() {
+                mCardsInteractor.clearDb()
+            }
+
+            override fun getErrorText(): String {
+                return mResources!!.getString(R.string.clear_db_error)
+            }
+
+            override fun getTitle(): String {
+                return mResources!!.getString(R.string.clear_db_title)
+            }
+
+            override fun onComplete() {
+                navigateToBlankRootScreen()
+            }
+        }
     }
 
-    @Override
-    protected ProgressDialogPresenter.WorkerImpl createWorkerImpl() {
-        return new ProgressDialogPresenter.WorkerImpl() {
-            @NotNull
-            @Override
-            public Completable createObservable() {
-                return mCardsInteractor.clearDb();
-            }
-
-            @Override
-            public int getTitleTextId() {
-                return R.string.clear_db_title;
-            }
-
-            @Override
-            public int getErrorTextId() {
-                return R.string.clear_db_error;
-            }
-
-            @Override
-            public void onComplete() {
-                navigateToBlankRootScreen();
-            }
-        };
-    }
-
-    private void navigateToBlankRootScreen() {
-        RouterHolder rh = (RouterHolder) getActivity();
+    private fun navigateToBlankRootScreen() {
+        val rh = getActivity() as RouterHolder?
         if (rh != null) {
-            //rh.getRouter().newRootScreen(new Screens.ThemeListScreen(-1L, ""));
-            startActivity(MainActivity.newRootActivity(getContext()));
+            startActivity(MainActivity.newRootActivity(getContext()))
+        }
+    }
+
+    companion object {
+        const val TAG: String = "ClearDbDialogFragment"
+
+        @JvmStatic fun newFragment(): ClearDbDialogFragment {
+            val result = ClearDbDialogFragment()
+            return result
         }
     }
 }
