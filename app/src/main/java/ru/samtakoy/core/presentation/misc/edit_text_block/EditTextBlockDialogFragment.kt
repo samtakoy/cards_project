@@ -1,79 +1,74 @@
-package ru.samtakoy.core.presentation.misc.edit_text_block;
+package ru.samtakoy.core.presentation.misc.edit_text_block
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
+import android.app.Activity
+import android.app.Dialog
+import android.content.DialogInterface
+import android.content.Intent
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import ru.samtakoy.R
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
+class EditTextBlockDialogFragment : DialogFragment() {
+    var mEditText: EditText? = null
 
-import ru.samtakoy.R;
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val text = requireArguments().getString(ARG_TEXT)
+        val v = LayoutInflater.from(getContext()).inflate(R.layout.fragment_dialog_edit_text_block, null)
 
-public class EditTextBlockDialogFragment extends DialogFragment {
+        mEditText = v.findViewById<EditText>(R.id.edit_text)
+        mEditText!!.setText(text)
 
-    public static final String TAG = "EditTextBlockDialogFrag";
-
-    private static final String ARG_TEXT = "ARG_TEXT";
-    public static final String RESULT_TEXT = "RESULT_TEXT";
-
-    EditText mEditText;
-
-    public static EditTextBlockDialogFragment newInstance(
-            String text,
-            Fragment targetFragment,
-            int targetFragmentRequestCode
-    ) {
-
-        Bundle args = new Bundle();
-        args.putString(ARG_TEXT, text);
-
-        EditTextBlockDialogFragment fragment = new EditTextBlockDialogFragment();
-        fragment.setArguments(args);
-        fragment.setTargetFragment(targetFragment, targetFragmentRequestCode);
-        return fragment;
+        val builder = AlertDialog.Builder(requireContext())
+            .setView(v)
+            .setCancelable(true)
+            .setOnCancelListener(DialogInterface.OnCancelListener { dialogInterface: DialogInterface? -> onCancel() })
+            .setPositiveButton(
+                R.string.btn_save,
+                DialogInterface.OnClickListener { dialogInterface: DialogInterface?, i: Int -> onOk() })
+            .setNegativeButton(
+                R.string.btn_cancel,
+                DialogInterface.OnClickListener { dialogInterface: DialogInterface?, i: Int -> onCancel() })
+        return builder.create()
     }
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+    private fun onOk() {
+        val resultText = mEditText!!.getText().toString()
 
-        String text = getArguments().getString(ARG_TEXT);
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.fragment_dialog_edit_text_block, null);
+        val result = Intent()
+        result.putExtra(RESULT_TEXT, resultText)
 
-        mEditText = v.findViewById(R.id.edit_text);
-        mEditText.setText(text);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
-                .setView(v)
-                .setCancelable(true)
-                .setOnCancelListener(dialogInterface -> onCancel())
-                .setPositiveButton(R.string.btn_save, (dialogInterface, i) -> onOk())
-                .setNegativeButton(R.string.btn_cancel, (dialogInterface, i) -> onCancel());
-        return builder.create();
+        getTargetFragment()!!.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, result)
+        dismiss()
     }
 
-    private void onOk(){
-
-        String resultText = mEditText.getText().toString();
-        
-        Intent result = new Intent();
-        result.putExtra(RESULT_TEXT, resultText);
-
-
-        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, result);
-        dismiss();
+    private fun onCancel() {
+        getTargetFragment()!!.onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, null)
+        dismiss()
     }
 
-    private void onCancel(){
-        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, null);
-        dismiss();
-    }
+    companion object {
+        const val TAG: String = "EditTextBlockDialogFrag"
 
+        private const val ARG_TEXT = "ARG_TEXT"
+        const val RESULT_TEXT: String = "RESULT_TEXT"
+
+        fun newInstance(
+            text: String,
+            targetFragment: Fragment,
+            targetFragmentRequestCode: Int
+        ): EditTextBlockDialogFragment {
+            val args = Bundle()
+            args.putString(ARG_TEXT, text)
+
+            val fragment = EditTextBlockDialogFragment()
+            fragment.setArguments(args)
+            fragment.setTargetFragment(targetFragment, targetFragmentRequestCode)
+            return fragment
+        }
+    }
 }

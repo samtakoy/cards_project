@@ -1,33 +1,30 @@
-package ru.samtakoy.features.notifications;
+package ru.samtakoy.features.notifications
 
-import ru.samtakoy.core.data.local.database.room.entities.elements.ScheduleTimeUnit;
+import ru.samtakoy.features.learncourse.domain.model.schedule.ScheduleTimeUnit
 
-public class NotificationsConst {
-
-    public static final int NEW_COURSE_LEARN_DEFAULT_MILLIS_DELTA = 3*ScheduleTimeUnit.MINUTE.getMillis();
+object NotificationsConst {
+    val NEW_COURSE_LEARN_DEFAULT_MILLIS_DELTA: Int = 3 * ScheduleTimeUnit.MINUTE.getMillis()
 
     // магические константы
-    public static final long DELTA = ScheduleTimeUnit.MINUTE.getMillis();
+    val DELTA: Long = ScheduleTimeUnit.MINUTE.getMillis().toLong()
+
     //public static final long SMALL_DELTA = 30*1000;
+    // коды PendingIntent
+    const val REQ_CODE_NEW_REPEATINGS_CLICK: Int = 1
+    const val REQ_CODE_NEW_REPEATINGS_CANCEL: Int = 2
+    const val REQ_CODE_NEW_REPEATINGS_ALARM: Int = 3
 
     // коды PendingIntent
-    public static final int REQ_CODE_NEW_REPEATINGS_CLICK = 1;
-    public static final int REQ_CODE_NEW_REPEATINGS_CANCEL = 2;
-    public static final int REQ_CODE_NEW_REPEATINGS_ALARM = 3;
+    const val REQ_CODE_NEW_LEARNINGS_CLICK: Int = 4
+    const val REQ_CODE_NEW_LEARNINGS_CANCEL: Int = 5
+    const val REQ_CODE_NEW_LEARNINGS_ALARM: Int = 6
 
-    // коды PendingIntent
-    public static final int REQ_CODE_NEW_LEARNINGS_CLICK = 4;
-    public static final int REQ_CODE_NEW_LEARNINGS_CANCEL = 5;
-    public static final int REQ_CODE_NEW_LEARNINGS_ALARM = 6;
+    const val REQ_CODE_UNCOMPLETED_TASKS_CLICK: Int = 7
+    const val REQ_CODE_UNCOMPLETED_TASKS_CANCEL: Int = 8
+    const val REQ_CODE_UNCOMPLETED_TASKS_ALARM: Int = 9
 
-    public static final int REQ_CODE_UNCOMPLETED_TASKS_CLICK = 7;
-    public static final int REQ_CODE_UNCOMPLETED_TASKS_CANCEL = 8;
-    public static final int REQ_CODE_UNCOMPLETED_TASKS_ALARM = 9;
-
-
-    static final int NOTIFICATIONS_ID_START = 100;
-    public static final int NOTIFICATION_ID_NEW_REPEATING_AVAILABLE = NOTIFICATIONS_ID_START+0;
-    public static final int NOTIFICATION_ID_NEW_LEARNINGS_AVAILABLE = NOTIFICATIONS_ID_START+1;
-    public static final int NOTIFICATION_ID_UNCOMPLETED_TASKS = NOTIFICATIONS_ID_START+2;
-
+    const val NOTIFICATIONS_ID_START: Int = 100
+    val NOTIFICATION_ID_NEW_REPEATING_AVAILABLE: Int = NOTIFICATIONS_ID_START + 0
+    val NOTIFICATION_ID_NEW_LEARNINGS_AVAILABLE: Int = NOTIFICATIONS_ID_START + 1
+    val NOTIFICATION_ID_UNCOMPLETED_TASKS: Int = NOTIFICATIONS_ID_START + 2
 }

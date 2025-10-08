@@ -1,7 +1,7 @@
-package ru.samtakoy.core.presentation;
+package ru.samtakoy.core.presentation
 
-import androidx.navigation.NavController;
+import androidx.navigation.NavController
 
-public interface RouterHolder {
-    NavController getNavController();
+interface RouterHolder {
+    val navController: NavController
 }

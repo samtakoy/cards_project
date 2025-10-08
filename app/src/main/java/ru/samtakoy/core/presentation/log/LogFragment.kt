@@ -1,87 +1,70 @@
-package ru.samtakoy.core.presentation.log;
+package ru.samtakoy.core.presentation.log
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import ru.samtakoy.R
+import ru.samtakoy.core.presentation.log.MyLog.strings
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+class LogFragment : Fragment() {
+    private var mRecyclerView: RecyclerView? = null
+    private var mLog: MutableList<String>? = null
 
-import java.util.List;
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val v = inflater.inflate(R.layout.fragment_log, container, false)
 
-import ru.samtakoy.R;
+        mLog = strings
 
-public class LogFragment extends Fragment {
-
-    private static final String TAG = "LogFragment";
-
-    private RecyclerView mRecyclerView;
-    private List<String> mLog;
-
-    public static Fragment newFragment() {
-        LogFragment result = new LogFragment();
-        return result;
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View v = inflater.inflate(R.layout.fragment_log, container, false);
-
-        mLog = MyLog.getStrings();
-
-        mRecyclerView = v.findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setAdapter(new RecyclerViewAdapter());
+        mRecyclerView = v.findViewById<RecyclerView>(R.id.recycler_view)
+        mRecyclerView!!.setLayoutManager(LinearLayoutManager(getContext()))
+        mRecyclerView!!.setAdapter(RecyclerViewAdapter())
 
         // items divider
-        DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        val divider = DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL)
         //divider.setDrawable(...);
-        mRecyclerView.addItemDecoration(divider);
+        mRecyclerView!!.addItemDecoration(divider)
 
-        return v;
+        return v
     }
 
-    private static class RecyclerViewHolder extends RecyclerView.ViewHolder{
+    private class RecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val mText: TextView
 
-        private TextView mText;
-
-        public RecyclerViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            mText = itemView.findViewById(R.id.list_item_text);
+        init {
+            mText = itemView.findViewById<TextView>(R.id.list_item_text)
         }
 
-        public void setText(String s) {
-            mText.setText(s);
+        fun setText(s: String?) {
+            mText.setText(s)
         }
     }
 
-    private class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder>{
-
-        @NonNull
-        @Override
-        public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new RecyclerViewHolder(
-                    LayoutInflater.from(getContext()).inflate(R.layout.log_list_item, parent, false)
-            );
+    private inner class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerViewHolder?>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
+            return RecyclerViewHolder(
+                LayoutInflater.from(getContext()).inflate(R.layout.log_list_item, parent, false)
+            )
         }
 
-        @Override
-        public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
-            holder.setText(mLog.get(position));
+        override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
+            holder.setText(mLog!!.get(position))
         }
 
-        @Override
-        public int getItemCount() {
-            return mLog.size();
+        override fun getItemCount(): Int {
+            return mLog?.size ?: 0
+        }
+    }
+
+    companion object {
+        @JvmStatic fun newFragment(): Fragment {
+            val result = LogFragment()
+            return result
         }
     }
 }

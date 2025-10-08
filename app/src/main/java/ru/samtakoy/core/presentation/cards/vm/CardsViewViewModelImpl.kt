@@ -19,10 +19,8 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.data.local.database.room.entities.CardEntity
-import ru.samtakoy.core.data.local.database.room.entities.elements.Schedule
-import ru.samtakoy.core.domain.CardsInteractor
-import ru.samtakoy.core.domain.CoursesPlanner
+import ru.samtakoy.features.card.domain.CardsInteractor
+import ru.samtakoy.features.learncourse.domain.CoursesPlanner
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.core.presentation.cards.types.BackupInfo
@@ -35,6 +33,8 @@ import ru.samtakoy.core.presentation.cards.vm.CardsViewViewModel.Action
 import ru.samtakoy.core.presentation.cards.vm.CardsViewViewModel.Event
 import ru.samtakoy.core.presentation.cards.vm.CardsViewViewModel.State
 import ru.samtakoy.core.presentation.log.MyLog
+import ru.samtakoy.features.card.domain.model.Card
+import ru.samtakoy.features.learncourse.domain.model.schedule.Schedule
 import ru.samtakoy.features.views.domain.ViewHistoryInteractor
 import ru.samtakoy.features.views.domain.ViewHistoryItem
 import ru.samtakoy.features.views.domain.ViewHistoryProgressUseCase
@@ -250,13 +250,6 @@ internal class CardsViewViewModelImpl(
         }
     }
 
-    /**
-     *
-     * viewItem из бызы
-     * curDataState -> CardEntity
-     *   | + backupInfo -> CardWithBackup
-     *
-     * */
     private fun subscribeData() {
         combine(
             mViewHistoryInteractor.getViewHistoryItemAsFlow(viewHistoryItemId),
@@ -298,7 +291,7 @@ internal class CardsViewViewModelImpl(
             getCurrentCardAsFlow(),
             backupInfoHolder.asFlow(),
         ) { cardStateAndData, backupInfoHolder ->
-            val card: CardEntity? = cardStateAndData.second
+            val card: Card? = cardStateAndData.second
             CardInfo(
                 state = cardStateAndData.first,
                 card = card,
@@ -308,7 +301,7 @@ internal class CardsViewViewModelImpl(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun getCurrentCardAsFlow(): Flow<Pair<CurCardState, CardEntity?>> {
+    private fun getCurrentCardAsFlow(): Flow<Pair<CurCardState, Card?>> {
         return curCardState
             .asFlow()
             .distinctUntilChanged()
@@ -418,7 +411,7 @@ internal class CardsViewViewModelImpl(
      * */
     internal data class CardInfo(
         val state: CurCardState,
-        val card: CardEntity?,
+        val card: Card?,
         val backup: BackupInfo
     )
 

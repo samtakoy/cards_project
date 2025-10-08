@@ -8,12 +8,15 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.domain.CardsInteractor
+import ru.samtakoy.features.card.domain.CardsInteractor
 import ru.samtakoy.core.presentation.themes.mapper.ThemeUiItemMapper
 import ru.samtakoy.features.import_export.QPacksExporter
+import ru.samtakoy.features.qpack.domain.QPackInteractor
+import ru.samtakoy.features.theme.domain.ThemeInteractor
 
 internal class ThemeListViewModelFactory @AssistedInject constructor(
-    private val cardsInteractor: CardsInteractor,
+    private val qPackInteractor: QPackInteractor,
+    private val themeInteractor: ThemeInteractor,
     private val qPacksExporter: QPacksExporter,
     private val uiItemsMapper: ThemeUiItemMapper,
     private val resources: Resources,
@@ -30,7 +33,8 @@ internal class ThemeListViewModelFactory @AssistedInject constructor(
     ): T {
         @Suppress("UNCHECKED_CAST")
         return ThemeListViewModelImpl(
-            cardsInteractor = cardsInteractor,
+            qPackInteractor = qPackInteractor,
+            themeInteractor = themeInteractor,
             qPacksExporter = qPacksExporter,
             uiItemsMapper = uiItemsMapper,
             resources = resources,

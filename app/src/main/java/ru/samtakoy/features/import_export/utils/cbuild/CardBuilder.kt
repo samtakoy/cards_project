@@ -1,115 +1,89 @@
-package ru.samtakoy.features.import_export.utils.cbuild;
+package ru.samtakoy.features.import_export.utils.cbuild
 
-import java.util.ArrayList;
-import java.util.List;
+import ru.samtakoy.features.card.domain.model.Card
+import ru.samtakoy.features.card.domain.model.CardWithTags
+import ru.samtakoy.features.tag.domain.Tag
 
-import ru.samtakoy.core.data.local.database.room.entities.TagEntity;
-import ru.samtakoy.core.data.local.database.room.entities.other.CardWithTags;
+class CardBuilder {
+    var qPackId: Long
+    var cardId: Long
+    private var mQuestion = ""
+    private var mAnswer: String = ""
+    private val mImages: MutableList<String>
+    private val mTags: MutableList<Tag>
 
-public class CardBuilder {
+    var isToRemove: Boolean = false
+        private set
 
-    private Long mQPackId;
-    private Long mCardId;
-    private String mQuestion;
-    private String mAnswer;
-    private List<String> mImages;
-    private List<TagEntity> mTags;
+    init {
+        this.qPackId = CBuilderConst.NO_ID
+        this.cardId = CBuilderConst.NO_ID
 
-    private boolean mToRemove;
-
-    public CardBuilder(){
-
-        mQPackId = CBuilderConst.NO_ID;
-        mCardId = CBuilderConst.NO_ID;
-        mQuestion = "";
-        mAnswer = "";
-
-        mImages = new ArrayList<>();
-        mTags = new ArrayList<>();
-
-
-        mToRemove = false;
+        mImages = ArrayList<String>()
+        mTags = ArrayList<Tag>()
     }
 
-    public CardWithTags build() {
-        CardWithTags result = CardWithTags.Companion.initNew(
-            getCardId(),
-            mQPackId,
-            mQuestion,
-            mAnswer,
-            mImages,
-            "",
+    fun build(): CardWithTags {
+        val result: CardWithTags = CardWithTags(
+            Card(
+                this.cardId,
+                this.qPackId,
+                mQuestion,
+                mAnswer,
+                mImages,
+                "",
+                0
+            ),
             mTags
-        );
-        return result;
+        )
+        return result
     }
 
-    public void setQPackId(Long qPackId) {
-        mQPackId = qPackId;
+    fun setQuestion(text: String) {
+        mQuestion = text
     }
 
-    public void setQuestion(String text) {
-        mQuestion = text;
+    fun setAnswer(text: String) {
+        mAnswer = text
     }
 
-    public void setAnswer(String text) {
-        mAnswer = text;
+    fun addTag(tag: Tag) {
+        mTags.add(tag)
     }
 
-    public void addTag(TagEntity tag) {
-        mTags.add(tag);
-    }
-
-    public void addImage(String imageName){
-        mImages.add(imageName);
+    fun addImage(imageName: String) {
+        mImages.add(imageName)
     }
 
     /*public boolean isEmpty(){
         return mQuestion.length()==0 && mAnswer.length()==0;
-    }/**/
-
-    public void toRemove(){
-        mToRemove = true;
+    }/ **/
+    fun toRemove() {
+        this.isToRemove = true
     }
 
-    public boolean isToRemove(){
-        return mToRemove;
-    }
-
-    public boolean isValid() {
-
-        if (mToRemove || mCardId != CBuilderConst.NO_ID) {
-            return true;
-        }
-
-        // check question emptiness
-        String[] checkStrings = mQuestion.split(CBuilderConst.LINE_BREAK);
-        for (String str : checkStrings) {
-            if (str.trim().length() > 0) {
-                return true;
+    val isValid: Boolean
+        get() {
+            if (this.isToRemove || this.cardId !== CBuilderConst.NO_ID) {
+                return true
             }
+
+            // check question emptiness
+            val checkStrings =
+                mQuestion.split(CBuilderConst.LINE_BREAK.toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            for (str in checkStrings) {
+                if (str.trim { it <= ' ' }.length > 0) {
+                    return true
+                }
+            }
+            return false
         }
-        return false;
+
+    fun hasId(): Boolean {
+        return this.cardId !== CBuilderConst.NO_ID
     }
 
-    public void setCardId(Long cardId) {
-        mCardId = cardId;
-
-    }
-
-    public Long getCardId() {
-        return mCardId;
-    }
-
-    public Long getQPackId() {
-        return mQPackId;
-    }
-
-    public boolean hasId() {
-        return mCardId != CBuilderConst.NO_ID;
-    }
-
-    public boolean hasQPackId() {
-        return mQPackId != CBuilderConst.NO_ID;
+    fun hasQPackId(): Boolean {
+        return this.qPackId !== CBuilderConst.NO_ID
     }
 }

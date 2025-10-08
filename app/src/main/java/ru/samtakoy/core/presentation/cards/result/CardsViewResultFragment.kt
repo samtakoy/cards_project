@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import ru.samtakoy.R
 import ru.samtakoy.core.app.di.Di
-import ru.samtakoy.core.data.local.database.room.entities.elements.Schedule
 import ru.samtakoy.core.presentation.base.observe
 import ru.samtakoy.core.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.core.presentation.base.viewmodel.ViewModelOwner
@@ -26,6 +25,8 @@ import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.core.presentation.schedule.ScheduleEditFragment
 import ru.samtakoy.core.presentation.schedule.ScheduleEditFragment.Companion.newFragment
 import ru.samtakoy.core.presentation.showDialogFragment
+import ru.samtakoy.features.learncourse.domain.model.schedule.Schedule
+import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.toParcelable
 import java.text.MessageFormat
 import javax.inject.Inject
 
@@ -127,7 +128,7 @@ class CardsViewResultFragment : Fragment(), ViewModelOwner {
     }
 
     private fun showScheduleEditDialog(schedule: Schedule?) {
-        val dialog = newFragment(schedule)
+        val dialog = newFragment(schedule?.toParcelable())
         dialog.setTargetFragment(this, REQ_SCHEDULE_EDIT)
         showDialogFragment(dialog, this, ScheduleEditFragment.TAG)
     }
@@ -137,7 +138,7 @@ class CardsViewResultFragment : Fragment(), ViewModelOwner {
         if (requestCode == REQ_SCHEDULE_EDIT && resultCode == Activity.RESULT_OK) {
             viewModel.onEvent(
                 Event.NewScheduleDialogResult(
-                    serializedSchedule = data?.getStringExtra(
+                    serializedSchedule = data?.getParcelableExtra(
                         ScheduleEditFragment.RESULT_SCHEDULE_STRING
                     )
                 )

@@ -1,11 +1,12 @@
 package ru.samtakoy.core.presentation.cards.result.vm
 
 import androidx.compose.runtime.Immutable
-import ru.samtakoy.core.data.local.database.room.entities.elements.Schedule
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.core.presentation.cards.result.vm.CardsViewResultViewModel.Action
 import ru.samtakoy.core.presentation.cards.result.vm.CardsViewResultViewModel.Event
 import ru.samtakoy.core.presentation.cards.result.vm.CardsViewResultViewModel.State
+import ru.samtakoy.features.learncourse.domain.model.schedule.Schedule
+import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.ParcelableSchedule
 
 @Immutable
 interface CardsViewResultViewModel : BaseViewModel<State, Action, Event> {
@@ -26,7 +27,7 @@ interface CardsViewResultViewModel : BaseViewModel<State, Action, Event> {
 
     sealed interface Event {
         object ScheduleBtnClick : Event
-        class NewScheduleDialogResult(val serializedSchedule: String?) : Event
+        class NewScheduleDialogResult(val serializedSchedule: ParcelableSchedule?) : Event
         object OkBtnClick : Event
     }
 }

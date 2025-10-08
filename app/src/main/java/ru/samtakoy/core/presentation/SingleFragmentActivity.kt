@@ -1,43 +1,33 @@
-package ru.samtakoy.core.presentation;
+package ru.samtakoy.core.presentation
 
-import android.os.Bundle;
+import android.os.Bundle
+import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import ru.samtakoy.R
 
-import androidx.annotation.LayoutRes;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+abstract class SingleFragmentActivity : AppCompatActivity() {
+    protected abstract fun createFragment(): Fragment
 
-import ru.samtakoy.R;
+    @get:LayoutRes
+    protected val layoutResId: Int
+        get() = R.layout.activity_single_fragment
 
-public abstract class SingleFragmentActivity extends AppCompatActivity {
+    protected val fragmentContainerId: Int
+        get() = R.id.fragment_cont
 
-    protected abstract Fragment createFragment();
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    @LayoutRes
-    protected int getLayoutResId() {
-        return R.layout.activity_single_fragment;
-    }
+        setContentView(this.layoutResId)
 
-    protected int getFragmentContainerId() {
-        return R.id.fragment_cont;
-    }
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(getLayoutResId());
-
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment f = fm.findFragmentById(getFragmentContainerId());
-        if(f == null){
-            f = createFragment();
+        val fm = getSupportFragmentManager()
+        var f = fm.findFragmentById(this.fragmentContainerId)
+        if (f == null) {
+            f = createFragment()
             fm.beginTransaction()
-                    .add(getFragmentContainerId(), f)
-                    .commit();
+                .add(this.fragmentContainerId, f)
+                .commit()
         }
     }
-
-
 }

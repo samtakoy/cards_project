@@ -4,7 +4,6 @@ import ru.samtakoy.R
 import ru.samtakoy.core.presentation.RouterHolder
 import ru.samtakoy.core.presentation.cards.CardsViewFragment
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
-import ru.samtakoy.core.presentation.cards.types.CardViewSource
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModel
 
 class QPacksWithFavsNavigationImpl : QPackSelectionViewModel.Navigation {

@@ -8,8 +8,8 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.domain.CardsInteractor
-import ru.samtakoy.core.domain.CoursesPlanner
+import ru.samtakoy.features.card.domain.CardsInteractor
+import ru.samtakoy.features.learncourse.domain.CoursesPlanner
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.features.views.domain.ViewHistoryInteractor
 import ru.samtakoy.features.views.domain.ViewHistoryProgressUseCase

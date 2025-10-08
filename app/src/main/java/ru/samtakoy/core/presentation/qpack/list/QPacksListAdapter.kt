@@ -1,81 +1,65 @@
-package ru.samtakoy.core.presentation.qpack.list;
+package ru.samtakoy.core.presentation.qpack.list
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import ru.samtakoy.R
+import ru.samtakoy.core.presentation.qpack.list.QPacksListAdapter.QPacksListViewHolder
+import ru.samtakoy.core.presentation.qpack.list.model.QPackListItemUiModel
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import ru.samtakoy.R;
-import ru.samtakoy.core.presentation.qpack.list.model.QPackListItemUiModel;
-
-public class QPacksListAdapter extends RecyclerView.Adapter<QPacksListAdapter.QPacksListViewHolder>{
-
-    public interface ItemClickListener{
-        void onClick(QPackListItemUiModel item);
+internal class QPacksListAdapter(
+    private val mItemClickListener: ItemClickListener
+) : RecyclerView.Adapter<QPacksListViewHolder>() {
+    interface ItemClickListener {
+        fun onClick(item: QPackListItemUiModel)
     }
 
-    class QPacksListViewHolder extends RecyclerView.ViewHolder{
+    internal inner class QPacksListViewHolder(private val mItemView: View) : RecyclerView.ViewHolder(
+        mItemView
+    ) {
+        private val mTitle: TextView
+        private val mLastViewText: TextView
+        private val mViewCountText: TextView
 
-        private TextView mTitle;
-        private TextView mLastViewText;
-        private TextView mViewCountText;
-        private View mItemView;
-
-        QPacksListViewHolder(@NonNull View itemView){
-            super(itemView);
-
-            mItemView = itemView;
-            mTitle = itemView.findViewById(R.id.list_item_text);
-            mLastViewText = itemView.findViewById(R.id.last_view_text);
-            mViewCountText = itemView.findViewById(R.id.view_count);
+        init {
+            mTitle = mItemView.findViewById<TextView>(R.id.list_item_text)
+            mLastViewText = mItemView.findViewById<TextView>(R.id.last_view_text)
+            mViewCountText = mItemView.findViewById<TextView>(R.id.view_count)
         }
 
-        public void bindData(QPackListItemUiModel item, ItemClickListener listener) {
+        fun bindData(item: QPackListItemUiModel, listener: ItemClickListener) {
+            mTitle.setText(item.title)
+            mLastViewText.setText(item.dateText)
+            mViewCountText.setText(item.viewCountText)
 
-            mTitle.setText(item.getTitle());
-            mLastViewText.setText(item.getDateText());
-            mViewCountText.setText(item.getViewCountText());
-
-            mItemView.setOnClickListener(view -> listener.onClick(item));
+            mItemView.setOnClickListener(View.OnClickListener { view: View? -> listener.onClick(item) })
         }
+    }
 
+    private var mItems: List<QPackListItemUiModel?>
+
+    init {
+        mItems = ArrayList<QPackListItemUiModel?>()
+    }
+
+    fun setItems(items: List<QPackListItemUiModel?>) {
+        mItems = items
+        notifyDataSetChanged()
     }
 
 
-    private List<QPackListItemUiModel> mItems;
-    private ItemClickListener mItemClickListener;
-
-    public QPacksListAdapter(ItemClickListener itemClickListener){
-
-        mItemClickListener = itemClickListener;
-        mItems = new ArrayList<>();
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QPacksListViewHolder {
+        val v = LayoutInflater.from(parent.getContext()).inflate(R.layout.qpacks_list_item, parent, false)
+        return QPacksListViewHolder(v)
     }
 
-    public void setItems(List<QPackListItemUiModel> items) {
-        mItems = items;
-        notifyDataSetChanged();
+    override fun onBindViewHolder(holder: QPacksListViewHolder, position: Int) {
+        holder.bindData(mItems.get(position)!!, mItemClickListener)
     }
 
-    @NonNull
-    @Override
-    public QPacksListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.qpacks_list_item, parent, false);
-        return new QPacksListViewHolder(v);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull QPacksListViewHolder holder, int position) {
-        holder.bindData(mItems.get(position), mItemClickListener);
-    }
-
-    @Override
-    public int getItemCount() {
-        return mItems.size();
+    override fun getItemCount(): Int {
+        return mItems.size
     }
 }

@@ -1,23 +1,16 @@
-package ru.samtakoy.core.data.network.pojo;
+package ru.samtakoy.core.data.network.pojo
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
-
-public class RemoteFile {
-
-
+data class RemoteFile(
     @SerializedName("mPath")
     @Expose
-    private String mPath;
+    val path: String? = null,
     @SerializedName("mVersion")
     @Expose
-    private Integer mVersion;
+    val version: Int? = null,
     @SerializedName("anchor")
     @Expose
-    private Integer mAnchor;
-
-    public String getPath(){ return mPath; }
-    public Integer getVersion() { return mVersion; }
-    public Integer getAnchor() { return mAnchor; }
-}
+    val anchor: Int? = null
+)

@@ -9,7 +9,7 @@ interface Resources {
     fun getString(resId: Int, vararg formatArgs: Any?): String
 }
 
-internal class ResourcesImpl @Inject constructor(
+class ResourcesImpl @Inject constructor(
     private val context: Context
 ) : Resources {
     override fun getString(resId: Int): String {

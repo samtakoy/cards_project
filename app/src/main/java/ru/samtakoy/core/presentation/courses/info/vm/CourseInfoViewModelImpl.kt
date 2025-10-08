@@ -1,6 +1,5 @@
 package ru.samtakoy.core.presentation.courses.info.vm
 
-import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
@@ -15,17 +14,9 @@ import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.core.app.some.Resources
 import ru.samtakoy.core.app.utils.DateUtils
-import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity
-import ru.samtakoy.core.data.local.database.room.entities.elements.ScheduleTimeUnit
-import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode.COMPLETED
-import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode.LEARNING
-import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode.LEARN_WAITING
-import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode.PREPARING
-import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode.REPEATING
-import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode.REPEAT_WAITING
-import ru.samtakoy.core.domain.CourseProgressUseCase
-import ru.samtakoy.core.domain.CoursesPlanner
-import ru.samtakoy.core.domain.NCoursesInteractor
+import ru.samtakoy.features.learncourse.domain.CourseProgressUseCase
+import ru.samtakoy.features.learncourse.domain.CoursesPlanner
+import ru.samtakoy.features.learncourse.domain.NCoursesInteractor
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.Action
@@ -33,6 +24,10 @@ import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.Event
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.NavigationAction
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.State
 import ru.samtakoy.core.presentation.log.MyLog
+import ru.samtakoy.features.learncourse.domain.model.LearnCourse
+import ru.samtakoy.features.learncourse.domain.model.LearnCourseMode
+import ru.samtakoy.features.learncourse.domain.model.LearnCourseMode.*
+import ru.samtakoy.features.learncourse.domain.model.schedule.ScheduleTimeUnit
 import ru.samtakoy.features.views.domain.ViewHistoryInteractor
 import ru.samtakoy.features.views.domain.ViewHistoryItem
 
@@ -121,8 +116,8 @@ internal class CourseInfoViewModelImpl(
 
     private fun startRepeatingExtraordinaryOrNext() {
         val learnCourse = dataStateAsFlow.value?.learnCourse ?: return
-        val timeDelta = DateUtils.dateToDbSerialized(learnCourse.repeatDate) - DateUtils.getCurrentTimeLong()
-        if (timeDelta < ScheduleTimeUnit.MINUTE.millis) {
+        val timeDelta = DateUtils.dateToDbSerialized(learnCourse.repeatDate) - DateUtils.currentTimeLong
+        if (timeDelta < ScheduleTimeUnit.MINUTE.getMillis()) {
             startRepeating()
         } else {
             sendAction(Action.RequestExtraordinaryRepeating)
@@ -243,7 +238,7 @@ internal class CourseInfoViewModelImpl(
     }
 
     internal class DataState(
-        val learnCourse: LearnCourseEntity,
+        val learnCourse: LearnCourse,
         val lastView: ViewHistoryItem?
     )
 }

@@ -6,17 +6,13 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.Single
+import kotlinx.coroutines.runBlocking
 import ru.samtakoy.core.app.utils.DateUtils
-import ru.samtakoy.core.data.local.database.room.entities.QPackEntity
-import ru.samtakoy.core.data.local.database.room.entities.TagEntity
-import ru.samtakoy.core.data.local.database.room.entities.ThemeEntity
-import ru.samtakoy.core.data.local.database.room.entities.other.CardIds
-import ru.samtakoy.core.data.local.database.room.entities.other.CardWithTags
-import ru.samtakoy.core.data.local.reps.CardsRepository
-import ru.samtakoy.core.data.local.reps.QPacksRepository
-import ru.samtakoy.core.data.local.reps.TagsRepository
-import ru.samtakoy.core.data.local.reps.ThemesRepository
-import ru.samtakoy.core.domain.CardsInteractor
+import ru.samtakoy.features.card.data.CardsRepository
+import ru.samtakoy.features.qpack.data.QPacksRepository
+import ru.samtakoy.features.theme.data.ThemesRepository
+import ru.samtakoy.features.card.domain.CardsInteractor
+import ru.samtakoy.features.card.domain.model.CardWithTags
 import ru.samtakoy.features.import_export.helpers.ZipHelper
 import ru.samtakoy.features.import_export.utils.FromUriStreamFactory
 import ru.samtakoy.features.import_export.utils.FromZipEntryStreamFactory
@@ -27,6 +23,10 @@ import ru.samtakoy.features.import_export.utils.cbuild.CBuilderConst
 import ru.samtakoy.features.import_export.utils.cbuild.CardBuilder
 import ru.samtakoy.features.import_export.utils.cbuild.QPackBuilder
 import ru.samtakoy.features.import_export.utils.isPackFile
+import ru.samtakoy.features.qpack.domain.QPack
+import ru.samtakoy.features.tag.domain.Tag
+import ru.samtakoy.features.tag.domain.TagInteractor
+import ru.samtakoy.features.theme.domain.Theme
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
@@ -38,7 +38,7 @@ import javax.inject.Inject
 class ImportApiImpl @Inject constructor(
     val contentResolver: ContentResolver,
     val cardsInteractor: CardsInteractor,
-    val tagsRepository: TagsRepository,
+    val tagInteractor: TagInteractor,
     val cardsRepository: CardsRepository,
     val qPacksRepository: QPacksRepository,
     val themesRepository: ThemesRepository
@@ -74,9 +74,9 @@ class ImportApiImpl @Inject constructor(
 
     private fun linesFromInputStream(
             sf: StreamFactory //InputStream iStream
-    ): Observable<String?> {
-        return object : Observable<String?>() {
-            override fun subscribeActual(observer: Observer<in String?>) {
+    ): Observable<String> {
+        return object : Observable<String>() {
+            override fun subscribeActual(observer: Observer<in String>) {
                 var iStream: InputStream? = null
                 try {
                     iStream = sf.openStream()
@@ -117,11 +117,14 @@ class ImportApiImpl @Inject constructor(
                             QPackBuilder(
                                     streamFactory.themeId,
                                     streamFactory.srcPath,
-                                    tagsRepository.buildTagMap(),
+                                    tagInteractor.buildTagMap().toMutableMap(),
                                     streamFactory.fileName,
                                     opts.nullifyId
                             )
-                        }) { obj: QPackBuilder, line: String? -> obj.addLine(line) }
+                        }
+                ) { obj: QPackBuilder, line: String ->
+                    obj.addLine(line)
+                }
     }
 
 
@@ -141,7 +144,7 @@ class ImportApiImpl @Inject constructor(
             opts: ImportCardsOpts
     ): Observable<QPackBuilder> {
         return Observable.fromCallable { resolver.openInputStream(zipFileUri!!) }
-                .concatMap { stream: InputStream? -> ZipHelper.unzipStream(resolver, stream) }
+                .concatMap { stream: InputStream -> ZipHelper.unzipStream(resolver, stream) }
                 .map { streamFactory: FromZipEntryStreamFactory -> actualizeThemes(streamFactory) }
                 .concatMap { streamFactory: FromZipEntryStreamFactory -> makeCardsBuilderFromFile(streamFactory, opts) }
     }
@@ -191,32 +194,32 @@ class ImportApiImpl @Inject constructor(
 
 
     @Throws(ImportCardsException::class)
-    private fun serializeCard(cardBuilder: CardBuilder): CardWithTags? {
+    private fun serializeCard(cardBuilder: CardBuilder): CardWithTags {
         val card = cardBuilder.build()
 
         if (cardBuilder.hasId()) {
-            val existingCard: CardIds? = cardsRepository.getCardIds(card.card.id)
+            val existingCardQPackId: Long? = cardsRepository.getCardQPackId(card.card.id)
 
-            existingCard?.let {
-
+            existingCardQPackId?.let {
+                val existingCardId: Long = card.card.id
                 // проверить, что карта из нашего пака
-                if (cardBuilder.qPackId != existingCard.qPackId) {
-                    val errMsg = "card ${existingCard.id} from pack ${existingCard.qPackId}, not ${cardBuilder.qPackId}, atRemoving: ${cardBuilder.isToRemove}"
+                if (cardBuilder.qPackId != existingCardQPackId) {
+                    val errMsg = "card ${existingCardId} from pack ${existingCardQPackId}, not ${cardBuilder.qPackId}, atRemoving: ${cardBuilder.isToRemove}"
                     throw ImportCardsException(ImportCardsException.ERR_WRONG_CARD_PACK, errMsg)
                 }
 
                 if (cardBuilder.isToRemove) {
                     // удалить
-                    cardsInteractor.deleteCardWithRelations(existingCard.id)
+                    cardsInteractor.deleteCardWithRelationsSync(existingCardId)
                     return card
                 }
             }
 
-            if (existingCard != null) {
+            if (existingCardQPackId != null) {
                 // обновить
                 cardsRepository.updateCardSync(card.card)
                 // будет обновлено ниже
-                tagsRepository.deleteAllTagsFromCard(cardBuilder.cardId)
+                tagInteractor.deleteAllTagsFromCard(cardBuilder.cardId)
             } else {
                 // создать
                 val cardId = cardsRepository.addCardSync(card.card)
@@ -240,18 +243,21 @@ class ImportApiImpl @Inject constructor(
 
     private fun serializeCardTags(cardId: Long, card: CardWithTags) {
         serializeNewTags(card.tags)
-        tagsRepository.addCardTags(cardId, card.tags)
+        tagInteractor.addCardTags(cardId, card.tags.map{ it.id })
     }
 
-    private fun serializeNewTags(tags: List<TagEntity>) {
+    private fun serializeNewTags(tags: List<Tag>) {
         tags.forEach { serializeIfNewTag(it) }
     }
 
-    private fun serializeIfNewTag(tag: TagEntity): TagEntity {
-        if (!tag.hasId()) {
-            tagsRepository.addTag(tag)
+    private fun serializeIfNewTag(tag: Tag): Tag {
+        return if (tag.id == 0L) {
+            tag.copy(
+                id = tagInteractor.addTag(tag)
+            )
+        } else {
+            tag
         }
-        return tag
     }
 
     @Throws(ImportCardsException::class)
@@ -264,12 +270,12 @@ class ImportApiImpl @Inject constructor(
             try {
                 ru.samtakoy.core.utils.DateUtils.DATE_FORMAT.parse(qPackBuilder.creationDate)!!
             } catch (e: Throwable) {
-                DateUtils.getCurrentTimeDate()
+                DateUtils.currentTimeDate
             }
         } else {
-            DateUtils.getCurrentTimeDate()
+            DateUtils.currentTimeDate
         }
-        val qPack = QPackEntity(
+        val qPack = QPack(
             id = qPackBuilder.parsedId,
             themeId = qPackBuilder.themeId,
             path = qPackBuilder.srcFilePath,
@@ -331,11 +337,13 @@ class ImportApiImpl @Inject constructor(
             // получить из базы - дочернюю с тем же именем, как дирректория
             // если нет - создать и ее id транслировать ниже
             val childThemeId: Long
-            val childTheme: ThemeEntity? = themesRepository.getThemeWithTitle(parentThemeId, f.name)
+            val childTheme: Theme? = themesRepository.getThemeWithTitle(parentThemeId, f.name)
             childThemeId = if (childTheme != null) {
                 childTheme.id
             } else {
-                themesRepository.addNewTheme(parentThemeId, f.name)?.id ?: 0L
+                runBlocking {
+                    themesRepository.addNewTheme(parentThemeId, f.name)?.id ?: 0L
+                }
             }
             return Observable.fromArray(*f.listFiles()).flatMap { file: File -> listFiles(resolver, file, childThemeId, opts) }
         }
@@ -358,12 +366,14 @@ class ImportApiImpl @Inject constructor(
         var newTheme = false
         //val resolver = streamFactory.resolver
         for (themeName in themesList) {
-            val theme: ThemeEntity? = if (newTheme) null else themesRepository.getThemeWithTitle(parentThemeId, themeName)
+            val theme: Theme? = if (newTheme) null else themesRepository.getThemeWithTitle(parentThemeId, themeName)
             if (theme != null) {
                 parentThemeId = theme.id
             } else {
                 newTheme = true
-                parentThemeId = themesRepository.addNewTheme(parentThemeId, themeName)?.id ?: 0L
+                parentThemeId = runBlocking {
+                    themesRepository.addNewTheme(parentThemeId, themeName)?.id ?: 0L
+                }
             }
         }
         streamFactory.themeId = parentThemeId

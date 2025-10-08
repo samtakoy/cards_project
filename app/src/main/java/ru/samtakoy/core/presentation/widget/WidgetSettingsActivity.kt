@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import ru.samtakoy.core.presentation.RouterHolder
 import ru.samtakoy.core.presentation.SingleFragmentActivity
 import ru.samtakoy.core.presentation.log.MyLog
@@ -25,5 +26,7 @@ class WidgetSettingsActivity : SingleFragmentActivity(), RouterHolder {
         setResult(RESULT_CANCELED, resultValue)
     }
 
-    override fun getNavController() = null
+    // override fun getNavController() = null
+    override val navController: NavController
+        get() = TODO("Not yet implemented")
 }

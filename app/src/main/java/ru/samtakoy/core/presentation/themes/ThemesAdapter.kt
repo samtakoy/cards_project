@@ -6,9 +6,6 @@ import android.view.View.OnCreateContextMenuListener
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ru.samtakoy.R
-import ru.samtakoy.core.data.local.database.room.entities.QPackEntity
-import ru.samtakoy.core.data.local.database.room.entities.ThemeEntity
-
 
 private const val ITEM_TYPE_THEME = 1
 private const val ITEM_TYPE_QPACK = 2

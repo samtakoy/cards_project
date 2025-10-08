@@ -6,14 +6,17 @@ import kotlinx.coroutines.flow.onEach
 import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.data.local.database.room.entities.elements.Schedule
-import ru.samtakoy.core.data.local.database.room.entities.elements.ScheduleItem
-import ru.samtakoy.core.data.local.database.room.entities.elements.ScheduleTimeUnit
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.Action
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.Event
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.State
+import ru.samtakoy.features.learncourse.domain.model.schedule.Schedule
+import ru.samtakoy.features.learncourse.domain.model.schedule.ScheduleItem
+import ru.samtakoy.features.learncourse.domain.model.schedule.ScheduleTimeUnit
+import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.ParcelableSchedule
+import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.toDomain
+import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.toParcelable
 import java.util.TreeSet
 
 internal class ScheduleEditViewModelImpl(
@@ -33,8 +36,8 @@ internal class ScheduleEditViewModelImpl(
         initialValueGetter = { initialSchedule },
         keyName = KEY_SCHEDULE,
         savedStateHandle = savedStateHandle,
-        serialize = { it.serializeToString() },
-        deserialize = { Schedule.deserializeFrom(it as? String) },
+        serialize = { it.toParcelable() },
+        deserialize = { (it as ParcelableSchedule).toDomain() },
         saveScope = ioScope
     )
 
@@ -42,8 +45,8 @@ internal class ScheduleEditViewModelImpl(
         initialValueGetter = { ScheduleItem(1, ScheduleTimeUnit.MINUTE) },
         keyName = KEY_SCHEDULE_ITEM,
         savedStateHandle = savedStateHandle,
-        serialize = { it.serializeToString() },
-        deserialize = { ScheduleItem.parseString(it as String) },
+        serialize = { it.toParcelable() },
+        deserialize = { (it as ParcelableSchedule.Item).toDomain() },
         saveScope = ioScope
     )
 
@@ -54,14 +57,14 @@ internal class ScheduleEditViewModelImpl(
     override fun onEvent(event: Event) {
         when (event) {
             Event.ClearScheduleClick -> {
-                schedule.value = Schedule()
+                schedule.value = Schedule(emptyList())
             }
             Event.ClearScheduleCurItemClick -> {
                 curItemToAdd.value = ScheduleItem(1, ScheduleTimeUnit.MINUTE)
             }
             Event.AddScheduleCurItem -> {
                 schedule.value = Schedule(
-                    mItems = (TreeSet(schedule.value.mItems) + curItemToAdd.value).toList()
+                    items = (TreeSet(schedule.value.items) + curItemToAdd.value).toList()
                 )
             }
             is Event.ScheduleTimeUnitSelect -> {
@@ -73,7 +76,7 @@ internal class ScheduleEditViewModelImpl(
             }
             Event.ConfirmResultClick -> {
                 sendAction(
-                    Action.CloseWithResult(serializedSchedule = schedule.value.serializeToString())
+                    Action.CloseWithResult(serializedSchedule = schedule.value.toParcelable())
                 )
             }
         }

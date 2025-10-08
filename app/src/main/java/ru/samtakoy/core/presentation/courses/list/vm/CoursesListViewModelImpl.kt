@@ -2,8 +2,6 @@ package ru.samtakoy.core.presentation.courses.list.vm
 
 import android.os.Parcelable
 import androidx.lifecycle.SavedStateHandle
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
@@ -14,12 +12,6 @@ import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.core.app.some.Resources
 import ru.samtakoy.core.app.utils.DateUtils
-import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity
-import ru.samtakoy.core.data.local.database.room.entities.elements.Schedule
-import ru.samtakoy.core.data.local.database.room.entities.types.CourseType
-import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode
-import ru.samtakoy.core.domain.CardsInteractor
-import ru.samtakoy.core.domain.NCoursesInteractor
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModel.Action
@@ -29,11 +21,15 @@ import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModel.State
 import ru.samtakoy.core.presentation.courses.model.CourseItemUiMapper
 import ru.samtakoy.core.presentation.courses.model.CourseItemUiModel
 import ru.samtakoy.core.presentation.log.MyLog
-import java.util.LinkedList
+import ru.samtakoy.features.learncourse.domain.NCoursesInteractor
+import ru.samtakoy.features.learncourse.domain.model.CourseType
+import ru.samtakoy.features.learncourse.domain.model.LearnCourseMode
+import ru.samtakoy.features.learncourse.domain.model.schedule.Schedule
+import ru.samtakoy.features.qpack.domain.QPackInteractor
 
 internal class CoursesListViewModelImpl(
     private val coursesInteractor: NCoursesInteractor,
-    private val cardsInteractor: CardsInteractor,
+    private val qPackInteractor: QPackInteractor,
     private val courseItemsMapper: CourseItemUiMapper,
     private val resources: Resources,
     savedStateHandle: SavedStateHandle,
@@ -66,7 +62,7 @@ internal class CoursesListViewModelImpl(
         ) {
             if (dataState.value.isSaved.not() && targetQPackId != null) {
                 dataState.value = dataState.value.copy(
-                    newCourseDefaultTitle = cardsInteractor.getQPack(targetQPackId)?.title.orEmpty()
+                    newCourseDefaultTitle = qPackInteractor.getQPack(targetQPackId)?.title.orEmpty()
                 )
             }
             dataState.value = dataState.value.copy(isSaved = true)
@@ -104,20 +100,18 @@ internal class CoursesListViewModelImpl(
 
     private fun addCourse(courseTitle: String) {
         val qPackId: Long = targetQPackId!!
-        val newCourse = LearnCourseEntity.initNew(
-            qPackId = qPackId,
-            courseType = CourseType.PRIMARY,
-            title = courseTitle,
-            mode = LearnCourseMode.PREPARING,
-            cardIds = LinkedList(),
-            restSchedule = Schedule.DEFAULT,
-            repeatDate = DateUtils.getCurrentTimeDate()
-        )
-
         launchWithLoader(
             onError = ::onCourseAddError
         ) {
-            coursesInteractor.addNewCourse(newCourse)
+            coursesInteractor.addNewCourse(
+                qPackId = qPackId,
+                courseType = CourseType.PRIMARY,
+                title = courseTitle,
+                mode = LearnCourseMode.PREPARING,
+                cardIds = emptyList(),
+                restSchedule = Schedule.DEFAULT,
+                repeatDate = DateUtils.currentTimeDate
+            )
             dataState.value = dataState.value.copy(
                 newCourseDefaultTitle = ""
             )

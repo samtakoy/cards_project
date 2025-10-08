@@ -157,8 +157,10 @@ open class QPacksListFragment : Fragment(), ViewModelOwner {
         )
 
         mAdapter = QPacksListAdapter(
-            ItemClickListener { qPack: QPackListItemUiModel ->
-                viewModel.onEvent(Event.PackClick(qPack))
+            object: ItemClickListener {
+                override fun onClick(item: QPackListItemUiModel) {
+                    viewModel.onEvent(Event.PackClick(item))
+                }
             }
         )
         mRecyclerView!!.setAdapter(mAdapter)
@@ -229,7 +231,7 @@ open class QPacksListFragment : Fragment(), ViewModelOwner {
     }
 
     private fun showPackInfo(qPackId: Long) {
-        mRouterHolder!!.getNavController().navigate(
+        mRouterHolder!!.navController.navigate(
             R.id.action_qPacksListFragment_to_qPackInfoFragment,
             buildBundle(qPackId)
         )

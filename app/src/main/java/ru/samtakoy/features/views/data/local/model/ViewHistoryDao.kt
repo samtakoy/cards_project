@@ -5,13 +5,12 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-import ru.samtakoy.core.data.local.database.room.entities.QPackEntity
-import ru.samtakoy.core.data.local.database.room.entities.ThemeEntity
+import ru.samtakoy.features.qpack.data.QPackEntity
+import ru.samtakoy.features.theme.data.ThemeEntity
 import ru.samtakoy.features.views.data.local.model.ViewHistoryEntity.Companion.ID
 import ru.samtakoy.features.views.data.local.model.ViewHistoryEntity.Companion.LAST_VIEW_DATE
 import ru.samtakoy.features.views.data.local.model.ViewHistoryEntity.Companion.QPACK_ID
 import ru.samtakoy.features.views.data.local.model.ViewHistoryEntity.Companion.TABLE
-import ru.samtakoy.features.views.domain.ViewHistoryItem
 
 @Dao
 interface ViewHistoryDao {

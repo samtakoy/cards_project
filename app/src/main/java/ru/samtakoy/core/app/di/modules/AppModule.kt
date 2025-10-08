@@ -1,41 +1,26 @@
-package ru.samtakoy.core.app.di.modules;
+package ru.samtakoy.core.app.di.modules
 
-import android.content.ContentResolver;
-import android.content.Context;
-
-import javax.inject.Singleton;
-
-import dagger.Binds;
-import dagger.Module;
-import dagger.Provides;
-import ru.samtakoy.core.app.some.Resources;
-import ru.samtakoy.core.app.some.ResourcesImpl;
-
+import android.content.ContentResolver
+import android.content.Context
+import dagger.Module
+import dagger.Provides
+import ru.samtakoy.core.app.some.Resources
+import ru.samtakoy.core.app.some.ResourcesImpl
+import javax.inject.Singleton
 
 @Module
-public class AppModule {
-
-    private Context mContext;
-
-    public AppModule(Context context) {
-        this.mContext = context;
+class AppModule(
+    private val mContext: Context
+) {
+    @Provides @Singleton fun provideContext(): Context {
+        return mContext
     }
 
-    @Provides
-    @Singleton
-    public Context provideContext() {
-        return mContext;
+    @Provides @Singleton fun provideContentResolver(): ContentResolver {
+        return mContext.getContentResolver()
     }
 
-    @Provides
-    @Singleton
-    public ContentResolver provideContentResolver() {
-        return mContext.getContentResolver();
-    }
-
-    @Provides
-    @Singleton
-    public Resources provideResources(ResourcesImpl resources) {
-        return resources;
+    @Provides @Singleton fun provideResources(resources: ResourcesImpl): Resources {
+        return resources
     }
 }

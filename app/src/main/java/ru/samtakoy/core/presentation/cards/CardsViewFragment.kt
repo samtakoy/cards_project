@@ -18,7 +18,6 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import ru.samtakoy.R
 import ru.samtakoy.core.app.di.Di
-import ru.samtakoy.core.data.local.database.room.entities.elements.Schedule
 import ru.samtakoy.core.presentation.RouterHolder
 import ru.samtakoy.core.presentation.base.observe
 import ru.samtakoy.core.presentation.base.viewmodel.AbstractViewModel
@@ -38,6 +37,7 @@ import ru.samtakoy.core.presentation.cards.vm.CardsViewViewModelImpl
 import ru.samtakoy.core.presentation.log.LogActivity
 import ru.samtakoy.core.presentation.misc.edit_text_block.EditTextBlockDialogFragment
 import ru.samtakoy.core.presentation.showDialogFragment
+import ru.samtakoy.features.learncourse.domain.model.schedule.Schedule
 import kotlin.math.floor
 import kotlin.math.min
 import javax.inject.Inject
@@ -65,7 +65,7 @@ class CardsViewFragment : Fragment(),
 
     private fun readViewMode(): CardViewMode {
         val cardViewModeOrdinal = requireArguments().getInt(ARG_VIEW_MODE)
-        return CardViewMode.get(cardViewModeOrdinal)
+        return CardViewMode.values().get(cardViewModeOrdinal)
     }
 
     private fun readViewHistoryItemId(): Long {
@@ -112,7 +112,7 @@ class CardsViewFragment : Fragment(),
                 showError(action.message)
             }
             CardsViewViewModel.NavigationAction.CloseScreen -> {
-                mRouterHolder!!.getNavController().navigateUp()
+                mRouterHolder!!.navController.navigateUp()
             }
             is CardsViewViewModel.Action.ShowEditTextDialog -> {
                 showEditTextDialog(action.text, action.question)
@@ -286,7 +286,7 @@ class CardsViewFragment : Fragment(),
         )
     }
 
-    private fun showEditTextDialog(text: String?, question: Boolean) {
+    private fun showEditTextDialog(text: String, question: Boolean) {
         showDialogFragment(
             EditTextBlockDialogFragment.newInstance(
                 text,
@@ -320,7 +320,7 @@ class CardsViewFragment : Fragment(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.getItemId()) {
             R.id.menu_item_log -> {
-                startActivity(LogActivity.newActivityIntent(getContext()))
+                startActivity(LogActivity.newActivityIntent(requireContext()))
                 return true
             }
         }

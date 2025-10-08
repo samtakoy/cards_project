@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import ru.samtakoy.core.data.local.preferences.AppPreferences
-import ru.samtakoy.core.data.local.preferences.AppPreferencesImpl
+import ru.samtakoy.features.preferences.data.AppPreferences
+import ru.samtakoy.features.preferences.data.AppPreferencesImpl
 
 import javax.inject.Singleton
 

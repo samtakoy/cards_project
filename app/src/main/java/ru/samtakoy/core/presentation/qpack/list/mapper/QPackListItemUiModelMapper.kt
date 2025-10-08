@@ -1,24 +1,23 @@
 package ru.samtakoy.core.presentation.qpack.list.mapper
 
-import androidx.compose.material3.TimeInput
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import ru.samtakoy.core.app.utils.asAnnotated
-import ru.samtakoy.core.data.local.database.room.entities.QPackEntity
 import ru.samtakoy.core.presentation.design_system.base.model.LongUiId
 import ru.samtakoy.core.presentation.qpack.list.model.QPackListItemUiModel
 import ru.samtakoy.core.presentation.qpack.list.model.QPackSortType
-import timber.log.Timber
+import ru.samtakoy.core.utils.DateUtils.DATE_FORMAT
+import ru.samtakoy.features.qpack.domain.QPack
 import javax.inject.Inject
 
 internal interface QPackListItemUiModelMapper {
-    fun map(item: QPackEntity, sortType: QPackSortType): QPackListItemUiModel
-    fun mapImmutableList(items: List<QPackEntity>, sortType: QPackSortType): ImmutableList<QPackListItemUiModel>
+    fun map(item: QPack, sortType: QPackSortType): QPackListItemUiModel
+    fun mapImmutableList(items: List<QPack>, sortType: QPackSortType): ImmutableList<QPackListItemUiModel>
 }
 
 internal class QPackListItemUiModelMapperImpl @Inject constructor(): QPackListItemUiModelMapper {
     override fun map(
-        item: QPackEntity,
+        item: QPack,
         sortType: QPackSortType
     ): QPackListItemUiModel {
         return QPackListItemUiModel(
@@ -33,11 +32,19 @@ internal class QPackListItemUiModelMapperImpl @Inject constructor(): QPackListIt
     }
 
     override fun mapImmutableList(
-        items: List<QPackEntity>,
+        items: List<QPack>,
         sortType: QPackSortType
     ): ImmutableList<QPackListItemUiModel> {
         return items.map {
             map(it, sortType)
         }.toImmutableList()
+    }
+
+    private fun QPack.getCreationDateAsString(): String {
+        return DATE_FORMAT.format(creationDate)
+    }
+
+    private fun QPack.getLastViewDateAsString(): String {
+        return DATE_FORMAT.format(lastViewDate)
     }
 }

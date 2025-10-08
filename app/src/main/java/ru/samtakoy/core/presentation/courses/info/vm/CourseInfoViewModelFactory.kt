@@ -8,9 +8,9 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.domain.CourseProgressUseCase
-import ru.samtakoy.core.domain.CoursesPlanner
-import ru.samtakoy.core.domain.NCoursesInteractor
+import ru.samtakoy.features.learncourse.domain.CourseProgressUseCase
+import ru.samtakoy.features.learncourse.domain.CoursesPlanner
+import ru.samtakoy.features.learncourse.domain.NCoursesInteractor
 import ru.samtakoy.features.views.domain.ViewHistoryInteractor
 
 internal class CourseInfoViewModelFactory @AssistedInject constructor(

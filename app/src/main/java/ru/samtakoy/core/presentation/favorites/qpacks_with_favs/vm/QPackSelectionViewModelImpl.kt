@@ -12,8 +12,6 @@ import kotlinx.coroutines.flow.update
 import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.data.local.database.room.entities.QPackEntity
-import ru.samtakoy.core.domain.CardsInteractor
 import ru.samtakoy.core.domain.FavoritesInteractor
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.design_system.base.model.LongUiId
@@ -23,10 +21,12 @@ import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectio
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModel.Event
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModel.NavigationAction
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModel.State
+import ru.samtakoy.features.qpack.domain.QPack
+import ru.samtakoy.features.qpack.domain.QPackInteractor
 import ru.samtakoy.features.views.domain.ViewHistoryInteractor
 
 class QPackSelectionViewModelImpl(
-    private val cardsInteractor: CardsInteractor,
+    private val qPackInteractor: QPackInteractor,
     private val favoritesInteractor: FavoritesInteractor,
     private val viewHistoryInteractor: ViewHistoryInteractor,
     private val itemsMapper: QPacksWithFavsItemsMapper,
@@ -104,10 +104,10 @@ class QPackSelectionViewModelImpl(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun getQPacksFlow(): Flow<List<QPackEntity>> {
+    private fun getQPacksFlow(): Flow<List<QPack>> {
         return favoritesInteractor.getAllQPacksIdsByCreationDateDescWithFavsAsFlow()
             .mapLatest {
-                cardsInteractor.getQPacksByIds(it)
+                qPackInteractor.getQPacksByIds(it)
             }
     }
 

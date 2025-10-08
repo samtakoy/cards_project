@@ -1,24 +1,22 @@
-package ru.samtakoy.features.import_export.utils.cbuild;
+package ru.samtakoy.features.import_export.utils.cbuild
 
-public class CBuilderConst {
+object CBuilderConst {
+    const val QPACK_ID_PREFIX: String = "id:"
+    const val TITLE_PREFIX: String = "title:"
+    const val DESC_PREFIX: String = "desc:"
+    const val DATE_PREFIX: String = "date:"
+    const val VIEWS_PREFIX: String = "views:"
+    const val QUESTION_PREFIX: String = "q:"
+    const val ANSWER_PREFIX: String = "a:"
+    const val TAGS_PREFIX: String = "#"
+    const val TAGS_PREFIX2: String = "tags:"
+    const val IMAGE_PREFIX: String = "img:"
 
+    const val LINE_BREAK: String = "\n"
 
-    public static final String QPACK_ID_PREFIX = "id:";
-    public static final String TITLE_PREFIX = "title:";
-    public static final String DESC_PREFIX = "desc:";
-    public static final String DATE_PREFIX = "date:";
-    public static final String VIEWS_PREFIX = "views:";
-    public static final String QUESTION_PREFIX = "q:";
-    public static final String ANSWER_PREFIX = "a:";
-    public static final String TAGS_PREFIX = "#";
-    public static final String TAGS_PREFIX2 = "tags:";
-    public static final String IMAGE_PREFIX = "img:";
+    const val CARD_REMOVE_TAG: String = "[remove]"
+    const val CARD_REMOVE_TAG2: String = "[r]"
 
-    public static final String LINE_BREAK = "\n";
-
-    public static final String CARD_REMOVE_TAG = "[remove]";
-    public static final String CARD_REMOVE_TAG2 = "[r]";
-
-    public final static Long NO_ID = 0L;
-    public final static String NO_ID_STR = String.valueOf(NO_ID);
+    const val NO_ID: Long = 0L
+    val NO_ID_STR: String = NO_ID.toString()
 }

@@ -3,7 +3,7 @@ package ru.samtakoy.features.views.di
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import ru.samtakoy.core.data.local.database.room.MyRoomDb
+import ru.samtakoy.features.database.data.MyRoomDb
 import ru.samtakoy.features.views.data.local.ViewHistoryRepository
 import ru.samtakoy.features.views.data.local.ViewHistoryRepositoryImpl
 import ru.samtakoy.features.views.data.local.mapper.ViewHistoryEntityMapper

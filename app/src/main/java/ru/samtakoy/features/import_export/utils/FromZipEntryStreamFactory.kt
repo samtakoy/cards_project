@@ -1,110 +1,83 @@
-package ru.samtakoy.features.import_export.utils;
+package ru.samtakoy.features.import_export.utils
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import ru.samtakoy.core.presentation.log.MyLog.add
+import ru.samtakoy.features.import_export.ExportConst
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
 
-import ru.samtakoy.core.presentation.log.MyLog;
-import ru.samtakoy.features.import_export.ExportConst;
-
-public class FromZipEntryStreamFactory implements StreamFactory{
-
-    private byte[] mData;
-    private String mSrcPath;
-    private String mFileName;
-    private Long mThemeId;
-    //private ContentResolver mResolver;
-
-    //private HashMap<String, Long> mThemeIdCache;
-
-    public FromZipEntryStreamFactory(
-            ZipInputStream zin,
-            ZipEntry ze//,
-            //ContentResolver resolver
-    ) throws IOException {
-
-        //mResolver = resolver;
-        mThemeId = 0L;
-
-        ByteArrayOutputStream baOutStream = new ByteArrayOutputStream();
-        for (int c = zin.read(); c != -1; c = zin.read()) {
-            baOutStream.write(c);
-        }
-        baOutStream.close();
-        mData = baOutStream.toByteArray();
-
-
-        // _export/moxy/11.txt
-        if(ze.getName().indexOf(ExportConst.EXPORT_ROOT_FOLDER) == 0){
-            mSrcPath = ze.getName().substring(ExportConst.EXPORT_ROOT_FOLDER.length()+1);
-        } else {
-            mSrcPath = ze.getName();
-        }
-
-        mFileName = ze.getName().substring(ze.getName().lastIndexOf('/')+1);
-        /*if(mFileName.indexOf(".") > 0){
-            mFileName = mFileName.substring(0, mFileName.lastIndexOf("."));
-        }/**/
-
-        //mThemeIdCache = new HashMap<>();
-    }
-
-    public List<String> getThemesPath() {
-
-        String[] arrStrings = mSrcPath.split("/");
-        int n = arrStrings.length - 1;
-        ArrayList<String> result = new ArrayList<>(n);
-
-        for (int i = 0; i < n; i++) {
-            if (arrStrings[i].length() > 0) {
-                result.add(arrStrings[i]);
-            }
-        }
-        return result;
-    }
-
-    //public
-
-    @Override
-    public InputStream openStream() throws Exception {
-
-        MyLog.add("++++++++++++++++++++++");
-        MyLog.add("++ openStream: "+mData.length+", "+mSrcPath);
-
-
-        return new ByteArrayInputStream(mData);
-    }
-
-    @Override
-    public String getSrcPath() {
-        return mSrcPath;
-    }
-
-    @Override
-    public Long getThemeId() {
-        return mThemeId;
-    }
-
-    public void setThemeId(Long themeId){
-        mThemeId = themeId;
-    }
-
-    @Override
-    public String getFileName() {
-        return mFileName;
-    }
+class FromZipEntryStreamFactory(
+    zin: ZipInputStream,
+    ze: ZipEntry //,
+    //ContentResolver resolver
+) : StreamFactory {
+    private val mData: ByteArray
+    private var mSrcPath: String
 
     /*
     @Override
     public ContentResolver getResolver() {
         return mResolver;
     }*/
+    override val fileName: String
+    override var themeId: Long = 0L
+
+    //private ContentResolver mResolver;
+    //private HashMap<String, Long> mThemeIdCache;
+    init {
+        //mResolver = resolver;
+
+        val baOutStream = ByteArrayOutputStream()
+        var c = zin.read()
+        while (c != -1) {
+            baOutStream.write(c)
+            c = zin.read()
+        }
+        baOutStream.close()
+        mData = baOutStream.toByteArray()
+
+        // _export/moxy/11.txt
+        if (ze.getName().indexOf(ExportConst.EXPORT_ROOT_FOLDER) == 0) {
+            mSrcPath = ze.getName().substring(ExportConst.EXPORT_ROOT_FOLDER.length + 1)
+        } else {
+            mSrcPath = ze.getName()
+        }
+
+        this.fileName = ze.getName().substring(ze.getName().lastIndexOf('/') + 1)
+
+        /*if(mFileName.indexOf(".") > 0){
+            mFileName = mFileName.substring(0, mFileName.lastIndexOf("."));
+        }/ **/
+
+        //mThemeIdCache = new HashMap<>();
+    }
+
+    val themesPath: MutableList<String>
+        get() {
+            val arrStrings: Array<String> =
+                mSrcPath.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val n = arrStrings.size - 1
+            val result = ArrayList<String>(n)
+
+            for (i in 0..<n) {
+                if (arrStrings[i].length > 0) {
+                    result.add(arrStrings[i])
+                }
+            }
+            return result
+        }
+
+    //public
+    @Throws(Exception::class) override fun openStream(): InputStream {
+        add("++++++++++++++++++++++")
+        add("++ openStream: " + mData.size + ", " + mSrcPath)
 
 
+        return ByteArrayInputStream(mData)
+    }
 
+    override val srcPath: String
+        get() = mSrcPath
 }

@@ -17,9 +17,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import ru.samtakoy.R
 import ru.samtakoy.core.app.di.Di
-import ru.samtakoy.core.data.local.database.room.entities.elements.Schedule
-import ru.samtakoy.core.data.local.database.room.entities.elements.Schedule.Companion.deserializeFrom
-import ru.samtakoy.core.data.local.database.room.entities.elements.ScheduleTimeUnit
 import ru.samtakoy.core.presentation.base.observe
 import ru.samtakoy.core.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.core.presentation.base.viewmodel.ViewModelOwner
@@ -27,6 +24,9 @@ import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.Event
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModelFactory
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModelImpl
+import ru.samtakoy.features.learncourse.domain.model.schedule.ScheduleTimeUnit
+import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.ParcelableSchedule
+import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.toDomainOrEmpty
 import javax.inject.Inject
 
 class ScheduleEditFragment : DialogFragment(), ViewModelOwner {
@@ -42,7 +42,7 @@ class ScheduleEditFragment : DialogFragment(), ViewModelOwner {
     internal lateinit var viewModelFactory: ScheduleEditViewModelFactory.Factory
     private val viewModel by viewModels<ScheduleEditViewModelImpl> {
         viewModelFactory.create(
-            schedule = deserializeFrom(requireArguments().getString(ARG_SCHEDULE_STRING))
+            schedule = (requireArguments().getParcelable(ARG_SCHEDULE_STRING) as? ParcelableSchedule).toDomainOrEmpty()
         )
     }
     override fun getViewModel(): AbstractViewModel = viewModel
@@ -134,7 +134,7 @@ class ScheduleEditFragment : DialogFragment(), ViewModelOwner {
         if (container.childCount < ScheduleTimeUnit.entries.size) {
             for (unit in ScheduleTimeUnit.entries) {
                 val unitBtn = Button(ctx)
-                unitBtn.setText("+1" + getResources().getString(unit.getStringId()))
+                unitBtn.setText("+1" + getResources().getString(unit.textStringId))
                 unitBtn.setOnClickListener(
                     View.OnClickListener { view: View? ->
                         viewModel.onEvent(Event.ScheduleTimeUnitSelect(unit))
@@ -145,7 +145,7 @@ class ScheduleEditFragment : DialogFragment(), ViewModelOwner {
         }
     }
 
-    private fun trySendResult(serializedSchedule: String) {
+    private fun trySendResult(serializedSchedule: ParcelableSchedule) {
         if (getTargetFragment() == null) {
             Log.e(TAG, "Target fragment is missing")
             return
@@ -162,13 +162,13 @@ class ScheduleEditFragment : DialogFragment(), ViewModelOwner {
         private const val ARG_SCHEDULE_STRING = "ARG_SCHEDULE_STRING"
         const val RESULT_SCHEDULE_STRING: String = "RESULT_SCHEDULE_STRING"
 
-        @JvmStatic fun newFragment(schedule: Schedule?): ScheduleEditFragment {
+        @JvmStatic fun newFragment(schedule: ParcelableSchedule?): ScheduleEditFragment {
             return ScheduleEditFragment().apply {
                 arguments = bundleOf(
                     ARG_SCHEDULE_STRING to if (schedule == null) {
                         null
                     } else {
-                        schedule.serializeToString()
+                        schedule
                     }
                 )
             }

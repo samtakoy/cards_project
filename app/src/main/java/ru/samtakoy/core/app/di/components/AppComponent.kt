@@ -1,109 +1,108 @@
-package ru.samtakoy.core.app.di.components;
+package ru.samtakoy.core.app.di.components
 
-
-import javax.inject.Singleton;
-
-import dagger.Component;
-import ru.samtakoy.core.app.di.modules.ApiModule;
-import ru.samtakoy.core.app.di.modules.AppModule;
-import ru.samtakoy.core.app.di.modules.CardsModule;
-import ru.samtakoy.core.app.di.modules.CoursesModule;
-import ru.samtakoy.core.app.di.modules.DatabaseModule;
-import ru.samtakoy.core.app.di.modules.CoroutinesModule;
-import ru.samtakoy.core.app.di.modules.FavoritesModule;
-import ru.samtakoy.core.presentation.MainActivity;
-import ru.samtakoy.core.presentation.cards.CardsViewFragment;
-import ru.samtakoy.core.presentation.cards.answer.CardAnswerFragment;
-import ru.samtakoy.core.presentation.cards.di.CardsViewPresentationModule;
-import ru.samtakoy.core.presentation.cards.question.CardQuestionFragment;
-import ru.samtakoy.core.presentation.cards.result.CardsViewResultFragment;
-import ru.samtakoy.core.presentation.courses.info.CourseInfoFragment;
-import ru.samtakoy.core.presentation.courses.list.CoursesListFragment;
-import ru.samtakoy.core.presentation.courses.select.SelectCourseDialogFragment;
-import ru.samtakoy.core.presentation.export_cards.BatchExportDialogFragment;
-import ru.samtakoy.core.presentation.favorites.onboarding.FavoritesFragment;
-import ru.samtakoy.core.presentation.import_cards.BatchImportDialogFragment;
-import ru.samtakoy.core.presentation.import_cards.ImportPackDialogFragment;
-import ru.samtakoy.core.presentation.import_cards.ImportZipDialogFragment;
-import ru.samtakoy.core.presentation.qpack.di.QPackPresentationModule;
-import ru.samtakoy.core.presentation.qpack.info.QPackInfoFragment;
-import ru.samtakoy.core.presentation.qpack.list.QPacksListFragment;
-import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.QPackSelectionFragment;
-import ru.samtakoy.core.presentation.schedule.ScheduleEditFragment;
-import ru.samtakoy.core.presentation.settings.ClearDbDialogFragment;
-import ru.samtakoy.core.presentation.themes.ThemesListFragment;
-import ru.samtakoy.core.presentation.themes.di.ThemesPresentationModule;
-import ru.samtakoy.core.presentation.widget.WidgetSettingsFragment;
-import ru.samtakoy.features.import_export.di.ExportModule;
-import ru.samtakoy.features.import_export.di.ImportModule;
-import ru.samtakoy.features.notifications.NotificationsPlannerService;
-import ru.samtakoy.features.views.di.ViewsFeatureModule;
-import ru.samtakoy.features.views.presentation.history.ViewsHistoryFragment;
+import dagger.Component
+import ru.samtakoy.core.app.di.modules.ApiModule
+import ru.samtakoy.core.app.di.modules.AppModule
+import ru.samtakoy.core.app.di.modules.CardsModule
+import ru.samtakoy.core.app.di.modules.CoroutinesModule
+import ru.samtakoy.core.app.di.modules.CoursesModule
+import ru.samtakoy.core.app.di.modules.DatabaseModule
+import ru.samtakoy.core.app.di.modules.FavoritesModule
+import ru.samtakoy.core.presentation.MainActivity
+import ru.samtakoy.core.presentation.cards.CardsViewFragment
+import ru.samtakoy.core.presentation.cards.answer.CardAnswerFragment
+import ru.samtakoy.core.presentation.cards.di.CardsViewPresentationModule
+import ru.samtakoy.core.presentation.cards.question.CardQuestionFragment
+import ru.samtakoy.core.presentation.cards.result.CardsViewResultFragment
+import ru.samtakoy.core.presentation.courses.info.CourseInfoFragment
+import ru.samtakoy.core.presentation.courses.list.CoursesListFragment
+import ru.samtakoy.core.presentation.courses.select.SelectCourseDialogFragment
+import ru.samtakoy.core.presentation.export_cards.BatchExportDialogFragment
+import ru.samtakoy.core.presentation.favorites.onboarding.FavoritesFragment
+import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.QPackSelectionFragment
+import ru.samtakoy.core.presentation.import_cards.BatchImportDialogFragment
+import ru.samtakoy.core.presentation.import_cards.ImportPackDialogFragment
+import ru.samtakoy.core.presentation.import_cards.ImportZipDialogFragment
+import ru.samtakoy.core.presentation.qpack.di.QPackPresentationModule
+import ru.samtakoy.core.presentation.qpack.info.QPackInfoFragment
+import ru.samtakoy.core.presentation.qpack.list.QPacksListFragment
+import ru.samtakoy.core.presentation.schedule.ScheduleEditFragment
+import ru.samtakoy.core.presentation.settings.ClearDbDialogFragment
+import ru.samtakoy.core.presentation.themes.ThemesListFragment
+import ru.samtakoy.core.presentation.themes.di.ThemesPresentationModule
+import ru.samtakoy.core.presentation.widget.WidgetSettingsFragment
+import ru.samtakoy.features.import_export.di.ExportModule
+import ru.samtakoy.features.import_export.di.ImportModule
+import ru.samtakoy.features.notifications.NotificationsPlannerService
+import ru.samtakoy.features.views.di.ViewsFeatureModule
+import ru.samtakoy.features.views.presentation.history.ViewsHistoryFragment
+import javax.inject.Singleton
 
 // TODO субкомпоненты для сервисов и для приложения
 // TODO доступ к компоненту через синхр сингелтон?
-
-@Component(modules = {
-    AppModule.class,
-    CoroutinesModule.class,
-    DatabaseModule.class,
-    CardsModule.class, CoursesModule.class,
-    ExportModule.class, ImportModule.class,
-    FavoritesModule.class,
-    ViewsFeatureModule.class,
-    CardsViewPresentationModule.class,
-    ThemesPresentationModule.class,
-    QPackPresentationModule.class,
-    ApiModule.class
-})
+@Component(
+    modules = [
+        AppModule::class,
+        CoroutinesModule::class,
+        DatabaseModule::class,
+        CardsModule::class,
+        CoursesModule::class,
+        ExportModule::class,
+        ImportModule::class,
+        FavoritesModule::class,
+        ViewsFeatureModule::class,
+        CardsViewPresentationModule::class,
+        ThemesPresentationModule::class,
+        QPackPresentationModule::class,
+        ApiModule::class
+    ]
+)
 @Singleton
-public interface AppComponent {
+interface AppComponent {
+    fun inject(f: QPackInfoFragment)
 
-    void inject(QPackInfoFragment f);
+    fun inject(a: MainActivity)
 
-    void inject(MainActivity a);
+    fun inject(f: ThemesListFragment)
 
-    void inject(ThemesListFragment f);
+    fun inject(f: BatchExportDialogFragment)
 
-    void inject(BatchExportDialogFragment f);
+    fun inject(f: CoursesListFragment)
 
-    void inject(CoursesListFragment f);
+    fun inject(f: CourseInfoFragment)
 
-    void inject(CourseInfoFragment f);
+    fun inject(f: ScheduleEditFragment)
 
-    void inject(ScheduleEditFragment f);
-
-    void inject(SelectCourseDialogFragment f);
+    fun inject(f: SelectCourseDialogFragment)
 
     // progress dialogs
-    void inject(ClearDbDialogFragment f);
+    fun inject(f: ClearDbDialogFragment)
 
-    void inject(BatchImportDialogFragment f);
+    fun inject(f: BatchImportDialogFragment)
 
-    void inject(ImportPackDialogFragment f);
+    fun inject(f: ImportPackDialogFragment)
 
-    void inject(ImportZipDialogFragment f);
+    fun inject(f: ImportZipDialogFragment)
 
-    void inject(CardsViewFragment f);
+    fun inject(f: CardsViewFragment)
 
-    void inject(CardQuestionFragment f);
+    fun inject(f: CardQuestionFragment)
 
-    void inject(CardAnswerFragment f);
+    fun inject(f: CardAnswerFragment)
 
-    void inject(CardsViewResultFragment f);
+    fun inject(f: CardsViewResultFragment)
 
-    void inject(QPacksListFragment f);
+    fun inject(f: QPacksListFragment)
 
-    void inject(QPackSelectionFragment f);
+    fun inject(f: QPackSelectionFragment)
 
-    void inject(WidgetSettingsFragment f);
+    fun inject(f: WidgetSettingsFragment)
 
     // TODO а этов модуль не вынести? в компонент конкретного модуля?
     // https://developer.android.com/training/dependency-injection/dagger-multi-module?hl=ru
-    void inject(FavoritesFragment f);
-    void inject(ViewsHistoryFragment f);
-
+    fun inject(f: FavoritesFragment)
+    fun inject(f: ViewsHistoryFragment)
 
     // сервисы
-    void inject(NotificationsPlannerService s);
+    fun inject(s: NotificationsPlannerService)
 }

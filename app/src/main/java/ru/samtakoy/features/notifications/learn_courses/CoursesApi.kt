@@ -6,27 +6,24 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
-import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import ru.samtakoy.core.app.some.Resources
 import ru.samtakoy.core.app.utils.DateUtils
-import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity
-import ru.samtakoy.core.data.local.database.room.entities.elements.ScheduleTimeUnit
-import ru.samtakoy.core.data.local.database.room.entities.getRepeatDateDebug
-import ru.samtakoy.core.data.local.database.room.entities.getRepeatDateUTCMillis
-import ru.samtakoy.core.data.local.database.room.entities.other.LearnCourseHelper
-import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode
-import ru.samtakoy.core.data.local.reps.CoursesRepository
+import ru.samtakoy.features.learncourse.domain.utils.getRepeatDateDebug
+import ru.samtakoy.features.learncourse.domain.utils.getRepeatDateUTCMillis
+import ru.samtakoy.features.learncourse.data.utils.LearnCourseHelper
+import ru.samtakoy.features.learncourse.data.CoursesRepository
 import ru.samtakoy.core.presentation.log.MyLog
+import ru.samtakoy.features.learncourse.domain.model.LearnCourse
+import ru.samtakoy.features.learncourse.domain.model.LearnCourseMode
+import ru.samtakoy.features.learncourse.domain.model.schedule.ScheduleTimeUnit
 import ru.samtakoy.features.notifications.NotificationsHelper
 import ru.samtakoy.features.notifications.NotificationsPlannerService
 import kotlin.Array
 import kotlin.Boolean
 import kotlin.Int
 import kotlin.Long
-import kotlin.div
-import java.lang.String
 import javax.inject.Inject
 
 abstract class CoursesApi {
@@ -52,7 +49,7 @@ abstract class CoursesApi {
         get() = mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager?
 
     protected val currentDateLong: Long
-        get() = DateUtils.getCurrentTimeLong()
+        get() = DateUtils.currentTimeLong
 
     protected val shiftMillis: Int
         get() = 20 * ScheduleTimeUnit.MINUTE.getMillis()
@@ -66,10 +63,10 @@ abstract class CoursesApi {
     protected val reSchedulingIntent: Intent
         get() = NotificationsPlannerService.getLearnCoursesReSchedulingIntent(this.appContext, this.learnCourseMode)
 
-    val newLearnCourseIds: Array<Long?>
+    val newLearnCourseIds: Array<Long>
         get() = LearnCourseHelper.getLearnCourseIds(this.newLearnCourses)
 
-    val newLearnCourses: List<LearnCourseEntity>
+    val newLearnCourses: List<LearnCourse>
         get() = mCoursesRepository.getOrderedCoursesLessThan(
             this.learnCourseMode,
             DateUtils.dateFromDbSerialized(this.currentDateLong)
@@ -82,7 +79,7 @@ abstract class CoursesApi {
         /*
         val currentDateLong = this.currentDateLong
         val currentDate = DateUtils.dateFromDbSerialized(currentDateLong)
-        val newLearnCourses: List<LearnCourseEntity> =
+        val newLearnCourses: List<LearnCourse> =
             mCoursesRepository.getOrderedCoursesLessThan(lcMode, currentDate)
 
         val newMinTimeLong = this.currentDateLong + shiftMillis
@@ -113,7 +110,7 @@ abstract class CoursesApi {
         // фиксируем дату для расчетов
         val currentDateLong = this.currentDateLong
         val currentDate = DateUtils.dateFromDbSerialized(currentDateLong)
-        val newRepeatCourses: List<LearnCourseEntity> =
+        val newRepeatCourses: List<LearnCourse> =
             mCoursesRepository.getOrderedCoursesLessThan(lcMode, currentDate)
 
         if (newRepeatCourses.size > 0) {
@@ -136,7 +133,7 @@ abstract class CoursesApi {
             hideNotificationForReadyCourses(notificationId)
         }
 
-        val futureRepeatCourses: List<LearnCourseEntity?> =
+        val futureRepeatCourses: List<LearnCourse?> =
             mCoursesRepository.getOrderedCoursesMoreThan(lcMode, currentDate)
         if (futureRepeatCourses.size == 0) {
             MyLog.add("NONE to alarm")
@@ -161,13 +158,13 @@ abstract class CoursesApi {
     /**
      * запланировать интент старта курса
      */
-    private fun planLearnCoursesAlarm(learnCourse: LearnCourseEntity) {
+    private fun planLearnCoursesAlarm(learnCourse: LearnCourse) {
         val pIntent = getLearnCoursesAlarmPendingIntent(false)
 
         MyLog.add(
-            learnCourse.id.toString() + ": " + (System.currentTimeMillis() / 1000).toString() + "_" + String.valueOf(
+            learnCourse.id.toString() + ": " + (System.currentTimeMillis() / 1000).toString() + "_" + (
                 learnCourse.getRepeatDateUTCMillis() / 1000
-            )
+            ).toString()
         )
         MyLog.add("planLearnCoursesAlarm, time:" + learnCourse.getRepeatDateDebug(learnCourse))
 
@@ -180,7 +177,7 @@ abstract class CoursesApi {
 
     /** показать нотификацию, что курс по времени готов к обучению  */
     protected fun showNotificationForReadyCourses(
-        sortedNewRepeatCourses: List<LearnCourseEntity>,
+        sortedNewRepeatCourses: List<LearnCourse>,
         notificationId: Int,
         icon: Int,
         title: String?,

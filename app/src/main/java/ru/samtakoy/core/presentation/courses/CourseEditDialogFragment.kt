@@ -1,77 +1,68 @@
-package ru.samtakoy.core.presentation.courses;
+package ru.samtakoy.core.presentation.courses
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.EditText;
+import android.app.Activity
+import android.app.Dialog
+import android.content.DialogInterface
+import android.content.Intent
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.WindowManager
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
+import ru.samtakoy.R
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
+class CourseEditDialogFragment : DialogFragment() {
+    private var mInputText: EditText? = null
 
-import ru.samtakoy.R;
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val args = getArguments()
+        val defaultInputText = args!!.getString(ARG_TEXT)
 
-public class CourseEditDialogFragment extends DialogFragment {
+        val v = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_dialog_theme_add, null)
+        mInputText = v.findViewById<View?>(R.id.fragment_dialog_theme_add_input) as EditText
+        mInputText!!.setText(defaultInputText)
 
-    public static final String RESULT_EXTRA_TEXT = "RESULT_EXTRA_TEXT";
-    private static final String ARG_TEXT = "ARG_TEXT";
-
-    private EditText mInputText;
-
-    public static CourseEditDialogFragment newDialog(String defaultInputText){
-        CourseEditDialogFragment result = new CourseEditDialogFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_TEXT, defaultInputText);
-        result.setArguments(args);
-        return result;
-    }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
-        Bundle args = getArguments();
-        String defaultInputText = args.getString(ARG_TEXT);
-
-        View v = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_dialog_theme_add, null);
-        mInputText = (EditText)v.findViewById(R.id.fragment_dialog_theme_add_input);
-        mInputText.setText(defaultInputText);
         //mInputText.requestFocus();
-
-        return new AlertDialog.Builder(getActivity())
-                .setView(v)
-                .setCancelable(true)
-                .setPositiveButton(android.R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                trySendResult();
-                            }
-                        }
-                )
-                .create();
+        return AlertDialog.Builder(requireActivity())
+            .setView(v)
+            .setCancelable(true)
+            .setPositiveButton(
+                android.R.string.ok,
+                object : DialogInterface.OnClickListener {
+                    override fun onClick(dialogInterface: DialogInterface?, i: Int) {
+                        trySendResult()
+                    }
+                }
+            )
+            .create()
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        getDialog()!!.getWindow()!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
     }
 
-    private void trySendResult(){
-        if(getTargetFragment() == null){
-            return;
+    private fun trySendResult() {
+        if (getTargetFragment() == null) {
+            return
         }
-        Intent result = new Intent();
-        result.putExtra(RESULT_EXTRA_TEXT, mInputText.getText().toString().trim());
-        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, result);
+        val result = Intent()
+        result.putExtra(RESULT_EXTRA_TEXT, mInputText!!.getText().toString().trim { it <= ' ' })
+        getTargetFragment()!!.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, result)
     }
 
+    companion object {
+        const val RESULT_EXTRA_TEXT: String = "RESULT_EXTRA_TEXT"
+        private const val ARG_TEXT = "ARG_TEXT"
 
+        fun newDialog(defaultInputText: String?): CourseEditDialogFragment {
+            val result = CourseEditDialogFragment()
+            val args = Bundle()
+            args.putString(ARG_TEXT, defaultInputText)
+            result.setArguments(args)
+            return result
+        }
+    }
 }

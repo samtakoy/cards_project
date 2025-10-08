@@ -1,100 +1,96 @@
-package ru.samtakoy.features.import_export.helpers;
+package ru.samtakoy.features.import_export.helpers
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.List;
+import ru.samtakoy.core.utils.DateUtils.DATE_FORMAT
+import ru.samtakoy.features.card.domain.model.CardWithTags
+import ru.samtakoy.features.import_export.utils.cbuild.CBuilderConst
+import ru.samtakoy.features.qpack.domain.QPack
+import ru.samtakoy.features.tag.domain.Tag
+import java.io.IOException
+import java.io.Writer
 
-import ru.samtakoy.core.data.local.database.room.entities.CardEntity;
-import ru.samtakoy.core.data.local.database.room.entities.QPackEntity;
-import ru.samtakoy.core.data.local.database.room.entities.TagEntity;
-import ru.samtakoy.core.data.local.database.room.entities.other.CardWithTags;
-import ru.samtakoy.features.import_export.utils.cbuild.CBuilderConst;
+object QPackExportHelper {
+    @Throws(IOException::class)
+    fun export(qPack: QPack, cards: List<CardWithTags>, writer: Writer) {
+        writer.write(CBuilderConst.QPACK_ID_PREFIX)
+        writer.write(qPack.id.toString())
+        writer.write(CBuilderConst.LINE_BREAK)
 
-public class QPackExportHelper {
-
-
-    public static void export(QPackEntity qPack, List<CardWithTags> cards, Writer writer) throws IOException {
-
-        writer.write(CBuilderConst.QPACK_ID_PREFIX);
-        writer.write(String.valueOf(qPack.getId()));
-        writer.write(CBuilderConst.LINE_BREAK);
-
-        if (qPack.hasTitle()) {
-            writer.write(CBuilderConst.TITLE_PREFIX);
-            writer.write(qPack.getTitle());
-            writer.write(CBuilderConst.LINE_BREAK);
+        if (!qPack.title.isEmpty()) {
+            writer.write(CBuilderConst.TITLE_PREFIX)
+            writer.write(qPack.title)
+            writer.write(CBuilderConst.LINE_BREAK)
         }
-        if(qPack.hasDesc()){
-            writer.write(CBuilderConst.DESC_PREFIX);
-            writer.write(qPack.getDesc());
-            writer.write(CBuilderConst.LINE_BREAK);
+        if (!qPack.desc.isEmpty()) {
+            writer.write(CBuilderConst.DESC_PREFIX)
+            writer.write(qPack.desc)
+            writer.write(CBuilderConst.LINE_BREAK)
         }
 
-        writer.write(CBuilderConst.DATE_PREFIX);
-        writer.write(qPack.getCreationDateAsString());
-        writer.write(CBuilderConst.LINE_BREAK);
+        writer.write(CBuilderConst.DATE_PREFIX)
+        writer.write(qPack.getCreationDateAsString())
+        writer.write(CBuilderConst.LINE_BREAK)
 
-        writer.write(CBuilderConst.VIEWS_PREFIX);
-        writer.write(String.valueOf(qPack.getViewCount()));
-        writer.write(CBuilderConst.LINE_BREAK);
+        writer.write(CBuilderConst.VIEWS_PREFIX)
+        writer.write(qPack.viewCount.toString())
+        writer.write(CBuilderConst.LINE_BREAK)
 
-        writer.write(CBuilderConst.LINE_BREAK);
-        for (CardWithTags card : cards) {
-            exportOneCard(card, writer);
-            writer.write(CBuilderConst.LINE_BREAK);
+        writer.write(CBuilderConst.LINE_BREAK)
+        for (card in cards) {
+            exportOneCard(card, writer)
+            writer.write(CBuilderConst.LINE_BREAK)
         }
     }
 
-    private static void exportOneCard(CardWithTags cardWithTags, Writer writer) throws IOException {
+    @Throws(IOException::class)
+    private fun exportOneCard(cardWithTags: CardWithTags, writer: Writer) {
+        //        q:[13213][removed]
+        //
+        //        q:[13213]: dependencies
+        //        a:
+        //        #
 
-//        q:[13213][removed]
-//
-//        q:[13213]: dependencies
-//        a:
-//        #
+        val card = cardWithTags.card
 
-        CardEntity card = cardWithTags.getCard();
+        writer.write(CBuilderConst.QUESTION_PREFIX)
+        writer.write("[")
+        writer.write(card.id.toString())
+        writer.write("]")
+        writer.write(card.question)
+        writer.write(CBuilderConst.LINE_BREAK)
 
-        writer.write(CBuilderConst.QUESTION_PREFIX);
-        writer.write("[");
-        writer.write(String.valueOf(card.getId()));
-        writer.write("]");
-        writer.write(card.getQuestion());
-        writer.write(CBuilderConst.LINE_BREAK);
+        writer.write(CBuilderConst.ANSWER_PREFIX)
+        writer.write(card.answer)
+        writer.write(CBuilderConst.LINE_BREAK)
 
-        writer.write(CBuilderConst.ANSWER_PREFIX);
-        writer.write(card.getAnswer());
-        writer.write(CBuilderConst.LINE_BREAK);
-
-        for (String img : card.getAImages()) {
-            writer.write(CBuilderConst.IMAGE_PREFIX);
-            writer.write(img);
-            writer.write(CBuilderConst.LINE_BREAK);
+        for (img in card.aImages) {
+            writer.write(CBuilderConst.IMAGE_PREFIX)
+            writer.write(img)
+            writer.write(CBuilderConst.LINE_BREAK)
         }
 
-        exportTags(cardWithTags.getTags(), writer);
-
+        QPackExportHelper.exportTags(cardWithTags.tags, writer)
     }
 
-    private static void exportTags(List<TagEntity> tags, Writer writer) throws IOException {
-
-
-        writer.write(CBuilderConst.TAGS_PREFIX);
-        if (tags.size() == 0) {
-            writer.write(CBuilderConst.LINE_BREAK);
-            return;
+    @Throws(IOException::class)
+    private fun exportTags(tags: List<Tag>, writer: Writer) {
+        writer.write(CBuilderConst.TAGS_PREFIX)
+        if (tags.size == 0) {
+            writer.write(CBuilderConst.LINE_BREAK)
+            return
         }
 
 
-        writer.write(tags.get(0).getTitle());
+        writer.write(tags.get(0)!!.title)
 
-        for(int i=1; i<tags.size(); i++){
-            writer.write(" ");
-            writer.write(CBuilderConst.TAGS_PREFIX);
-            writer.write(tags.get(i).getTitle());
+        for (i in 1..<tags.size) {
+            writer.write(" ")
+            writer.write(CBuilderConst.TAGS_PREFIX)
+            writer.write(tags.get(i)!!.title)
         }
-        writer.write(CBuilderConst.LINE_BREAK);
+        writer.write(CBuilderConst.LINE_BREAK)
     }
 
-
+    private fun QPack.getCreationDateAsString(): String {
+        return DATE_FORMAT.format(creationDate)
+    }
 }

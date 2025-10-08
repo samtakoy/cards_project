@@ -4,10 +4,10 @@ import android.content.Context
 import android.net.Uri
 import androidx.core.content.FileProvider
 import com.google.gson.Gson
-import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity
-import ru.samtakoy.core.data.local.reps.CoursesRepository
+import ru.samtakoy.features.learncourse.data.CoursesRepository
 import ru.samtakoy.core.presentation.log.MyLog.add
 import ru.samtakoy.features.import_export.helpers.SendEmailHelper
+import ru.samtakoy.features.learncourse.domain.model.LearnCourse
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
@@ -23,11 +23,11 @@ class CoursesExporterImpl @Inject constructor(
         exportCoursesToEmail(mCoursesReposithory.getAllCourses())
     }
 
-    private fun serializeCourses(learnCourses: List<LearnCourseEntity>): String {
+    private fun serializeCourses(learnCourses: List<LearnCourse>): String {
         return Gson().toJson(learnCourses)
     }
 
-    fun exportCoursesToFolder(learnCourses: MutableList<LearnCourseEntity>, exportDirPath: String): Boolean {
+    fun exportCoursesToFolder(learnCourses: MutableList<LearnCourse>, exportDirPath: String): Boolean {
         val file = File(exportDirPath, ExportConst.COURSES_FILE_NAME)
         if (file.exists()) {
             file.delete()
@@ -35,7 +35,7 @@ class CoursesExporterImpl @Inject constructor(
         return exportCoursesToFile(learnCourses, file)
     }
 
-    fun exportCoursesToFile(learnCourses: List<LearnCourseEntity>, file: File): Boolean {
+    fun exportCoursesToFile(learnCourses: List<LearnCourse>, file: File): Boolean {
         var writer: Writer? = null
         try {
             writer = OutputStreamWriter(FileOutputStream(file), ExportConst.FILES_CHARSET)
@@ -56,7 +56,7 @@ class CoursesExporterImpl @Inject constructor(
         return true
     }
 
-    fun exportCoursesToEmail(learnCourses: List<LearnCourseEntity>): Boolean {
+    fun exportCoursesToEmail(learnCourses: List<LearnCourse>): Boolean {
         var cacheDir = mContext.getCacheDir()
         cacheDir = File(cacheDir, "_send")
         if (!cacheDir.exists()) {

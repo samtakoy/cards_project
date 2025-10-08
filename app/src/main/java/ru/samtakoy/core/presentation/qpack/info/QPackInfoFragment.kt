@@ -325,7 +325,7 @@ class QPackInfoFragment : Fragment(), CardViewingTypeSelectorListener, ViewModel
     }
 
     private fun showCourseScreen(courseId: Long) {
-        mRouterHolder!!.getNavController().navigate(R.id.courseInfoFragment, CourseInfoFragment.buildBundle(courseId))
+        mRouterHolder!!.navController.navigate(R.id.courseInfoFragment, CourseInfoFragment.buildBundle(courseId))
     }
 
     private fun showMessage(message: String) {
@@ -333,11 +333,11 @@ class QPackInfoFragment : Fragment(), CardViewingTypeSelectorListener, ViewModel
     }
 
     private fun closeScreen() {
-        mRouterHolder!!.getNavController().navigateUp()
+        mRouterHolder!!.navController.navigateUp()
     }
 
     private fun navigateToPackCourses(qPackId: Long) {
-        mRouterHolder!!.getNavController().navigate(
+        mRouterHolder!!.navController.navigate(
             R.id.coursesListFragment,
             buildBundle(qPackId, null, null)
         )
@@ -362,7 +362,7 @@ class QPackInfoFragment : Fragment(), CardViewingTypeSelectorListener, ViewModel
     }
 
     private fun navigateToCardsView(viewItemId: Long) {
-        mRouterHolder!!.getNavController().navigate(
+        mRouterHolder!!.navController.navigate(
             R.id.action_qPackInfoFragment_to_cardsViewFragment,
             buildBundle(
                 viewItemId,

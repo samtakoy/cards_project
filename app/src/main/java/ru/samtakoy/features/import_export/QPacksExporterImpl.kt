@@ -6,15 +6,15 @@ import androidx.annotation.WorkerThread
 import androidx.core.content.FileProvider
 import ru.samtakoy.core.app.utils.DateUtils
 import ru.samtakoy.core.app.utils.FileUtils
-import ru.samtakoy.core.data.local.database.room.entities.QPackEntity
-import ru.samtakoy.core.data.local.database.room.entities.other.CardWithTags
-import ru.samtakoy.core.data.local.reps.CardsRepository
-import ru.samtakoy.core.data.local.reps.QPacksRepository
-import ru.samtakoy.core.data.local.reps.ThemesRepository
+import ru.samtakoy.features.card.data.CardsRepository
+import ru.samtakoy.features.qpack.data.QPacksRepository
+import ru.samtakoy.features.theme.data.ThemesRepository
 import ru.samtakoy.core.presentation.log.MyLog.add
+import ru.samtakoy.features.card.domain.model.CardWithTags
 import ru.samtakoy.features.import_export.helpers.QPackExportHelper
 import ru.samtakoy.features.import_export.helpers.SendEmailHelper
 import ru.samtakoy.features.import_export.helpers.ZipHelper
+import ru.samtakoy.features.qpack.domain.QPack
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -39,7 +39,7 @@ class QPacksExporterImpl @Inject constructor(
     }
 
     @WorkerThread
-    override suspend fun exportQPack(qPack: QPackEntity) {
+    override suspend fun exportQPack(qPack: QPack) {
         val defaultBaseFolder = mContext.getExternalFilesDir(null)!!.getAbsolutePath()
         exportQPackToFolder(qPack, defaultBaseFolder)
     }
@@ -78,7 +78,7 @@ class QPacksExporterImpl @Inject constructor(
         return sb.toString()
     }
 
-    suspend fun getExportQPackLocalPath(qPack: QPackEntity): String {
+    suspend fun getExportQPackLocalPath(qPack: QPack): String {
         return getExportThemeLocalPath(qPack.themeId)
     }
 
@@ -90,7 +90,7 @@ class QPacksExporterImpl @Inject constructor(
         return file.getAbsolutePath()
     }
 
-    private fun exportQPackToEmail(qPack: QPackEntity, cards: List<CardWithTags>): Boolean {
+    private fun exportQPackToEmail(qPack: QPack, cards: List<CardWithTags>): Boolean {
         val file: File?
 
         try {
@@ -114,10 +114,10 @@ class QPacksExporterImpl @Inject constructor(
     private val currentTimeString: String
         get() {
             val fmtOut = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
-            return fmtOut.format(DateUtils.getCurrentTimeDate())
+            return fmtOut.format(DateUtils.currentTimeDate)
         }
 
-    private fun sendQPackFile(fileUri: Uri?, qPack: QPackEntity) {
+    private fun sendQPackFile(fileUri: Uri?, qPack: QPack) {
         SendEmailHelper.sendFileByEmail(
             mContext,
             "qpack: " + qPack.title + " (" + this.currentTimeString + ")",
@@ -126,7 +126,7 @@ class QPacksExporterImpl @Inject constructor(
         )
     }
 
-    private suspend fun exportQPackToFolder(qPack: QPackEntity, baseFolder: String) {
+    private suspend fun exportQPackToFolder(qPack: QPack, baseFolder: String) {
         add("export qPack: " + qPack.title + ", to folder: " + baseFolder)
 
         val path = validateThemePath(baseFolder, getExportQPackLocalPath(qPack))
@@ -145,7 +145,7 @@ class QPacksExporterImpl @Inject constructor(
 
     private fun exportQPackToFile(
         file: File,
-        qPack: QPackEntity,
+        qPack: QPack,
         cards: List<CardWithTags>
     ): Boolean {
         var writer: Writer? = null
@@ -178,6 +178,12 @@ class QPacksExporterImpl @Inject constructor(
         }
         sendTmpDir.mkdirs()
         return sendTmpDir
+    }
+
+
+    private fun QPack.getExportFileName(): String {
+        val result: String = if (fileName.length > 0) fileName else id.toString()
+        return if (result.indexOf('.') < 0) "$result.txt" else result
     }
 
     companion object {

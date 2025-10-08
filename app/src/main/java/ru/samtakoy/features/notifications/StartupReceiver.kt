@@ -1,19 +1,16 @@
-package ru.samtakoy.features.notifications;
+package ru.samtakoy.features.notifications
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 
 /**
  * TODO перейти на WorkManager?
  */
-public class StartupReceiver extends BroadcastReceiver {
-
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
+class StartupReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent?) {
         context.startService(
-                NotificationsPlannerService.getOnBootReSchedulingIntent(context)
-        );
+            NotificationsPlannerService.getOnBootReSchedulingIntent(context)
+        )
     }
 }

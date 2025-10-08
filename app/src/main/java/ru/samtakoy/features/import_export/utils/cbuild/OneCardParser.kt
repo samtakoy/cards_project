@@ -1,125 +1,112 @@
-package ru.samtakoy.features.import_export.utils.cbuild;
+package ru.samtakoy.features.import_export.utils.cbuild
 
-import java.util.HashMap;
+import ru.samtakoy.features.tag.domain.Tag
+import ru.samtakoy.features.tag.domain.tagTitleToKey
 
-import ru.samtakoy.core.data.local.database.room.entities.TagEntity;
+class OneCardParser(
+    private val mTagMap: MutableMap<String, Tag>
+) {
 
+    private val mText: StringBuilder
+    private var mCurCardBuilder: CardBuilder? = null
 
-public class OneCardParser {
+    private var mIsTextClosed = false
 
-    enum BuildPhase {NONE, QUESTION, ANSWER, FINISHED}
-
-    ;
-
-    private HashMap<String, TagEntity> mTagMap;
-
-    private StringBuilder mText;
-    private CardBuilder mCurCardBuilder;
-
-    private boolean mIsTextClosed;
-
-    public OneCardParser(HashMap<String, TagEntity> tagMap) {
-        mTagMap = tagMap;
-        mText = new StringBuilder();
-        mIsTextClosed = false;
+    init {
+        mText = StringBuilder()
     }
 
-    public void reset(){
-
-        mCurCardBuilder = null;
-        mText.setLength(0);
-        mIsTextClosed = false;
+    fun reset() {
+        mCurCardBuilder = null
+        mText.setLength(0)
+        mIsTextClosed = false
     }
 
-    public void openQuestion(){
-        reset();
-        mCurCardBuilder = new CardBuilder();
+    fun openQuestion() {
+        reset()
+        mCurCardBuilder = CardBuilder()
     }
 
-    public void openAnswer(){
-
-        mCurCardBuilder.setQuestion(mText.toString());
-        mText.setLength(0);
+    fun openAnswer() {
+        mCurCardBuilder!!.setQuestion(mText.toString())
+        mText.setLength(0)
     }
 
-    public void addTagsLine(String tagsLine){
-        if(tagsLine.trim().length()>1){
-            String[] tags = tagsLine.split("#");
-            for(String tagTitle:tags){
+    fun addTagsLine(tagsLine: String) {
+        if (tagsLine.trim { it <= ' ' }.length > 1) {
+            val tags = tagsLine.split("#".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            for (tagTitle in tags) {
                 // первая будет пустая
-                if(tagTitle.length() > 0){
-                    addTag(tagTitle.trim());
+                if (tagTitle.length > 0) {
+                    addTag(tagTitle.trim { it <= ' ' })
                 }
             }
         }
 
-        mIsTextClosed = true;
+        mIsTextClosed = true
     }
 
-    private void addTag(String tagTitle) {
-        String key = TagEntity.Companion.titleToKey(tagTitle);
-        TagEntity tag = mTagMap.get(key);
+    private fun addTag(tagTitle: String) {
+        val key: String = tagTitle.tagTitleToKey()
+        var tag = mTagMap.get(key)
         if (tag == null) {
-            tag = TagEntity.Companion.initNew(tagTitle);
-            mTagMap.put(tag.getKey(), tag);
+            tag = Tag(id = 0L, title = tagTitle)
+            mTagMap.put(key, tag)
         }
-        mCurCardBuilder.addTag(tag);
+        mCurCardBuilder!!.addTag(tag)
     }
 
-    public void addImage(String imageLine) {
-
-        imageLine = imageLine.trim();
-        if(imageLine.length()>1){
-            String[] images = imageLine.split(",");
-            for(String img:images){
-                img = img.trim();
-                if(img.length() > 0){
-                    mCurCardBuilder.addImage(img);
+    fun addImage(imageLine: String) {
+        var imageLine = imageLine
+        imageLine = imageLine.trim { it <= ' ' }
+        if (imageLine.length > 1) {
+            val images = imageLine.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            for (img in images) {
+                var img = img
+                img = img.trim { it <= ' ' }
+                if (img.length > 0) {
+                    mCurCardBuilder!!.addImage(img)
                 }
             }
         }
     }
 
-    public void addLine(String line, boolean isFirstLine){
-        if(!mIsTextClosed) {
+    fun addLine(line: String?, isFirstLine: Boolean) {
+        if (!mIsTextClosed) {
             if (!isFirstLine) {
-                mText.append(CBuilderConst.LINE_BREAK);
+                mText.append(CBuilderConst.LINE_BREAK)
             }
-            mText.append(line);
+            mText.append(line)
         }
     }
 
-    public CardBuilder getBuilder(Long qPackId){
-
-        if(!isCardOpened()){
-            return null;
+    fun getBuilder(qPackId: Long?): CardBuilder? {
+        if (!this.isCardOpened) {
+            return null
         }
 
         // ?
         //mCurCardBuilder.setQPackId(qPackId);
-        mCurCardBuilder.setAnswer(mText.toString());
+        mCurCardBuilder!!.setAnswer(mText.toString())
 
-        CardBuilder result = mCurCardBuilder;
+        val result = mCurCardBuilder
 
-        reset();
-        return  result;
+        reset()
+        return result
     }
 
-    public boolean isCardOpened(){
-        return  mCurCardBuilder != null;
+    val isCardOpened: Boolean
+        get() = mCurCardBuilder != null
+
+    val isValidCard: Boolean
+        get() = mCurCardBuilder != null && mCurCardBuilder!!.isValid
+
+    fun markCardToRemove(cardId: Long) {
+        setCardId(cardId)
+        mCurCardBuilder!!.toRemove()
     }
 
-    public boolean isValidCard() {
-        return  mCurCardBuilder != null && mCurCardBuilder.isValid();
+    fun setCardId(cardId: Long) {
+        mCurCardBuilder!!.cardId = cardId
     }
-
-    public void markCardToRemove(Long cardId) {
-        setCardId(cardId);
-        mCurCardBuilder.toRemove();
-    }
-
-    public void setCardId(Long cardId) {
-        mCurCardBuilder.setCardId(cardId);
-    }
-
 }

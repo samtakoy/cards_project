@@ -1,55 +1,60 @@
-package ru.samtakoy.features.notifications.learn_courses;
+package ru.samtakoy.features.notifications.learn_courses
 
-import android.app.PendingIntent;
+import android.app.PendingIntent
+import ru.samtakoy.R
+import ru.samtakoy.features.learncourse.domain.model.LearnCourseMode
+import ru.samtakoy.features.notifications.NotificationsConst
+import javax.inject.Inject
 
-import org.jetbrains.annotations.NotNull;
+class LearnsApi @Inject constructor() : CoursesApi() {
+    override val learnCourseMode: LearnCourseMode
+        get() = LearnCourseMode.LEARN_WAITING
 
-import javax.inject.Inject;
-
-import ru.samtakoy.R;
-import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode;
-
-import static ru.samtakoy.features.notifications.NotificationsConst.NOTIFICATION_ID_NEW_LEARNINGS_AVAILABLE;
-import static ru.samtakoy.features.notifications.NotificationsConst.REQ_CODE_NEW_LEARNINGS_ALARM;
-import static ru.samtakoy.features.notifications.NotificationsConst.REQ_CODE_NEW_LEARNINGS_CANCEL;
-import static ru.samtakoy.features.notifications.NotificationsConst.REQ_CODE_NEW_LEARNINGS_CLICK;
-
-public class LearnsApi extends CoursesApi {
-
-    @Inject
-    public LearnsApi() {
+    fun shiftLearnCourses() {
+        shiftLearnCourses(learnCourseMode, shiftMillis)
+        rescheduleNewLearnCourses()
     }
 
-    @Override
-    @NotNull
-    protected LearnCourseMode getLearnCourseMode() {
-        return LearnCourseMode.LEARN_WAITING;
+    /** обновить нотификации и таймеры напоминания  */
+    fun rescheduleNewLearnCourses() {
+        val lcMode = learnCourseMode
+        val notificationId = NotificationsConst.NOTIFICATION_ID_NEW_LEARNINGS_AVAILABLE
+        val notificationIconId = android.R.drawable.ic_menu_report_image
+        val notificationTitle = mResources.getString(R.string.notifications_learn_waitings_title)
+        val notificationText = mResources.getString(R.string.notifications_learn_waitings_text)
+
+        val clickIntent =
+            PendingIntent.getService(
+                mContext,
+                NotificationsConst.REQ_CODE_NEW_LEARNINGS_CLICK,
+                showUiIntent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+        val cancelIntent =
+            PendingIntent.getService(
+                mContext,
+                NotificationsConst.REQ_CODE_NEW_LEARNINGS_CANCEL,
+                shiftIntent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+
+        rescheduleLearnCourses(
+            lcMode,
+            notificationId,
+            notificationIconId,
+            notificationTitle,
+            notificationText,
+            clickIntent,
+            cancelIntent
+        )
     }
 
-    public void shiftLearnCourses() {
-        shiftLearnCourses(getLearnCourseMode(), getShiftMillis());
-        rescheduleNewLearnCourses();
+    override fun getLearnCoursesAlarmPendingIntent(noCreate: Boolean): PendingIntent {
+        return PendingIntent.getService(
+            mContext,
+            NotificationsConst.REQ_CODE_NEW_LEARNINGS_ALARM,
+            reSchedulingIntent,
+            if (noCreate) PendingIntent.FLAG_NO_CREATE else 0
+        )
     }
-
-    /** обновить нотификации и таймеры напоминания */
-    public void rescheduleNewLearnCourses(){
-
-        LearnCourseMode lcMode = getLearnCourseMode();
-        int notificationId =       NOTIFICATION_ID_NEW_LEARNINGS_AVAILABLE;
-        int notificationIconId =   android.R.drawable.ic_menu_report_image;
-        String notificationTitle = mResources.getString(R.string.notifications_learn_waitings_title);
-        String notificationText =  mResources.getString(R.string.notifications_learn_waitings_text);
-
-        PendingIntent clickIntent = PendingIntent.getService(mContext, REQ_CODE_NEW_LEARNINGS_CLICK, getShowUiIntent(), 0);
-        PendingIntent cancelIntent = PendingIntent.getService(mContext, REQ_CODE_NEW_LEARNINGS_CANCEL, getShiftIntent(), 0);
-
-        rescheduleLearnCourses(lcMode, notificationId, notificationIconId, notificationTitle, notificationText, clickIntent, cancelIntent);
-    }
-
-    @Override
-    protected PendingIntent getLearnCoursesAlarmPendingIntent(boolean noCreate){
-        return PendingIntent.getService(mContext, REQ_CODE_NEW_LEARNINGS_ALARM, getReSchedulingIntent(), noCreate ? PendingIntent.FLAG_NO_CREATE : 0);
-    }
-
-
 }

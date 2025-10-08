@@ -8,7 +8,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.data.local.database.room.entities.elements.Schedule
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.core.presentation.cards.result.vm.CardsViewResultViewModel.Action
@@ -16,6 +15,11 @@ import ru.samtakoy.core.presentation.cards.result.vm.CardsViewResultViewModel.Ev
 import ru.samtakoy.core.presentation.cards.result.vm.CardsViewResultViewModel.State
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.core.presentation.log.MyLog
+import ru.samtakoy.features.learncourse.domain.model.schedule.Schedule
+import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.ParcelableSchedule
+import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.toDomain
+import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.toDomainOrEmpty
+import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.toParcelable
 import ru.samtakoy.features.views.domain.ViewHistoryInteractor
 
 class CardsViewResultViewModelImpl(
@@ -35,11 +39,11 @@ class CardsViewResultViewModelImpl(
     )
 ) {
     private val currentSchedule = SavedStateValue<Schedule>(
-        initialValueGetter = { Schedule() },
+        initialValueGetter = { Schedule(emptyList()) },
         keyName = KEY_SCHEDULE,
         savedStateHandle = savedStateHandle,
-        serialize = { it.serializeToString() },
-        deserialize = { Schedule.deserializeFrom(it as String) },
+        serialize = { it.toParcelable() },
+        deserialize = { (it as ParcelableSchedule).toDomain() },
         saveScope = ioScope
     )
 
@@ -62,8 +66,8 @@ class CardsViewResultViewModelImpl(
         sendAction(Action.ShowScheduleEditDialog(currentSchedule.value))
     }
 
-    private fun onNewScheduleSet(serializedSchedule: String?) {
-        currentSchedule.value = Schedule.deserializeFrom(serializedSchedule)
+    private fun onNewScheduleSet(serializedSchedule: ParcelableSchedule?) {
+        currentSchedule.value = serializedSchedule.toDomainOrEmpty()
     }
 
     private fun onUiOkClick() {

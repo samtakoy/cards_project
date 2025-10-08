@@ -94,7 +94,7 @@ class CourseInfoFragment : Fragment(), ViewModelOwner {
                 return true
             }
             R.id.menu_item_log -> {
-                startActivity(LogActivity.newActivityIntent(getContext()))
+                startActivity(LogActivity.newActivityIntent(requireContext()))
                 return true
             }
         }
@@ -121,7 +121,7 @@ class CourseInfoFragment : Fragment(), ViewModelOwner {
     }
 
     private fun exit() {
-        mRouterHolder!!.getNavController().navigateUp()
+        mRouterHolder!!.navController.navigateUp()
         //mRouterHolder.getRouter().exit();
     }
 
@@ -152,7 +152,7 @@ class CourseInfoFragment : Fragment(), ViewModelOwner {
         viewHistoryItemId: Long,
         viewMode: CardViewMode
     ) {
-        mRouterHolder!!.getNavController().navigate(
+        mRouterHolder!!.navController.navigate(
             R.id.action_courseInfoFragment_to_cardsViewFragment,
             buildBundle(viewHistoryItemId, viewMode)
         )
@@ -160,7 +160,7 @@ class CourseInfoFragment : Fragment(), ViewModelOwner {
 
     private fun requestExtraordinaryRepeating() {
         DialogHelper.showYesNoDialog(
-            getContext(),
+            requireContext(),
             getResources().getString(R.string.confirm_dialog_title),
             getResources().getString(R.string.course_info_extra_repeating_confirm),
             DialogInterface.OnClickListener { dialogInterface: DialogInterface?, i: Int ->

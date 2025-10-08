@@ -143,7 +143,7 @@ class ThemesListFragment : Fragment(), ViewModelOwner {
                 }
                 R.id.menu_item_log -> {
                     // пока тут
-                    startActivity(LogActivity.newActivityIntent(context))
+                    startActivity(LogActivity.newActivityIntent(requireContext()))
                     return true
                 }
                 R.id.menu_item_settings -> {
@@ -382,7 +382,7 @@ class ThemesListFragment : Fragment(), ViewModelOwner {
         val pickedDir = DocumentFile.fromTreeUri(requireContext(), uri!!)
         if (pickedDir!!.isDirectory) {
             val docUri = DocumentsContract.buildDocumentUriUsingTree(uri, DocumentsContract.getTreeDocumentId(uri))
-            val path = RealPathUtil.getRealPath(context, docUri)
+            val path = RealPathUtil.getRealPath(requireContext(), docUri)!!
             viewModel.onEvent(Event.PathSelected(path))
         }
     }

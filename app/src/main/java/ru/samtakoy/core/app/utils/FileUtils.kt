@@ -1,23 +1,21 @@
-package ru.samtakoy.core.app.utils;
+package ru.samtakoy.core.app.utils
 
-import java.io.File;
-import java.io.IOException;
+import java.io.File
+import java.io.IOException
 
-public class FileUtils {
-
-
-    public static void deleteDirectoryRecursionJava6(File file) throws IOException {
+object FileUtils {
+    @Throws(IOException::class)
+    fun deleteDirectoryRecursionJava6(file: File) {
         if (file.isDirectory()) {
-            File[] entries = file.listFiles();
+            val entries = file.listFiles()
             if (entries != null) {
-                for (File entry : entries) {
-                    deleteDirectoryRecursionJava6(entry);
+                for (entry in entries) {
+                    deleteDirectoryRecursionJava6(entry)
                 }
             }
         }
         if (!file.delete()) {
-            throw new IOException("Failed to delete " + file);
+            throw IOException("Failed to delete " + file)
         }
     }
-
 }

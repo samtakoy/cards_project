@@ -1,44 +1,39 @@
-package ru.samtakoy.core.app.utils;
+package ru.samtakoy.core.app.utils
 
-import java.util.Date;
+import java.util.Date
 
-public class DateUtils {
-
-    public static long getTimeLong(Date date) {
-        return date.getTime();
+object DateUtils {
+    fun getTimeLong(date: Date): Long {
+        return date.getTime()
     }
 
-    public static long getCurrentTimeLong() {
-        return System.currentTimeMillis();
+    val currentTimeLong: Long
+        get() = System.currentTimeMillis()
+
+    fun getMillisTo(targetUtc: Long): Long {
+        return targetUtc - System.currentTimeMillis()
     }
 
-    public static long getMillisTo(long targetUtc) {
-        return targetUtc - System.currentTimeMillis();
+    fun getMillisTo(date: Date): Long {
+        return getMillisTo(dateToDbSerialized(date))
     }
 
-    public static long getMillisTo(Date date) {
-        return getMillisTo(dateToDbSerialized(date));
+    val currentTimeDate: Date
+        get() = getDateFromLong(currentTimeLong)
+
+    fun getDateAfterCurrentLong(millisDelta: Int): Long {
+        return currentTimeLong + millisDelta
     }
 
-    public static Date getCurrentTimeDate() {
-        return getDateFromLong(getCurrentTimeLong());
+    fun dateToDbSerialized(d: Date): Long {
+        return getTimeLong(d)
     }
 
-    public static long getDateAfterCurrentLong(int millisDelta) {
-        return getCurrentTimeLong() + millisDelta;
+    fun dateFromDbSerialized(utcTimeMillis: Long): Date {
+        return getDateFromLong(utcTimeMillis)
     }
 
-    public static long dateToDbSerialized(Date d){
-        return getTimeLong(d);
+    fun getDateFromLong(value: Long): Date {
+        return Date(value)
     }
-
-    public static Date dateFromDbSerialized(long utcTimeMillis){
-        return getDateFromLong(utcTimeMillis);
-    }
-
-
-    public static Date getDateFromLong(long value) {
-        return new Date(value);
-    }
-
 }

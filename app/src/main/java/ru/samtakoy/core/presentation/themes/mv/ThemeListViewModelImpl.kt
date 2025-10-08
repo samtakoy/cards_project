@@ -14,8 +14,6 @@ import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.core.app.some.Resources
 import ru.samtakoy.core.app.utils.asAnnotated
-import ru.samtakoy.core.data.local.database.room.entities.ThemeEntity
-import ru.samtakoy.core.domain.CardsInteractor
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.core.presentation.log.MyLog
@@ -28,9 +26,13 @@ import ru.samtakoy.core.presentation.themes.mv.ThemeListViewModel.State
 import ru.samtakoy.features.import_export.QPacksExporter
 import ru.samtakoy.features.import_export.utils.ImportCardsOpts
 import ru.samtakoy.features.import_export.utils.cbuild.CBuilderConst
+import ru.samtakoy.features.qpack.domain.QPackInteractor
+import ru.samtakoy.features.theme.domain.Theme
+import ru.samtakoy.features.theme.domain.ThemeInteractor
 
 internal class ThemeListViewModelImpl(
-    private val cardsInteractor: CardsInteractor,
+    private val qPackInteractor: QPackInteractor,
+    private val themeInteractor: ThemeInteractor,
     private val qPacksExporter: QPacksExporter,
     private val uiItemsMapper: ThemeUiItemMapper,
     private val resources: Resources,
@@ -50,7 +52,7 @@ internal class ThemeListViewModelImpl(
     )
 ), ThemeListViewModel {
 
-    private var parentTheme: ThemeEntity? = null
+    private var parentTheme: Theme? = null
     private var lastLongClickedItem: ThemeUiItem? = null
 
     private val lastDialogState = SavedStateValue<DialogState>(
@@ -92,7 +94,7 @@ internal class ThemeListViewModelImpl(
         launchWithLoader(
             onError = ::onGetError
         ) {
-            if(!cardsInteractor.deleteTheme(themeId)) {
+            if(!themeInteractor.deleteTheme(themeId)) {
                 sendAction(
                     Action.ShowErrorMessage(
                         resources.getString(R.string.fragment_themes_list_cant_delete_theme_msg)
@@ -150,7 +152,7 @@ internal class ThemeListViewModelImpl(
         launchWithLoader(
             onError = ::onGetError
         ) {
-            cardsInteractor.addNewTheme(getParentThemeId(), title)
+            themeInteractor.addNewTheme(getParentThemeId(), title)
         }
     }
 
@@ -250,13 +252,13 @@ internal class ThemeListViewModelImpl(
                     onGetError(it)
                 }
             ) {
-                parentTheme = cardsInteractor.getTheme(themeId)
+                parentTheme = themeInteractor.getTheme(themeId)
                 if (parentTheme != null) {
                     viewState = viewState.copy(
                         toolbarSubtitle = parentTheme?.title.orEmpty().asAnnotated()
                     )
                     updateMenuState()
-                    val parentOfParent = cardsInteractor.getTheme(parentTheme!!.parentId)
+                    val parentOfParent = themeInteractor.getTheme(parentTheme!!.parentId)
                     if (parentOfParent != null) {
                         viewState = viewState.copy(
                             toolbarTitle = ("../" + parentOfParent.title).asAnnotated()
@@ -273,10 +275,10 @@ internal class ThemeListViewModelImpl(
 
     private fun bindData(themeId: Long) {
         combine(
-            cardsInteractor.getChildThemesAsFlow(themeId)
+            themeInteractor.getChildThemesAsFlow(themeId)
                 .debounce(DEBOUNCE_MILLI)
                 .distinctUntilChanged(),
-            cardsInteractor.getChildQPacksAsFlow(themeId)
+            qPackInteractor.getChildQPacksAsFlow(themeId)
                 .debounce(DEBOUNCE_MILLI)
                 .distinctUntilChanged()
         ) {  childThemes, childQPacks ->

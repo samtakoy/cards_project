@@ -8,7 +8,6 @@ import dagger.assisted.AssistedInject
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.core.app.some.Resources
 import ru.samtakoy.core.domain.FavoritesInteractor
-import ru.samtakoy.core.domain.NCoursesInteractor
 import ru.samtakoy.core.presentation.favorites.onboarding.mapper.FavoritesButtonsMapper
 import ru.samtakoy.features.views.domain.ViewHistoryInteractor
 

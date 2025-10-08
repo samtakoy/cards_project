@@ -8,14 +8,14 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode
-import ru.samtakoy.core.domain.CardsInteractor
-import ru.samtakoy.core.domain.NCoursesInteractor
 import ru.samtakoy.core.presentation.courses.model.CourseItemUiMapper
+import ru.samtakoy.features.learncourse.domain.NCoursesInteractor
+import ru.samtakoy.features.learncourse.domain.model.LearnCourseMode
+import ru.samtakoy.features.qpack.domain.QPackInteractor
 
 internal class CoursesListViewModelFactory @AssistedInject constructor(
     private val coursesInteractor: NCoursesInteractor,
-    private val cardsInteractor: CardsInteractor,
+    private val qPackInteractor: QPackInteractor,
     private val courseItemsMapper: CourseItemUiMapper,
     private val resources: Resources,
     private val scopeProvider: ScopeProvider,
@@ -36,7 +36,7 @@ internal class CoursesListViewModelFactory @AssistedInject constructor(
         @Suppress("UNCHECKED_CAST")
         return CoursesListViewModelImpl(
             coursesInteractor = coursesInteractor,
-            cardsInteractor = cardsInteractor,
+            qPackInteractor = qPackInteractor,
             courseItemsMapper = courseItemsMapper,
             resources = resources,
             savedStateHandle = handle,

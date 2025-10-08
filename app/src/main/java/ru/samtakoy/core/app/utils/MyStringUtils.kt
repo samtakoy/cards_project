@@ -1,46 +1,37 @@
-package ru.samtakoy.core.app.utils;
+package ru.samtakoy.core.app.utils
 
-import java.util.Iterator;
+object MyStringUtils {
+    private const val EMPTY = ""
 
-public class MyStringUtils {
-
-
-    private static final String EMPTY = "";
-
-    public static String join(final Iterable<?> iterable, final String separator) {
-        return join(iterable.iterator(), separator);
+    fun join(iterable: Iterable<*>, separator: String): String {
+        return MyStringUtils.join(iterable.iterator(), separator)
     }
 
-    public static String join(final Iterator<?> iterator, final String separator) {
-
+    fun join(iterator: Iterator<*>, separator: String): String {
         // handle null, zero and one elements before building a buffer
-        if (iterator == null) {
-            return null;
-        }
         if (!iterator.hasNext()) {
-            return EMPTY;
+            return EMPTY
         }
-        final Object first = iterator.next();
+        val first = iterator.next()
         if (!iterator.hasNext()) {
-            return String.valueOf(first);
+            return first.toString()
         }
 
         // two or more elements
-        final StringBuilder buf = new StringBuilder(); // Java default is 16, probably too small
+        val buf = StringBuilder() // Java default is 16, probably too small
         if (first != null) {
-            buf.append(first);
+            buf.append(first)
         }
 
         while (iterator.hasNext()) {
             if (separator != null) {
-                buf.append(separator);
+                buf.append(separator)
             }
-            final Object obj = iterator.next();
+            val obj = iterator.next()
             if (obj != null) {
-                buf.append(obj);
+                buf.append(obj)
             }
         }
-        return buf.toString();
+        return buf.toString()
     }
-
 }

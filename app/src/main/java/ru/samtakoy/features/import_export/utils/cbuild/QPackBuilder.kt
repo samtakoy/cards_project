@@ -1,156 +1,103 @@
-package ru.samtakoy.features.import_export.utils.cbuild;
+package ru.samtakoy.features.import_export.utils.cbuild
 
-import java.util.HashMap;
-import java.util.List;
+import ru.samtakoy.features.qpack.data.DEF_DATE
+import ru.samtakoy.features.import_export.utils.ImportCardsException
+import ru.samtakoy.features.tag.domain.Tag
+import java.util.Locale
 
-import ru.samtakoy.core.data.local.database.room.entities.QPackEntityKt;
-import ru.samtakoy.core.data.local.database.room.entities.TagEntity;
-import ru.samtakoy.features.import_export.utils.ImportCardsException;
+class QPackBuilder(
+    val themeId: Long,
+    val srcFilePath: String,
+    tagMap: MutableMap<String, Tag>,
+    val fileName: String,
+    private val mNullifyId: Boolean
+) {
+    private val mBlockParsers: BlockParsers
+    private val mCardsParser: CardsParser
 
-public class QPackBuilder {
+    private var mQPackId: Long
 
+    var buildersCount: Int = 1
+    var builderNum: Int = 1
 
-    private BlockParsers mBlockParsers;
-    private CardsParser mCardsParser;
-
-    private Long mThemeId;
-    private Long mQPackId;
-    private String mSrcFilePath;
-    private String mFileName;
-
-
-    private int mBuildersCount = 1;
-    private int mBuilderNum = 1;
-
-    private boolean mNullifyId;
-
-    public QPackBuilder(
-            Long themeId,
-            String srcPath,
-            HashMap<String, TagEntity> tagMap,
-            String fileName,
-            boolean nullifyId
-    ){
-
-        mThemeId = themeId;
-        mQPackId = CBuilderConst.NO_ID;
-        mSrcFilePath = srcPath;
-        mFileName = fileName;
-        mNullifyId = nullifyId;
+    init {
+        mQPackId = CBuilderConst.NO_ID
 
         //mTargetQPack = null;
-
-
-        mBlockParsers = new BlockParsers();
-        mCardsParser = new CardsParser(tagMap, nullifyId);
+        mBlockParsers = BlockParsers()
+        mCardsParser = CardsParser(tagMap, mNullifyId)
     }
 
-    public Long getThemeId() {
-        return mThemeId;
-    }
+    fun addLine(line: String) {
+        val lowerLine = line.lowercase(Locale.getDefault())
 
-    public String getSrcFilePath() {
-        return mSrcFilePath;
-    }
-
-
-    public void addLine(String line){
-
-        String lowerLine = line.toLowerCase();
-
-        if(!mBlockParsers.isFinished()){
-            mBlockParsers.processLine(line, lowerLine);
-            if(!mBlockParsers.isFinished()){
-                return;
-            }else{
-                mQPackId = mNullifyId ? CBuilderConst.NO_ID : getParsedId();
-                mCardsParser.onStart(mQPackId);
+        if (!mBlockParsers.isFinished) {
+            mBlockParsers.processLine(line, lowerLine)
+            if (!mBlockParsers.isFinished) {
+                return
+            } else {
+                mQPackId = if (mNullifyId) CBuilderConst.NO_ID else this.parsedId
+                mCardsParser.onStart(mQPackId)
             }
         }
 
-        mCardsParser.processLine(line, lowerLine);
+        mCardsParser.processLine(line, lowerLine)
     }
 
-    public QPackBuilder build() throws ImportCardsException {
-        mCardsParser.onFinalize(mQPackId);
+    @Throws(ImportCardsException::class) fun build(): QPackBuilder {
+        mCardsParser.onFinalize(mQPackId)
 
-        if(!hasIncomingId() && hasAnyCardId()){
-            throw new ImportCardsException(ImportCardsException.ERR_PACK_ID_MISSING, "");
+        if (!hasIncomingId() && hasAnyCardId()) {
+            throw ImportCardsException(ImportCardsException.ERR_PACK_ID_MISSING, "")
         }
 
-        return this;
+        return this
     }
 
-    public boolean hasIncomingId(){
-        return mBlockParsers.has(CBuilderConst.QPACK_ID_PREFIX);
+    fun hasIncomingId(): Boolean {
+        return mBlockParsers.has(CBuilderConst.QPACK_ID_PREFIX)
     }
 
+    val parsedId: Long
+        get() = if (hasIncomingId()) mBlockParsers.get(CBuilderConst.QPACK_ID_PREFIX, CBuilderConst.NO_ID_STR)
+            .toLong() else CBuilderConst.NO_ID /**/
 
-    public Long getParsedId(){
-        return hasIncomingId() ? Long.parseLong(mBlockParsers.get(CBuilderConst.QPACK_ID_PREFIX, CBuilderConst.NO_ID_STR)) : CBuilderConst.NO_ID;
-    }/**/
+    val title: String
+        get() = mBlockParsers.get(CBuilderConst.TITLE_PREFIX, this.fileName)
 
-    public String getTitle() {
-        return mBlockParsers.get(CBuilderConst.TITLE_PREFIX, mFileName);
+    val desc: String
+        get() = mBlockParsers.get(CBuilderConst.DESC_PREFIX, "")
+
+    fun hasCreationDate(): Boolean {
+        return mBlockParsers.has(CBuilderConst.DATE_PREFIX)
     }
 
-    public String getFileName(){
-        return mFileName;
+    val creationDate: String
+        get() = mBlockParsers.get(CBuilderConst.DATE_PREFIX, DEF_DATE).trim { it <= ' ' }
+
+    fun hasViewCount(): Boolean {
+        return mBlockParsers.has(CBuilderConst.VIEWS_PREFIX)
     }
 
-    public String getDesc() {
-        return mBlockParsers.get(CBuilderConst.DESC_PREFIX, "");
+    val viewCount: Int
+        get() {
+            val stringResult = mBlockParsers.get(CBuilderConst.VIEWS_PREFIX, "0").trim { it <= ' ' }
+            return stringResult.toInt()
+        }
+
+    val cardBuilders: List<CardBuilder>
+        get() = mCardsParser.cardBuilders
+
+    fun setTargetQPack(qPackId: Long) {
+        mQPackId = qPackId
     }
 
-    public boolean hasCreationDate(){
-        return mBlockParsers.has(CBuilderConst.DATE_PREFIX);
-    }
-
-    public String getCreationDate() {
-        return mBlockParsers.get(CBuilderConst.DATE_PREFIX, QPackEntityKt.DEF_DATE).trim();
-    }
-
-    public boolean hasViewCount(){
-        return mBlockParsers.has(CBuilderConst.VIEWS_PREFIX);
-    }
-
-    public int getViewCount() {
-        String stringResult = mBlockParsers.get(CBuilderConst.VIEWS_PREFIX, "0").trim();
-         return Integer.parseInt(stringResult);
-    }
-
-    public List<CardBuilder> getCardBuilders() {
-        return mCardsParser.getCardBuilders();
-    }
-
-    public void setTargetQPack(Long qPackId) {
-        mQPackId = qPackId;
-    }
-
-    public int getBuildersCount() {
-        return mBuildersCount;
-    }
-
-    public void setBuildersCount(int buildersCount) {
-        mBuildersCount = buildersCount;
-    }
-
-    public int getBuilderNum() {
-        return mBuilderNum;
-    }
-
-    public void setBuilderNum(int builderNum) {
-        mBuilderNum = builderNum;
-    }
-
-
-    public boolean hasAnyCardId() {
-        for(CardBuilder cBuilder:getCardBuilders()){
-            if(cBuilder.hasId()){
-                return true;
+    fun hasAnyCardId(): Boolean {
+        for (cBuilder in this.cardBuilders) {
+            if (cBuilder.hasId()) {
+                return true
             }
         }
-        return false;
+        return false
     }
-
 }

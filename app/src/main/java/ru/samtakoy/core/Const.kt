@@ -1,6 +1,5 @@
-package ru.samtakoy.core;
+package ru.samtakoy.core
 
-public class Const {
-
-    public static final Long NO_PARENT_THEME_ID = 0L;
+object Const {
+    const val NO_PARENT_THEME_ID: Long = 0L
 }

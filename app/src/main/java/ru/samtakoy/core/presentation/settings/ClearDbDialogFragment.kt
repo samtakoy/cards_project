@@ -4,7 +4,7 @@ import android.os.Bundle
 import ru.samtakoy.R
 import ru.samtakoy.core.app.di.Di
 import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.domain.CardsInteractor
+import ru.samtakoy.features.card.domain.CardsInteractor
 import ru.samtakoy.core.presentation.MainActivity
 import ru.samtakoy.core.presentation.RouterHolder
 import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogFragment

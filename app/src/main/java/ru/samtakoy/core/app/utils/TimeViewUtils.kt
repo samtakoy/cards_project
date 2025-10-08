@@ -1,12 +1,8 @@
-package ru.samtakoy.core.app.utils;
+package ru.samtakoy.core.app.utils
 
-import android.content.res.Resources;
-
-public class TimeViewUtils {
-
-    public static String getTimeView(int millis){
-        // TODO;
-        return String.valueOf((millis/1000));
+object TimeViewUtils {
+    fun getTimeView(millis: Int): String {
+        // TODO
+        return (millis / 1000).toString()
     }
-
 }

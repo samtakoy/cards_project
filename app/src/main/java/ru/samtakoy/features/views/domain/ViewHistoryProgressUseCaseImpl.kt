@@ -1,7 +1,7 @@
 package ru.samtakoy.features.views.domain
 
 import ru.samtakoy.core.app.utils.DateUtils
-import ru.samtakoy.core.domain.CourseProgressUseCase
+import ru.samtakoy.features.learncourse.domain.CourseProgressUseCase
 import javax.inject.Inject
 
 class ViewHistoryProgressUseCaseImpl @Inject constructor(
@@ -19,7 +19,7 @@ class ViewHistoryProgressUseCaseImpl @Inject constructor(
             item.copy(
                 viewedCardIds = item.viewedCardIds.subList(0, item.viewedCardIds.lastIndex),
                 todoCardIds = listOf(item.viewedCardIds.last()) + item.todoCardIds,
-                lastViewDate = DateUtils.getCurrentTimeDate()
+                lastViewDate = DateUtils.currentTimeDate
             )
         )
         return newCurrentCardId
@@ -48,7 +48,7 @@ class ViewHistoryProgressUseCaseImpl @Inject constructor(
             } else {
                 item.errorCardIds
             },
-            lastViewDate = DateUtils.getCurrentTimeDate()
+            lastViewDate = DateUtils.currentTimeDate
         )
 
         viewHistoryInteractor.updateViewItem(item = resultItem)
@@ -56,7 +56,7 @@ class ViewHistoryProgressUseCaseImpl @Inject constructor(
         if (isLastCard) {
             courseProgressUseCase.finishCourseCardsViewingForViewId(
                 viewId = viewItemId,
-                currentTime = DateUtils.getCurrentTimeDate()
+                currentTime = DateUtils.currentTimeDate
             )
         }
         return resultItem

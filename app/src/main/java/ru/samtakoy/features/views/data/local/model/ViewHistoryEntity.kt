@@ -5,9 +5,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import ru.samtakoy.core.data.local.database.room.converters.CardIdListConverter
-import ru.samtakoy.core.data.local.database.room.converters.DateLongConverter
-import ru.samtakoy.core.data.local.database.room.entities.QPackEntity
+import ru.samtakoy.features.database.data.converters.ListOfLongConverter
+import ru.samtakoy.features.database.data.converters.DateLongConverter
+import ru.samtakoy.features.qpack.data.QPackEntity
 
 @Entity(
     tableName = ViewHistoryEntity.TABLE,
@@ -29,22 +29,22 @@ class ViewHistoryEntity(
     val qPackId: Long,
 
     /** Просмотренные карточки */
-    @field:TypeConverters(CardIdListConverter::class)
+    @field:TypeConverters(ListOfLongConverter::class)
     @ColumnInfo(name = VIEWED_CARD_IDS)
     val viewedCardIds: List<Long>,
 
     /** Еще не просмотренные карточки */
-    @field:TypeConverters(CardIdListConverter::class)
+    @field:TypeConverters(ListOfLongConverter::class)
     @ColumnInfo(name = TODO_CARD_IDS)
     val todoCardIds: List<Long>,
 
     /** Карточки с ошибкой */
-    @field:TypeConverters(CardIdListConverter::class)
+    @field:TypeConverters(ListOfLongConverter::class)
     @ColumnInfo(name = ERROR_CARD_IDS)
     val errorCardIds: List<Long>,
 
     /** Добавленные в избранные во время просмотра */
-    @field:TypeConverters(CardIdListConverter::class)
+    @field:TypeConverters(ListOfLongConverter::class)
     @ColumnInfo(name = NEW_FAVS_CARD_IDS)
     val addedToFavsCardIds: List<Long>,
 

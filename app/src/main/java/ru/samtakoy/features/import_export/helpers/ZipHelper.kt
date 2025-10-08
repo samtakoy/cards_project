@@ -1,116 +1,104 @@
-package ru.samtakoy.features.import_export.helpers;
+package ru.samtakoy.features.import_export.helpers
 
-import android.content.ContentResolver;
-import android.os.Build;
+import android.content.ContentResolver
+import android.os.Build
+import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
+import io.reactivex.ObservableOnSubscribe
+import ru.samtakoy.core.presentation.log.MyLog.add
+import ru.samtakoy.features.import_export.utils.FromZipEntryStreamFactory
+import ru.samtakoy.features.import_export.utils.isPackFile
+import java.io.BufferedInputStream
+import java.io.BufferedOutputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.nio.charset.Charset
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
+import java.util.zip.ZipOutputStream
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
-
-import io.reactivex.Observable;
-import ru.samtakoy.core.presentation.log.MyLog;
-import ru.samtakoy.features.import_export.utils.FromZipEntryStreamFactory;
-import ru.samtakoy.features.import_export.utils.ImportUtilsKt;
-
-public class ZipHelper {
-
-    public static Observable<FromZipEntryStreamFactory> unzipStream(
-            ContentResolver resolver,
-            InputStream zippedFileInputStream){
-
-        return Observable.create(emitter -> {
-
-            ZipInputStream zin = null;
+object ZipHelper {
+    fun unzipStream(
+        resolver: ContentResolver,
+        zippedFileInputStream: InputStream
+    ): Observable<FromZipEntryStreamFactory> {
+        return Observable.create<FromZipEntryStreamFactory>(ObservableOnSubscribe { emitter: ObservableEmitter<FromZipEntryStreamFactory> ->
+            var zin: ZipInputStream? = null
             try {
-
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-                    zin = new ZipInputStream(zippedFileInputStream, Charset.forName("Cp437"));
-                }else{
-                    zin = new ZipInputStream(zippedFileInputStream);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    zin = ZipInputStream(zippedFileInputStream, Charset.forName("Cp437"))
+                } else {
+                    zin = ZipInputStream(zippedFileInputStream)
                 }
 
-                ZipEntry ze;
+                var ze: ZipEntry?
 
-                while ((ze = zin.getNextEntry()) != null) {
-
+                while ((zin.getNextEntry().also { ze = it }) != null) {
                     //create dir if required while unzipping
-                    if (ze.isDirectory()) {
+
+                    if (ze!!.isDirectory()) {
                         // do nothing
                     } else {
-
-                        String fileName = ze.getName().substring(ze.getName().lastIndexOf('/')+1);
-                        if (ImportUtilsKt.isPackFile(fileName)) {
-                            MyLog.add("f:" + fileName);
-                            emitter.onNext(new FromZipEntryStreamFactory(zin, ze));
-                            MyLog.add("ok!");
+                        val fileName = ze.getName().substring(ze.getName().lastIndexOf('/') + 1)
+                        if (isPackFile(fileName)) {
+                            add("f:" + fileName)
+                            emitter.onNext(FromZipEntryStreamFactory(zin, ze))
+                            add("ok!")
                         }
-                        zin.closeEntry();
+                        zin.closeEntry()
                     }
                 }
 
-                zin.close();
-                emitter.onComplete();
-            } catch (Exception e) {
-                emitter.onError(e);
-                zin.close();
+                zin.close()
+                emitter.onComplete()
+            } catch (e: Exception) {
+                emitter.onError(e)
+                zin!!.close()
             }
-        });
-
-
+        })
     }
 
-    public static void zipDirectory(File dir, File zipFile) throws IOException {
-
-        FileOutputStream fout = new FileOutputStream(zipFile);
-        ZipOutputStream zout = new ZipOutputStream(new BufferedOutputStream(fout));
+    @Throws(IOException::class) fun zipDirectory(dir: File, zipFile: File?) {
+        val fout = FileOutputStream(zipFile)
+        val zout = ZipOutputStream(BufferedOutputStream(fout))
         try {
-            zipSubDirectory("", dir, zout);
-        }catch (IOException e){ throw e; }
-        finally { zout.close(); }
+            zipSubDirectory("", dir, zout)
+        } catch (e: IOException) {
+            throw e
+        } finally {
+            zout.close()
+        }
     }
 
-    private static void zipSubDirectory(String basePath, File dir, ZipOutputStream zout) throws IOException {
-
-        final int BUFFER = 4096;
-        byte[] buffer = new byte[BUFFER];
-        File[] files = dir.listFiles();
-        for (File file : files) {
-
+    @Throws(IOException::class) private fun zipSubDirectory(basePath: String?, dir: File, zout: ZipOutputStream) {
+        val BUFFER = 4096
+        val buffer = ByteArray(BUFFER)
+        val files = dir.listFiles()
+        for (file in files!!) {
             if (file.isDirectory()) {
-
-                String path = basePath + file.getName() + "/";
-                zout.putNextEntry(new ZipEntry(path));
-                zipSubDirectory(path, file, zout);
-                zout.closeEntry();
+                val path = basePath + file.getName() + "/"
+                zout.putNextEntry(ZipEntry(path))
+                zipSubDirectory(path, file, zout)
+                zout.closeEntry()
             } else {
-
-                BufferedInputStream fin = new BufferedInputStream(new FileInputStream(file), BUFFER);
+                val fin = BufferedInputStream(FileInputStream(file), BUFFER)
 
                 try {
-                    zout.putNextEntry(new ZipEntry(basePath + file.getName()));
-                    int length;
-                    while ((length = fin.read(buffer)) > 0) {
-                        zout.write(buffer, 0, length);
+                    zout.putNextEntry(ZipEntry(basePath + file.getName()))
+                    var length: Int
+                    while ((fin.read(buffer).also { length = it }) > 0) {
+                        zout.write(buffer, 0, length)
                     }
-                    zout.closeEntry();
+                    zout.closeEntry()
+                } catch (e: IOException) {
+                    throw e
+                } finally {
+                    fin.close()
                 }
-                catch (IOException e){ throw e; }
-                finally {
-                    fin.close();
-                }
-
             }
         } // for
     }
-
-
-
 }

@@ -1,7 +1,7 @@
 package ru.samtakoy.features.views.domain
 
 import kotlinx.coroutines.flow.Flow
-import ru.samtakoy.core.domain.CardsInteractor
+import ru.samtakoy.features.card.domain.CardsInteractor
 import ru.samtakoy.core.utils.CollectionUtils
 import ru.samtakoy.features.views.data.local.ViewHistoryRepository
 import javax.inject.Inject

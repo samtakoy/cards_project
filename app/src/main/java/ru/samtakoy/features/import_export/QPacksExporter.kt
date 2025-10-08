@@ -1,14 +1,15 @@
 package ru.samtakoy.features.import_export
 
 import androidx.annotation.WorkerThread
-import ru.samtakoy.core.data.local.database.room.entities.QPackEntity
+import ru.samtakoy.features.qpack.data.QPackEntity
+import ru.samtakoy.features.qpack.domain.QPack
 
 interface QPacksExporter {
     @WorkerThread
     suspend fun exportQPackToEmail(qPackId: Long)
 
     @WorkerThread
-    suspend fun exportQPack(qPack: QPackEntity)
+    suspend fun exportQPack(qPack: QPack)
 
     @WorkerThread
     suspend fun exportAllToEmail()

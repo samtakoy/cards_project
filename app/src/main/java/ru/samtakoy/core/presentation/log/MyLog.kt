@@ -6,10 +6,10 @@ import java.util.Collections
 import java.util.LinkedList
 
 object MyLog {
-    private val sLog: MutableList<String?> = LinkedList<String?>()
+    private val sLog: MutableList<String> = LinkedList<String>()
 
     @JvmStatic
-    fun add(source: String?, t: Throwable?) {
+    fun add(source: String, t: Throwable?) {
         val s = source + ": " + t?.message + "\n" + t?.stackTraceToString()
         sLog.add(s)
         Log.e("MyLog", s)
@@ -22,6 +22,6 @@ object MyLog {
     }
 
     @JvmStatic
-    val strings: MutableList<String?>
-        get() = Collections.unmodifiableList<String?>(sLog)
+    val strings: MutableList<String>
+        get() = Collections.unmodifiableList<String>(sLog)
 }

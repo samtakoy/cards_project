@@ -8,7 +8,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.data.local.database.room.entities.elements.Schedule
+import ru.samtakoy.features.learncourse.domain.model.schedule.Schedule
 
 internal class ScheduleEditViewModelFactory @AssistedInject constructor(
     private val resources: Resources,

@@ -1,69 +1,49 @@
-package ru.samtakoy.core.presentation.online_import;
+package ru.samtakoy.core.presentation.online_import
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import ru.samtakoy.R
+import ru.samtakoy.core.data.network.pojo.RemoteFile
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+internal class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder?>() {
+    private var mFiles: MutableList<RemoteFile> = ArrayList<RemoteFile>()
 
-import java.util.ArrayList;
-import java.util.List;
-
-import ru.samtakoy.R;
-import ru.samtakoy.core.data.network.pojo.RemoteFile;
-
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>{
-
-
-
-    private List<RemoteFile> mFiles = new ArrayList<>();
-
-    @NonNull
-    @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.remote_file_list_item, parent, false);
-        return new MyViewHolder(v);
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val v = LayoutInflater.from(parent.getContext()).inflate(R.layout.remote_file_list_item, parent, false)
+        return MyViewHolder(v)
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.bind(mFiles.get(position));
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        holder.bind(mFiles.get(position))
     }
 
-    @Override
-    public int getItemCount() {
-        return mFiles.size();
+    override fun getItemCount(): Int {
+        return mFiles.size
     }
 
-    public void setFiles(List<RemoteFile> files) {
-        mFiles = files;
-        notifyDataSetChanged();
+    fun setFiles(files: MutableList<RemoteFile>) {
+        mFiles = files
+        notifyDataSetChanged()
     }
 
-    public void updateFile(RemoteFile file){
+    fun updateFile(file: RemoteFile) {
         // ?
-        mFiles.set(mFiles.indexOf(file), file);
-        notifyItemChanged(mFiles.indexOf(file));
+        mFiles.set(mFiles.indexOf(file), file)
+        notifyItemChanged(mFiles.indexOf(file))
     }
 
+    internal class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val mText: TextView
 
-
-    static class MyViewHolder extends RecyclerView.ViewHolder{
-
-        private TextView mText;
-
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            mText = itemView.findViewById(R.id.title);
+        init {
+            mText = itemView.findViewById<TextView>(R.id.title)
         }
 
-        public void bind(RemoteFile remoteFile) {
-
-            mText.setText(remoteFile.getPath());
+        fun bind(remoteFile: RemoteFile) {
+            mText.setText(remoteFile.path)
         }
     }
-
 }

@@ -1,72 +1,51 @@
-package ru.samtakoy.core.presentation.qpack.info;
+package ru.samtakoy.core.presentation.qpack.info
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import ru.samtakoy.R
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+internal class CardsFastViewAdapter : RecyclerView.Adapter<CardsFastViewAdapter.MyViewHolder>() {
+    private var mCards: List<FastCardUiModel>
 
-import java.util.ArrayList;
-import java.util.List;
-
-import ru.samtakoy.R;
-
-
-public class CardsFastViewAdapter extends RecyclerView.Adapter<CardsFastViewAdapter.MyViewHolder> {
-
-
-    private List<FastCardUiModel> mCards;
-
-    public CardsFastViewAdapter() {
-        mCards = new ArrayList<>();
+    init {
+        mCards = ArrayList<FastCardUiModel>()
     }
 
-    public void setCards(List<FastCardUiModel> cards) {
-        mCards = cards;
-        notifyDataSetChanged();
+    fun setCards(cards: List<FastCardUiModel>) {
+        mCards = cards
+        notifyDataSetChanged()
     }
 
-    @NonNull
-    @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.cards_fast_view_list_item, parent, false
-        );
-        return new MyViewHolder(v);
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val v = LayoutInflater.from(parent.getContext()).inflate(
+            R.layout.cards_fast_view_list_item, parent, false
+        )
+        return MyViewHolder(v)
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.bind(mCards.get(position));
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        holder.bind(mCards.get(position)!!)
     }
 
-    @Override
-    public int getItemCount() {
-        return mCards.size();
+    override fun getItemCount(): Int {
+        return mCards.size
     }
 
-    static class MyViewHolder extends RecyclerView.ViewHolder{
+    internal class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val mTextQ: TextView
+        private val mTextA: TextView
 
-        private TextView mTextQ;
-        private TextView mTextA;
-
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-            mTextQ = itemView.findViewById(R.id.questionText);
-            mTextA = itemView.findViewById(R.id.answerText);
+        init {
+            mTextQ = itemView.findViewById<TextView>(R.id.questionText)
+            mTextA = itemView.findViewById<TextView>(R.id.answerText)
         }
 
-        public void bind(FastCardUiModel card) {
-
-            mTextQ.setText(card.getQuestion());
-            mTextA.setText(card.getAnswer());
+        fun bind(card: FastCardUiModel) {
+            mTextQ.setText(card.question)
+            mTextA.setText(card.answer)
         }
     }
-
 }
-
-
-
-

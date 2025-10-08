@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView
 import org.apache.commons.lang3.ArrayUtils
 import ru.samtakoy.R
 import ru.samtakoy.core.app.di.Di
-import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode
 import ru.samtakoy.core.presentation.RouterHolder
 import ru.samtakoy.core.presentation.base.observe
 import ru.samtakoy.core.presentation.base.viewmodel.AbstractViewModel
@@ -38,6 +37,9 @@ import ru.samtakoy.core.presentation.courses.model.CoursesAdapter
 import ru.samtakoy.core.presentation.courses.model.CoursesAdapter.CourseClickListener
 import ru.samtakoy.core.presentation.export_cards.BatchExportDialogFragment
 import ru.samtakoy.core.presentation.showDialogFragment
+import ru.samtakoy.features.learncourse.domain.model.LearnCourseMode
+import ru.samtakoy.features.learncourse.domain.utils.listToPrimitiveArray
+import ru.samtakoy.features.learncourse.domain.utils.primitiveArrayToList
 import javax.inject.Inject
 
 class CoursesListFragment : Fragment(), CourseClickListener, ViewModelOwner {
@@ -198,7 +200,7 @@ class CoursesListFragment : Fragment(), CourseClickListener, ViewModelOwner {
     }
 
     private fun navigateToCourseInfo(courseId: Long) {
-        mRouterHolder!!.getNavController().navigate(
+        mRouterHolder!!.navController.navigate(
             R.id.action_coursesListFragment_to_courseInfoFragment,
             buildBundle(courseId)
         )
@@ -215,7 +217,7 @@ class CoursesListFragment : Fragment(), CourseClickListener, ViewModelOwner {
 
     private fun readTargetModes(): List<LearnCourseMode>? {
         val result = requireArguments().getIntArray(ARG_TARGET_MODES)
-        return LearnCourseMode.primitiveArrayToList(result)
+        return result.primitiveArrayToList()
     }
 
     private fun readTargetCourseIds(): Array<Long>? {
@@ -247,13 +249,16 @@ class CoursesListFragment : Fragment(), CourseClickListener, ViewModelOwner {
 
         @JvmStatic
         fun buildBundle(
-            targetQPackId: Long?,
+            targetQPackId: Long,
             targetModes: List<LearnCourseMode>?,
             targetCourseIds: Array<Long>?
         ): Bundle {
             val args = Bundle()
             args.putSerializable(ARG_TARGET_QPACK_ID, targetQPackId)
-            args.putIntArray(ARG_TARGET_MODES, LearnCourseMode.listToPrimitiveArray(targetModes))
+            args.putIntArray(
+                ARG_TARGET_MODES,
+                targetModes.listToPrimitiveArray()
+            )
             args.putLongArray(ARG_TARGET_COURSE_IDS, ArrayUtils.toPrimitive(targetCourseIds))
             return args
         }

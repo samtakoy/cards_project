@@ -4,16 +4,16 @@ import androidx.annotation.StringRes
 import ru.samtakoy.R
 import ru.samtakoy.core.app.some.Resources
 import ru.samtakoy.core.app.utils.TimeViewUtils
-import ru.samtakoy.core.data.local.database.room.entities.LearnCourseEntity
-import ru.samtakoy.core.data.local.database.room.entities.getMillisToStart
-import ru.samtakoy.core.data.local.database.room.entities.types.LearnCourseMode
+import ru.samtakoy.features.learncourse.domain.model.LearnCourse
+import ru.samtakoy.features.learncourse.domain.model.LearnCourseMode
+import ru.samtakoy.features.learncourse.domain.utils.getMillisToStart
 import ru.samtakoy.features.views.domain.ViewHistoryItem
 import java.text.MessageFormat
 import javax.inject.Inject
 
 internal interface CourseInfoViewStateMapper {
     fun mapData(
-        learnCourse: LearnCourseEntity,
+        learnCourse: LearnCourse,
         lastView: ViewHistoryItem?
     ): CourseInfoViewModel.State.Type.Data
 }
@@ -23,7 +23,7 @@ internal class CourseInfoViewStateMapperImpl @Inject constructor(
 ): CourseInfoViewStateMapper {
 
     override fun mapData(
-        learnCourse: LearnCourseEntity,
+        learnCourse: LearnCourse,
         lastView: ViewHistoryItem?
     ): CourseInfoViewModel.State.Type.Data {
         return CourseInfoViewModel.State.Type.Data(
@@ -44,7 +44,7 @@ internal class CourseInfoViewStateMapperImpl @Inject constructor(
         )
     }
 
-    private fun getScheduleButtonText(learnCourse: LearnCourseEntity): String {
+    private fun getScheduleButtonText(learnCourse: LearnCourse): String {
         if (learnCourse.mode == LearnCourseMode.COMPLETED) {
             return resources.getString(R.string.course_info_schedule_is_completed)
         }
@@ -61,7 +61,7 @@ internal class CourseInfoViewStateMapperImpl @Inject constructor(
         return learnCourse.restSchedule.toStringView(resources)
     }
 
-    private fun getStatusString(learnCourse: LearnCourseEntity, lastView: ViewHistoryItem?): String {
+    private fun getStatusString(learnCourse: LearnCourse, lastView: ViewHistoryItem?): String {
         val resString: String
 
         when (learnCourse.mode) {
@@ -103,7 +103,7 @@ internal class CourseInfoViewStateMapperImpl @Inject constructor(
         }
     }
 
-    private fun getActionButtonText(learnCourse: LearnCourseEntity, lastView: ViewHistoryItem?): String {
+    private fun getActionButtonText(learnCourse: LearnCourse, lastView: ViewHistoryItem?): String {
         @StringRes val resId: Int
         when (learnCourse.mode) {
             LearnCourseMode.PREPARING -> resId = R.string.course_info_btn_complete_preparing

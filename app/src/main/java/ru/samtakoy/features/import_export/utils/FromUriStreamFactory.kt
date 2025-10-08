@@ -1,48 +1,22 @@
-package ru.samtakoy.features.import_export.utils;
+package ru.samtakoy.features.import_export.utils
 
-import android.content.ContentResolver;
-import android.net.Uri;
+import android.content.ContentResolver
+import android.net.Uri
+import ru.samtakoy.features.import_export.utils.UriUtils.getFileNameByUri
+import java.io.InputStream
 
-import java.io.InputStream;
-
-public class FromUriStreamFactory implements StreamFactory{
-
-
-    private ContentResolver mResolver;
-    private Long mTargetThemeId;
-    private Uri mSelectedFileUri;
-
-    public FromUriStreamFactory(
-            ContentResolver resolver, Long targetThemeId, Uri selectedFileUri
-    ){
-
-        mResolver = resolver;
-        mTargetThemeId = targetThemeId;
-        mSelectedFileUri = selectedFileUri;
+class FromUriStreamFactory(
+    private val mResolver: ContentResolver,
+    override val themeId: Long,
+    private val mSelectedFileUri: Uri
+) : StreamFactory {
+    @Throws(Exception::class) override fun openStream(): InputStream {
+        return mResolver.openInputStream(mSelectedFileUri)!!
     }
 
-    @Override
-    public InputStream openStream() throws Exception {
-        return mResolver.openInputStream(mSelectedFileUri);
-    }
+    override val srcPath: String
+        get() = mSelectedFileUri.getPath()!!
 
-    @Override
-    public String getSrcPath() {
-        return mSelectedFileUri.getPath();
-    }
-
-    @Override
-    public Long getThemeId() {
-        return mTargetThemeId;
-    }
-
-    @Override
-    public String getFileName() {
-        return UriUtils.getFileNameByUri(mResolver, mSelectedFileUri);
-    }
-
-    /*@Override
-    public ContentResolver getResolver() {
-        return mResolver;
-    }*/
+    override val fileName: String
+        get() = getFileNameByUri(mResolver, mSelectedFileUri)
 }

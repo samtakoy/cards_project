@@ -1,13 +1,11 @@
-package ru.samtakoy.features.import_export.utils;
+package ru.samtakoy.features.import_export.utils
 
-import java.io.InputStream;
+import java.io.InputStream
 
-public interface StreamFactory {
-
-    InputStream openStream() throws Exception;
-    String getSrcPath();
-    Long getThemeId();
-    String getFileName();
-    //ContentResolver getResolver();
-
+interface StreamFactory {
+    @Throws(Exception::class)
+    fun openStream(): InputStream
+    val srcPath: String
+    val themeId: Long
+    val fileName: String
 }

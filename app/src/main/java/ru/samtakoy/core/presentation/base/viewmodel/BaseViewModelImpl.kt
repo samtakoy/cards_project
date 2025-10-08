@@ -23,7 +23,7 @@ abstract class BaseViewModelImpl<State: Any, Action, Event>(
     override val ioScope: CoroutineScope = scopeProvider.ioScope
 
     private val _viewStates = MutableStateFlow(initialState)
-    private val _viewActions = MutableSharedFlow<Action?>(replay = 0)
+    private val _viewActions = MutableSharedFlow<Action>(replay = 0)
 
     private var isFirstTimeInit: Boolean = true
 

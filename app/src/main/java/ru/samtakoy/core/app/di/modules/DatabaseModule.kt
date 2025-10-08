@@ -5,10 +5,10 @@ import androidx.room.Room
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import ru.samtakoy.core.data.local.database.DB_NAME
-import ru.samtakoy.core.data.local.database.room.MyRoomDb
-import ru.samtakoy.core.data.local.reps.TransactionRepository
-import ru.samtakoy.core.data.local.reps.impl.TransactionRepositoryImpl
+import ru.samtakoy.features.database.data.DB_NAME
+import ru.samtakoy.features.database.data.MyRoomDb
+import ru.samtakoy.features.database.data.TransactionRepository
+import ru.samtakoy.features.database.data.TransactionRepositoryImpl
 import javax.inject.Singleton
 
 @Module(includes = [AppModule::class])

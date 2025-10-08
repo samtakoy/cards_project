@@ -19,8 +19,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.data.local.database.room.entities.QPackEntity
-import ru.samtakoy.core.domain.CardsInteractor
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.core.presentation.base.viewmodel.savedstate.toSavedState
@@ -32,9 +30,11 @@ import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.Action
 import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.Event
 import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.NavAction.*
 import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.State
+import ru.samtakoy.features.qpack.domain.QPack
+import ru.samtakoy.features.qpack.domain.QPackInteractor
 
 internal class QPacksListViewModelImpl(
-    private val cardsInteractor: CardsInteractor,
+    private val qPackInteractor: QPackInteractor,
     private val itemsMapper: QPackListItemUiModelMapper,
     private val resources: Resources,
     savedStateHandle: SavedStateHandle,
@@ -136,7 +136,7 @@ internal class QPacksListViewModelImpl(
                 isFavorites = it.first,
                 searchString = it.third
             )
-        }.onEach { (sortType: QPackSortType, list: List<QPackEntity>) ->
+        }.onEach { (sortType: QPackSortType, list: List<QPack>) ->
             if (sortTypeState.value == sortType) {
                 viewState = viewState.copy(
                     items = itemsMapper.mapImmutableList(list, sortType)
@@ -150,10 +150,10 @@ internal class QPacksListViewModelImpl(
         sortType: QPackSortType,
         isFavorites: Boolean,
         searchString: String
-    ): Flow<Pair<QPackSortType, List<QPackEntity>>> {
+    ): Flow<Pair<QPackSortType, List<QPack>>> {
         return getAllQPacksSortedAsFlow(sortType, isFavorites, searchString)
             .map { list ->
-                Pair<QPackSortType, List<QPackEntity>>(
+                Pair<QPackSortType, List<QPack>>(
                     sortType,
                     list
                 )
@@ -164,13 +164,13 @@ internal class QPacksListViewModelImpl(
         sortType: QPackSortType,
         isFavorites: Boolean,
         searchString: String
-    ): Flow<List<QPackEntity>> {
+    ): Flow<List<QPack>> {
         return when (sortType) {
-            QPackSortType.LAST_VIEW_DATE_ASC -> cardsInteractor.getAllQPacksByLastViewDateAscAsFlow(
+            QPackSortType.LAST_VIEW_DATE_ASC -> qPackInteractor.getAllQPacksByLastViewDateAscAsFlow(
                 searchString,
                 isFavorites
             )
-            QPackSortType.CREATION_DATE_DESC -> cardsInteractor.getAllQPacksByCreationDateDescAsFlow(
+            QPackSortType.CREATION_DATE_DESC -> qPackInteractor.getAllQPacksByCreationDateDescAsFlow(
                 searchString,
                 isFavorites
             )

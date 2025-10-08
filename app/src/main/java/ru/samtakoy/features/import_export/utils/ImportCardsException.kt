@@ -1,22 +1,12 @@
-package ru.samtakoy.features.import_export.utils;
+package ru.samtakoy.features.import_export.utils
 
-public class ImportCardsException extends Exception{
-
-
-    public static final int ERR_PACK_ID_MISSING = 1;
-    public static final int ERR_PACK_WITH_ID_CREATION_NOT_ALLOWED = 2;
-    public static final int ERR_WRONG_CARD_PACK = 3;
-
-    private int mErrorId;
-
-    public ImportCardsException(int errorId, String message){
-        super(message);
-
-        mErrorId = errorId;
+class ImportCardsException(
+    val errorId: Int,
+    message: String?
+) : Exception(message) {
+    companion object {
+        const val ERR_PACK_ID_MISSING: Int = 1
+        const val ERR_PACK_WITH_ID_CREATION_NOT_ALLOWED: Int = 2
+        const val ERR_WRONG_CARD_PACK: Int = 3
     }
-
-    public int getErrorId(){
-        return mErrorId;
-    }
-
 }
