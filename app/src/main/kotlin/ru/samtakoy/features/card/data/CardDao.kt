@@ -1,7 +1,10 @@
 package ru.samtakoy.features.card.data
 
-import androidx.room.*
-import io.reactivex.Single
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -51,9 +54,6 @@ interface CardDao {
     fun getCardCountInQPack(qPackId: Long): Int
 
     // Favorites
-    @Query("SELECT ${CardEntity.Companion._id} FROM ${CardEntity.Companion.table} WHERE ${CardEntity.Companion._favorite}>0")
-    fun getAllFavoriteCardsIdsRx(): Single<List<Long>>
-
     @Query("SELECT ${CardEntity.Companion._id} FROM ${CardEntity.Companion.table} WHERE ${CardEntity.Companion._favorite}>0")
     suspend fun getAllFavoriteCardsIds(): List<Long>
 

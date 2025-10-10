@@ -1,6 +1,5 @@
 package ru.samtakoy.features.card.data
 
-import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
 import ru.samtakoy.features.card.domain.model.Card
 import ru.samtakoy.features.card.domain.model.CardWithTags
@@ -22,7 +21,6 @@ interface CardsRepository {
     // favorites
     suspend fun updateCardFavorite(cardId: Long, favorite: Int)
     suspend fun getFavoriteCardsCount(): Int
-    fun getAllFavoriteCardsIdsRx(): Single<List<Long>>
     suspend fun getAllFavoriteCardsIds(): List<Long>
     suspend fun getAllFavoriteCardsIdsFromQPacks(qPackIds: List<Long>): List<Long>
 

@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id("kotlin-kapt") // TODO ksp
     alias(libs.plugins.android.application)
@@ -23,16 +25,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         multiDexEnabled = true
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += mapOf(
-                        // here go the options for Moxy compiler
-                        "defaultMoxyStrategy" to "moxy.viewstate.strategy.AddToEndSingleStrategy",
-                        "room.schemaLocation" to "$projectDir/schemas".toString()
-                )
-            }
-        }/**/
     }
     buildTypes {
         release {
@@ -45,11 +37,15 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+    /*
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
-    }
+    }*/
     kotlin {
-        jvmToolchain(17)
+        // jvmToolchain(17)
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
     }
 }
 

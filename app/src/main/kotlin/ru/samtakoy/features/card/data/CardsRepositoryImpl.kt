@@ -1,14 +1,13 @@
 package ru.samtakoy.features.card.data
 
 import androidx.room.withTransaction
-import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import ru.samtakoy.features.database.data.MyRoomDb
 import ru.samtakoy.features.card.data.mapper.CardEntityMapper
 import ru.samtakoy.features.card.data.mapper.CardWithTagsEntityMapper
 import ru.samtakoy.features.card.domain.model.Card
 import ru.samtakoy.features.card.domain.model.CardWithTags
+import ru.samtakoy.features.database.data.MyRoomDb
 import javax.inject.Inject
 
 internal class CardsRepositoryImpl @Inject constructor(
@@ -62,10 +61,6 @@ internal class CardsRepositoryImpl @Inject constructor(
 
     override suspend fun getFavoriteCardsCount(): Int {
         return cardDao.getFavoriteCardsCount()
-    }
-
-    override fun getAllFavoriteCardsIdsRx(): Single<List<Long>> {
-        return cardDao.getAllFavoriteCardsIdsRx()
     }
 
     override suspend fun getAllFavoriteCardsIds(): List<Long> {
