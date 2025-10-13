@@ -3,7 +3,7 @@
 plugins {
 
     alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.kotlin.gradle) apply false
+    alias(libs.plugins.android.kotlin.support) apply false
     alias(libs.plugins.compose.compiler) apply false
     // alias(libs.plugins.kotlinx.serialization) apply false
     alias(libs.plugins.androidx.navigation.safeargs) apply false

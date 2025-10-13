@@ -1,45 +1,32 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     id("kotlin-kapt") // TODO ksp
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.gradle)
+    alias(libs.plugins.android.kotlin.support)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.androidx.navigation.safeargs)
     id("kotlin-parcelize")
+    id("convention.base.plugin")
 }
 
 android {
     namespace = "ru.samtakoy"
-    compileSdk = libs.versions.compileSdk.get().toInt()
     buildFeatures {
         viewBinding = true
         compose = true
     }
     defaultConfig {
         applicationId = "ru.samtakoy"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         multiDexEnabled = true
     }
+
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 }
@@ -133,6 +120,3 @@ dependencies {
     implementation(project(":module:data:common:api"))
     implementation(project(":module:data:common:impl"))
 }
-
-
-

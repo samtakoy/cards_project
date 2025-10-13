@@ -24,6 +24,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+includeBuild("build-logic")
 
 include(":app")
 include(":module:data:common:api")

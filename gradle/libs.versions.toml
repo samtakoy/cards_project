@@ -2,6 +2,7 @@
 minSdk = "21"
 targetSdk = "35"
 compileSdk = "35"
+javaVersion = "17"
 
 kotlin_version="2.2.20"
 kotlin_coroutines_version="1.9.0"
@@ -18,6 +19,14 @@ espressoCoreVersion = "3.7.0"
 gson_version = "2.11.0"
 
 [libraries]
+# provides the Kotlin Gradle plugin
+# This plugin enables Gradle to understand and compile Kotlin code,
+# regardless of the target platform (JVM, Android, Multiplatform).
+gradleplugin-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin_version" }
+gradleplugin-android = { module = "com.android.tools.build:gradle", version.ref = "agp_version" }
+# gradleplugin-compose = { module = "org.jetbrains.compose:compose-gradle-plugin", version.ref = "compose" }
+# gradleplugin-composeCompiler = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "compose" }
+
 androidx-appcompat = "androidx.appcompat:appcompat:1.7.1"
 androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.2.1"
 androidx-recyclerview = "androidx.recyclerview:recyclerview:1.4.0"
@@ -99,14 +108,13 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 
 
 [plugins]
-# androidApplication = { id = "com.android.application", version.ref = "agp" }
-# jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "agp_version" }
 android-library = { id = "com.android.library", version.ref = "agp_version" }
-kotlin-gradle = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin_version" }
+#  to enable Kotlin support specifically for Android development
+android-kotlin-support = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin_version" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin_version" }
 androidx-navigation-safeargs = { id="androidx.navigation.safeargs", version.ref="nav_version" }
-#kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin_version" }
+# kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin_version" }
 # TODO после выпила Java
 # androidx.navigation.safeargs.kotlin
 
