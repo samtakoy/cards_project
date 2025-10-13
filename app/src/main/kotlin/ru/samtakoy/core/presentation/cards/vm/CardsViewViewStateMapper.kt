@@ -1,7 +1,7 @@
 package ru.samtakoy.core.presentation.cards.vm
 
 import ru.samtakoy.R
-import ru.samtakoy.core.app.some.Resources
+import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.core.presentation.cards.types.BackupInfo
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.core.presentation.cards.vm.CardsViewViewModel.State

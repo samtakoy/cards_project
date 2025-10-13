@@ -1,6 +1,6 @@
 package ru.samtakoy.features.notifications
 
-import ru.samtakoy.features.learncourse.domain.model.schedule.ScheduleTimeUnit
+import ru.samtakoy.domain.learncourse.schedule.ScheduleTimeUnit
 
 object NotificationsConst {
     val NEW_COURSE_LEARN_DEFAULT_MILLIS_DELTA: Int = 3 * ScheduleTimeUnit.MINUTE.getMillis()

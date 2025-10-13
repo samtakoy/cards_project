@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.update
 import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
+import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.core.domain.FavoritesInteractor
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.design_system.base.model.LongUiId
@@ -21,9 +21,9 @@ import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectio
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModel.Event
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModel.NavigationAction
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModel.State
-import ru.samtakoy.features.qpack.domain.QPack
-import ru.samtakoy.features.qpack.domain.QPackInteractor
-import ru.samtakoy.features.views.domain.ViewHistoryInteractor
+import ru.samtakoy.domain.qpack.QPack
+import ru.samtakoy.domain.qpack.QPackInteractor
+import ru.samtakoy.domain.view.ViewHistoryInteractor
 
 class QPackSelectionViewModelImpl(
     private val qPackInteractor: QPackInteractor,

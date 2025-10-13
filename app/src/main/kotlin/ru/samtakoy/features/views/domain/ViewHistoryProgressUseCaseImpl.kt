@@ -1,7 +1,10 @@
 package ru.samtakoy.features.views.domain
 
-import ru.samtakoy.core.app.utils.DateUtils
-import ru.samtakoy.features.learncourse.domain.CourseProgressUseCase
+import ru.samtakoy.common.utils.DateUtils
+import ru.samtakoy.domain.view.ViewHistoryInteractor
+import ru.samtakoy.domain.view.ViewHistoryItem
+import ru.samtakoy.domain.view.ViewHistoryProgressUseCase
+import ru.samtakoy.domain.learncourse.CourseProgressUseCase
 import javax.inject.Inject
 
 class ViewHistoryProgressUseCaseImpl @Inject constructor(

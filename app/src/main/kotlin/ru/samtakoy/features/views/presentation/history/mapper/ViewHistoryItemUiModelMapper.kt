@@ -1,10 +1,10 @@
 package ru.samtakoy.features.views.presentation.history.mapper
 
 import ru.samtakoy.R
-import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.app.utils.asAnnotated
-import ru.samtakoy.core.utils.DateUtils
-import ru.samtakoy.features.views.domain.ViewHistoryItemWithInfo
+import ru.samtakoy.common.resources.Resources
+import ru.samtakoy.common.utils.DateUtils.DATE_FORMAT
+import ru.samtakoy.presentation.utils.asAnnotated
+import ru.samtakoy.domain.view.ViewHistoryItemWithInfo
 import ru.samtakoy.features.views.presentation.history.components.OneViewHistoryItemModel
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ internal class ViewHistoryItemUiModelMapperImpl @Inject constructor(
                 item.themeTitle ?: resources.getString(R.string.views_history_empty_theme_title)
             ).asAnnotated(),
             packTitle = item.qPackTitle.asAnnotated(),
-            viewDate = DateUtils.DATE_FORMAT.format(item.viewItem.lastViewDate).asAnnotated(),
+            viewDate = DATE_FORMAT.format(item.viewItem.lastViewDate).asAnnotated(),
             viewedInfo = resources.getString(
                 R.string.views_history_empty_viewed_count,
                 item.viewItem.viewedCardIds.size,

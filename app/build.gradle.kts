@@ -11,15 +11,15 @@ plugins {
 
 android {
     namespace = "ru.samtakoy"
-    compileSdk = 35
+    compileSdk = libs.versions.compileSdk.get().toInt()
     buildFeatures {
         viewBinding = true
         compose = true
     }
     defaultConfig {
         applicationId = "ru.samtakoy"
-        minSdk = 21
-        targetSdk = 35
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -37,12 +37,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    /*
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }*/
     kotlin {
-        // jvmToolchain(17)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }
@@ -61,9 +56,6 @@ dependencies {
     // (Java only)
     implementation(libs.androidx.work)
 
-    // TODO ksp
-    kapt(libs.androidx.room.compiler)
-
     // navigation
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
@@ -73,6 +65,8 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
 
     // room
+    // TODO ksp
+    kapt(libs.androidx.room.compiler)
     implementation(libs.bundles.room)
 
     // Compose
@@ -109,6 +103,35 @@ dependencies {
     // retrofit
     implementation(libs.bundles.squareup)
 
+    implementation(project(":module:common:utils"))
+
+    implementation(project(":module:presentation:utils"))
+
+    implementation(project(":module:platform:api"))
+    implementation(project(":module:platform:impl"))
+
+    implementation(project(":module:domain:card:api"))
+    implementation(project(":module:domain:card:model"))
+    implementation(project(":module:domain:card:impl"))
+
+    implementation(project(":module:domain:learncourse:api"))
+    implementation(project(":module:domain:learncourse:model"))
+    implementation(project(":module:domain:learncourse:impl"))
+
+    implementation(project(":module:domain:qpack:api"))
+    implementation(project(":module:domain:qpack:model"))
+    implementation(project(":module:domain:qpack:impl"))
+
+    implementation(project(":module:domain:theme:api"))
+    implementation(project(":module:domain:theme:model"))
+    implementation(project(":module:domain:theme:impl"))
+
+    implementation(project(":module:domain:view:api"))
+    implementation(project(":module:domain:view:model"))
+    implementation(project(":module:domain:view:impl"))
+
+    implementation(project(":module:data:common:api"))
+    implementation(project(":module:data:common:impl"))
 }
 
 

@@ -4,7 +4,7 @@ import android.os.Bundle
 import kotlinx.coroutines.rx2.await
 import ru.samtakoy.R
 import ru.samtakoy.core.app.di.Di
-import ru.samtakoy.core.app.some.Resources
+import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogFragment
 import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogPresenter.IProgressWorker
 import ru.samtakoy.features.import_export.ImportApi

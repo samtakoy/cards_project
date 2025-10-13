@@ -1,11 +1,11 @@
 package ru.samtakoy.core.presentation.themes.mapper
 
-import ru.samtakoy.core.app.utils.asAnnotated
+import ru.samtakoy.common.utils.DateUtils.DATE_FORMAT
+import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.core.presentation.design_system.base.model.LongUiId
 import ru.samtakoy.core.presentation.themes.ThemeUiItem
-import ru.samtakoy.core.utils.DateUtils.DATE_FORMAT
-import ru.samtakoy.features.qpack.domain.QPack
-import ru.samtakoy.features.theme.domain.Theme
+import ru.samtakoy.domain.qpack.QPack
+import ru.samtakoy.domain.theme.Theme
 import javax.inject.Inject
 
 internal interface ThemeUiItemMapper {

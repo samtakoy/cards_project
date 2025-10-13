@@ -1,7 +1,7 @@
 package ru.samtakoy.features.import_export.utils.cbuild
 
-import ru.samtakoy.features.tag.domain.Tag
-import ru.samtakoy.features.tag.domain.tagTitleToKey
+import ru.samtakoy.domain.cardtag.Tag
+import ru.samtakoy.domain.cardtag.tagTitleToKey
 
 class OneCardParser(
     private val mTagMap: MutableMap<String, Tag>

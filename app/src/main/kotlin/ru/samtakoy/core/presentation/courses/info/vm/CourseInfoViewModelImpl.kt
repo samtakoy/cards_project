@@ -12,24 +12,23 @@ import kotlinx.coroutines.flow.update
 import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.app.utils.DateUtils
-import ru.samtakoy.features.learncourse.domain.CourseProgressUseCase
-import ru.samtakoy.features.learncourse.domain.CoursesPlanner
-import ru.samtakoy.features.learncourse.domain.NCoursesInteractor
+import ru.samtakoy.common.resources.Resources
+import ru.samtakoy.common.utils.DateUtils
+import ru.samtakoy.domain.learncourse.CourseProgressUseCase
+import ru.samtakoy.domain.learncourse.CoursesPlanner
+import ru.samtakoy.domain.learncourse.NCoursesInteractor
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.Action
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.Event
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.NavigationAction
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.State
-import ru.samtakoy.core.presentation.log.MyLog
-import ru.samtakoy.features.learncourse.domain.model.LearnCourse
-import ru.samtakoy.features.learncourse.domain.model.LearnCourseMode
-import ru.samtakoy.features.learncourse.domain.model.LearnCourseMode.*
-import ru.samtakoy.features.learncourse.domain.model.schedule.ScheduleTimeUnit
-import ru.samtakoy.features.views.domain.ViewHistoryInteractor
-import ru.samtakoy.features.views.domain.ViewHistoryItem
+import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.domain.learncourse.LearnCourse
+import ru.samtakoy.domain.learncourse.LearnCourseMode.*
+import ru.samtakoy.domain.learncourse.schedule.ScheduleTimeUnit
+import ru.samtakoy.domain.view.ViewHistoryInteractor
+import ru.samtakoy.domain.view.ViewHistoryItem
 
 internal class CourseInfoViewModelImpl(
     private val coursesInteractor: NCoursesInteractor,

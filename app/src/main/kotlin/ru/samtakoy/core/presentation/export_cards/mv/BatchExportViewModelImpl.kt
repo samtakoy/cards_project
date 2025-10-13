@@ -3,11 +3,11 @@ package ru.samtakoy.core.presentation.export_cards.mv
 import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
+import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.export_cards.BatchExportType
 import ru.samtakoy.core.presentation.export_cards.mv.BatchExportViewModel.Action
-import ru.samtakoy.core.presentation.log.MyLog
+import ru.samtakoy.common.utils.MyLog
 import ru.samtakoy.features.import_export.CoursesExporter
 import ru.samtakoy.features.import_export.QPacksExporter
 

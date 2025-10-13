@@ -3,7 +3,7 @@ package ru.samtakoy.core.presentation.cards.vm
 import androidx.compose.runtime.Immutable
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
-import ru.samtakoy.features.learncourse.domain.model.schedule.Schedule
+import ru.samtakoy.domain.learncourse.schedule.Schedule
 
 @Immutable
 interface CardsViewViewModel : BaseViewModel<CardsViewViewModel.State, CardsViewViewModel.Action, CardsViewViewModel.Event> {

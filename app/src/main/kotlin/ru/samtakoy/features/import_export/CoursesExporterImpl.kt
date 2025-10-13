@@ -4,10 +4,10 @@ import android.content.Context
 import android.net.Uri
 import androidx.core.content.FileProvider
 import com.google.gson.Gson
-import ru.samtakoy.features.learncourse.data.CoursesRepository
-import ru.samtakoy.core.presentation.log.MyLog.add
+import ru.samtakoy.data.learncourse.CoursesRepository
+import ru.samtakoy.common.utils.MyLog.add
 import ru.samtakoy.features.import_export.helpers.SendEmailHelper
-import ru.samtakoy.features.learncourse.domain.model.LearnCourse
+import ru.samtakoy.domain.learncourse.LearnCourse
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
@@ -16,7 +16,8 @@ import javax.inject.Inject
 
 class CoursesExporterImpl @Inject constructor(
     private val mContext: Context,
-    private val mCoursesReposithory: CoursesRepository
+    private val mCoursesReposithory: CoursesRepository,
+    private val gson: Gson
 ) : CoursesExporter {
 
     override suspend fun exportAllToEmail() {
@@ -24,7 +25,8 @@ class CoursesExporterImpl @Inject constructor(
     }
 
     private fun serializeCourses(learnCourses: List<LearnCourse>): String {
-        return Gson().toJson(learnCourses)
+        // TODO локальная моделька и SerializedName
+        return gson.toJson(learnCourses)
     }
 
     fun exportCoursesToFolder(learnCourses: MutableList<LearnCourse>, exportDirPath: String): Boolean {

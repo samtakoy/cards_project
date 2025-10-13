@@ -5,8 +5,8 @@ import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.Action
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.Event
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.State
-import ru.samtakoy.features.learncourse.domain.model.schedule.ScheduleTimeUnit
-import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.ParcelableSchedule
+import ru.samtakoy.domain.learncourse.schedule.ScheduleTimeUnit
+import ru.samtakoy.domain.learncourse.schedule.serialize.ParcelableSchedule
 
 @Immutable
 internal interface ScheduleEditViewModel : BaseViewModel<State, Action, Event> {

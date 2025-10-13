@@ -1,8 +1,8 @@
 package ru.samtakoy.features.import_export.utils.cbuild
 
-import ru.samtakoy.features.card.domain.model.Card
-import ru.samtakoy.features.card.domain.model.CardWithTags
-import ru.samtakoy.features.tag.domain.Tag
+import ru.samtakoy.domain.card.domain.model.Card
+import ru.samtakoy.domain.card.domain.model.CardWithTags
+import ru.samtakoy.domain.cardtag.Tag
 
 class CardBuilder {
     var qPackId: Long

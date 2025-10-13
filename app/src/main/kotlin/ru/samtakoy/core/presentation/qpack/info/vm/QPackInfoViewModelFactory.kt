@@ -7,16 +7,16 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.features.card.domain.CardsInteractor
+import ru.samtakoy.common.resources.Resources
+import ru.samtakoy.domain.card.CardInteractor
 import ru.samtakoy.core.domain.FavoritesInteractor
-import ru.samtakoy.features.learncourse.domain.NCoursesInteractor
+import ru.samtakoy.domain.learncourse.NCoursesInteractor
 import ru.samtakoy.core.presentation.qpack.info.mapper.FastCardUiModelMapper
-import ru.samtakoy.features.qpack.domain.QPackInteractor
-import ru.samtakoy.features.views.domain.ViewHistoryInteractor
+import ru.samtakoy.domain.qpack.QPackInteractor
+import ru.samtakoy.domain.view.ViewHistoryInteractor
 
 internal class QPackInfoViewModelFactory @AssistedInject constructor(
-    private val cardsInteractor: CardsInteractor,
+    private val cardInteractor: CardInteractor,
     private val qPackInteractor: QPackInteractor,
     private val favoritesInteractor: FavoritesInteractor,
     private val coursesInteractor: NCoursesInteractor,
@@ -34,7 +34,7 @@ internal class QPackInfoViewModelFactory @AssistedInject constructor(
     ): T {
         require(modelClass == QPackInfoViewModelImpl::class.java)
         return QPackInfoViewModelImpl(
-            cardsInteractor = cardsInteractor,
+            cardInteractor = cardInteractor,
             qPackInteractor = qPackInteractor,
             favoritesInteractor = favoritesInteractor,
             coursesInteractor = coursesInteractor,

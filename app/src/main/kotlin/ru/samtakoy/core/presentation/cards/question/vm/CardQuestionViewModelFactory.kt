@@ -7,13 +7,13 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.features.card.domain.CardsInteractor
+import ru.samtakoy.common.resources.Resources
+import ru.samtakoy.domain.card.CardInteractor
 import ru.samtakoy.core.domain.FavoritesInteractor
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
 
 internal class CardQuestionViewModelFactory @AssistedInject constructor(
-    private val cardsInteractor: CardsInteractor,
+    private val cardInteractor: CardInteractor,
     private val favoritesInteractor: FavoritesInteractor,
     private val viewStateMapper: CardQuestionViewModelMapper,
     private val resources: Resources,
@@ -31,7 +31,7 @@ internal class CardQuestionViewModelFactory @AssistedInject constructor(
         require(modelClass == CardQuestionViewModelImpl::class.java)
         @Suppress("UNCHECKED_CAST")
         return CardQuestionViewModelImpl(
-            cardsInteractor = cardsInteractor,
+            cardInteractor = cardInteractor,
             favoritesInteractor = favoritesInteractor,
             viewStateMapper = viewStateMapper,
             resources = resources,

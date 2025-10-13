@@ -1,8 +1,8 @@
 package ru.samtakoy.core.presentation.cards.question.vm
 
 import ru.samtakoy.R
-import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.app.utils.asAnnotated
+import ru.samtakoy.common.resources.Resources
+import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.core.presentation.cards.question.vm.CardQuestionViewModelMapper.Companion.IS_FAVORITE_ID
 import ru.samtakoy.core.presentation.cards.question.vm.CardQuestionViewModelMapper.Companion.NEXT_CARD_BTN_ID
 import ru.samtakoy.core.presentation.cards.question.vm.CardQuestionViewModelMapper.Companion.PREV_CARD_BTN_ID

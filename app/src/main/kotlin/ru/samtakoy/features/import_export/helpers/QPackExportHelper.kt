@@ -1,10 +1,10 @@
 package ru.samtakoy.features.import_export.helpers
 
-import ru.samtakoy.core.utils.DateUtils.DATE_FORMAT
-import ru.samtakoy.features.card.domain.model.CardWithTags
+import ru.samtakoy.common.utils.DateUtils.DATE_FORMAT
+import ru.samtakoy.domain.card.domain.model.CardWithTags
 import ru.samtakoy.features.import_export.utils.cbuild.CBuilderConst
-import ru.samtakoy.features.qpack.domain.QPack
-import ru.samtakoy.features.tag.domain.Tag
+import ru.samtakoy.domain.qpack.QPack
+import ru.samtakoy.domain.cardtag.Tag
 import java.io.IOException
 import java.io.Writer
 

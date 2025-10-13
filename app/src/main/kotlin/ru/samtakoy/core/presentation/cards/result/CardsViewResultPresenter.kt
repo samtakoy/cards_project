@@ -1,6 +1,6 @@
 package ru.samtakoy.core.presentation.cards.result
 
-import ru.samtakoy.features.learncourse.domain.model.schedule.Schedule
+import ru.samtakoy.domain.learncourse.schedule.Schedule
 
 // TODO remove
 interface CardsViewResultPresenter {

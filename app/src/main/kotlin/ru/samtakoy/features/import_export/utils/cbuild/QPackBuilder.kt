@@ -1,8 +1,8 @@
 package ru.samtakoy.features.import_export.utils.cbuild
 
-import ru.samtakoy.features.qpack.data.DEF_DATE
+import ru.samtakoy.data.qpack.DEF_DATE
 import ru.samtakoy.features.import_export.utils.ImportCardsException
-import ru.samtakoy.features.tag.domain.Tag
+import ru.samtakoy.domain.cardtag.Tag
 import java.util.Locale
 
 class QPackBuilder(

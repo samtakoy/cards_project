@@ -25,8 +25,8 @@ import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.core.presentation.schedule.ScheduleEditFragment
 import ru.samtakoy.core.presentation.schedule.ScheduleEditFragment.Companion.newFragment
 import ru.samtakoy.core.presentation.showDialogFragment
-import ru.samtakoy.features.learncourse.domain.model.schedule.Schedule
-import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.toParcelable
+import ru.samtakoy.domain.learncourse.schedule.Schedule
+import ru.samtakoy.domain.learncourse.schedule.serialize.toParcelable
 import java.text.MessageFormat
 import javax.inject.Inject
 

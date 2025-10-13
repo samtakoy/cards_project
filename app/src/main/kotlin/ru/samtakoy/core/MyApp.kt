@@ -4,10 +4,14 @@ import android.os.Process
 import androidx.multidex.MultiDexApplication
 import com.facebook.stetho.Stetho
 import ru.samtakoy.BuildConfig
+import ru.samtakoy.common.di.DaggerCommonUtilsComponent
 import ru.samtakoy.core.app.di.Di
 import ru.samtakoy.core.app.di.components.DaggerAppComponent
-import ru.samtakoy.core.app.di.modules.AppModule
-import ru.samtakoy.core.presentation.log.MyLog
+import ru.samtakoy.platform.di.PlatformModule
+import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.data.di.DaggerDataModuleComponent
+import ru.samtakoy.platform.di.DaggerPlatformComponent
+import ru.samtakoy.platform.di.PlatformComponent
 import timber.log.Timber
 
 class MyApp : MultiDexApplication() {
@@ -26,8 +30,25 @@ class MyApp : MultiDexApplication() {
 
         Stetho.initializeWithDefaults(this)
 
+        val platformModule = PlatformModule(this)
+
+        val platformComponent = DaggerPlatformComponent.builder()
+            .platformModule(platformModule)
+            .build()
+
+        val commonUtilsComponent = DaggerCommonUtilsComponent.builder()
+            .platformComponent(platformComponent)
+            .build()
+
+        val dataModuleComponent = DaggerDataModuleComponent.builder()
+            .platformComponent(platformComponent)
+            .commonUtilsComponent(commonUtilsComponent)
+            .build()
+
         Di.appComponent = DaggerAppComponent.builder()
-            .appModule(AppModule(this))
+            .dataModuleComponent(dataModuleComponent)
+            .commonUtilsComponent(commonUtilsComponent)
+            .platformModule(platformModule)
             .build()
         MyLog.add("DI init ok")
 

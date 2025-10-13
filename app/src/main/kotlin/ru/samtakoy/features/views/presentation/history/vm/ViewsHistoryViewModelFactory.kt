@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.features.views.domain.ViewHistoryInteractor
+import ru.samtakoy.common.resources.Resources
+import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.features.views.presentation.history.mapper.ViewHistoryItemUiModelMapper
 
 internal class ViewsHistoryViewModelFactory @AssistedInject constructor(

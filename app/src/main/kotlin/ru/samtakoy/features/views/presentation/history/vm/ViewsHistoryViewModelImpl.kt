@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
+import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
-import ru.samtakoy.features.views.domain.ViewHistoryInteractor
+import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.features.views.presentation.history.components.OneViewHistoryItemModel
 import ru.samtakoy.features.views.presentation.history.mapper.ViewHistoryItemUiModelMapper
 import ru.samtakoy.features.views.presentation.history.vm.ViewsHistoryViewModel.Action

@@ -1,8 +1,10 @@
 package ru.samtakoy.features.theme.domain
 
 import kotlinx.coroutines.flow.Flow
-import ru.samtakoy.features.qpack.domain.QPackInteractor
-import ru.samtakoy.features.theme.data.ThemesRepository
+import ru.samtakoy.domain.qpack.QPackInteractor
+import ru.samtakoy.domain.theme.Theme
+import ru.samtakoy.domain.theme.ThemeInteractor
+import ru.samtakoy.data.theme.ThemesRepository
 import javax.inject.Inject
 
 class ThemeInteractorImpl @Inject constructor(

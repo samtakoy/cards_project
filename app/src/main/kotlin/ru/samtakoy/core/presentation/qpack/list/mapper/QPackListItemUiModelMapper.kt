@@ -2,12 +2,12 @@ package ru.samtakoy.core.presentation.qpack.list.mapper
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import ru.samtakoy.core.app.utils.asAnnotated
+import ru.samtakoy.common.utils.DateUtils.DATE_FORMAT
+import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.core.presentation.design_system.base.model.LongUiId
 import ru.samtakoy.core.presentation.qpack.list.model.QPackListItemUiModel
 import ru.samtakoy.core.presentation.qpack.list.model.QPackSortType
-import ru.samtakoy.core.utils.DateUtils.DATE_FORMAT
-import ru.samtakoy.features.qpack.domain.QPack
+import ru.samtakoy.domain.qpack.QPack
 import javax.inject.Inject
 
 internal interface QPackListItemUiModelMapper {

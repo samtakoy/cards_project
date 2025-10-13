@@ -1,24 +1,21 @@
 package ru.samtakoy.features.learncourse.domain
 
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.rx2.rxCompletable
-import kotlinx.coroutines.rx2.rxSingle
 import ru.samtakoy.R
-import ru.samtakoy.features.learncourse.domain.utils.getNotInCards
-import ru.samtakoy.features.learncourse.domain.utils.hasNotInCards
-import ru.samtakoy.features.learncourse.domain.utils.hasRealizedSchedule
-import ru.samtakoy.features.learncourse.domain.utils.hasRestSchedule
-import ru.samtakoy.features.card.data.CardsRepository
-import ru.samtakoy.features.learncourseview.data.CourseViewRepository
-import ru.samtakoy.features.learncourse.data.CoursesRepository
 import ru.samtakoy.core.domain.utils.MessageException
-import ru.samtakoy.features.learncourse.domain.model.CourseType
-import ru.samtakoy.features.learncourse.domain.model.LearnCourse
-import ru.samtakoy.features.learncourse.domain.model.LearnCourseMode
-import ru.samtakoy.features.learncourse.domain.model.schedule.Schedule
+import ru.samtakoy.data.learncourse.CourseViewRepository
+import ru.samtakoy.data.learncourse.CoursesRepository
+import ru.samtakoy.domain.learncourse.CourseType
+import ru.samtakoy.domain.learncourse.CoursesPlanner
+import ru.samtakoy.domain.learncourse.LearnCourse
+import ru.samtakoy.domain.learncourse.LearnCourseMode
+import ru.samtakoy.domain.learncourse.NCoursesInteractor
+import ru.samtakoy.domain.learncourse.getNotInCards
+import ru.samtakoy.domain.learncourse.hasNotInCards
+import ru.samtakoy.domain.learncourse.hasRealizedSchedule
+import ru.samtakoy.domain.learncourse.hasRestSchedule
+import ru.samtakoy.domain.learncourse.schedule.Schedule
+import ru.samtakoy.data.card.CardsRepository
 import java.util.Date
 import javax.inject.Inject
 
@@ -37,10 +34,6 @@ class NCoursesInteractorImpl @Inject constructor(
         return mCoursesRepository.getCourseAsFlow(courseId)
     }
 
-    override fun getCourseFlowableRx(courseId: Long): Flowable<LearnCourse> {
-        return mCoursesRepository.getCourseFlowableRx(courseId)
-    }
-
     override suspend fun deleteCourse(courseId: Long) {
         return mCoursesRepository.deleteCourse(courseId)
     }
@@ -55,45 +48,43 @@ class NCoursesInteractorImpl @Inject constructor(
         if (!learnCourse.hasNotInCards(cardIds)) {
             throw MessageException(R.string.msg_there_is_no_new_cards_to_learn)
         }
-        addCardsToCourseRx(
+        addCardsToCourse(
             learnCourse = learnCourse,
             newCardsToAdd = learnCourse.getNotInCards(cardIds)
         )
     }
 
-    override fun addCardsToCourseRx(learnCourse: LearnCourse, newCardsToAdd: List<Long>): Completable {
-        return rxCompletable {
-            // TODO проверить - происходит ли добавление, 2) добавляется ли в список активного курса (в процессе повтороения)
-            mCoursesRepository.updateCourse(
-                learnCourse.copy(
-                    cardIds = learnCourse.cardIds + newCardsToAdd
-                )
-            )
-            true
-        }.andThen( // additional
-            // TODO надо спрашивать пользователя отдельно после добавления карточек курс
-            planAdditionalCourseAfterCardsAdding(learnCourse, newCardsToAdd)
-        )
-    }
-
-    private fun planAdditionalCourseAfterCardsAdding(
+    private suspend fun addCardsToCourse(
         learnCourse: LearnCourse,
         newCardsToAdd: List<Long>
-    ): Completable {
-        return Completable.fromCallable {
-            if (learnCourse.hasRealizedSchedule()) {
-                mCoursesPlanner.planAdditionalCards(
-                    learnCourse.qPackId,
-                    learnCourse.title + "+",
-                    newCardsToAdd,
-                    if (learnCourse.hasRestSchedule()) {
-                        Schedule(learnCourse.realizedSchedule.items + learnCourse.restSchedule.firstItem!!)
-                    } else {
-                        learnCourse.realizedSchedule
-                    }
-                )
-            }
+    ) {
+        // TODO проверить - происходит ли добавление, 2) добавляется ли в список активного курса (в процессе повтороения)
+        mCoursesRepository.updateCourse(
+            learnCourse.copy(
+                cardIds = learnCourse.cardIds + newCardsToAdd
+            )
+        )
+        planAdditionalCourseAfterCardsAdding(learnCourse, newCardsToAdd)
+    }
+
+    private suspend fun planAdditionalCourseAfterCardsAdding(
+        learnCourse: LearnCourse,
+        newCardsToAdd: List<Long>
+    ): Boolean {
+        return if (learnCourse.hasRealizedSchedule()) {
+            mCoursesPlanner.planAdditionalCards(
+                learnCourse.qPackId,
+                learnCourse.title + "+",
+                newCardsToAdd,
+                if (learnCourse.hasRestSchedule()) {
+                    Schedule(learnCourse.realizedSchedule.items + learnCourse.restSchedule.firstItem!!)
+                } else {
+                    learnCourse.realizedSchedule
+                }
+            )
             true
+        } else {
+            false
         }
     }
 
@@ -118,32 +109,16 @@ class NCoursesInteractorImpl @Inject constructor(
         )
     }
 
-    override fun getAllCoursesRx(): Flowable<List<LearnCourse>> {
-        return mCoursesRepository.getAllCoursesRx()
-    }
-
     override fun getAllCoursesAsFlow(): Flow<List<LearnCourse>> {
         return mCoursesRepository.getAllCoursesAsFlow()
-    }
-
-    override fun getCoursesByIds(targetCourseIds: Array<Long>): Flowable<List<LearnCourse>> {
-        return mCoursesRepository.getCoursesByIds(targetCourseIds)
     }
 
     override fun getCoursesByIdsAsFlow(targetCourseIds: Array<Long>): Flow<List<LearnCourse>> {
         return mCoursesRepository.getCoursesByIdsAsFlow(targetCourseIds)
     }
 
-    override fun getCoursesByModes(targetModes: List<LearnCourseMode>): Flowable<List<LearnCourse>> {
-        return mCoursesRepository.getCoursesByModes(targetModes)
-    }
-
     override fun getCoursesByModesAsFlow(targetModes: List<LearnCourseMode>): Flow<List<LearnCourse>> {
         return mCoursesRepository.getCoursesByModesAsFlow(targetModes)
-    }
-
-    override fun getCoursesForQPackRx(qPackId: Long): Flowable<List<LearnCourse>> {
-        return mCoursesRepository.getCoursesForQPackRx(qPackId)
     }
 
     override fun getCoursesForQPackAsFlow(qPackId: Long): Flow<List<LearnCourse>> {
@@ -152,12 +127,6 @@ class NCoursesInteractorImpl @Inject constructor(
 
     override suspend fun saveCourse(learnCourse: LearnCourse) {
         mCoursesRepository.updateCourse(learnCourse)
-    }
-
-    override fun getCourseViewIdRx(learnCourseId: Long): Single<Long> {
-        return rxSingle {
-            mCourseViewRepository.getCourseLastViewId(learnCourseId)!!
-        }
     }
 
     override suspend fun getCourseViewId(learnCourseId: Long): Long? {

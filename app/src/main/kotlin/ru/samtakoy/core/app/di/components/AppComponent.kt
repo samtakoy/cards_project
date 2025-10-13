@@ -1,12 +1,11 @@
 package ru.samtakoy.core.app.di.components
 
 import dagger.Component
+import ru.samtakoy.common.di.CommonUtilsComponent
 import ru.samtakoy.core.app.di.modules.ApiModule
-import ru.samtakoy.core.app.di.modules.AppModule
 import ru.samtakoy.core.app.di.modules.CardsModule
 import ru.samtakoy.core.app.di.modules.CoroutinesModule
 import ru.samtakoy.core.app.di.modules.CoursesModule
-import ru.samtakoy.core.app.di.modules.DatabaseModule
 import ru.samtakoy.core.app.di.modules.FavoritesModule
 import ru.samtakoy.core.presentation.MainActivity
 import ru.samtakoy.core.presentation.cards.CardsViewFragment
@@ -31,6 +30,7 @@ import ru.samtakoy.core.presentation.settings.ClearDbDialogFragment
 import ru.samtakoy.core.presentation.themes.ThemesListFragment
 import ru.samtakoy.core.presentation.themes.di.ThemesPresentationModule
 import ru.samtakoy.core.presentation.widget.WidgetSettingsFragment
+import ru.samtakoy.data.di.DataModuleComponent
 import ru.samtakoy.features.import_export.di.ExportModule
 import ru.samtakoy.features.import_export.di.ImportModule
 import ru.samtakoy.features.notifications.NotificationsPlannerService
@@ -42,9 +42,7 @@ import javax.inject.Singleton
 // TODO доступ к компоненту через синхр сингелтон?
 @Component(
     modules = [
-        AppModule::class,
         CoroutinesModule::class,
-        DatabaseModule::class,
         CardsModule::class,
         CoursesModule::class,
         ExportModule::class,
@@ -55,9 +53,13 @@ import javax.inject.Singleton
         ThemesPresentationModule::class,
         QPackPresentationModule::class,
         ApiModule::class
+    ],
+    dependencies = [
+        DataModuleComponent::class,
+        CommonUtilsComponent::class
     ]
 )
-@Singleton
+@AppSingletonScope
 interface AppComponent {
     fun inject(f: QPackInfoFragment)
 

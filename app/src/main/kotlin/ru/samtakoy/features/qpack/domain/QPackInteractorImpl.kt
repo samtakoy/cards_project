@@ -1,8 +1,10 @@
 package ru.samtakoy.features.qpack.domain
 
 import kotlinx.coroutines.flow.Flow
-import ru.samtakoy.features.card.data.CardsRepository
-import ru.samtakoy.features.qpack.data.QPacksRepository
+import ru.samtakoy.domain.qpack.QPack
+import ru.samtakoy.domain.qpack.QPackInteractor
+import ru.samtakoy.data.card.CardsRepository
+import ru.samtakoy.data.qpack.QPacksRepository
 import java.util.Date
 import javax.inject.Inject
 

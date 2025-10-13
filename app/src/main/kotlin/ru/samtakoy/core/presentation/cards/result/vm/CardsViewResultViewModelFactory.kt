@@ -7,10 +7,9 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
+import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
-import ru.samtakoy.core.presentation.cards.vm.CardsViewViewModelImpl
-import ru.samtakoy.features.views.domain.ViewHistoryInteractor
+import ru.samtakoy.domain.view.ViewHistoryInteractor
 
 class CardsViewResultViewModelFactory @AssistedInject constructor(
     private val viewHistoryInteractor: ViewHistoryInteractor,

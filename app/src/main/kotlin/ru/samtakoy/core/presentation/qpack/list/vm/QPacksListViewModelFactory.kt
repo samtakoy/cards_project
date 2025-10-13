@@ -4,10 +4,9 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.features.card.domain.CardsInteractor
+import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.core.presentation.qpack.list.mapper.QPackListItemUiModelMapper
-import ru.samtakoy.features.qpack.domain.QPackInteractor
+import ru.samtakoy.domain.qpack.QPackInteractor
 import javax.inject.Inject
 
 internal class QPacksListViewModelFactory @Inject constructor(

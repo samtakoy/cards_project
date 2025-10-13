@@ -18,9 +18,9 @@ import kotlinx.parcelize.Parcelize
 import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.features.card.domain.CardsInteractor
-import ru.samtakoy.features.learncourse.domain.CoursesPlanner
+import ru.samtakoy.common.resources.Resources
+import ru.samtakoy.domain.card.CardInteractor
+import ru.samtakoy.domain.learncourse.CoursesPlanner
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.core.presentation.cards.types.BackupInfo
@@ -32,15 +32,15 @@ import ru.samtakoy.core.presentation.cards.types.isQuestionEmpty
 import ru.samtakoy.core.presentation.cards.vm.CardsViewViewModel.Action
 import ru.samtakoy.core.presentation.cards.vm.CardsViewViewModel.Event
 import ru.samtakoy.core.presentation.cards.vm.CardsViewViewModel.State
-import ru.samtakoy.core.presentation.log.MyLog
-import ru.samtakoy.features.card.domain.model.Card
-import ru.samtakoy.features.learncourse.domain.model.schedule.Schedule
-import ru.samtakoy.features.views.domain.ViewHistoryInteractor
-import ru.samtakoy.features.views.domain.ViewHistoryItem
-import ru.samtakoy.features.views.domain.ViewHistoryProgressUseCase
+import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.domain.card.domain.model.Card
+import ru.samtakoy.domain.learncourse.schedule.Schedule
+import ru.samtakoy.domain.view.ViewHistoryInteractor
+import ru.samtakoy.domain.view.ViewHistoryItem
+import ru.samtakoy.domain.view.ViewHistoryProgressUseCase
 
 internal class CardsViewViewModelImpl(
-    private val mCardsInteractor: CardsInteractor,
+    private val cardInteractor: CardInteractor,
     private val mViewHistoryInteractor: ViewHistoryInteractor,
     private val mViewHistoryProgressUseCase: ViewHistoryProgressUseCase,
     private val mCoursesPlanner: CoursesPlanner,
@@ -190,7 +190,7 @@ internal class CardsViewViewModelImpl(
         val card = dataState.value?.cardInfo?.card ?: return
         val prevText = card.question
         launchWithLoader {
-            mCardsInteractor.setCardNewQuestionText(card.id, newText)
+            cardInteractor.setCardNewQuestionText(card.id, newText)
             updateBackupInfo(cardId = card.id) { backupInfo ->
                 if (backupInfo.isQuestionEmpty()) {
                     backupInfo.copy(question = prevText)
@@ -205,7 +205,7 @@ internal class CardsViewViewModelImpl(
         val card = dataState.value?.cardInfo?.card ?: return
         val prevText = card.answer
         launchWithLoader {
-            mCardsInteractor.setCardNewAnswerText(card.id, newText)
+            cardInteractor.setCardNewAnswerText(card.id, newText)
             updateBackupInfo(cardId = card.id) { backupInfo ->
                 if (backupInfo.isAnswerEmpty()) {
                     backupInfo.copy(answer = prevText)
@@ -233,7 +233,7 @@ internal class CardsViewViewModelImpl(
     private fun revertAnswerToBackup(cardId: Long, backupInfo: BackupInfo) {
         if (backupInfo.isAnswerEmpty()) return
         launchWithLoader {
-            mCardsInteractor.setCardNewAnswerText(cardId, backupInfo.answer.orEmpty())
+            cardInteractor.setCardNewAnswerText(cardId, backupInfo.answer.orEmpty())
             updateBackupInfo(cardId = cardId) { backupInfo ->
                 backupInfo.copy(answer = null)
             }
@@ -243,7 +243,7 @@ internal class CardsViewViewModelImpl(
     private fun revertQuestionToBackup(cardId: Long, backupInfo: BackupInfo) {
         if (backupInfo.isQuestionEmpty()) return
         launchWithLoader {
-            mCardsInteractor.setCardNewQuestionText(cardId, backupInfo.question.orEmpty())
+            cardInteractor.setCardNewQuestionText(cardId, backupInfo.question.orEmpty())
             updateBackupInfo(cardId = cardId) { backupInfo ->
                 backupInfo.copy(question = null)
             }
@@ -307,7 +307,7 @@ internal class CardsViewViewModelImpl(
             .distinctUntilChanged()
             .flatMapLatest { cardState ->
                 if (cardState.cardId != null) {
-                    mCardsInteractor.getCardAsFlow(cardState.cardId).map { card ->
+                    cardInteractor.getCardAsFlow(cardState.cardId).map { card ->
                         Pair(cardState, card)
                     }
                 } else {

@@ -1,8 +1,7 @@
 package ru.samtakoy.features.import_export
 
 import androidx.annotation.WorkerThread
-import ru.samtakoy.features.qpack.data.QPackEntity
-import ru.samtakoy.features.qpack.domain.QPack
+import ru.samtakoy.domain.qpack.QPack
 
 interface QPacksExporter {
     @WorkerThread

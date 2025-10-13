@@ -2,7 +2,7 @@ package ru.samtakoy.features.notifications.learn_courses
 
 import android.app.PendingIntent
 import ru.samtakoy.R
-import ru.samtakoy.features.learncourse.domain.model.LearnCourseMode
+import ru.samtakoy.domain.learncourse.LearnCourseMode
 import ru.samtakoy.features.notifications.NotificationsConst
 import javax.inject.Inject
 

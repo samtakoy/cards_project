@@ -37,7 +37,7 @@ import ru.samtakoy.core.presentation.cards.vm.CardsViewViewModelImpl
 import ru.samtakoy.core.presentation.log.LogActivity
 import ru.samtakoy.core.presentation.misc.edit_text_block.EditTextBlockDialogFragment
 import ru.samtakoy.core.presentation.showDialogFragment
-import ru.samtakoy.features.learncourse.domain.model.schedule.Schedule
+import ru.samtakoy.domain.learncourse.schedule.Schedule
 import kotlin.math.floor
 import kotlin.math.min
 import javax.inject.Inject

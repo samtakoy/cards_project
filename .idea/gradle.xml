@@ -11,6 +11,39 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/module" />
+            <option value="$PROJECT_DIR$/module/common" />
+            <option value="$PROJECT_DIR$/module/common/utils" />
+            <option value="$PROJECT_DIR$/module/data" />
+            <option value="$PROJECT_DIR$/module/data/common" />
+            <option value="$PROJECT_DIR$/module/data/common/api" />
+            <option value="$PROJECT_DIR$/module/data/common/impl" />
+            <option value="$PROJECT_DIR$/module/domain" />
+            <option value="$PROJECT_DIR$/module/domain/card" />
+            <option value="$PROJECT_DIR$/module/domain/card/api" />
+            <option value="$PROJECT_DIR$/module/domain/card/impl" />
+            <option value="$PROJECT_DIR$/module/domain/card/model" />
+            <option value="$PROJECT_DIR$/module/domain/learncourse" />
+            <option value="$PROJECT_DIR$/module/domain/learncourse/api" />
+            <option value="$PROJECT_DIR$/module/domain/learncourse/impl" />
+            <option value="$PROJECT_DIR$/module/domain/learncourse/model" />
+            <option value="$PROJECT_DIR$/module/domain/qpack" />
+            <option value="$PROJECT_DIR$/module/domain/qpack/api" />
+            <option value="$PROJECT_DIR$/module/domain/qpack/impl" />
+            <option value="$PROJECT_DIR$/module/domain/qpack/model" />
+            <option value="$PROJECT_DIR$/module/domain/theme" />
+            <option value="$PROJECT_DIR$/module/domain/theme/api" />
+            <option value="$PROJECT_DIR$/module/domain/theme/impl" />
+            <option value="$PROJECT_DIR$/module/domain/theme/model" />
+            <option value="$PROJECT_DIR$/module/domain/view" />
+            <option value="$PROJECT_DIR$/module/domain/view/api" />
+            <option value="$PROJECT_DIR$/module/domain/view/impl" />
+            <option value="$PROJECT_DIR$/module/domain/view/model" />
+            <option value="$PROJECT_DIR$/module/platform" />
+            <option value="$PROJECT_DIR$/module/platform/api" />
+            <option value="$PROJECT_DIR$/module/platform/impl" />
+            <option value="$PROJECT_DIR$/module/presentation" />
+            <option value="$PROJECT_DIR$/module/presentation/utils" />
           </set>
         </option>
       </GradleProjectSettings>

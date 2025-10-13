@@ -5,8 +5,8 @@ import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.core.presentation.cards.result.vm.CardsViewResultViewModel.Action
 import ru.samtakoy.core.presentation.cards.result.vm.CardsViewResultViewModel.Event
 import ru.samtakoy.core.presentation.cards.result.vm.CardsViewResultViewModel.State
-import ru.samtakoy.features.learncourse.domain.model.schedule.Schedule
-import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.ParcelableSchedule
+import ru.samtakoy.domain.learncourse.schedule.Schedule
+import ru.samtakoy.domain.learncourse.schedule.serialize.ParcelableSchedule
 
 @Immutable
 interface CardsViewResultViewModel : BaseViewModel<State, Action, Event> {

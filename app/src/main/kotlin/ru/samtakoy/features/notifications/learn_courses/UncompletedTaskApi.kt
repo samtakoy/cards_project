@@ -11,11 +11,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import ru.samtakoy.R
-import ru.samtakoy.core.app.utils.DateUtils
-import ru.samtakoy.features.learncourse.data.CoursesRepository
-import ru.samtakoy.features.learncourse.domain.model.LearnCourse
-import ru.samtakoy.features.learncourse.domain.model.LearnCourseMode
-import ru.samtakoy.features.learncourse.domain.model.schedule.ScheduleTimeUnit
+import ru.samtakoy.common.utils.DateUtils
+import ru.samtakoy.data.learncourse.CoursesRepository
+import ru.samtakoy.domain.learncourse.LearnCourse
+import ru.samtakoy.domain.learncourse.LearnCourseMode
+import ru.samtakoy.domain.learncourse.schedule.ScheduleTimeUnit
 import ru.samtakoy.features.notifications.NotificationsConst
 import ru.samtakoy.features.notifications.NotificationsHelper
 import ru.samtakoy.features.notifications.NotificationsPlannerService

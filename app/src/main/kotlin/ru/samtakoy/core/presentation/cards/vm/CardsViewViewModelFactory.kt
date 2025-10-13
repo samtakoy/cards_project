@@ -7,15 +7,15 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.features.card.domain.CardsInteractor
-import ru.samtakoy.features.learncourse.domain.CoursesPlanner
+import ru.samtakoy.common.resources.Resources
+import ru.samtakoy.domain.card.CardInteractor
+import ru.samtakoy.domain.learncourse.CoursesPlanner
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
-import ru.samtakoy.features.views.domain.ViewHistoryInteractor
-import ru.samtakoy.features.views.domain.ViewHistoryProgressUseCase
+import ru.samtakoy.domain.view.ViewHistoryInteractor
+import ru.samtakoy.domain.view.ViewHistoryProgressUseCase
 
 internal class CardsViewViewModelFactory @AssistedInject constructor(
-    private var cardsInteractor: CardsInteractor,
+    private var cardInteractor: CardInteractor,
     private var viewHistoryInteractor: ViewHistoryInteractor,
     private val viewHistoryProgressUseCase: ViewHistoryProgressUseCase,
     private var coursesPlanner: CoursesPlanner,
@@ -35,7 +35,7 @@ internal class CardsViewViewModelFactory @AssistedInject constructor(
     ): T {
         require(modelClass == CardsViewViewModelImpl::class.java)
         return CardsViewViewModelImpl(
-            cardsInteractor,
+            cardInteractor,
             viewHistoryInteractor,
             viewHistoryProgressUseCase,
             coursesPlanner,

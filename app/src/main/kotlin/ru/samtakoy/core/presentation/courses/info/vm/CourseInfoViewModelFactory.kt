@@ -7,11 +7,11 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.features.learncourse.domain.CourseProgressUseCase
-import ru.samtakoy.features.learncourse.domain.CoursesPlanner
-import ru.samtakoy.features.learncourse.domain.NCoursesInteractor
-import ru.samtakoy.features.views.domain.ViewHistoryInteractor
+import ru.samtakoy.common.resources.Resources
+import ru.samtakoy.domain.learncourse.CourseProgressUseCase
+import ru.samtakoy.domain.learncourse.CoursesPlanner
+import ru.samtakoy.domain.learncourse.NCoursesInteractor
+import ru.samtakoy.domain.view.ViewHistoryInteractor
 
 internal class CourseInfoViewModelFactory @AssistedInject constructor(
     private val coursesInteractor: NCoursesInteractor,

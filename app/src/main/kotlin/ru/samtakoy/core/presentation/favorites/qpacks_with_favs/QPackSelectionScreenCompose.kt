@@ -15,9 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import ru.samtakoy.core.app.utils.asAnnotated
+import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.core.presentation.base.observeActionsWithLifecycle
-import ru.samtakoy.core.presentation.design_system.base.MyOffsets
 import ru.samtakoy.core.presentation.design_system.base.UiOffsets
 import ru.samtakoy.core.presentation.design_system.base.model.LongUiId
 import ru.samtakoy.core.presentation.design_system.button.MyButton

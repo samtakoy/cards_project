@@ -7,7 +7,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import ru.samtakoy.R
-import ru.samtakoy.core.presentation.log.MyLog.add
+import ru.samtakoy.common.utils.MyLog.add
 import ru.samtakoy.core.presentation.showDialogFragment
 
 class SettingsFragment : PreferenceFragmentCompat() {

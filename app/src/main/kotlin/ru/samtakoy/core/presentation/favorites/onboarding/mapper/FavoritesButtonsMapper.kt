@@ -2,8 +2,8 @@ package ru.samtakoy.core.presentation.favorites.onboarding.mapper
 
 import kotlinx.parcelize.Parcelize
 import ru.samtakoy.R
-import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.app.utils.asAnnotated
+import ru.samtakoy.common.resources.Resources
+import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.core.presentation.design_system.base.model.UiId
 import ru.samtakoy.core.presentation.design_system.button.MyButtonModel
 import javax.inject.Inject

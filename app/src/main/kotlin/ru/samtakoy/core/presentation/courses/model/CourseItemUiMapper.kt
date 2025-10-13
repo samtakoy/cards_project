@@ -1,9 +1,9 @@
 package ru.samtakoy.core.presentation.courses.model
 
-import ru.samtakoy.core.app.utils.asAnnotated
-import ru.samtakoy.features.learncourse.domain.utils.getDynamicTitle
+import ru.samtakoy.presentation.utils.asAnnotated
+import ru.samtakoy.domain.learncourse.getDynamicTitle
 import ru.samtakoy.core.presentation.design_system.base.model.LongUiId
-import ru.samtakoy.features.learncourse.domain.model.LearnCourse
+import ru.samtakoy.domain.learncourse.LearnCourse
 import javax.inject.Inject
 
 interface CourseItemUiMapper {

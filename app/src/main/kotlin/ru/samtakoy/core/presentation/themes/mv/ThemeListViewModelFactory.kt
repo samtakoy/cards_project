@@ -7,12 +7,11 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.features.card.domain.CardsInteractor
+import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.core.presentation.themes.mapper.ThemeUiItemMapper
 import ru.samtakoy.features.import_export.QPacksExporter
-import ru.samtakoy.features.qpack.domain.QPackInteractor
-import ru.samtakoy.features.theme.domain.ThemeInteractor
+import ru.samtakoy.domain.qpack.QPackInteractor
+import ru.samtakoy.domain.theme.ThemeInteractor
 
 internal class ThemeListViewModelFactory @AssistedInject constructor(
     private val qPackInteractor: QPackInteractor,

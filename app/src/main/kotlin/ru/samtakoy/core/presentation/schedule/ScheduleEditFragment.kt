@@ -24,9 +24,10 @@ import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.Event
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModelFactory
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModelImpl
-import ru.samtakoy.features.learncourse.domain.model.schedule.ScheduleTimeUnit
-import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.ParcelableSchedule
-import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.toDomainOrEmpty
+import ru.samtakoy.domain.learncourse.schedule.ScheduleTimeUnit
+import ru.samtakoy.domain.learncourse.schedule.serialize.ParcelableSchedule
+import ru.samtakoy.domain.learncourse.schedule.serialize.toDomainOrEmpty
+import ru.samtakoy.presentation.utils.toStringId
 import javax.inject.Inject
 
 class ScheduleEditFragment : DialogFragment(), ViewModelOwner {
@@ -134,7 +135,7 @@ class ScheduleEditFragment : DialogFragment(), ViewModelOwner {
         if (container.childCount < ScheduleTimeUnit.entries.size) {
             for (unit in ScheduleTimeUnit.entries) {
                 val unitBtn = Button(ctx)
-                unitBtn.setText("+1" + getResources().getString(unit.textStringId))
+                unitBtn.setText("+1" + getResources().getString(unit.toStringId()))
                 unitBtn.setOnClickListener(
                     View.OnClickListener { view: View? ->
                         viewModel.onEvent(Event.ScheduleTimeUnitSelect(unit))

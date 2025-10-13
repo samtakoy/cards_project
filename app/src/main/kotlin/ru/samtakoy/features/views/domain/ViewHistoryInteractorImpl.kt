@@ -1,14 +1,17 @@
 package ru.samtakoy.features.views.domain
 
 import kotlinx.coroutines.flow.Flow
-import ru.samtakoy.features.card.domain.CardsInteractor
-import ru.samtakoy.core.utils.CollectionUtils
-import ru.samtakoy.features.views.data.local.ViewHistoryRepository
+import ru.samtakoy.domain.card.CardInteractor
+import ru.samtakoy.common.utils.CollectionUtils
+import ru.samtakoy.domain.view.ViewHistoryInteractor
+import ru.samtakoy.domain.view.ViewHistoryItem
+import ru.samtakoy.domain.view.ViewHistoryItemWithInfo
+import ru.samtakoy.data.view.ViewHistoryRepository
 import javax.inject.Inject
 
 internal class ViewHistoryInteractorImpl @Inject constructor(
     private val viewHistoryRepository: ViewHistoryRepository,
-    private val cardsInteractor: CardsInteractor
+    private val cardInteractor: CardInteractor
 ) : ViewHistoryInteractor {
 
     override suspend fun addNewViewItem(
@@ -22,7 +25,7 @@ internal class ViewHistoryInteractorImpl @Inject constructor(
         qPackId: Long,
         shuffleCards: Boolean
     ): ViewHistoryItem {
-        val cardIds = cardsInteractor.getQPackCardIds(qPackId)
+        val cardIds = cardInteractor.getQPackCardIds(qPackId)
         return viewHistoryRepository.addNewViewItem(
             qPackId = qPackId,
             cardIds = if (shuffleCards) {

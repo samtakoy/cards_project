@@ -2,12 +2,13 @@ package ru.samtakoy.core.presentation.courses.info.vm
 
 import androidx.annotation.StringRes
 import ru.samtakoy.R
-import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.app.utils.TimeViewUtils
-import ru.samtakoy.features.learncourse.domain.model.LearnCourse
-import ru.samtakoy.features.learncourse.domain.model.LearnCourseMode
-import ru.samtakoy.features.learncourse.domain.utils.getMillisToStart
-import ru.samtakoy.features.views.domain.ViewHistoryItem
+import ru.samtakoy.common.resources.Resources
+import ru.samtakoy.domain.learncourse.LearnCourse
+import ru.samtakoy.domain.learncourse.LearnCourseMode
+import ru.samtakoy.domain.learncourse.getMillisToStart
+import ru.samtakoy.domain.view.ViewHistoryItem
+import ru.samtakoy.presentation.utils.toStringView
+import ru.samtakoy.presentation.utils.toStringViewWithPrev
 import java.text.MessageFormat
 import javax.inject.Inject
 
@@ -70,7 +71,7 @@ internal class CourseInfoViewStateMapperImpl @Inject constructor(
                 resString = resources.getString(R.string.course_info_status_learn_waiting)
                 return MessageFormat.format(
                     resString,
-                    TimeViewUtils.getTimeView(
+                    getTimeView(
                         learnCourse.getMillisToStart().toInt()
                     )
                 )
@@ -86,7 +87,7 @@ internal class CourseInfoViewStateMapperImpl @Inject constructor(
                 resString = resources.getString(R.string.course_info_status_repeat_waiting)
                 return MessageFormat.format(
                     resString,
-                    TimeViewUtils.getTimeView(
+                    getTimeView(
                         learnCourse.getMillisToStart().toInt()
                     )
                 )
@@ -131,5 +132,9 @@ internal class CourseInfoViewStateMapperImpl @Inject constructor(
 
     private fun getViewedCardsCount(lastView: ViewHistoryItem?): Int {
         return lastView?.viewedCardIds?.size ?: 0
+    }
+
+    private fun getTimeView(millis: Int): String {
+        return (millis / 1000).toString()
     }
 }

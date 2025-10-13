@@ -7,19 +7,19 @@ import kotlinx.coroutines.flow.onEach
 import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.app.utils.asAnnotated
-import ru.samtakoy.features.card.domain.CardsInteractor
+import ru.samtakoy.common.resources.Resources
+import ru.samtakoy.presentation.utils.asAnnotated
+import ru.samtakoy.domain.card.CardInteractor
 import ru.samtakoy.core.domain.FavoritesInteractor
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModel.Action
 import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModel.Event
 import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModel.State
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
-import ru.samtakoy.core.presentation.log.MyLog
+import ru.samtakoy.common.utils.MyLog
 
 internal class CardAnswerViewModelImpl(
-    private val cardsInteractor: CardsInteractor,
+    private val cardInteractor: CardInteractor,
     private val favoritesInteractor: FavoritesInteractor,
     private val viewStateMapper: CardAnswerViewModelMapper,
     private val resources: Resources,
@@ -60,7 +60,7 @@ internal class CardAnswerViewModelImpl(
     }
 
     private fun subscribeData() {
-        cardsInteractor.getCardAsFlow(cardId = cardId)
+        cardInteractor.getCardAsFlow(cardId = cardId)
             .filterNotNull()
             .onEach { card ->
                 viewState = viewState.copy(

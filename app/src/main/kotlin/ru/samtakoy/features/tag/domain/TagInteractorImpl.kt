@@ -1,6 +1,8 @@
 package ru.samtakoy.features.tag.domain
 
-import ru.samtakoy.features.tag.data.TagsRepository
+import ru.samtakoy.domain.cardtag.Tag
+import ru.samtakoy.domain.cardtag.TagInteractor
+import ru.samtakoy.data.cardtag.TagsRepository
 import javax.inject.Inject
 
 class TagInteractorImpl @Inject constructor(

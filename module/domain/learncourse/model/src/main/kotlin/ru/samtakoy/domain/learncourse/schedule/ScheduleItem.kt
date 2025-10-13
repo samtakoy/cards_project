@@ -1,0 +1,17 @@
+package ru.samtakoy.domain.learncourse.schedule
+
+data class ScheduleItem(
+    val dimension: Int,
+    val timeUnit: ScheduleTimeUnit
+) : Comparable<Any?> {
+    override fun compareTo(o: Any?): Int {
+        val other = o as ScheduleItem
+        if (other.timeUnit == this.timeUnit) {
+            return this.dimension - other.dimension
+        }
+        return timeUnit.ordinal - other.timeUnit.ordinal
+    }
+
+    val millis: Int
+        get() = this.dimension * timeUnit.getMillis()
+}

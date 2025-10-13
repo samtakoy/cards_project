@@ -1,13 +1,16 @@
 package ru.samtakoy.features.learncourse.domain
 
-import ru.samtakoy.features.learncourse.domain.utils.finishLearnOrRepeat
-import ru.samtakoy.features.learncourse.domain.utils.makeInitialTodosStatic
-import ru.samtakoy.features.database.data.TransactionRepository
-import ru.samtakoy.features.learncourse.domain.model.LearnCourse
-import ru.samtakoy.features.learncourse.domain.model.LearnCourseMode
-import ru.samtakoy.features.qpack.domain.QPackInteractor
-import ru.samtakoy.features.views.domain.ViewHistoryInteractor
-import ru.samtakoy.features.views.domain.ViewHistoryItem
+import ru.samtakoy.domain.learncourse.CourseProgressUseCase
+import ru.samtakoy.domain.learncourse.CoursesPlanner
+import ru.samtakoy.domain.learncourse.finishLearnOrRepeat
+import ru.samtakoy.domain.learncourse.makeInitialTodosStatic
+import ru.samtakoy.data.common.transaction.TransactionRepository
+import ru.samtakoy.domain.learncourse.LearnCourse
+import ru.samtakoy.domain.learncourse.LearnCourseMode
+import ru.samtakoy.domain.learncourse.NCoursesInteractor
+import ru.samtakoy.domain.qpack.QPackInteractor
+import ru.samtakoy.domain.view.ViewHistoryInteractor
+import ru.samtakoy.domain.view.ViewHistoryItem
 import java.util.Date
 import javax.inject.Inject
 

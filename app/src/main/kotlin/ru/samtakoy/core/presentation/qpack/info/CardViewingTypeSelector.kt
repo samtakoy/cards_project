@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import ru.samtakoy.R
-import ru.samtakoy.core.presentation.log.MyLog.add
+import ru.samtakoy.common.utils.MyLog.add
 
 class CardViewingTypeSelector : DialogFragment() {
     enum class CardViewingType {

@@ -9,10 +9,10 @@ import ru.samtakoy.R
 import ru.samtakoy.core.app.di.Di
 import ru.samtakoy.core.presentation.courses.info.CourseInfoFragment.Companion.buildBundle
 import ru.samtakoy.core.presentation.courses.list.CoursesListFragment
-import ru.samtakoy.core.presentation.log.MyLog.add
-import ru.samtakoy.features.learncourse.data.utils.LearnCourseHelper
-import ru.samtakoy.features.learncourse.domain.model.LearnCourse
-import ru.samtakoy.features.learncourse.domain.model.LearnCourseMode
+import ru.samtakoy.common.utils.MyLog.add
+import ru.samtakoy.data.learncourse.utils.LearnCourseHelper
+import ru.samtakoy.domain.learncourse.LearnCourse
+import ru.samtakoy.domain.learncourse.LearnCourseMode
 import ru.samtakoy.features.notifications.learn_courses.LearnsApi
 import ru.samtakoy.features.notifications.learn_courses.NewRepeatsApi
 import ru.samtakoy.features.notifications.learn_courses.UncompletedTaskApi

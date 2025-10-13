@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import ru.samtakoy.core.app.utils.asAnnotated
+import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.core.presentation.base.getLoremIpsum
 import ru.samtakoy.core.presentation.design_system.base.MyColors
 import ru.samtakoy.core.presentation.design_system.base.MyOffsets

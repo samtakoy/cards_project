@@ -7,12 +7,12 @@ import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.Single
 import kotlinx.coroutines.runBlocking
-import ru.samtakoy.core.app.utils.DateUtils
-import ru.samtakoy.features.card.data.CardsRepository
-import ru.samtakoy.features.qpack.data.QPacksRepository
-import ru.samtakoy.features.theme.data.ThemesRepository
-import ru.samtakoy.features.card.domain.CardsInteractor
-import ru.samtakoy.features.card.domain.model.CardWithTags
+import ru.samtakoy.common.utils.DateUtils
+import ru.samtakoy.data.card.CardsRepository
+import ru.samtakoy.data.qpack.QPacksRepository
+import ru.samtakoy.data.theme.ThemesRepository
+import ru.samtakoy.domain.card.CardInteractor
+import ru.samtakoy.domain.card.domain.model.CardWithTags
 import ru.samtakoy.features.import_export.helpers.ZipHelper
 import ru.samtakoy.features.import_export.utils.FromUriStreamFactory
 import ru.samtakoy.features.import_export.utils.FromZipEntryStreamFactory
@@ -23,10 +23,10 @@ import ru.samtakoy.features.import_export.utils.cbuild.CBuilderConst
 import ru.samtakoy.features.import_export.utils.cbuild.CardBuilder
 import ru.samtakoy.features.import_export.utils.cbuild.QPackBuilder
 import ru.samtakoy.features.import_export.utils.isPackFile
-import ru.samtakoy.features.qpack.domain.QPack
-import ru.samtakoy.features.tag.domain.Tag
-import ru.samtakoy.features.tag.domain.TagInteractor
-import ru.samtakoy.features.theme.domain.Theme
+import ru.samtakoy.domain.qpack.QPack
+import ru.samtakoy.domain.cardtag.Tag
+import ru.samtakoy.domain.cardtag.TagInteractor
+import ru.samtakoy.domain.theme.Theme
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
@@ -37,7 +37,7 @@ import javax.inject.Inject
 
 class ImportApiImpl @Inject constructor(
     val contentResolver: ContentResolver,
-    val cardsInteractor: CardsInteractor,
+    val cardInteractor: CardInteractor,
     val tagInteractor: TagInteractor,
     val cardsRepository: CardsRepository,
     val qPacksRepository: QPacksRepository,
@@ -210,7 +210,7 @@ class ImportApiImpl @Inject constructor(
 
                 if (cardBuilder.isToRemove) {
                     // удалить
-                    cardsInteractor.deleteCardWithRelationsSync(existingCardId)
+                    cardInteractor.deleteCardWithRelationsSync(existingCardId)
                     return card
                 }
             }
@@ -268,7 +268,7 @@ class ImportApiImpl @Inject constructor(
 
         val creationDate: Date = if (qPackBuilder.hasCreationDate()) {
             try {
-                ru.samtakoy.core.utils.DateUtils.DATE_FORMAT.parse(qPackBuilder.creationDate)!!
+                DateUtils.DATE_FORMAT.parse(qPackBuilder.creationDate)!!
             } catch (e: Throwable) {
                 DateUtils.currentTimeDate
             }

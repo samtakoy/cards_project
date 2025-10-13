@@ -1,6 +1,6 @@
 package ru.samtakoy.features.import_export.utils.cbuild
 
-import ru.samtakoy.features.tag.domain.Tag
+import ru.samtakoy.domain.cardtag.Tag
 import java.util.LinkedList
 import java.util.Locale
 import java.util.regex.Pattern

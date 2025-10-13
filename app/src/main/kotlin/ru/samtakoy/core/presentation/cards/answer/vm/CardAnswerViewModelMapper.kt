@@ -1,8 +1,8 @@
 package ru.samtakoy.core.presentation.cards.answer.vm
 
 import ru.samtakoy.R
-import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.app.utils.asAnnotated
+import ru.samtakoy.common.resources.Resources
+import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModelMapper.Companion.BACK_BTN_ID
 import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModelMapper.Companion.IS_FAVORITE_ID
 import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModelMapper.Companion.NEXT_CARD_BTN_ID

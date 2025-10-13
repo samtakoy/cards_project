@@ -18,11 +18,11 @@ import kotlinx.coroutines.flow.onEach
 import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
+import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.core.presentation.base.viewmodel.savedstate.toSavedState
-import ru.samtakoy.core.presentation.log.MyLog
+import ru.samtakoy.common.utils.MyLog
 import ru.samtakoy.core.presentation.qpack.list.mapper.QPackListItemUiModelMapper
 import ru.samtakoy.core.presentation.qpack.list.model.QPackListItemUiModel
 import ru.samtakoy.core.presentation.qpack.list.model.QPackSortType
@@ -30,8 +30,8 @@ import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.Action
 import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.Event
 import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.NavAction.*
 import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.State
-import ru.samtakoy.features.qpack.domain.QPack
-import ru.samtakoy.features.qpack.domain.QPackInteractor
+import ru.samtakoy.domain.qpack.QPack
+import ru.samtakoy.domain.qpack.QPackInteractor
 
 internal class QPacksListViewModelImpl(
     private val qPackInteractor: QPackInteractor,

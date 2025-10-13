@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.samtakoy.R
-import ru.samtakoy.core.presentation.log.MyLog.strings
+import ru.samtakoy.common.utils.MyLog.strings
 
 class LogFragment : Fragment() {
     private var mRecyclerView: RecyclerView? = null

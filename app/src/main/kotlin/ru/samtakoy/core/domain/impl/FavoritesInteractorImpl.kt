@@ -3,9 +3,9 @@ package ru.samtakoy.core.domain.impl
 import io.reactivex.Completable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.rx2.rxCompletable
-import ru.samtakoy.features.card.data.CardsRepository
+import ru.samtakoy.data.card.CardsRepository
 import ru.samtakoy.core.domain.FavoritesInteractor
-import ru.samtakoy.features.qpack.data.QPacksRepository
+import ru.samtakoy.data.qpack.QPacksRepository
 import javax.inject.Inject
 
 class FavoritesInteractorImpl @Inject constructor(

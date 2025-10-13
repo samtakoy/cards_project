@@ -7,26 +7,26 @@ import kotlinx.coroutines.flow.launchIn
 import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.app.utils.asAnnotated
+import ru.samtakoy.common.resources.Resources
+import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.core.domain.FavoritesInteractor
-import ru.samtakoy.features.learncourse.domain.NCoursesInteractor
+import ru.samtakoy.domain.learncourse.NCoursesInteractor
 import ru.samtakoy.core.domain.utils.MessageException
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
-import ru.samtakoy.core.presentation.log.MyLog
+import ru.samtakoy.common.utils.MyLog
 import ru.samtakoy.core.presentation.qpack.info.mapper.FastCardUiModelMapper
 import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModel.Action
 import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModel.Event
 import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModel.NavigationAction
 import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModel.State
-import ru.samtakoy.features.card.domain.CardsInteractor
-import ru.samtakoy.features.qpack.domain.QPack
-import ru.samtakoy.features.qpack.domain.QPackInteractor
-import ru.samtakoy.features.views.domain.ViewHistoryInteractor
-import ru.samtakoy.features.views.domain.ViewHistoryItem
+import ru.samtakoy.domain.card.CardInteractor
+import ru.samtakoy.domain.qpack.QPack
+import ru.samtakoy.domain.qpack.QPackInteractor
+import ru.samtakoy.domain.view.ViewHistoryInteractor
+import ru.samtakoy.domain.view.ViewHistoryItem
 
 internal class QPackInfoViewModelImpl(
-    private val cardsInteractor: CardsInteractor,
+    private val cardInteractor: CardInteractor,
     private val qPackInteractor: QPackInteractor,
     private val favoritesInteractor: FavoritesInteractor,
     private val coursesInteractor: NCoursesInteractor,
@@ -133,7 +133,7 @@ internal class QPackInfoViewModelImpl(
 
     private fun onUiCardsFastView() {
         launchWithLoader {
-            val cards = cardsInteractor.getQPackCards(qPackId)
+            val cards = cardInteractor.getQPackCards(qPackId)
             viewState = viewState.copy(
                 fastCards = State.CardsState.Data(cards.map(cardsMapper::map).toImmutableList())
             )
@@ -142,7 +142,7 @@ internal class QPackInfoViewModelImpl(
 
     private fun onUiAddFakeCard() {
         launchWithLoader {
-            cardsInteractor.addFakeCard(qPackId)
+            cardInteractor.addFakeCard(qPackId)
             sendAction(Action.ShowErrorMessage(resources.getString(R.string.btn_ok)))
         }
     }
@@ -169,7 +169,7 @@ internal class QPackInfoViewModelImpl(
         combine(
             qPackInteractor.getQPackAsFlow(qPackId)
                 .distinctUntilChanged(),
-            cardsInteractor.getQPackCardIdsAsFlow(qPackId)
+            cardInteractor.getQPackCardIdsAsFlow(qPackId)
                 .distinctUntilChanged(),
             viewHistoryInteractor.getLastViewHistoryItemForAsFlow(qPackId)
                 .distinctUntilChanged()

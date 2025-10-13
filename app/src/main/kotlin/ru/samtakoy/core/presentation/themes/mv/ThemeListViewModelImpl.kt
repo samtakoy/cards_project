@@ -12,11 +12,11 @@ import kotlinx.parcelize.Parcelize
 import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
-import ru.samtakoy.core.app.utils.asAnnotated
+import ru.samtakoy.common.resources.Resources
+import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.base.viewmodel.savedstate.SavedStateValue
-import ru.samtakoy.core.presentation.log.MyLog
+import ru.samtakoy.common.utils.MyLog
 import ru.samtakoy.core.presentation.themes.ThemeUiItem
 import ru.samtakoy.core.presentation.themes.mapper.ThemeUiItemMapper
 import ru.samtakoy.core.presentation.themes.mv.ThemeListViewModel.Action
@@ -26,9 +26,9 @@ import ru.samtakoy.core.presentation.themes.mv.ThemeListViewModel.State
 import ru.samtakoy.features.import_export.QPacksExporter
 import ru.samtakoy.features.import_export.utils.ImportCardsOpts
 import ru.samtakoy.features.import_export.utils.cbuild.CBuilderConst
-import ru.samtakoy.features.qpack.domain.QPackInteractor
-import ru.samtakoy.features.theme.domain.Theme
-import ru.samtakoy.features.theme.domain.ThemeInteractor
+import ru.samtakoy.domain.qpack.QPackInteractor
+import ru.samtakoy.domain.theme.Theme
+import ru.samtakoy.domain.theme.ThemeInteractor
 
 internal class ThemeListViewModelImpl(
     private val qPackInteractor: QPackInteractor,

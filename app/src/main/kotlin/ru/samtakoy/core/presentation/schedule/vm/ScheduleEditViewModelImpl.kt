@@ -5,18 +5,19 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
-import ru.samtakoy.core.app.some.Resources
+import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.Action
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.Event
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.State
-import ru.samtakoy.features.learncourse.domain.model.schedule.Schedule
-import ru.samtakoy.features.learncourse.domain.model.schedule.ScheduleItem
-import ru.samtakoy.features.learncourse.domain.model.schedule.ScheduleTimeUnit
-import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.ParcelableSchedule
-import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.toDomain
-import ru.samtakoy.features.learncourse.domain.model.schedule.serialize.toParcelable
+import ru.samtakoy.domain.learncourse.schedule.Schedule
+import ru.samtakoy.domain.learncourse.schedule.ScheduleItem
+import ru.samtakoy.domain.learncourse.schedule.ScheduleTimeUnit
+import ru.samtakoy.domain.learncourse.schedule.serialize.ParcelableSchedule
+import ru.samtakoy.domain.learncourse.schedule.serialize.toDomain
+import ru.samtakoy.domain.learncourse.schedule.serialize.toParcelable
+import ru.samtakoy.presentation.utils.toStringView
 import java.util.TreeSet
 
 internal class ScheduleEditViewModelImpl(

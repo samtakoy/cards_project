@@ -18,9 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.toImmutableList
-import ru.samtakoy.core.app.utils.asAnnotated
+import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.core.presentation.base.observeActionsWithLifecycle
-import ru.samtakoy.core.presentation.design_system.base.MyOffsets
 import ru.samtakoy.core.presentation.design_system.base.UiOffsets
 import ru.samtakoy.core.presentation.design_system.button.MyButton
 import ru.samtakoy.core.presentation.design_system.button.MyButtonModel

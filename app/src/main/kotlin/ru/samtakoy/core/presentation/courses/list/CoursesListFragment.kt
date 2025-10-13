@@ -37,9 +37,9 @@ import ru.samtakoy.core.presentation.courses.model.CoursesAdapter
 import ru.samtakoy.core.presentation.courses.model.CoursesAdapter.CourseClickListener
 import ru.samtakoy.core.presentation.export_cards.BatchExportDialogFragment
 import ru.samtakoy.core.presentation.showDialogFragment
-import ru.samtakoy.features.learncourse.domain.model.LearnCourseMode
-import ru.samtakoy.features.learncourse.domain.utils.listToPrimitiveArray
-import ru.samtakoy.features.learncourse.domain.utils.primitiveArrayToList
+import ru.samtakoy.domain.learncourse.LearnCourseMode
+import ru.samtakoy.domain.learncourse.listToPrimitiveArray
+import ru.samtakoy.domain.learncourse.primitiveArrayToList
 import javax.inject.Inject
 
 class CoursesListFragment : Fragment(), CourseClickListener, ViewModelOwner {
