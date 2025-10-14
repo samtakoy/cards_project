@@ -37,7 +37,7 @@ import ru.samtakoy.domain.card.domain.model.Card
 import ru.samtakoy.domain.learncourse.schedule.Schedule
 import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.domain.view.ViewHistoryItem
-import ru.samtakoy.domain.view.ViewHistoryProgressUseCase
+import ru.samtakoy.domain.learncourse.ViewHistoryProgressUseCase
 
 internal class CardsViewViewModelImpl(
     private val cardInteractor: CardInteractor,

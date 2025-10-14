@@ -5,7 +5,7 @@ import kotlinx.collections.immutable.toImmutableList
 import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.common.resources.Resources
-import ru.samtakoy.core.domain.FavoritesInteractor
+import ru.samtakoy.domain.favorites.FavoritesInteractor
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.design_system.base.model.UiId
 import ru.samtakoy.core.presentation.favorites.onboarding.mapper.FavoritesButtonsMapper

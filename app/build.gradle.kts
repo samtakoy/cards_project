@@ -90,12 +90,11 @@ dependencies {
     // retrofit
     implementation(libs.bundles.squareup)
 
-    implementation(project(":module:common:utils"))
-
-    implementation(project(":module:presentation:utils"))
-
     implementation(project(":module:platform:api"))
     implementation(project(":module:platform:impl"))
+
+    implementation(project(":module:data:common:api"))
+    implementation(project(":module:data:common:impl"))
 
     implementation(project(":module:domain:card:api"))
     implementation(project(":module:domain:card:model"))
@@ -117,6 +116,10 @@ dependencies {
     implementation(project(":module:domain:view:model"))
     implementation(project(":module:domain:view:impl"))
 
-    implementation(project(":module:data:common:api"))
-    implementation(project(":module:data:common:impl"))
+    implementation(project(":module:domain:favorites:api"))
+    implementation(project(":module:domain:favorites:impl"))
+
+    implementation(project(":module:presentation:utils"))
+
+    implementation(project(":module:common:utils"))
 }

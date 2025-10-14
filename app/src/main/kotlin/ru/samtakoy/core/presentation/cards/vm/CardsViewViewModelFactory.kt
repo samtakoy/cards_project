@@ -12,7 +12,7 @@ import ru.samtakoy.domain.card.CardInteractor
 import ru.samtakoy.domain.learncourse.CoursesPlanner
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.domain.view.ViewHistoryInteractor
-import ru.samtakoy.domain.view.ViewHistoryProgressUseCase
+import ru.samtakoy.domain.learncourse.ViewHistoryProgressUseCase
 
 internal class CardsViewViewModelFactory @AssistedInject constructor(
     private var cardInteractor: CardInteractor,

@@ -9,9 +9,8 @@ import ru.samtakoy.R
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.presentation.utils.asAnnotated
-import ru.samtakoy.core.domain.FavoritesInteractor
+import ru.samtakoy.domain.favorites.FavoritesInteractor
 import ru.samtakoy.domain.learncourse.NCoursesInteractor
-import ru.samtakoy.core.domain.utils.MessageException
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.common.utils.MyLog
 import ru.samtakoy.core.presentation.qpack.info.mapper.FastCardUiModelMapper
@@ -198,9 +197,10 @@ internal class QPackInfoViewModelImpl(
     }
 
     private fun onGetError(t: Throwable): Boolean {
-        if (t is MessageException) {
+        /* if (t is MessageException) {
+            // TODO
             sendAction(Action.ShowErrorMessage(resources.getString(t.msgId)))
-        } else {
+        } else */ {
             MyLog.add(ExceptionUtils.getMessage(t), t)
             sendAction(Action.ShowErrorMessage(resources.getString(R.string.db_request_err_message)))
         }

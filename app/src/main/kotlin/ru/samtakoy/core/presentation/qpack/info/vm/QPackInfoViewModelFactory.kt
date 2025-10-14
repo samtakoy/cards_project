@@ -9,7 +9,7 @@ import dagger.assisted.AssistedInject
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.domain.card.CardInteractor
-import ru.samtakoy.core.domain.FavoritesInteractor
+import ru.samtakoy.domain.favorites.FavoritesInteractor
 import ru.samtakoy.domain.learncourse.NCoursesInteractor
 import ru.samtakoy.core.presentation.qpack.info.mapper.FastCardUiModelMapper
 import ru.samtakoy.domain.qpack.QPackInteractor

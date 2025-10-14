@@ -18,7 +18,7 @@ dependencies {
     kapt(libs.google.dagger.compiler)
 
     implementation(project(":module:common:utils"))
-    implementation(project(":module:platform:impl"))
+    implementation(project(":module:platform:api"))
     implementation(project(":module:data:common:api"))
 
     implementation(project(":module:domain:card:model"))

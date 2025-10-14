@@ -30,13 +30,16 @@ import ru.samtakoy.core.presentation.settings.ClearDbDialogFragment
 import ru.samtakoy.core.presentation.themes.ThemesListFragment
 import ru.samtakoy.core.presentation.themes.di.ThemesPresentationModule
 import ru.samtakoy.core.presentation.widget.WidgetSettingsFragment
-import ru.samtakoy.data.di.DataModuleComponent
+import ru.samtakoy.data.di.DataModuleApiComponent
+import ru.samtakoy.domain.di.CardDomainApiComponent
+import ru.samtakoy.domain.learncourse.di.LearnCourseDomainApiComponent
+import ru.samtakoy.domain.qpack.di.QPackDomainApiComponent
+import ru.samtakoy.domain.view.di.ViewHistoryDomainApiComponent
 import ru.samtakoy.features.import_export.di.ExportModule
 import ru.samtakoy.features.import_export.di.ImportModule
 import ru.samtakoy.features.notifications.NotificationsPlannerService
 import ru.samtakoy.features.views.di.ViewsFeatureModule
 import ru.samtakoy.features.views.presentation.history.ViewsHistoryFragment
-import javax.inject.Singleton
 
 // TODO субкомпоненты для сервисов и для приложения
 // TODO доступ к компоненту через синхр сингелтон?
@@ -55,8 +58,12 @@ import javax.inject.Singleton
         ApiModule::class
     ],
     dependencies = [
-        DataModuleComponent::class,
-        CommonUtilsComponent::class
+        DataModuleApiComponent::class,
+        CommonUtilsComponent::class,
+        CardDomainApiComponent::class,
+        QPackDomainApiComponent::class,
+        LearnCourseDomainApiComponent::class,
+        ViewHistoryDomainApiComponent::class
     ]
 )
 @AppSingletonScope

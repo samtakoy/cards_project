@@ -1,12 +1,11 @@
 package ru.samtakoy.data.common.db.converters
 
 import androidx.room.TypeConverter
-import ru.samtakoy.common.utils.MyStringUtils
 
 internal class ListOfLongConverter {
 
     @TypeConverter
-    fun fromList(cardIds: List<Long>): String = MyStringUtils.join(cardIds.iterator(), ",")
+    fun fromList(cardIds: List<Long>): String = cardIds.joinToString(",")
 
     @TypeConverter
     fun fromString(srcString: String): List<Long> {

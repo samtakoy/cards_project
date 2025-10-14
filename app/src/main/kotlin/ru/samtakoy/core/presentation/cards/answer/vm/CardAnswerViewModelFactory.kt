@@ -9,7 +9,7 @@ import dagger.assisted.AssistedInject
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.domain.card.CardInteractor
-import ru.samtakoy.core.domain.FavoritesInteractor
+import ru.samtakoy.domain.favorites.FavoritesInteractor
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
 
 internal class CardAnswerViewModelFactory @AssistedInject constructor(

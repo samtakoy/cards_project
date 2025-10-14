@@ -5,8 +5,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.common.resources.Resources
-import ru.samtakoy.core.domain.FavoritesInteractor
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.mapper.QPacksWithFavsItemsMapper
+import ru.samtakoy.domain.favorites.FavoritesInteractor
 import ru.samtakoy.domain.qpack.QPackInteractor
 import ru.samtakoy.domain.view.ViewHistoryInteractor
 import javax.inject.Inject

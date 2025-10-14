@@ -5,13 +5,16 @@ import androidx.multidex.MultiDexApplication
 import com.facebook.stetho.Stetho
 import ru.samtakoy.BuildConfig
 import ru.samtakoy.common.di.DaggerCommonUtilsComponent
+import ru.samtakoy.common.utils.MyLog
 import ru.samtakoy.core.app.di.Di
 import ru.samtakoy.core.app.di.components.DaggerAppComponent
+import ru.samtakoy.data.di.DaggerDataModuleImplComponent
+import ru.samtakoy.domain.di.DaggerCardDomainImplComponent
+import ru.samtakoy.domain.learncourse.di.DaggerLearnCourseDomainImplComponent
+import ru.samtakoy.domain.qpack.di.DaggerQPackDomainImplComponent
+import ru.samtakoy.domain.view.di.DaggerViewHistoryDomainImplComponent
+import ru.samtakoy.platform.di.DaggerPlatformImplComponent
 import ru.samtakoy.platform.di.PlatformModule
-import ru.samtakoy.common.utils.MyLog
-import ru.samtakoy.data.di.DaggerDataModuleComponent
-import ru.samtakoy.platform.di.DaggerPlatformComponent
-import ru.samtakoy.platform.di.PlatformComponent
 import timber.log.Timber
 
 class MyApp : MultiDexApplication() {
@@ -32,22 +35,47 @@ class MyApp : MultiDexApplication() {
 
         val platformModule = PlatformModule(this)
 
-        val platformComponent = DaggerPlatformComponent.builder()
+        val platformComponent = DaggerPlatformImplComponent.builder()
             .platformModule(platformModule)
             .build()
 
         val commonUtilsComponent = DaggerCommonUtilsComponent.builder()
-            .platformComponent(platformComponent)
+            .platformApiComponent(platformComponent)
             .build()
 
-        val dataModuleComponent = DaggerDataModuleComponent.builder()
-            .platformComponent(platformComponent)
+        val dataModuleComponent = DaggerDataModuleImplComponent.builder()
+            .platformApiComponent(platformComponent)
             .commonUtilsComponent(commonUtilsComponent)
+            .build()
+
+        val cardDomainComponent = DaggerCardDomainImplComponent.builder()
+            .dataModuleApiComponent(dataModuleComponent)
+            .build()
+
+        val qPackDomainComponent = DaggerQPackDomainImplComponent.builder()
+            .dataModuleApiComponent(dataModuleComponent)
+            .build()
+
+        val viewHistoryDomainComponent = DaggerViewHistoryDomainImplComponent.builder()
+            .dataModuleApiComponent(dataModuleComponent)
+            .cardDomainApiComponent(cardDomainComponent)
+            .build()
+
+        val learnCourseDomainComponent = DaggerLearnCourseDomainImplComponent.builder()
+            .dataModuleApiComponent(dataModuleComponent)
+            .qPackDomainApiComponent(qPackDomainComponent)
+            .viewHistoryDomainApiComponent(viewHistoryDomainComponent)
+            .platformApiComponent(platformComponent)
             .build()
 
         Di.appComponent = DaggerAppComponent.builder()
-            .dataModuleComponent(dataModuleComponent)
+            .dataModuleApiComponent(dataModuleComponent)
             .commonUtilsComponent(commonUtilsComponent)
+            .cardDomainApiComponent(cardDomainComponent)
+            .qPackDomainApiComponent(qPackDomainComponent)
+            .learnCourseDomainApiComponent(learnCourseDomainComponent)
+            .viewHistoryDomainApiComponent(viewHistoryDomainComponent)
+            // ?
             .platformModule(platformModule)
             .build()
         MyLog.add("DI init ok")

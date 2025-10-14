@@ -33,7 +33,7 @@ internal class QPacksRepositoryImpl @Inject constructor(
         qPackDao.updateQPack(qPackMapper.mapToEntity(qPack))
     }
 
-    override fun updateQPackFavorite(qPackId: Long, favorite: Int) {
+    override suspend fun updateQPackFavorite(qPackId: Long, favorite: Int) {
         qPackDao.updateQPackFavorite(qPackId, favorite)
     }
 

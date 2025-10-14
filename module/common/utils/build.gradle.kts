@@ -14,5 +14,5 @@ dependencies {
 
     api(libs.gson)
 
-    implementation(project(":module:platform:impl"))
+    implementation(project(":module:platform:api"))
 }

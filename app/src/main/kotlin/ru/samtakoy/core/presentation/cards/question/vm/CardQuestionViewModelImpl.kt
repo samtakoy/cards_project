@@ -10,7 +10,7 @@ import ru.samtakoy.core.app.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.domain.card.CardInteractor
-import ru.samtakoy.core.domain.FavoritesInteractor
+import ru.samtakoy.domain.favorites.FavoritesInteractor
 import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.cards.question.vm.CardQuestionViewModel.Action
 import ru.samtakoy.core.presentation.cards.question.vm.CardQuestionViewModel.Event

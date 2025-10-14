@@ -37,6 +37,9 @@
             <option value="$PROJECT_DIR$/module/domain/card/api" />
             <option value="$PROJECT_DIR$/module/domain/card/impl" />
             <option value="$PROJECT_DIR$/module/domain/card/model" />
+            <option value="$PROJECT_DIR$/module/domain/favorites" />
+            <option value="$PROJECT_DIR$/module/domain/favorites/api" />
+            <option value="$PROJECT_DIR$/module/domain/favorites/impl" />
             <option value="$PROJECT_DIR$/module/domain/learncourse" />
             <option value="$PROJECT_DIR$/module/domain/learncourse/api" />
             <option value="$PROJECT_DIR$/module/domain/learncourse/impl" />

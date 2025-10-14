@@ -13,7 +13,7 @@ interface QPacksRepository {
     suspend fun deletePack(qPackId: Long)
 
     fun updateQPack(qPack: QPack)
-    fun updateQPackFavorite(qPackId: Long, favorite: Int)
+    suspend fun updateQPackFavorite(qPackId: Long, favorite: Int)
     suspend fun updateQPackViewCount(qPackId: Long, currentTime: Date)
 
     fun isPackExists(qPackId: Long): Boolean
