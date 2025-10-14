@@ -10,8 +10,10 @@ import ru.samtakoy.core.app.di.Di
 import ru.samtakoy.core.app.di.components.DaggerAppComponent
 import ru.samtakoy.data.di.DaggerDataModuleImplComponent
 import ru.samtakoy.domain.di.DaggerCardDomainImplComponent
+import ru.samtakoy.domain.favorites.di.DaggerFavoritesDomainImplComponent
 import ru.samtakoy.domain.learncourse.di.DaggerLearnCourseDomainImplComponent
 import ru.samtakoy.domain.qpack.di.DaggerQPackDomainImplComponent
+import ru.samtakoy.domain.theme.di.DaggerThemeDomainImplComponent
 import ru.samtakoy.domain.view.di.DaggerViewHistoryDomainImplComponent
 import ru.samtakoy.platform.di.DaggerPlatformImplComponent
 import ru.samtakoy.platform.di.PlatformModule
@@ -56,6 +58,11 @@ class MyApp : MultiDexApplication() {
             .dataModuleApiComponent(dataModuleComponent)
             .build()
 
+        val themeDomainComponent = DaggerThemeDomainImplComponent.builder()
+            .dataModuleApiComponent(dataModuleComponent)
+            .qPackDomainApiComponent(qPackDomainComponent)
+            .build()
+
         val viewHistoryDomainComponent = DaggerViewHistoryDomainImplComponent.builder()
             .dataModuleApiComponent(dataModuleComponent)
             .cardDomainApiComponent(cardDomainComponent)
@@ -68,13 +75,19 @@ class MyApp : MultiDexApplication() {
             .platformApiComponent(platformComponent)
             .build()
 
+        val favoritesDomainComponent = DaggerFavoritesDomainImplComponent.builder()
+            .dataModuleApiComponent(dataModuleComponent)
+            .build()
+
         Di.appComponent = DaggerAppComponent.builder()
             .dataModuleApiComponent(dataModuleComponent)
             .commonUtilsComponent(commonUtilsComponent)
             .cardDomainApiComponent(cardDomainComponent)
+            .themeDomainApiComponent(themeDomainComponent)
             .qPackDomainApiComponent(qPackDomainComponent)
             .learnCourseDomainApiComponent(learnCourseDomainComponent)
             .viewHistoryDomainApiComponent(viewHistoryDomainComponent)
+            .favoritesDomainApiComponent(favoritesDomainComponent)
             // ?
             .platformModule(platformModule)
             .build()

@@ -32,8 +32,10 @@ import ru.samtakoy.core.presentation.themes.di.ThemesPresentationModule
 import ru.samtakoy.core.presentation.widget.WidgetSettingsFragment
 import ru.samtakoy.data.di.DataModuleApiComponent
 import ru.samtakoy.domain.di.CardDomainApiComponent
+import ru.samtakoy.domain.favorites.di.FavoritesDomainApiComponent
 import ru.samtakoy.domain.learncourse.di.LearnCourseDomainApiComponent
 import ru.samtakoy.domain.qpack.di.QPackDomainApiComponent
+import ru.samtakoy.domain.theme.di.ThemeDomainApiComponent
 import ru.samtakoy.domain.view.di.ViewHistoryDomainApiComponent
 import ru.samtakoy.features.import_export.di.ExportModule
 import ru.samtakoy.features.import_export.di.ImportModule
@@ -62,8 +64,10 @@ import ru.samtakoy.features.views.presentation.history.ViewsHistoryFragment
         CommonUtilsComponent::class,
         CardDomainApiComponent::class,
         QPackDomainApiComponent::class,
+        ThemeDomainApiComponent::class,
         LearnCourseDomainApiComponent::class,
-        ViewHistoryDomainApiComponent::class
+        ViewHistoryDomainApiComponent::class,
+        FavoritesDomainApiComponent::class
     ]
 )
 @AppSingletonScope

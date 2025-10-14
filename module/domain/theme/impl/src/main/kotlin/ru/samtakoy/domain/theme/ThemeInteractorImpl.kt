@@ -5,7 +5,7 @@ import ru.samtakoy.data.theme.ThemesRepository
 import ru.samtakoy.domain.qpack.QPackInteractor
 import javax.inject.Inject
 
-class ThemeInteractorImpl @Inject constructor(
+internal class ThemeInteractorImpl @Inject constructor(
     private val themeRepository: ThemesRepository,
     private val qPackInteractor: QPackInteractor
 ) : ThemeInteractor {
