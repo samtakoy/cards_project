@@ -17,12 +17,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.parcelize.Parcelize
 import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
-import ru.samtakoy.core.app.ScopeProvider
+import ru.samtakoy.common.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.domain.card.CardInteractor
 import ru.samtakoy.domain.learncourse.CoursesPlanner
-import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
-import ru.samtakoy.core.presentation.base.viewmodel.savedstate.SavedStateValue
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
+import ru.samtakoy.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.core.presentation.cards.types.BackupInfo
 import ru.samtakoy.core.presentation.cards.types.BackupInfoHolder
 import ru.samtakoy.core.presentation.cards.types.CardViewMode

@@ -4,8 +4,7 @@ import android.net.Uri
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.AnnotatedString
 import kotlinx.collections.immutable.ImmutableList
-import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModel
-import ru.samtakoy.core.presentation.design_system.base.model.LongUiId
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.core.presentation.themes.ThemeUiItem
 import ru.samtakoy.core.presentation.themes.mv.ThemeListViewModel.Action
 import ru.samtakoy.core.presentation.themes.mv.ThemeListViewModel.Event

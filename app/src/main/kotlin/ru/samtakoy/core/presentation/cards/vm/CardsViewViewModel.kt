@@ -1,7 +1,7 @@
 package ru.samtakoy.core.presentation.cards.vm
 
 import androidx.compose.runtime.Immutable
-import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModel
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.domain.learncourse.schedule.Schedule
 

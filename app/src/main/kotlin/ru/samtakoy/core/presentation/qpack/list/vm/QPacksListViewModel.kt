@@ -2,7 +2,7 @@ package ru.samtakoy.core.presentation.qpack.list.vm
 
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
-import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModel
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.core.presentation.qpack.list.model.QPackListItemUiModel
 import ru.samtakoy.core.presentation.qpack.list.model.QPackSortType
 import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.Action

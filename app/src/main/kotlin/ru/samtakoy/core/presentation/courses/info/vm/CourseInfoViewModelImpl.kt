@@ -11,13 +11,13 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
-import ru.samtakoy.core.app.ScopeProvider
+import ru.samtakoy.common.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.domain.learncourse.CourseProgressUseCase
 import ru.samtakoy.domain.learncourse.CoursesPlanner
 import ru.samtakoy.domain.learncourse.NCoursesInteractor
-import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.Action
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.Event

@@ -4,10 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import ru.samtakoy.R
-import ru.samtakoy.core.app.ScopeProvider
+import ru.samtakoy.common.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
-import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
-import ru.samtakoy.core.presentation.base.viewmodel.savedstate.SavedStateValue
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
+import ru.samtakoy.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.Action
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.Event
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.State

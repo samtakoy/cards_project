@@ -119,7 +119,9 @@ dependencies {
     implementation(project(":module:domain:favorites:api"))
     implementation(project(":module:domain:favorites:impl"))
 
-    implementation(project(":module:presentation:utils"))
+    implementation(project(":module:presentation:core:utils"))
+    implementation(project(":module:presentation:core:viewmodel"))
+    implementation(project(":module:presentation:core:designsystem"))
 
     implementation(project(":module:common:utils"))
 }

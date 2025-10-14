@@ -11,9 +11,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.viewModels
 import ru.samtakoy.R
-import ru.samtakoy.core.presentation.base.observe
-import ru.samtakoy.core.presentation.base.viewmodel.AbstractViewModel
-import ru.samtakoy.core.presentation.base.viewmodel.ViewModelOwner
+import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogPresenter.IProgressWorker
 import ru.samtakoy.core.presentation.progress_dialog.vm.ProgressDialogViewModel
 import ru.samtakoy.core.presentation.progress_dialog.vm.ProgressDialogViewModelFactory

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import ru.samtakoy.core.app.ScopeProvider
+import ru.samtakoy.common.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.core.presentation.themes.mapper.ThemeUiItemMapper
 import ru.samtakoy.features.import_export.QPacksExporter

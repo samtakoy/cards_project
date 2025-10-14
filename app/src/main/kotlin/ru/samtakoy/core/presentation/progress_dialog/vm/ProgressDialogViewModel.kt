@@ -1,7 +1,7 @@
 package ru.samtakoy.core.presentation.progress_dialog.vm
 
 import androidx.compose.runtime.Immutable
-import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModel
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.core.presentation.progress_dialog.vm.ProgressDialogViewModel.Action
 import ru.samtakoy.core.presentation.progress_dialog.vm.ProgressDialogViewModel.State
 

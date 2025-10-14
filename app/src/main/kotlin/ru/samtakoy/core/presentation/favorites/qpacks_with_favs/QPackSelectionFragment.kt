@@ -10,11 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import ru.samtakoy.R
 import ru.samtakoy.core.app.di.Di
 import ru.samtakoy.core.presentation.RouterHolder
-import ru.samtakoy.core.presentation.base.composeContent
-import ru.samtakoy.core.presentation.base.viewmodel.AbstractViewModel
-import ru.samtakoy.core.presentation.base.viewmodel.ViewModelOwner
+import ru.samtakoy.presentation.base.composeContent
+import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModelFactory
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModelImpl
 import javax.inject.Inject
@@ -46,7 +47,7 @@ class QPackSelectionFragment : Fragment(), ViewModelOwner {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return composeContent {
+        return composeContent(R.id.compose_root) {
             QPackSelectionScreen(
                 viewModel = viewModel,
                 onNavigationAction = navigation::onAction,

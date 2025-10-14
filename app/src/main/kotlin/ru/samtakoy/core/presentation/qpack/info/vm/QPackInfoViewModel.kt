@@ -3,7 +3,7 @@ package ru.samtakoy.core.presentation.qpack.info.vm
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.AnnotatedString
 import kotlinx.collections.immutable.ImmutableList
-import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModel
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.core.presentation.qpack.info.FastCardUiModel
 import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModel.Action
 import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModel.Event

@@ -60,7 +60,10 @@
             <option value="$PROJECT_DIR$/module/platform/api" />
             <option value="$PROJECT_DIR$/module/platform/impl" />
             <option value="$PROJECT_DIR$/module/presentation" />
-            <option value="$PROJECT_DIR$/module/presentation/utils" />
+            <option value="$PROJECT_DIR$/module/presentation/core" />
+            <option value="$PROJECT_DIR$/module/presentation/core/designsystem" />
+            <option value="$PROJECT_DIR$/module/presentation/core/utils" />
+            <option value="$PROJECT_DIR$/module/presentation/core/viewmodel" />
           </set>
         </option>
       </GradleProjectSettings>

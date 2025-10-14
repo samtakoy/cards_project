@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
-import ru.samtakoy.core.app.ScopeProvider
+import ru.samtakoy.common.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.domain.learncourse.NCoursesInteractor
-import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.courses.model.CourseItemUiMapper
 import ru.samtakoy.core.presentation.courses.model.CourseItemUiModel
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel.Action

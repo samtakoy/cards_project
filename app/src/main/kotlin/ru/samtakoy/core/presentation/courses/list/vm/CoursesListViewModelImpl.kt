@@ -9,11 +9,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.parcelize.Parcelize
 import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
-import ru.samtakoy.core.app.ScopeProvider
+import ru.samtakoy.common.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.common.utils.DateUtils
-import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
-import ru.samtakoy.core.presentation.base.viewmodel.savedstate.SavedStateValue
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
+import ru.samtakoy.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModel.Action
 import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModel.Event
 import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModel.NavigationAction

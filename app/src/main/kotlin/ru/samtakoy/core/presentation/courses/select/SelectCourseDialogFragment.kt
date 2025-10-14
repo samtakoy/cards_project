@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.samtakoy.R
 import ru.samtakoy.core.app.di.Di
-import ru.samtakoy.core.presentation.base.observe
-import ru.samtakoy.core.presentation.base.viewmodel.AbstractViewModel
-import ru.samtakoy.core.presentation.base.viewmodel.ViewModelOwner
+import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import ru.samtakoy.core.presentation.courses.model.CoursesAdapter
 import ru.samtakoy.core.presentation.courses.model.CoursesAdapter.CourseClickListener
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel

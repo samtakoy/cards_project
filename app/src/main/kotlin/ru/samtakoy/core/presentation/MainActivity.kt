@@ -16,7 +16,7 @@ import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import ru.samtakoy.R
 import ru.samtakoy.core.app.di.Di
-import ru.samtakoy.core.presentation.base.viewmodel.FragmentViewModelLifecycleCallbacks
+import ru.samtakoy.presentation.base.viewmodel.FragmentViewModelLifecycleCallbacks
 import ru.samtakoy.common.utils.MyLog.add
 import timber.log.Timber
 

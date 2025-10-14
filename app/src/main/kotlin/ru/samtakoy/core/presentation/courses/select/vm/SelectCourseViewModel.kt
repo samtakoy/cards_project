@@ -2,7 +2,7 @@ package ru.samtakoy.core.presentation.courses.select.vm
 
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
-import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModel
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.core.presentation.courses.model.CourseItemUiModel
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel.Action
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel.Event

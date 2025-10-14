@@ -6,12 +6,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
-import ru.samtakoy.core.app.ScopeProvider
+import ru.samtakoy.common.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.domain.card.CardInteractor
 import ru.samtakoy.domain.favorites.FavoritesInteractor
-import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.cards.question.vm.CardQuestionViewModel.Action
 import ru.samtakoy.core.presentation.cards.question.vm.CardQuestionViewModel.Event
 import ru.samtakoy.core.presentation.cards.question.vm.CardQuestionViewModel.State

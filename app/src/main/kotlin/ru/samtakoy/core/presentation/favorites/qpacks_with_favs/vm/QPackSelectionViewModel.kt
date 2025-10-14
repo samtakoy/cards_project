@@ -3,10 +3,9 @@ package ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 import ru.samtakoy.core.presentation.RouterHolder
-import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModel
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.core.presentation.design_system.button.MyButtonModel
 import ru.samtakoy.core.presentation.design_system.selectable_item.MySelectableItemModel
-import ru.samtakoy.core.presentation.favorites.onboarding.vm.FavoritesViewModel.NavigationAction
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModel.Action
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModel.Event
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModel.State

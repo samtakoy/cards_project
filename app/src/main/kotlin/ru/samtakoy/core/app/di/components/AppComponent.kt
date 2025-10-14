@@ -3,8 +3,6 @@ package ru.samtakoy.core.app.di.components
 import dagger.Component
 import ru.samtakoy.common.di.CommonUtilsComponent
 import ru.samtakoy.core.app.di.modules.ApiModule
-import ru.samtakoy.core.app.di.modules.CardsModule
-import ru.samtakoy.core.app.di.modules.CoroutinesModule
 import ru.samtakoy.core.app.di.modules.CoursesModule
 import ru.samtakoy.core.app.di.modules.FavoritesModule
 import ru.samtakoy.core.presentation.MainActivity
@@ -42,13 +40,12 @@ import ru.samtakoy.features.import_export.di.ImportModule
 import ru.samtakoy.features.notifications.NotificationsPlannerService
 import ru.samtakoy.features.views.di.ViewsFeatureModule
 import ru.samtakoy.features.views.presentation.history.ViewsHistoryFragment
+import ru.samtakoy.platform.di.PlatformApiComponent
 
 // TODO субкомпоненты для сервисов и для приложения
 // TODO доступ к компоненту через синхр сингелтон?
 @Component(
     modules = [
-        CoroutinesModule::class,
-        CardsModule::class,
         CoursesModule::class,
         ExportModule::class,
         ImportModule::class,
@@ -67,7 +64,8 @@ import ru.samtakoy.features.views.presentation.history.ViewsHistoryFragment
         ThemeDomainApiComponent::class,
         LearnCourseDomainApiComponent::class,
         ViewHistoryDomainApiComponent::class,
-        FavoritesDomainApiComponent::class
+        FavoritesDomainApiComponent::class,
+        PlatformApiComponent::class
     ]
 )
 @AppSingletonScope

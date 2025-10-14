@@ -2,7 +2,7 @@ package ru.samtakoy.core.presentation.cards.answer.vm
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.AnnotatedString
-import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModel
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModel.Action
 import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModel.Event
 import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModel.State

@@ -33,9 +33,9 @@ import ru.samtakoy.R
 import ru.samtakoy.core.Const
 import ru.samtakoy.core.app.di.Di
 import ru.samtakoy.core.presentation.RouterHolder
-import ru.samtakoy.core.presentation.base.observe
-import ru.samtakoy.core.presentation.base.viewmodel.AbstractViewModel
-import ru.samtakoy.core.presentation.base.viewmodel.ViewModelOwner
+import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import ru.samtakoy.core.presentation.export_cards.BatchExportDialogFragment
 import ru.samtakoy.core.presentation.export_cards.BatchExportType
 import ru.samtakoy.core.presentation.import_cards.BatchImportDialogFragment

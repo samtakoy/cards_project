@@ -1,7 +1,7 @@
 package ru.samtakoy.core.presentation.schedule.vm
 
 import androidx.compose.runtime.Immutable
-import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModel
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.Action
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.Event
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.State

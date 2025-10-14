@@ -88,8 +88,7 @@ class MyApp : MultiDexApplication() {
             .learnCourseDomainApiComponent(learnCourseDomainComponent)
             .viewHistoryDomainApiComponent(viewHistoryDomainComponent)
             .favoritesDomainApiComponent(favoritesDomainComponent)
-            // ?
-            .platformModule(platformModule)
+            .platformApiComponent(platformComponent)
             .build()
         MyLog.add("DI init ok")
 

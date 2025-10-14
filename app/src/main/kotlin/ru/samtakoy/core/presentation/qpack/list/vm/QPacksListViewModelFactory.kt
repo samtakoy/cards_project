@@ -3,7 +3,7 @@ package ru.samtakoy.core.presentation.qpack.list.vm
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import ru.samtakoy.core.app.ScopeProvider
+import ru.samtakoy.common.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.core.presentation.qpack.list.mapper.QPackListItemUiModelMapper
 import ru.samtakoy.domain.qpack.QPackInteractor

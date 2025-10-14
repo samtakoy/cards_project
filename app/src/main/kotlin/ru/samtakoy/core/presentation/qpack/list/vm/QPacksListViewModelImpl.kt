@@ -17,11 +17,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
-import ru.samtakoy.core.app.ScopeProvider
+import ru.samtakoy.common.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
-import ru.samtakoy.core.presentation.base.viewmodel.BaseViewModelImpl
-import ru.samtakoy.core.presentation.base.viewmodel.savedstate.SavedStateValue
-import ru.samtakoy.core.presentation.base.viewmodel.savedstate.toSavedState
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
+import ru.samtakoy.presentation.base.viewmodel.savedstate.SavedStateValue
+import ru.samtakoy.presentation.base.viewmodel.savedstate.toSavedState
 import ru.samtakoy.common.utils.MyLog
 import ru.samtakoy.core.presentation.qpack.list.mapper.QPackListItemUiModelMapper
 import ru.samtakoy.core.presentation.qpack.list.model.QPackListItemUiModel

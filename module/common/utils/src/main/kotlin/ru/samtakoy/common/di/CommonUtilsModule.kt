@@ -2,13 +2,20 @@ package ru.samtakoy.common.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import ru.samtakoy.common.coroutines.ContextProvider
+import ru.samtakoy.common.coroutines.ContextProviderImpl
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.common.resources.ResourcesImpl
 
 @Module
 internal interface CommonUtilsModule {
+
+    @Binds
+    fun provideContextProvider(impl: ContextProviderImpl): ContextProvider
+
     companion object {
         @JvmStatic
         @Provides
