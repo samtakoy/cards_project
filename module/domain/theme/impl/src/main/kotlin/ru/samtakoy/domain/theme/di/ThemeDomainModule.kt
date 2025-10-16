@@ -1,12 +1,11 @@
 package ru.samtakoy.domain.theme.di
 
-import dagger.Binds
-import dagger.Module
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 import ru.samtakoy.domain.theme.ThemeInteractor
 import ru.samtakoy.domain.theme.ThemeInteractorImpl
 
-@Module
-internal interface ThemeDomainModule {
-    @Binds
-    fun bindsThemeInteractor(impl: ThemeInteractorImpl): ThemeInteractor
+fun themeDomainModule() = module {
+    factoryOf(::ThemeInteractorImpl) bind ThemeInteractor::class
 }

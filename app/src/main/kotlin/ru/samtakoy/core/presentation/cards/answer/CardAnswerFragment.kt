@@ -13,29 +13,28 @@ import android.widget.CompoundButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import ru.samtakoy.R
-import ru.samtakoy.core.app.di.Di
-import ru.samtakoy.presentation.base.observe
-import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
-import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import ru.samtakoy.core.presentation.cards.CardsViewFragment
 import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModel
 import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModel.Event
-import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModelFactory
 import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModelImpl
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
-import javax.inject.Inject
+import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 
 class CardAnswerFragment : Fragment(), ViewModelOwner {
 
-    @Inject
-    internal lateinit var viewModelFactory: CardAnswerViewModelFactory.Factory
-    private val viewModel: CardAnswerViewModelImpl by viewModels {
-        viewModelFactory.create(
-            qPackId = requireArguments().getLong(ARG_QPACK_ID, -1),
-            cardId = requireArguments().getLong(ARG_CARD_ID, -1),
-            viewMode = requireArguments().getSerializable(ARG_VIEW_MODE) as CardViewMode
+    private val viewModel: CardAnswerViewModel by viewModel<CardAnswerViewModelImpl> {
+        parametersOf(
+            // qPackId
+            requireArguments().getLong(ARG_QPACK_ID, -1),
+            // cardId
+            requireArguments().getLong(ARG_CARD_ID, -1),
+            // viewMode
+            requireArguments().getSerializable(ARG_VIEW_MODE) as CardViewMode
         )
     }
     override fun getViewModel(): AbstractViewModel = viewModel
@@ -48,11 +47,6 @@ class CardAnswerFragment : Fragment(), ViewModelOwner {
     private var mView: View? = null
     private val mCheckListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
         viewModel.onEvent(Event.FavoriteChange(isChecked = isChecked))
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Di.appComponent.inject(this)
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

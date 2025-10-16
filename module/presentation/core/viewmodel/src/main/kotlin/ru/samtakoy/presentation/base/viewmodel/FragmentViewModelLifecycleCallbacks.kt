@@ -7,9 +7,12 @@ import androidx.fragment.app.FragmentManager
 import timber.log.Timber
 
 class FragmentViewModelLifecycleCallbacks : FragmentManager.FragmentLifecycleCallbacks() {
-
     override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
         Timber.tag("mytest").e("onFragmentViewCreated: ${f.javaClass.name}")
+        tryObserveFragmentViewModel(f)
+    }
+
+    private fun tryObserveFragmentViewModel(f: Fragment) {
         when (f) {
             is ViewModelOwner -> {
                 f.onObserveViewModel()

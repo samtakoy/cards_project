@@ -1,13 +1,15 @@
 package ru.samtakoy.features.views.di
 
-import dagger.Binds
-import dagger.Module
+import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 import ru.samtakoy.features.views.presentation.history.mapper.ViewHistoryItemUiModelMapper
 import ru.samtakoy.features.views.presentation.history.mapper.ViewHistoryItemUiModelMapperImpl
+import ru.samtakoy.features.views.presentation.history.vm.ViewsHistoryViewModelImpl
 
-@Module
-internal interface ViewsFeatureModule {
+internal fun viewsFeatureModule() = module {
     // presentation
-    @Binds
-    fun bindsViewHistoryItemUiModelMapper(impl: ViewHistoryItemUiModelMapperImpl): ViewHistoryItemUiModelMapper
+    factoryOf(::ViewHistoryItemUiModelMapperImpl) bind ViewHistoryItemUiModelMapper::class
+    viewModelOf(::ViewsHistoryViewModelImpl)
 }

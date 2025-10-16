@@ -1,9 +1,8 @@
 package ru.samtakoy.common.resources
 
 import android.content.Context
-import javax.inject.Inject
 
-internal class ResourcesImpl @Inject constructor(
+internal class ResourcesImpl(
     private val context: Context
 ) : Resources {
     override fun getString(resId: Int): String {

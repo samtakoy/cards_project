@@ -1,9 +1,7 @@
 import ru.samtakoy.ext.libs
 
 plugins {
-    id("kotlin-kapt") // TODO ksp
-    // alias(libs.plugins.android.library)
-    // alias(libs.plugins.android.kotlin.support)
+    id("com.google.devtools.ksp")
     id("com.android.library")
     id("kotlin-android")
     // id("kotlin-parcelize")

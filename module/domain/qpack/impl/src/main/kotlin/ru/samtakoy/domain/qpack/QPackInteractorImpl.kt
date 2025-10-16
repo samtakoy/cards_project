@@ -4,9 +4,8 @@ import kotlinx.coroutines.flow.Flow
 import ru.samtakoy.data.card.CardsRepository
 import ru.samtakoy.data.qpack.QPacksRepository
 import java.util.Date
-import javax.inject.Inject
 
-internal class QPackInteractorImpl @Inject constructor(
+internal class QPackInteractorImpl(
     private val qPacksRepository: QPacksRepository,
     private val cardsRepository: CardsRepository
 ) : QPackInteractor {

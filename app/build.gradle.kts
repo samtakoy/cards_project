@@ -1,11 +1,15 @@
 plugins {
-    id("kotlin-kapt") // TODO ksp
+    alias(libs.plugins.ksp)
     alias(libs.plugins.android.application)
     alias(libs.plugins.android.kotlin.support)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.androidx.navigation.safeargs)
     id("kotlin-parcelize")
     id("convention.base.plugin")
+}
+
+ksp {
+    arg("KOIN_CONFIG_CHECK", "true")
 }
 
 android {
@@ -53,7 +57,7 @@ dependencies {
 
     // room
     // TODO ksp
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
     implementation(libs.bundles.room)
 
     // Compose
@@ -82,10 +86,11 @@ dependencies {
     // log
     implementation(libs.jakewharton.timber)
 
-    // dagger
-    api(libs.google.dagger)
-    annotationProcessor(libs.google.dagger.compiler)
-    kapt(libs.google.dagger.compiler)
+    // koin
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.compose.navigation)
 
     // retrofit
     implementation(libs.bundles.squareup)

@@ -1,15 +1,11 @@
 package ru.samtakoy.features.import_export.di
 
-import dagger.Binds
-import dagger.Module
-import ru.samtakoy.core.app.di.components.AppSingletonScope
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 import ru.samtakoy.features.import_export.ImportApi
 import ru.samtakoy.features.import_export.ImportApiImpl
-import javax.inject.Singleton
 
-@Module
-abstract class ImportModule {
-    @Binds
-    @AppSingletonScope
-    abstract fun provideImportApi(impl: ImportApiImpl): ImportApi;
+internal fun importModule() = module {
+    factoryOf(::ImportApiImpl) bind ImportApi::class
 }

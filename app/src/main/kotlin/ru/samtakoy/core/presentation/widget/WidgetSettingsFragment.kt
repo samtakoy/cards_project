@@ -2,7 +2,6 @@ package ru.samtakoy.core.presentation.widget
 
 import android.appwidget.AppWidgetManager
 import androidx.core.os.bundleOf
-import ru.samtakoy.core.app.di.Di
 import ru.samtakoy.core.presentation.qpack.list.QPacksListFragment
 
 class WidgetSettingsFragment : QPacksListFragment() {
@@ -12,7 +11,6 @@ class WidgetSettingsFragment : QPacksListFragment() {
     }
 
     /* TODO переделать
-    @Inject
     lateinit var mPresenterFactory2: WidgetSettingsPresenter.Factory
     override fun providePresenter(): QPacksListPresenter {
         return mPresenterFactory2.create(widgetId)
@@ -26,9 +24,5 @@ class WidgetSettingsFragment : QPacksListFragment() {
                 KEY_WIDGET_ID to widgetId
             )
         }
-    }
-
-    override fun injectDependencies() {
-        Di.appComponent.inject(this)
     }
 }

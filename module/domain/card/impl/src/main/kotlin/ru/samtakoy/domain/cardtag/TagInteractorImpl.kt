@@ -1,9 +1,8 @@
 package ru.samtakoy.domain.cardtag
 
 import ru.samtakoy.data.cardtag.TagsRepository
-import javax.inject.Inject
 
-internal class TagInteractorImpl @Inject constructor(
+internal class TagInteractorImpl(
     private val tagsRepository: TagsRepository
 ) : TagInteractor {
     override fun addTag(tag: Tag): Long {

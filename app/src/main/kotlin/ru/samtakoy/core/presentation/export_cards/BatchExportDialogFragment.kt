@@ -9,38 +9,31 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import ru.samtakoy.R
-import ru.samtakoy.core.app.di.Di
+import ru.samtakoy.core.presentation.export_cards.mv.BatchExportViewModel
+import ru.samtakoy.core.presentation.export_cards.mv.BatchExportViewModelImpl
 import ru.samtakoy.presentation.base.observe
 import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
-import ru.samtakoy.core.presentation.export_cards.mv.BatchExportViewModel
-import ru.samtakoy.core.presentation.export_cards.mv.BatchExportViewModelFactory
-import ru.samtakoy.core.presentation.export_cards.mv.BatchExportViewModelImpl
-import javax.inject.Inject
 
+/**
+ * TODO это все устарело и будет переписано (удалено)
+ * */
 class BatchExportDialogFragment : AppCompatDialogFragment(), ViewModelOwner {
 
-    @Inject
-    internal lateinit var viewModelFactory: BatchExportViewModelFactory.Factory
-    private val viewModel: BatchExportViewModelImpl by viewModels {
-        viewModelFactory.factory(
+    private val viewModel: BatchExportViewModel by viewModel<BatchExportViewModelImpl> {
+        parametersOf(
             requireArguments().getParcelable<BatchExportType>(ARG_EXPORT_TYPE) as BatchExportType
         )
     }
     override fun getViewModel(): AbstractViewModel = viewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Di.appComponent.inject(this)
-
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val v = LayoutInflater.from(getContext()).inflate(R.layout.fragment_dialog_batch_export, null)
+        val dialogView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_dialog_batch_export, null)
         return AlertDialog.Builder(requireContext())
-            .setView(v)
+            .setView(dialogView)
             .setCancelable(false)
             .create()
     }

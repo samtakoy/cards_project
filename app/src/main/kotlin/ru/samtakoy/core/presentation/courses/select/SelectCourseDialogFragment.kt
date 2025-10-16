@@ -8,45 +8,42 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import ru.samtakoy.R
-import ru.samtakoy.core.app.di.Di
-import ru.samtakoy.presentation.base.observe
-import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
-import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import ru.samtakoy.core.presentation.courses.model.CoursesAdapter
 import ru.samtakoy.core.presentation.courses.model.CoursesAdapter.CourseClickListener
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel.Action
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel.State
-import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModelFactory
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModelImpl
 import ru.samtakoy.core.presentation.qpack.info.QPackInfoFragment
-import javax.inject.Inject
+import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 
+/**
+ * TODO это все устарело и будет переписано (удалено)
+ * */
 class SelectCourseDialogFragment : AppCompatDialogFragment(), ViewModelOwner {
 
-    @Inject
-    internal lateinit var viewModelFactory: SelectCourseViewModelFactory.Factory
-    private val viewModel: SelectCourseViewModelImpl by viewModels {
-        viewModelFactory.create(targetQPackId = requireArguments().getSerializable(ARG_TARGET_QPACK_ID) as? Long)
+    private val viewModel: SelectCourseViewModel by viewModel<SelectCourseViewModelImpl> {
+        parametersOf(
+            // targetQPackId
+            requireArguments().getSerializable(ARG_TARGET_QPACK_ID) as? Long
+        )
     }
     override fun getViewModel(): AbstractViewModel = viewModel
 
     private var mCoursesIsEmptyLabel: TextView? = null
     private var mCoursesRecycler: RecyclerView? = null
     private var mCoursesAdapter: CoursesAdapter? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Di.appComponent.inject(this)
-
-        super.onCreate(savedInstanceState)
-    }
 
     private fun initView(v: View) {
         mCoursesIsEmptyLabel = v.findViewById<TextView>(R.id.courses_is_empty_label)
@@ -63,12 +60,12 @@ class SelectCourseDialogFragment : AppCompatDialogFragment(), ViewModelOwner {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val v = LayoutInflater.from(getContext()).inflate(R.layout.fragment_courses, null)
-        initView(v)
+        val dialogView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_courses, null)
+        initView(dialogView)
 
         return AlertDialog.Builder(getContext())
             .setTitle(R.string.courses_list_select_title)
-            .setView(v)
+            .setView(dialogView)
             .setNegativeButton(
                 R.string.btn_cancel,
                 DialogInterface.OnClickListener { dialogInterface: DialogInterface?, i: Int -> exitCanceled() })

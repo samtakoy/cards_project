@@ -6,7 +6,6 @@ import ru.samtakoy.core.presentation.cards.types.BackupInfo
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.core.presentation.cards.vm.CardsViewViewModel.State
 import ru.samtakoy.core.presentation.cards.vm.CardsViewViewModelImpl.DataState
-import javax.inject.Inject
 
 internal interface CardsViewViewStateMapper {
     fun mapStateType(
@@ -15,7 +14,7 @@ internal interface CardsViewViewStateMapper {
     ): State.Type
 }
 
-internal class CardsViewViewStateMapperImpl @Inject constructor(
+internal class CardsViewViewStateMapperImpl(
     private val resources: Resources
 ): CardsViewViewStateMapper {
     override fun mapStateType(

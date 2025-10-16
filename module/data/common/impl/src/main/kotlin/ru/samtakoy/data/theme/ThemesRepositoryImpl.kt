@@ -4,9 +4,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.samtakoy.data.theme.mapper.ThemeEntityMapper
 import ru.samtakoy.domain.theme.Theme
-import javax.inject.Inject
 
-internal class ThemesRepositoryImpl @Inject constructor(
+internal class ThemesRepositoryImpl(
     private val themeDao: ThemeDao,
     private val themeMapper: ThemeEntityMapper
 ) : ThemesRepository {

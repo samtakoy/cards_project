@@ -5,38 +5,42 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.fragment.app.viewModels
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import ru.samtakoy.R
+import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogPresenter.IProgressWorker
+import ru.samtakoy.core.presentation.progress_dialog.vm.ProgressDialogViewModel
+import ru.samtakoy.core.presentation.progress_dialog.vm.ProgressDialogViewModelImpl
 import ru.samtakoy.presentation.base.observe
 import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
-import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogPresenter.IProgressWorker
-import ru.samtakoy.core.presentation.progress_dialog.vm.ProgressDialogViewModel
-import ru.samtakoy.core.presentation.progress_dialog.vm.ProgressDialogViewModelFactory
-import ru.samtakoy.core.presentation.progress_dialog.vm.ProgressDialogViewModelImpl
-import javax.inject.Inject
 
+/**
+ * TODO это все устарело и будет переписано (удалено)
+ * */
 abstract class ProgressDialogFragment : AppCompatDialogFragment(), ViewModelOwner {
     protected abstract fun createWorkerImpl(): IProgressWorker
 
     private var titleTextView: TextView? = null
 
-    @Inject
-    internal lateinit var viewModelFactory: ProgressDialogViewModelFactory.Factory
-    private val viewModel: ProgressDialogViewModelImpl by viewModels {
-        viewModelFactory.create(worker = createWorkerImpl())
+    private val viewModel: ProgressDialogViewModel by viewModel<ProgressDialogViewModelImpl> {
+        parametersOf(
+            // worker
+            createWorkerImpl()
+        )
     }
     override fun getViewModel(): AbstractViewModel = viewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val v = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_dialog_progress, null)
-        initView(v)
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_dialog_progress, null)
+        initView(dialogView!!)
         return AlertDialog.Builder(requireContext())
-            .setView(v)
+            .setView(dialogView)
             .setCancelable(false)
             .create()
     }

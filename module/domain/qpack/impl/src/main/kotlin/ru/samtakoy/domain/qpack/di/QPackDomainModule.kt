@@ -1,12 +1,11 @@
 package ru.samtakoy.domain.qpack.di
 
-import dagger.Binds
-import dagger.Module
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 import ru.samtakoy.domain.qpack.QPackInteractor
 import ru.samtakoy.domain.qpack.QPackInteractorImpl
 
-@Module
-internal interface QPackDomainModule {
-    @Binds
-    fun bindsQPackInteractor(impl: QPackInteractorImpl): QPackInteractor
+fun qPackDomainModule() = module {
+    factoryOf(::QPackInteractorImpl) bind QPackInteractor::class
 }

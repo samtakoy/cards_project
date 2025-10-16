@@ -3,29 +3,18 @@ package ru.samtakoy.core.presentation.import_cards
 import android.net.Uri
 import android.os.Bundle
 import kotlinx.coroutines.rx2.await
+import org.koin.android.ext.android.inject
 import ru.samtakoy.R
-import ru.samtakoy.core.app.di.Di
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogFragment
 import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogPresenter.IProgressWorker
 import ru.samtakoy.features.import_export.ImportApi
 import ru.samtakoy.features.import_export.utils.ImportCardsOpts
-import javax.inject.Inject
 
 class ImportZipDialogFragment : ProgressDialogFragment() {
+    private val mImportApi: ImportApi by inject()
+    private val mResources: Resources by inject()
 
-    @Inject
-    internal lateinit var mImportApi: ImportApi
-
-    @Inject
-    internal lateinit var mResources: Resources
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Di.appComponent.inject(this)
-        super.onCreate(savedInstanceState)
-    }
-
-    // --
     override fun createWorkerImpl(): IProgressWorker {
         val args = requireArguments()
         val selectedFileUri = args.getParcelable<Uri>(ARG_FILE_URI)!!

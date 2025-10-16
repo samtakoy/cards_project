@@ -4,17 +4,16 @@ import android.content.Context
 import android.net.Uri
 import androidx.core.content.FileProvider
 import com.google.gson.Gson
-import ru.samtakoy.data.learncourse.CoursesRepository
 import ru.samtakoy.common.utils.MyLog.add
-import ru.samtakoy.features.import_export.helpers.SendEmailHelper
+import ru.samtakoy.data.learncourse.CoursesRepository
 import ru.samtakoy.domain.learncourse.LearnCourse
+import ru.samtakoy.features.import_export.helpers.SendEmailHelper
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
 import java.io.Writer
-import javax.inject.Inject
 
-class CoursesExporterImpl @Inject constructor(
+class CoursesExporterImpl(
     private val mContext: Context,
     private val mCoursesReposithory: CoursesRepository,
     private val gson: Gson

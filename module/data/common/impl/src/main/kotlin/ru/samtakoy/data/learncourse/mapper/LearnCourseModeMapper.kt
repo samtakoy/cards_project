@@ -2,14 +2,13 @@ package ru.samtakoy.data.learncourse.mapper
 
 import ru.samtakoy.data.learncourse.model.LearnCourseModeEntity
 import ru.samtakoy.domain.learncourse.LearnCourseMode
-import javax.inject.Inject
 
 internal interface LearnCourseModeMapper {
     fun mapToDomain(data: LearnCourseModeEntity): LearnCourseMode
     fun mapToEntity(data: LearnCourseMode): LearnCourseModeEntity
 }
 
-internal class LearnCourseModeMapperImpl @Inject constructor() : LearnCourseModeMapper {
+internal class LearnCourseModeMapperImpl() : LearnCourseModeMapper {
     override fun mapToDomain(data: LearnCourseModeEntity): LearnCourseMode {
         return when (data) {
             LearnCourseModeEntity.PREPARING -> LearnCourseMode.PREPARING

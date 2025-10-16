@@ -5,25 +5,24 @@ import android.net.Uri
 import androidx.annotation.WorkerThread
 import androidx.core.content.FileProvider
 import ru.samtakoy.common.utils.DateUtils
+import ru.samtakoy.common.utils.MyLog.add
 import ru.samtakoy.core.app.utils.FileUtils
 import ru.samtakoy.data.card.CardsRepository
 import ru.samtakoy.data.qpack.QPacksRepository
 import ru.samtakoy.data.theme.ThemesRepository
-import ru.samtakoy.common.utils.MyLog.add
 import ru.samtakoy.domain.card.domain.model.CardWithTags
+import ru.samtakoy.domain.qpack.QPack
 import ru.samtakoy.features.import_export.helpers.QPackExportHelper
 import ru.samtakoy.features.import_export.helpers.SendEmailHelper
 import ru.samtakoy.features.import_export.helpers.ZipHelper
-import ru.samtakoy.domain.qpack.QPack
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStreamWriter
 import java.io.Writer
 import java.text.SimpleDateFormat
-import javax.inject.Inject
 
-class QPacksExporterImpl @Inject constructor(
+class QPacksExporterImpl(
     private val mContext: Context,
     private val mCardsRepository: CardsRepository,
     private val mQPacksRepository: QPacksRepository,

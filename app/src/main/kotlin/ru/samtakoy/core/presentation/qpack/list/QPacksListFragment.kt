@@ -15,29 +15,27 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.samtakoy.R
-import ru.samtakoy.core.app.di.Di
 import ru.samtakoy.core.presentation.RouterHolder
-import ru.samtakoy.presentation.base.observe
-import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
-import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import ru.samtakoy.core.presentation.qpack.info.QPackInfoFragment.Companion.buildBundle
 import ru.samtakoy.core.presentation.qpack.list.QPacksListAdapter.ItemClickListener
 import ru.samtakoy.core.presentation.qpack.list.model.QPackListItemUiModel
 import ru.samtakoy.core.presentation.qpack.list.model.QPackSortType
+import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel
 import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.Action
 import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.Event
 import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.NavAction
 import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.State
-import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModelFactory
 import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModelImpl
-import javax.inject.Inject
+import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 
 open class QPacksListFragment : Fragment(), ViewModelOwner {
 
@@ -52,11 +50,7 @@ open class QPacksListFragment : Fragment(), ViewModelOwner {
 
     private var mRouterHolder: RouterHolder? = null
 
-    @Inject
-    internal lateinit var viewModelFactory: QPacksListViewModelFactory
-    private val viewModel: QPacksListViewModelImpl by viewModels {
-        viewModelFactory
-    }
+    private val viewModel: QPacksListViewModel by viewModel<QPacksListViewModelImpl>()
     override fun getViewModel(): AbstractViewModel = viewModel
 
     private val mTextListener: SearchView.OnQueryTextListener = object : SearchView.OnQueryTextListener {
@@ -132,13 +126,8 @@ open class QPacksListFragment : Fragment(), ViewModelOwner {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        injectDependencies()
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-    }
-
-    protected open fun injectDependencies() {
-        Di.appComponent.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

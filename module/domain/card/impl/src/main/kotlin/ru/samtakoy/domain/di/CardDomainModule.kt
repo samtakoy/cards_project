@@ -1,16 +1,14 @@
 package ru.samtakoy.domain.di
 
-import dagger.Binds
-import dagger.Module
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 import ru.samtakoy.domain.card.CardInteractor
 import ru.samtakoy.domain.card.CardInteractorImpl
 import ru.samtakoy.domain.cardtag.TagInteractor
 import ru.samtakoy.domain.cardtag.TagInteractorImpl
 
-@Module
-internal interface CardDomainModule {
-    @Binds
-    fun bindsCardsInteractor(impl: CardInteractorImpl): CardInteractor
-    @Binds
-    fun bindsTagInteractor(impl: TagInteractorImpl): TagInteractor
+fun cardDomainModule() = module {
+    factoryOf(::CardInteractorImpl) bind CardInteractor::class
+    factoryOf(::TagInteractorImpl) bind TagInteractor::class
 }

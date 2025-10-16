@@ -2,7 +2,6 @@ package ru.samtakoy.core.presentation.cards.answer.vm
 
 import ru.samtakoy.R
 import ru.samtakoy.common.resources.Resources
-import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModelMapper.Companion.BACK_BTN_ID
 import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModelMapper.Companion.IS_FAVORITE_ID
 import ru.samtakoy.core.presentation.cards.answer.vm.CardAnswerViewModelMapper.Companion.NEXT_CARD_BTN_ID
@@ -11,7 +10,7 @@ import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.core.presentation.design_system.base.model.LongUiId
 import ru.samtakoy.core.presentation.design_system.button.MyButtonModel
 import ru.samtakoy.core.presentation.design_system.selectable_item.MySelectableItemModel
-import javax.inject.Inject
+import ru.samtakoy.presentation.utils.asAnnotated
 
 interface CardAnswerViewModelMapper {
     fun mapBackButton(viewMode: CardViewMode): MyButtonModel?
@@ -27,7 +26,7 @@ interface CardAnswerViewModelMapper {
     }
 }
 
-internal class CardAnswerViewModelMapperImpl @Inject constructor(
+internal class CardAnswerViewModelMapperImpl(
     private val resources: Resources
 ): CardAnswerViewModelMapper {
     override fun mapBackButton(viewMode: CardViewMode): MyButtonModel? {

@@ -1,18 +1,20 @@
 package ru.samtakoy.core.presentation.qpack.di
 
-import dagger.Binds
-import dagger.Module
+import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 import ru.samtakoy.core.presentation.qpack.info.mapper.FastCardUiModelMapper
 import ru.samtakoy.core.presentation.qpack.info.mapper.FastCardUiModelMapperImpl
+import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModelImpl
 import ru.samtakoy.core.presentation.qpack.list.mapper.QPackListItemUiModelMapper
 import ru.samtakoy.core.presentation.qpack.list.mapper.QPackListItemUiModelMapperImpl
+import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModelImpl
 
-@Module
-internal interface QPackPresentationModule {
+internal fun qPackPresentationModule() = module {
+    factoryOf(::FastCardUiModelMapperImpl) bind FastCardUiModelMapper::class
+    viewModelOf(::QPackInfoViewModelImpl)
 
-    @Binds
-    fun bindsFastCardUiModelMapper(impl: FastCardUiModelMapperImpl): FastCardUiModelMapper
-
-    @Binds
-    fun bindsQPackListItemUiModelMapper(impl: QPackListItemUiModelMapperImpl): QPackListItemUiModelMapper
+    factoryOf(::QPackListItemUiModelMapperImpl) bind QPackListItemUiModelMapper::class
+    viewModelOf(::QPacksListViewModelImpl)
 }

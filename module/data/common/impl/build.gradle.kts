@@ -9,13 +9,12 @@ android {
 dependencies {
     // room
     // TODO ksp
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
     implementation(libs.bundles.room)
 
-    // dagger
-    api(libs.google.dagger)
-    annotationProcessor(libs.google.dagger.compiler)
-    kapt(libs.google.dagger.compiler)
+    // koin
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
 
     implementation(project(":module:common:utils"))
     implementation(project(":module:platform:api"))

@@ -3,10 +3,9 @@ package ru.samtakoy.core.presentation.favorites.onboarding.mapper
 import kotlinx.parcelize.Parcelize
 import ru.samtakoy.R
 import ru.samtakoy.common.resources.Resources
-import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.core.presentation.design_system.base.model.UiId
 import ru.samtakoy.core.presentation.design_system.button.MyButtonModel
-import javax.inject.Inject
+import ru.samtakoy.presentation.utils.asAnnotated
 
 interface FavoritesButtonsMapper {
     fun mapInitial(): List<MyButtonModel>
@@ -19,7 +18,7 @@ interface FavoritesButtonsMapper {
     }
 }
 
-internal class FavoritesButtonsMapperImpl @Inject constructor(
+internal class FavoritesButtonsMapperImpl(
     private val resources: Resources
 ) : FavoritesButtonsMapper {
     override fun mapInitial(): List<MyButtonModel> {

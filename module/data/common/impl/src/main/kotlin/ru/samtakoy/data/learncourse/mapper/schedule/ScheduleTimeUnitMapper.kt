@@ -2,14 +2,13 @@ package ru.samtakoy.data.learncourse.mapper.schedule
 
 import ru.samtakoy.data.learncourse.model.schedule.ScheduleTimeUnitEntity
 import ru.samtakoy.domain.learncourse.schedule.ScheduleTimeUnit
-import javax.inject.Inject
 
 internal interface ScheduleTimeUnitMapper {
     fun mapToEntity(data: ScheduleTimeUnit): ScheduleTimeUnitEntity
     fun mapToDomain(data: ScheduleTimeUnitEntity): ScheduleTimeUnit
 }
 
-internal class ScheduleTimeUnitMapperImpl @Inject constructor(): ScheduleTimeUnitMapper {
+internal class ScheduleTimeUnitMapperImpl(): ScheduleTimeUnitMapper {
     override fun mapToDomain(data: ScheduleTimeUnitEntity): ScheduleTimeUnit {
         return when (data) {
             ScheduleTimeUnitEntity.MINUTE -> ScheduleTimeUnit.MINUTE

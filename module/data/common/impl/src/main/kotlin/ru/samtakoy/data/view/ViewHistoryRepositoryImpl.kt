@@ -9,9 +9,8 @@ import ru.samtakoy.data.view.model.ViewHistoryEntity
 import ru.samtakoy.domain.view.ViewHistoryItem
 import ru.samtakoy.domain.view.ViewHistoryItemWithInfo
 import java.util.Date
-import javax.inject.Inject
 
-internal class ViewHistoryRepositoryImpl @Inject constructor(
+internal class ViewHistoryRepositoryImpl(
     private val dao: ViewHistoryDao,
     private val entityMapper: ViewHistoryEntityMapper,
     private val entityMapperEx: ViewHistoryEntityMapperEx,

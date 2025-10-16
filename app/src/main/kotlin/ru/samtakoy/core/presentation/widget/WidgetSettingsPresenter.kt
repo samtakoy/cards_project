@@ -1,7 +1,6 @@
 package ru.samtakoy.core.presentation.widget
 
 /* TODO
-@InjectViewState
 class WidgetSettingsPresenter(
     private val widgetId: Int,
     cardsInteractor: CardsInteractor
@@ -11,8 +10,8 @@ class WidgetSettingsPresenter(
         MyLog.add("widgetId = $widgetId")
     }
 
-    class Factory @Inject constructor() {
-        @Inject
+    class Factory constructor() {
+
         lateinit var mCardsInteractor: CardsInteractor
 
         fun create(widgetId: Int) = WidgetSettingsPresenter(widgetId, mCardsInteractor)

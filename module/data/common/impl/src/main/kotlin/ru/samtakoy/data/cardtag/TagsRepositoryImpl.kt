@@ -4,9 +4,8 @@ import ru.samtakoy.data.cardtag.mapper.TagEntityMapper
 import ru.samtakoy.data.cardtag.model.CardTagEntity
 import ru.samtakoy.domain.cardtag.Tag
 import ru.samtakoy.domain.cardtag.toStringKey
-import javax.inject.Inject
 
-internal class TagsRepositoryImpl @Inject constructor(
+internal class TagsRepositoryImpl(
     private val tagDao: TagDao,
     private val cardTagDao: CardTagDao,
     private val tagMapper: TagEntityMapper

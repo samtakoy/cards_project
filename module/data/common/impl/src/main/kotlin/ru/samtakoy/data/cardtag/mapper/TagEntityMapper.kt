@@ -2,14 +2,13 @@ package ru.samtakoy.data.cardtag.mapper
 
 import ru.samtakoy.data.cardtag.model.TagEntity
 import ru.samtakoy.domain.cardtag.Tag
-import javax.inject.Inject
 
 internal interface TagEntityMapper {
     fun mapToEntity(model: Tag): TagEntity
     fun mapToDomain(entity: TagEntity): Tag
 }
 
-internal class TagEntityMapperImpl @Inject constructor() : TagEntityMapper {
+internal class TagEntityMapperImpl() : TagEntityMapper {
     override fun mapToEntity(model: Tag): TagEntity {
         return TagEntity(
             id = model.id,

@@ -13,6 +13,10 @@ import ru.samtakoy.data.qpack.QPacksRepository
 import ru.samtakoy.data.theme.ThemesRepository
 import ru.samtakoy.domain.card.CardInteractor
 import ru.samtakoy.domain.card.domain.model.CardWithTags
+import ru.samtakoy.domain.cardtag.Tag
+import ru.samtakoy.domain.cardtag.TagInteractor
+import ru.samtakoy.domain.qpack.QPack
+import ru.samtakoy.domain.theme.Theme
 import ru.samtakoy.features.import_export.helpers.ZipHelper
 import ru.samtakoy.features.import_export.utils.FromUriStreamFactory
 import ru.samtakoy.features.import_export.utils.FromZipEntryStreamFactory
@@ -23,26 +27,20 @@ import ru.samtakoy.features.import_export.utils.cbuild.CBuilderConst
 import ru.samtakoy.features.import_export.utils.cbuild.CardBuilder
 import ru.samtakoy.features.import_export.utils.cbuild.QPackBuilder
 import ru.samtakoy.features.import_export.utils.isPackFile
-import ru.samtakoy.domain.qpack.QPack
-import ru.samtakoy.domain.cardtag.Tag
-import ru.samtakoy.domain.cardtag.TagInteractor
-import ru.samtakoy.domain.theme.Theme
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.charset.Charset
 import java.util.Date
-import javax.inject.Inject
 
-class ImportApiImpl @Inject constructor(
+class ImportApiImpl(
     val contentResolver: ContentResolver,
     val cardInteractor: CardInteractor,
     val tagInteractor: TagInteractor,
     val cardsRepository: CardsRepository,
     val qPacksRepository: QPacksRepository,
     val themesRepository: ThemesRepository
-        //
 ) : ImportApi {
 
 

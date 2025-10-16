@@ -6,9 +6,8 @@ import ru.samtakoy.data.common.transaction.TransactionRepository
 import ru.samtakoy.domain.card.domain.model.Card
 import ru.samtakoy.domain.cardtag.TagInteractor
 import java.util.Random
-import javax.inject.Inject
 
-internal class CardInteractorImpl @Inject constructor(
+internal class CardInteractorImpl(
     private val tagInteractor: TagInteractor,
     private val cardsRepository: CardsRepository,
     private val transactionRepository: TransactionRepository

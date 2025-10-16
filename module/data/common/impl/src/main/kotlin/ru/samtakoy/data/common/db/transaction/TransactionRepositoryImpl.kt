@@ -3,9 +3,8 @@ package ru.samtakoy.data.common.db.transaction
 import androidx.room.withTransaction
 import ru.samtakoy.data.common.db.MyRoomDb
 import ru.samtakoy.data.common.transaction.TransactionRepository
-import javax.inject.Inject
 
-internal class TransactionRepositoryImpl @Inject constructor(
+internal class TransactionRepositoryImpl(
     private val database: MyRoomDb
 ) : TransactionRepository {
 

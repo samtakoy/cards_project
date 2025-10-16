@@ -2,9 +2,8 @@ package ru.samtakoy.data.learncourseview
 
 import kotlinx.coroutines.flow.Flow
 import ru.samtakoy.data.learncourse.CourseViewRepository
-import javax.inject.Inject
 
-internal class CourseViewRepositoryImpl @Inject constructor(
+internal class CourseViewRepositoryImpl(
     private val dao: LearnCourseViewDao
 ): CourseViewRepository {
     override suspend fun addCourseView(courseId: Long, viewId: Long) {

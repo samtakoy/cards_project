@@ -6,9 +6,8 @@ import kotlinx.coroutines.flow.map
 import ru.samtakoy.data.qpack.mapper.QPackEntityMapper
 import ru.samtakoy.domain.qpack.QPack
 import java.util.Date
-import javax.inject.Inject
 
-internal class QPacksRepositoryImpl @Inject constructor(
+internal class QPacksRepositoryImpl(
     private val qPackDao: QPackDao,
     private val qPackMapper: QPackEntityMapper
 ) : QPacksRepository {

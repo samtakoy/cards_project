@@ -10,12 +10,10 @@ import ru.samtakoy.domain.learncourse.CourseType
 import ru.samtakoy.domain.learncourse.LearnCourse
 import ru.samtakoy.domain.learncourse.LearnCourseMode
 import ru.samtakoy.domain.learncourse.schedule.Schedule
-import kotlin.collections.map
 import java.util.Arrays
 import java.util.Date
-import javax.inject.Inject
 
-internal class CoursesRepositoryImpl @Inject constructor(
+internal class CoursesRepositoryImpl(
     private val courseDao: LearnCourseDao,
     private val courseMapper: LearnCourseMapper,
     private val modeMapper: LearnCourseModeMapper

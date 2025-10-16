@@ -1,20 +1,20 @@
 package ru.samtakoy.features.import_export.di
 
-import dagger.Binds
-import dagger.Module
-import ru.samtakoy.core.app.di.components.AppSingletonScope
+import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
+import ru.samtakoy.core.presentation.export_cards.mv.BatchExportViewModelImpl
 import ru.samtakoy.features.import_export.CoursesExporter
 import ru.samtakoy.features.import_export.CoursesExporterImpl
 import ru.samtakoy.features.import_export.QPacksExporter
 import ru.samtakoy.features.import_export.QPacksExporterImpl
 
-@Module
-interface ExportModule {
-    @Binds
-    @AppSingletonScope
-    fun provideQPacksExporter(impl: QPacksExporterImpl): QPacksExporter
+internal fun exportModule() = module {
+    // domain
+    factoryOf(::QPacksExporterImpl) bind QPacksExporter::class
+    factoryOf(::CoursesExporterImpl) bind CoursesExporter::class
 
-    @Binds
-    @AppSingletonScope
-    fun provideCoursesExporter(impl: CoursesExporterImpl): CoursesExporter
+    // presentation
+    viewModelOf(::BatchExportViewModelImpl)
 }

@@ -5,18 +5,17 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.navigation.NavDeepLinkBuilder
+import org.koin.android.ext.android.inject
 import ru.samtakoy.R
-import ru.samtakoy.core.app.di.Di
+import ru.samtakoy.common.utils.MyLog.add
 import ru.samtakoy.core.presentation.courses.info.CourseInfoFragment.Companion.buildBundle
 import ru.samtakoy.core.presentation.courses.list.CoursesListFragment
-import ru.samtakoy.common.utils.MyLog.add
 import ru.samtakoy.data.learncourse.utils.LearnCourseHelper
 import ru.samtakoy.domain.learncourse.LearnCourse
 import ru.samtakoy.domain.learncourse.LearnCourseMode
 import ru.samtakoy.features.notifications.learn_courses.LearnsApi
 import ru.samtakoy.features.notifications.learn_courses.NewRepeatsApi
 import ru.samtakoy.features.notifications.learn_courses.UncompletedTaskApi
-import javax.inject.Inject
 
 class NotificationsPlannerService : IntentService {
     /*
@@ -43,14 +42,9 @@ class NotificationsPlannerService : IntentService {
     //       сдвинуть время и пересчитать
     // 4. начал повторять и закрыл приложение
     //       через 10-20-30 мин напомнить UNFINISHED
-    @Inject
-    internal lateinit var newRepeatsApi: NewRepeatsApi
-
-    @Inject
-    internal lateinit var learnsApi: LearnsApi
-
-    @Inject
-    internal lateinit var mUncompletedTaskApi: UncompletedTaskApi
+    private val newRepeatsApi: NewRepeatsApi by inject()
+    private val learnsApi: LearnsApi by inject()
+    private val mUncompletedTaskApi: UncompletedTaskApi by inject()
 
     constructor() : super("NotificationsPlannerService") {
         NotificationsHelper.initChannels(this)
@@ -180,12 +174,6 @@ class NotificationsPlannerService : IntentService {
         } else {
             showCoursesByModes(mUncompletedTaskApi.uncompletedCourseModes)
         }
-    }
-
-    override fun onCreate() {
-        Di.appComponent.inject(this)
-
-        super.onCreate()
     }
 
     override fun onDestroy() {

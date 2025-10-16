@@ -38,7 +38,7 @@ class CardsViewResultViewModelImpl(
         errorCardsCount = 0,
         newSchedule = resources.getString(R.string.schedule_none)
     )
-) {
+), CardsViewResultViewModel {
     private val currentSchedule = SavedStateValue<Schedule>(
         initialValueGetter = { Schedule(emptyList()) },
         keyName = KEY_SCHEDULE,

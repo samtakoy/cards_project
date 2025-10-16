@@ -3,9 +3,8 @@ package ru.samtakoy.domain.theme
 import kotlinx.coroutines.flow.Flow
 import ru.samtakoy.data.theme.ThemesRepository
 import ru.samtakoy.domain.qpack.QPackInteractor
-import javax.inject.Inject
 
-internal class ThemeInteractorImpl @Inject constructor(
+internal class ThemeInteractorImpl(
     private val themeRepository: ThemesRepository,
     private val qPackInteractor: QPackInteractor
 ) : ThemeInteractor {

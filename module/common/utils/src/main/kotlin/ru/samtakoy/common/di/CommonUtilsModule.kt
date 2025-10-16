@@ -2,32 +2,18 @@ package ru.samtakoy.common.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import dagger.Binds
-import dagger.Module
-import dagger.Provides
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 import ru.samtakoy.common.coroutines.ContextProvider
 import ru.samtakoy.common.coroutines.ContextProviderImpl
+import ru.samtakoy.common.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.common.resources.ResourcesImpl
 
-@Module
-internal interface CommonUtilsModule {
-
-    @Binds
-    fun provideContextProvider(impl: ContextProviderImpl): ContextProvider
-
-    companion object {
-        @JvmStatic
-        @Provides
-        fun provideResources(resources: ResourcesImpl): Resources {
-            return resources
-        }
-
-        @JvmStatic
-        @Provides
-        @CommonUtilsScope
-        fun provideGson(): Gson {
-            return GsonBuilder().create()
-        }
-    }
+fun commonUtilsModule() = module {
+    factoryOf(::ContextProviderImpl) bind ContextProvider::class
+    factoryOf(::ScopeProvider)
+    factoryOf(::ResourcesImpl) bind Resources::class
+    single<Gson> { GsonBuilder().create() }
 }

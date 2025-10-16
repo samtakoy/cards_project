@@ -2,19 +2,18 @@ package ru.samtakoy.features.preferences.data
 
 import android.content.Context
 import android.preference.PreferenceManager
-import javax.inject.Inject
 
-class AppPreferencesImpl @Inject constructor() : AppPreferences {
-    @JvmField
-    @Inject
-    var mContext: Context? = null
+/** TODO переделать (префы с привязкой к имени файла всесто app) */
+class AppPreferencesImpl(
+    private val context: Context
+) : AppPreferences {
 
     var newRepeatsNotificationMinUtc: Long
         // --
-        get() = PreferenceManager.getDefaultSharedPreferences(mContext)
+        get() = PreferenceManager.getDefaultSharedPreferences(context)
             .getLong(NEW_REPEATS_NOTIFICATION_MIN_UTC, 0)
         set(value) {
-            PreferenceManager.getDefaultSharedPreferences(mContext)
+            PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putLong(NEW_REPEATS_NOTIFICATION_MIN_UTC, value)
                 .apply()
@@ -22,12 +21,12 @@ class AppPreferencesImpl @Inject constructor() : AppPreferences {
 
     // --
     override fun getString(key: String, defValue: String?): String? {
-        return PreferenceManager.getDefaultSharedPreferences(mContext)
+        return PreferenceManager.getDefaultSharedPreferences(context)
             .getString(key, defValue)
     }
 
     override fun setString(key: String, value: String?) {
-        PreferenceManager.getDefaultSharedPreferences(mContext)
+        PreferenceManager.getDefaultSharedPreferences(context)
             .edit()
             .putString(key, value)
             .apply()
@@ -35,10 +34,10 @@ class AppPreferencesImpl @Inject constructor() : AppPreferences {
 
     var newLearnsNotificationMinUtc: Long
         // --
-        get() = PreferenceManager.getDefaultSharedPreferences(mContext)
+        get() = PreferenceManager.getDefaultSharedPreferences(context)
             .getLong(NEW_LEARNS_NOTIFICATION_MIN_UTC, 0)
         set(value) {
-            PreferenceManager.getDefaultSharedPreferences(mContext)
+            PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putLong(NEW_LEARNS_NOTIFICATION_MIN_UTC, value)
                 .apply()
@@ -47,12 +46,12 @@ class AppPreferencesImpl @Inject constructor() : AppPreferences {
     // --
     // --
     fun getUncompletedNotificationMinUtc(): Long {
-        return PreferenceManager.getDefaultSharedPreferences(mContext)
+        return PreferenceManager.getDefaultSharedPreferences(context)
             .getLong(UNCOMPLETED_NOTIFICATION_MIN_UTC, 0)
     }
 
     override fun setUncompletedNotificationMinUtc(value: Long) {
-        PreferenceManager.getDefaultSharedPreferences(mContext)
+        PreferenceManager.getDefaultSharedPreferences(context)
             .edit()
             .putLong(UNCOMPLETED_NOTIFICATION_MIN_UTC, value)
             .apply()

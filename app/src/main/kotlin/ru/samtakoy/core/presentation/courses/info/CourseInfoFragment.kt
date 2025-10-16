@@ -13,22 +13,20 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import ru.samtakoy.R
-import ru.samtakoy.core.app.di.Di
 import ru.samtakoy.core.presentation.DialogHelper
 import ru.samtakoy.core.presentation.RouterHolder
-import ru.samtakoy.presentation.base.observe
-import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
-import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import ru.samtakoy.core.presentation.cards.CardsViewFragment.Companion.buildBundle
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.Event
-import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModelFactory
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModelImpl
 import ru.samtakoy.core.presentation.log.LogActivity
-import javax.inject.Inject
+import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 
 class CourseInfoFragment : Fragment(), ViewModelOwner {
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -41,10 +39,8 @@ class CourseInfoFragment : Fragment(), ViewModelOwner {
 
     private var mRouterHolder: RouterHolder? = null
 
-    @Inject
-    internal lateinit var viewModelFactory: CourseInfoViewModelFactory.Factory
-    private val viewModel: CourseInfoViewModelImpl by viewModels {
-        return@viewModels viewModelFactory.create(readLearnCourseId())
+    private val viewModel: CourseInfoViewModel by viewModel<CourseInfoViewModelImpl> {
+        parametersOf(readLearnCourseId())
     }
     override fun getViewModel(): AbstractViewModel = viewModel
 
@@ -58,10 +54,7 @@ class CourseInfoFragment : Fragment(), ViewModelOwner {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Di.appComponent.inject(this)
-
         super.onCreate(savedInstanceState)
-
         setHasOptionsMenu(true)
     }
 

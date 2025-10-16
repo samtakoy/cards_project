@@ -1,21 +1,15 @@
 package ru.samtakoy.domain.learncourse
 
 import android.content.Context
-import ru.samtakoy.data.learncourse.CoursesRepository
 import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.data.learncourse.CoursesRepository
 import ru.samtakoy.domain.learncourse.schedule.Schedule
-import javax.inject.Inject
 
 // TODO rename to PlanCourseUseCase
-internal class CoursesPlannerImpl @Inject constructor() : CoursesPlanner {
-    @JvmField
-    @Inject
-    var mCtx: Context? = null
-
-    @JvmField
-    @Inject
-    var mCoursesRepository: CoursesRepository? = null
-
+internal class CoursesPlannerImpl(
+    private val mCtx: Context,
+    private val mCoursesRepository: CoursesRepository
+) : CoursesPlanner {
     override fun planUncompletedTasksChecking() {
         // TODO refactor
         // mCtx!!.startService(NotificationsPlannerService.getPlanUncompletedCheckingIntent(mCtx))

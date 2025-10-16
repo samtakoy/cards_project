@@ -8,9 +8,8 @@ import ru.samtakoy.data.common.db.MyRoomDb
 import ru.samtakoy.data.common.transaction.TransactionRepository
 import ru.samtakoy.domain.card.domain.model.Card
 import ru.samtakoy.domain.card.domain.model.CardWithTags
-import javax.inject.Inject
 
-internal class CardsRepositoryImpl @Inject constructor(
+internal class CardsRepositoryImpl(
     private val db: MyRoomDb,
     private val transactionRepository: TransactionRepository,
     private val cardDao: CardDao,

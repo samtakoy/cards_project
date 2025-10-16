@@ -1,12 +1,11 @@
 package ru.samtakoy.domain.view
 
 import kotlinx.coroutines.flow.Flow
-import ru.samtakoy.domain.card.CardInteractor
 import ru.samtakoy.common.utils.CollectionUtils
 import ru.samtakoy.data.view.ViewHistoryRepository
-import javax.inject.Inject
+import ru.samtakoy.domain.card.CardInteractor
 
-internal class ViewHistoryInteractorImpl @Inject constructor(
+internal class ViewHistoryInteractorImpl(
     private val viewHistoryRepository: ViewHistoryRepository,
     private val cardInteractor: CardInteractor
 ) : ViewHistoryInteractor {

@@ -9,24 +9,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.samtakoy.R
-import ru.samtakoy.core.app.di.Di
 import ru.samtakoy.core.presentation.RouterHolder
+import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModel
+import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModelImpl
 import ru.samtakoy.presentation.base.composeContent
 import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
-import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModelFactory
-import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModelImpl
-import javax.inject.Inject
 
 class QPackSelectionFragment : Fragment(), ViewModelOwner {
 
-    @Inject
-    internal lateinit var viewModelFactory : QPackSelectionViewModelFactory
-    private val viewModel by viewModels<QPackSelectionViewModelImpl> {
-        viewModelFactory
-    }
+    private val viewModel: QPackSelectionViewModel by viewModel<QPackSelectionViewModelImpl>()
     override fun getViewModel(): AbstractViewModel = viewModel
 
     private val navigation = QPacksWithFavsNavigationImpl()
@@ -39,11 +33,6 @@ class QPackSelectionFragment : Fragment(), ViewModelOwner {
     override fun onDetach() {
         navigation.onDetach()
         super.onDetach()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Di.appComponent.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

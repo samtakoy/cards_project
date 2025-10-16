@@ -1,8 +1,9 @@
 package ru.samtakoy.data.learncourse.di
 
-import dagger.Binds
-import dagger.Module
-import dagger.Provides
+import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 import ru.samtakoy.data.common.db.MyRoomDb
 import ru.samtakoy.data.learncourse.CoursesRepository
 import ru.samtakoy.data.learncourse.CoursesRepositoryImpl
@@ -20,37 +21,13 @@ import ru.samtakoy.data.learncourse.mapper.schedule.ScheduleMapperImpl
 import ru.samtakoy.data.learncourse.mapper.schedule.ScheduleTimeUnitMapper
 import ru.samtakoy.data.learncourse.mapper.schedule.ScheduleTimeUnitMapperImpl
 
-@Module
-internal interface LearnCourseDataModule {
-
-    @Binds
-    fun bindsScheduleItemMapper(impl: ScheduleItemMapperImpl): ScheduleItemMapper
-
-    @Binds
-    fun bindsScheduleMapper(impl: ScheduleMapperImpl): ScheduleMapper
-
-    @Binds
-    fun bindsScheduleTimeUnitMapper(impl: ScheduleTimeUnitMapperImpl): ScheduleTimeUnitMapper
-
-    @Binds
-    fun bindsLearnCourseModeMapper(impl: LearnCourseModeMapperImpl): LearnCourseModeMapper
-
-    @Binds
-    fun bindsCourseTypeMapper(impl: CourseTypeMapperImpl): CourseTypeMapper
-
-    @Binds
-    fun bindsLearnCourseMapper(impl: LearnCourseMapperImpl): LearnCourseMapper
-
-    @Binds
-    fun bindsCoursesRepository(impl: CoursesRepositoryImpl): CoursesRepository
-
-
-    companion object {
-
-        @JvmStatic
-        @Provides
-        fun providesLearnCourseDao(db: MyRoomDb): LearnCourseDao {
-            return db.courseDao()
-        }
-    }
+internal fun learnCourseDataModule() = module {
+    factoryOf(::ScheduleItemMapperImpl) bind ScheduleItemMapper::class
+    factoryOf(::ScheduleMapperImpl) bind ScheduleMapper::class
+    factoryOf(::ScheduleTimeUnitMapperImpl) bind ScheduleTimeUnitMapper::class
+    factoryOf(::LearnCourseModeMapperImpl) bind LearnCourseModeMapper::class
+    factoryOf(::CourseTypeMapperImpl) bind CourseTypeMapper::class
+    factoryOf(::LearnCourseMapperImpl) bind LearnCourseMapper::class
+    singleOf(::CoursesRepositoryImpl) bind CoursesRepository::class
+    single<LearnCourseDao> { get<MyRoomDb>().courseDao() }
 }

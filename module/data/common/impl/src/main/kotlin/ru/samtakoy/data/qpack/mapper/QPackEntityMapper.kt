@@ -2,14 +2,13 @@ package ru.samtakoy.data.qpack.mapper
 
 import ru.samtakoy.data.qpack.QPackEntity
 import ru.samtakoy.domain.qpack.QPack
-import javax.inject.Inject
 
 internal interface QPackEntityMapper {
     fun mapToEntity(data: QPack): QPackEntity
     fun mapToDomain(data: QPackEntity): QPack
 }
 
-internal class QPackEntityMapperImpl @Inject constructor() : QPackEntityMapper {
+internal class QPackEntityMapperImpl() : QPackEntityMapper {
     override fun mapToEntity(data: QPack): QPackEntity {
         return QPackEntity(
             id = data.id,

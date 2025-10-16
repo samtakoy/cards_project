@@ -3,9 +3,8 @@ package ru.samtakoy.domain.favorites
 import kotlinx.coroutines.flow.Flow
 import ru.samtakoy.data.card.CardsRepository
 import ru.samtakoy.data.qpack.QPacksRepository
-import javax.inject.Inject
 
-class FavoritesInteractorImpl @Inject constructor(
+class FavoritesInteractorImpl(
     private val cardsRepository: CardsRepository,
     private val qPacksRepository: QPacksRepository
 ) : FavoritesInteractor {

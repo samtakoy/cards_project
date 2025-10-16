@@ -1,14 +1,13 @@
 package ru.samtakoy.domain.learncourse
 
 import kotlinx.coroutines.flow.Flow
+import ru.samtakoy.data.card.CardsRepository
 import ru.samtakoy.data.learncourse.CourseViewRepository
 import ru.samtakoy.data.learncourse.CoursesRepository
 import ru.samtakoy.domain.learncourse.schedule.Schedule
-import ru.samtakoy.data.card.CardsRepository
 import java.util.Date
-import javax.inject.Inject
 
-internal class NCoursesInteractorImpl @Inject constructor(
+internal class NCoursesInteractorImpl(
     private val mCardsRepository: CardsRepository,
     private val mCourseViewRepository: CourseViewRepository,
     private val mCoursesRepository: CoursesRepository,

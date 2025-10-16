@@ -7,10 +7,9 @@ android {
 }
 
 dependencies {
-    // dagger
-    api(libs.google.dagger)
-    annotationProcessor(libs.google.dagger.compiler)
-    kapt(libs.google.dagger.compiler)
+    // koin
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
 
     implementation(project(":module:data:common:api"))
     implementation(project(":module:data:common:api"))

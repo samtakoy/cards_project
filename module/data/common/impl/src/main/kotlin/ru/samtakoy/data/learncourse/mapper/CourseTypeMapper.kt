@@ -2,14 +2,13 @@ package ru.samtakoy.data.learncourse.mapper
 
 import ru.samtakoy.data.learncourse.model.CourseTypeEntity
 import ru.samtakoy.domain.learncourse.CourseType
-import javax.inject.Inject
 
 internal interface CourseTypeMapper {
     fun mapToDomain(data: CourseTypeEntity): CourseType
     fun mapToEntity(data: CourseType): CourseTypeEntity
 }
 
-internal class CourseTypeMapperImpl @Inject constructor() : CourseTypeMapper {
+internal class CourseTypeMapperImpl() : CourseTypeMapper {
     override fun mapToDomain(data: CourseTypeEntity): CourseType {
         return when (data) {
             CourseTypeEntity.PRIMARY -> CourseType.PRIMARY

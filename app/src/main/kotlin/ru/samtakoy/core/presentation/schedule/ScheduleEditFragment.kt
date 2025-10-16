@@ -14,21 +14,19 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import ru.samtakoy.R
-import ru.samtakoy.core.app.di.Di
-import ru.samtakoy.presentation.base.observe
-import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
-import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.Event
-import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModelFactory
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModelImpl
 import ru.samtakoy.domain.learncourse.schedule.ScheduleTimeUnit
 import ru.samtakoy.domain.learncourse.schedule.serialize.ParcelableSchedule
 import ru.samtakoy.domain.learncourse.schedule.serialize.toDomainOrEmpty
+import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import ru.samtakoy.presentation.utils.toStringId
-import javax.inject.Inject
 
 class ScheduleEditFragment : DialogFragment(), ViewModelOwner {
     private var mScheduleView: TextView? = null
@@ -39,19 +37,13 @@ class ScheduleEditFragment : DialogFragment(), ViewModelOwner {
     private var mScheduleCurItemAddButton: Button? = null
     private var mScheduleItemButtons: ViewGroup? = null
 
-    @Inject
-    internal lateinit var viewModelFactory: ScheduleEditViewModelFactory.Factory
-    private val viewModel by viewModels<ScheduleEditViewModelImpl> {
-        viewModelFactory.create(
-            schedule = (requireArguments().getParcelable(ARG_SCHEDULE_STRING) as? ParcelableSchedule).toDomainOrEmpty()
+    private val viewModel: ScheduleEditViewModel by viewModel<ScheduleEditViewModelImpl> {
+        parametersOf(
+            // schedule
+            (requireArguments().getParcelable(ARG_SCHEDULE_STRING) as? ParcelableSchedule).toDomainOrEmpty()
         )
     }
     override fun getViewModel(): AbstractViewModel = viewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Di.appComponent.inject(this)
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val v = layoutInflater.inflate(R.layout.fragment_schedule_edit, null)

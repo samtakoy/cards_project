@@ -3,19 +3,18 @@ package ru.samtakoy.core.presentation.qpack.list.mapper
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import ru.samtakoy.common.utils.DateUtils.DATE_FORMAT
-import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.core.presentation.design_system.base.model.LongUiId
 import ru.samtakoy.core.presentation.qpack.list.model.QPackListItemUiModel
 import ru.samtakoy.core.presentation.qpack.list.model.QPackSortType
 import ru.samtakoy.domain.qpack.QPack
-import javax.inject.Inject
+import ru.samtakoy.presentation.utils.asAnnotated
 
 internal interface QPackListItemUiModelMapper {
     fun map(item: QPack, sortType: QPackSortType): QPackListItemUiModel
     fun mapImmutableList(items: List<QPack>, sortType: QPackSortType): ImmutableList<QPackListItemUiModel>
 }
 
-internal class QPackListItemUiModelMapperImpl @Inject constructor(): QPackListItemUiModelMapper {
+internal class QPackListItemUiModelMapperImpl(): QPackListItemUiModelMapper {
     override fun map(
         item: QPack,
         sortType: QPackSortType

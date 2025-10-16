@@ -14,14 +14,11 @@ import android.widget.Toast
 import androidx.annotation.AnimRes
 import androidx.annotation.AnimatorRes
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import ru.samtakoy.R
-import ru.samtakoy.core.app.di.Di
 import ru.samtakoy.core.presentation.RouterHolder
-import ru.samtakoy.presentation.base.observe
-import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
-import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import ru.samtakoy.core.presentation.cards.answer.CardAnswerFragment
 import ru.samtakoy.core.presentation.cards.answer.CardAnswerPresenter
 import ru.samtakoy.core.presentation.cards.question.CardQuestionFragment
@@ -32,15 +29,16 @@ import ru.samtakoy.core.presentation.cards.types.AnimationType
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.core.presentation.cards.vm.CardsViewViewModel
 import ru.samtakoy.core.presentation.cards.vm.CardsViewViewModel.Event
-import ru.samtakoy.core.presentation.cards.vm.CardsViewViewModelFactory
 import ru.samtakoy.core.presentation.cards.vm.CardsViewViewModelImpl
 import ru.samtakoy.core.presentation.log.LogActivity
 import ru.samtakoy.core.presentation.misc.edit_text_block.EditTextBlockDialogFragment
 import ru.samtakoy.core.presentation.showDialogFragment
 import ru.samtakoy.domain.learncourse.schedule.Schedule
+import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import kotlin.math.floor
 import kotlin.math.min
-import javax.inject.Inject
 
 class CardsViewFragment : Fragment(),
     CardQuestionPresenter.Callbacks,
@@ -53,10 +51,8 @@ class CardsViewFragment : Fragment(),
 
     private var mRouterHolder: RouterHolder? = null
 
-    @Inject
-    internal lateinit var viewModelFactory: CardsViewViewModelFactory.Factory
-    private val viewModel: CardsViewViewModelImpl by viewModels {
-        viewModelFactory.create(
+    private val viewModel: CardsViewViewModel by viewModel<CardsViewViewModelImpl> {
+        parametersOf(
             readViewHistoryItemId(),
             readViewMode()
         )
@@ -76,11 +72,6 @@ class CardsViewFragment : Fragment(),
         super.onObserveViewModel()
         viewModel.getViewActionsAsFlow().observe(viewLifecycleOwner, ::onAction)
         viewModel.getViewStateAsFlow().observe(viewLifecycleOwner, ::onViewState)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Di.appComponent.inject(this)
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

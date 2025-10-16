@@ -3,14 +3,13 @@ package ru.samtakoy.data.learncourse.mapper
 import ru.samtakoy.data.learncourse.mapper.schedule.ScheduleMapper
 import ru.samtakoy.data.learncourse.model.LearnCourseEntity
 import ru.samtakoy.domain.learncourse.LearnCourse
-import javax.inject.Inject
 
 internal interface LearnCourseMapper {
     fun mapToDomain(data: LearnCourseEntity): LearnCourse
     fun mapToEntity(data: LearnCourse): LearnCourseEntity
 }
 
-internal class LearnCourseMapperImpl @Inject constructor(
+internal class LearnCourseMapperImpl(
     private val courseTypeMapper: CourseTypeMapper,
     private val courseModeMapper: LearnCourseModeMapper,
     private val scheduleMapper: ScheduleMapper

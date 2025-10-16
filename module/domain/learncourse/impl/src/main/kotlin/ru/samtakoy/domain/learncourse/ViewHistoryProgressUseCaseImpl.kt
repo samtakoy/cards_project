@@ -3,9 +3,8 @@ package ru.samtakoy.domain.learncourse
 import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.domain.view.ViewHistoryItem
-import javax.inject.Inject
 
-internal class ViewHistoryProgressUseCaseImpl @Inject constructor(
+internal class ViewHistoryProgressUseCaseImpl(
     private val viewHistoryInteractor: ViewHistoryInteractor,
     private val courseProgressUseCase: CourseProgressUseCase,
 ) : ViewHistoryProgressUseCase {

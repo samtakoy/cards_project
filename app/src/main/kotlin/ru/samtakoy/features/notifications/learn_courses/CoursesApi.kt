@@ -10,43 +10,31 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.common.utils.DateUtils
-import ru.samtakoy.domain.learncourse.getRepeatDateDebug
-import ru.samtakoy.domain.learncourse.getRepeatDateUTCMillis
-import ru.samtakoy.data.learncourse.utils.LearnCourseHelper
-import ru.samtakoy.data.learncourse.CoursesRepository
 import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.data.learncourse.CoursesRepository
+import ru.samtakoy.data.learncourse.utils.LearnCourseHelper
 import ru.samtakoy.domain.learncourse.LearnCourse
 import ru.samtakoy.domain.learncourse.LearnCourseMode
+import ru.samtakoy.domain.learncourse.getRepeatDateDebug
+import ru.samtakoy.domain.learncourse.getRepeatDateUTCMillis
 import ru.samtakoy.domain.learncourse.schedule.ScheduleTimeUnit
 import ru.samtakoy.features.notifications.NotificationsHelper
 import ru.samtakoy.features.notifications.NotificationsPlannerService
-import kotlin.Array
-import kotlin.Boolean
-import kotlin.Int
-import kotlin.Long
-import javax.inject.Inject
 
-abstract class CoursesApi {
-    @Inject
-    lateinit var mContext: Context
-
-    @Inject
-    lateinit var mResources: Resources
-
-    @Inject
-    lateinit var mCoursesRepository: CoursesRepository
-
-    fun dispose() {
-
-    }
+// TODO тут все пересмотреть и переделать
+abstract class CoursesApi(
+    protected val context: Context,
+    protected val resources: Resources,
+    protected val coursesRepository: CoursesRepository,
+) {
 
     protected abstract val learnCourseMode: LearnCourseMode
 
     protected val appContext: Context?
-        get() = mContext.getApplicationContext()
+        get() = context.getApplicationContext()
 
     protected val alarmManager: AlarmManager?
-        get() = mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager?
+        get() = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager?
 
     protected val currentDateLong: Long
         get() = DateUtils.currentTimeLong
@@ -67,7 +55,7 @@ abstract class CoursesApi {
         get() = LearnCourseHelper.getLearnCourseIds(this.newLearnCourses)
 
     val newLearnCourses: List<LearnCourse>
-        get() = mCoursesRepository.getOrderedCoursesLessThan(
+        get() = coursesRepository.getOrderedCoursesLessThan(
             this.learnCourseMode,
             DateUtils.dateFromDbSerialized(this.currentDateLong)
         )
@@ -111,7 +99,7 @@ abstract class CoursesApi {
         val currentDateLong = this.currentDateLong
         val currentDate = DateUtils.dateFromDbSerialized(currentDateLong)
         val newRepeatCourses: List<LearnCourse> =
-            mCoursesRepository.getOrderedCoursesLessThan(lcMode, currentDate)
+            coursesRepository.getOrderedCoursesLessThan(lcMode, currentDate)
 
         if (newRepeatCourses.size > 0) {
             MyLog.add(
@@ -134,7 +122,7 @@ abstract class CoursesApi {
         }
 
         val futureRepeatCourses: List<LearnCourse?> =
-            mCoursesRepository.getOrderedCoursesMoreThan(lcMode, currentDate)
+            coursesRepository.getOrderedCoursesMoreThan(lcMode, currentDate)
         if (futureRepeatCourses.size == 0) {
             MyLog.add("NONE to alarm")
             cancelLearnCoursesAlarm()
@@ -189,7 +177,7 @@ abstract class CoursesApi {
             return
         }
 
-        val notification = NotificationCompat.Builder(mContext, NotificationsHelper.CHANNEL_ID)
+        val notification = NotificationCompat.Builder(context, NotificationsHelper.CHANNEL_ID)
             .setTicker(title)
             .setSmallIcon(icon)
 
@@ -202,21 +190,21 @@ abstract class CoursesApi {
             .setDeleteIntent(shiftIntent)
             .setAutoCancel(true)
             .build()
-        val nManager = NotificationManagerCompat.from(mContext)
+        val nManager = NotificationManagerCompat.from(context)
         // TODO
         // nManager.notify(notificationId, notification)
     }
 
     /** скрыть нотификацию, что курс по времени готов к обучению  */
     protected fun hideNotificationForReadyCourses(notificationId: Int) {
-        val nManager = NotificationManagerCompat.from(mContext)
+        val nManager = NotificationManagerCompat.from(context)
         nManager.cancel(notificationId)
     }
 
     /** отменить AlarmManager по PendingIntent  */
     protected fun cancelAlarmByPendingIntent(pIntent: PendingIntent?) {
         if (pIntent != null) {
-            val aManager = mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val aManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             aManager.cancel(pIntent)
             pIntent.cancel()
         }

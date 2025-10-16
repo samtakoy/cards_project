@@ -5,9 +5,8 @@ import ru.samtakoy.domain.qpack.QPackInteractor
 import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.domain.view.ViewHistoryItem
 import java.util.Date
-import javax.inject.Inject
 
-internal class CourseProgressUseCaseImpl @Inject constructor(
+internal class CourseProgressUseCaseImpl(
     private val transactionRepository: TransactionRepository,
     private val coursesInteractor: NCoursesInteractor,
     private val viewHistoryInteractor: ViewHistoryInteractor,

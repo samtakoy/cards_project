@@ -21,9 +21,9 @@ import ru.samtakoy.features.notifications.NotificationsHelper
 import ru.samtakoy.features.notifications.NotificationsPlannerService
 import ru.samtakoy.features.preferences.data.AppPreferences
 import java.util.EnumSet
-import javax.inject.Inject
 
-class UncompletedTaskApi @Inject constructor(
+// TODO тут все пересмотреть и переделать
+class UncompletedTaskApi(
     private val mContext: Context,
     private val mPreferences: AppPreferences,
     private val  mCoursesRepository: CoursesRepository

@@ -36,7 +36,7 @@ internal class CardAnswerViewModelImpl(
         wrongButton = viewStateMapper.mapWrongButton(viewMode),
         nextCardButton = viewStateMapper.mapNextCardButton(viewMode)
     )
-) {
+), CardAnswerViewModel {
     init {
         subscribeData()
     }

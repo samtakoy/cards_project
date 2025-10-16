@@ -2,14 +2,13 @@ package ru.samtakoy.data.view.mapper
 
 import ru.samtakoy.data.view.model.ViewHistoryEntity
 import ru.samtakoy.domain.view.ViewHistoryItem
-import javax.inject.Inject
 
 internal interface ViewHistoryEntityMapper {
     fun mapToEntity(item: ViewHistoryItem): ViewHistoryEntity
     fun mapToDomain(item: ViewHistoryEntity): ViewHistoryItem
 }
 
-internal class ViewHistoryEntityMapperImpl @Inject constructor(): ViewHistoryEntityMapper {
+internal class ViewHistoryEntityMapperImpl(): ViewHistoryEntityMapper {
     override fun mapToEntity(item: ViewHistoryItem): ViewHistoryEntity {
         return ViewHistoryEntity(
             id = item.id,

@@ -1,12 +1,11 @@
 package ru.samtakoy.domain.view.di
 
-import dagger.Binds
-import dagger.Module
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.domain.view.ViewHistoryInteractorImpl
 
-@Module
-internal interface ViewHistoryDomainModule {
-    @Binds
-    fun bindsViewHistoryInteractor(impl: ViewHistoryInteractorImpl): ViewHistoryInteractor
+fun viewHistoryDomainModule() = module {
+    factoryOf(::ViewHistoryInteractorImpl) bind ViewHistoryInteractor::class
 }

@@ -23,19 +23,16 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import ru.samtakoy.R
-import ru.samtakoy.core.app.di.Di
 import ru.samtakoy.core.presentation.RouterHolder
-import ru.samtakoy.presentation.base.observe
-import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
-import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import ru.samtakoy.core.presentation.cards.CardsViewFragment.Companion.buildBundle
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.core.presentation.courses.CourseEditDialogFragment
@@ -49,18 +46,17 @@ import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModel
 import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModel.Action
 import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModel.Event
 import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModel.State
-import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModelFactory
 import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModelImpl
 import ru.samtakoy.core.presentation.showDialogFragment
+import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import kotlin.math.max
-import javax.inject.Inject
 
 class QPackInfoFragment : Fragment(), CardViewingTypeSelectorListener, ViewModelOwner {
 
-    @Inject
-    internal lateinit var viewModelFactory: QPackInfoViewModelFactory.Factory
-    private val viewModel: QPackInfoViewModelImpl by viewModels {
-        return@viewModels viewModelFactory.create(requireArguments().getLong(ARG_QPACK_ID, -1))
+    private val viewModel: QPackInfoViewModel by viewModel<QPackInfoViewModelImpl> {
+        parametersOf(requireArguments().getLong(ARG_QPACK_ID, -1))
     }
     override fun getViewModel(): AbstractViewModel = viewModel
 
@@ -94,10 +90,7 @@ class QPackInfoFragment : Fragment(), CardViewingTypeSelectorListener, ViewModel
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Di.appComponent.inject(this)
-
         super.onCreate(savedInstanceState)
-
         setHasOptionsMenu(true)
     }
 

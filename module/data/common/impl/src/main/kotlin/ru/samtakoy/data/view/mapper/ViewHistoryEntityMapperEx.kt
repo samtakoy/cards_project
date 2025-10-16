@@ -2,13 +2,12 @@ package ru.samtakoy.data.view.mapper
 
 import ru.samtakoy.data.view.model.ViewHistoryEntityWithTheme
 import ru.samtakoy.domain.view.ViewHistoryItemWithInfo
-import javax.inject.Inject
 
 internal interface ViewHistoryEntityMapperEx {
     fun mapToDomain(item: ViewHistoryEntityWithTheme): ViewHistoryItemWithInfo
 }
 
-internal class ViewHistoryEntityMapperExImpl @Inject constructor(
+internal class ViewHistoryEntityMapperExImpl(
     private val viewHistoryEntityMapper: ViewHistoryEntityMapper
 ) : ViewHistoryEntityMapperEx {
 

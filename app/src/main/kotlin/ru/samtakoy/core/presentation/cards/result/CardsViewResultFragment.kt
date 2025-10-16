@@ -10,16 +10,13 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import ru.samtakoy.R
-import ru.samtakoy.core.app.di.Di
-import ru.samtakoy.presentation.base.observe
-import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
-import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
+import ru.samtakoy.core.presentation.cards.result.vm.CardsViewResultViewModel
 import ru.samtakoy.core.presentation.cards.result.vm.CardsViewResultViewModel.Action
 import ru.samtakoy.core.presentation.cards.result.vm.CardsViewResultViewModel.Event
 import ru.samtakoy.core.presentation.cards.result.vm.CardsViewResultViewModel.State
-import ru.samtakoy.core.presentation.cards.result.vm.CardsViewResultViewModelFactory
 import ru.samtakoy.core.presentation.cards.result.vm.CardsViewResultViewModelImpl
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.core.presentation.schedule.ScheduleEditFragment
@@ -27,8 +24,10 @@ import ru.samtakoy.core.presentation.schedule.ScheduleEditFragment.Companion.new
 import ru.samtakoy.core.presentation.showDialogFragment
 import ru.samtakoy.domain.learncourse.schedule.Schedule
 import ru.samtakoy.domain.learncourse.schedule.serialize.toParcelable
+import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import java.text.MessageFormat
-import javax.inject.Inject
 
 class CardsViewResultFragment : Fragment(), ViewModelOwner {
     private var mViewedCardsText: TextView? = null
@@ -37,21 +36,15 @@ class CardsViewResultFragment : Fragment(), ViewModelOwner {
     private var mScheduleBtn: Button? = null
     private var mOkBtn: Button? = null
 
-    @Inject
-    internal lateinit var viewModelFactory: CardsViewResultViewModelFactory.Factory
-    private val viewModel: CardsViewResultViewModelImpl by viewModels {
-        viewModelFactory.create(
-            viewItemId = requireArguments().getLong(ARG_VIEW_ITEM_ID, -1),
-            cardViewMode = requireArguments().getSerializable(ARG_VIEW_MODE) as CardViewMode
+    private val viewModel: CardsViewResultViewModel by viewModel<CardsViewResultViewModelImpl> {
+        parametersOf(
+            // viewItemId
+            requireArguments().getLong(ARG_VIEW_ITEM_ID, -1),
+            // cardViewMode
+            requireArguments().getSerializable(ARG_VIEW_MODE) as CardViewMode
         )
     }
     override fun getViewModel(): AbstractViewModel = viewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Di.appComponent.inject(this)
-
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_cards_view_result, container, false)

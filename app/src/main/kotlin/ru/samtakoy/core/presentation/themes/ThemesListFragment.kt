@@ -24,18 +24,15 @@ import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.setFragmentResultListener
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.misc.RealPathUtil
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import ru.samtakoy.R
 import ru.samtakoy.core.Const
-import ru.samtakoy.core.app.di.Di
 import ru.samtakoy.core.presentation.RouterHolder
-import ru.samtakoy.presentation.base.observe
-import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
-import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import ru.samtakoy.core.presentation.export_cards.BatchExportDialogFragment
 import ru.samtakoy.core.presentation.export_cards.BatchExportType
 import ru.samtakoy.core.presentation.import_cards.BatchImportDialogFragment
@@ -47,24 +44,21 @@ import ru.samtakoy.core.presentation.themes.mv.ThemeListViewModel
 import ru.samtakoy.core.presentation.themes.mv.ThemeListViewModel.Action
 import ru.samtakoy.core.presentation.themes.mv.ThemeListViewModel.Event
 import ru.samtakoy.core.presentation.themes.mv.ThemeListViewModel.State
-import ru.samtakoy.core.presentation.themes.mv.ThemeListViewModelFactory
+import ru.samtakoy.core.presentation.themes.mv.ThemeListViewModelImpl
 import ru.samtakoy.features.import_export.utils.ImportCardsOpts
+import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import java.io.File
 import java.lang.ref.WeakReference
-import javax.inject.Inject
 
 class ThemesListFragment : Fragment(), ViewModelOwner {
     private var mThemesRecycler: RecyclerView? = null
     private var mThemesAdapter: ThemesAdapter? = null
     private var mRouterHolder: RouterHolder? = null
 
-    @Inject
-    internal lateinit var viewModelFactory: ThemeListViewModelFactory.Factory
-    private val viewModel: ThemeListViewModel by viewModels {
-        viewModelFactory.create(
-            readThemeId(),
-            readThemeTitle()
-        )
+    private val viewModel: ThemeListViewModel by viewModel<ThemeListViewModelImpl> {
+        parametersOf(readThemeId(), readThemeTitle())
     }
     override fun getViewModel(): AbstractViewModel = viewModel
 
@@ -184,11 +178,6 @@ class ThemesListFragment : Fragment(), ViewModelOwner {
                 activity.invalidateMenu()
             }
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Di.appComponent.inject(this)
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

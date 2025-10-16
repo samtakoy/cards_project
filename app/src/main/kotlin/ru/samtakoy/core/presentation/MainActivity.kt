@@ -15,7 +15,6 @@ import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import ru.samtakoy.R
-import ru.samtakoy.core.app.di.Di
 import ru.samtakoy.presentation.base.viewmodel.FragmentViewModelLifecycleCallbacks
 import ru.samtakoy.common.utils.MyLog.add
 import timber.log.Timber
@@ -34,8 +33,6 @@ class MainActivity : AppCompatActivity(), RouterHolder {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Di.appComponent.inject(this)
-
         super.onCreate(savedInstanceState)
 
         // Подписка на данные вью моделей фрагментов

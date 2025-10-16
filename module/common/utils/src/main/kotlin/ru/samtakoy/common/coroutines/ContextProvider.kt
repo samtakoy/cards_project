@@ -2,7 +2,6 @@ package ru.samtakoy.common.coroutines
 
 import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext
-import javax.inject.Inject
 
 interface ContextProvider {
     val main: CoroutineContext
@@ -10,7 +9,7 @@ interface ContextProvider {
     val calc: CoroutineContext
 }
 
-internal class ContextProviderImpl @Inject constructor() : ContextProvider {
+internal class ContextProviderImpl() : ContextProvider {
     override val main: CoroutineContext by lazy { Dispatchers.Main }
     override val io: CoroutineContext by lazy { Dispatchers.IO }
     override val calc: CoroutineContext by lazy { Dispatchers.Default }

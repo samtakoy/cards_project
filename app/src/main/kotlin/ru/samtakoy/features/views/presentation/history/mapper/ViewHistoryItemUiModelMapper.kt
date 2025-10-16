@@ -3,16 +3,15 @@ package ru.samtakoy.features.views.presentation.history.mapper
 import ru.samtakoy.R
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.common.utils.DateUtils.DATE_FORMAT
-import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.domain.view.ViewHistoryItemWithInfo
 import ru.samtakoy.features.views.presentation.history.components.OneViewHistoryItemModel
-import javax.inject.Inject
+import ru.samtakoy.presentation.utils.asAnnotated
 
 internal interface ViewHistoryItemUiModelMapper {
     fun map(item: ViewHistoryItemWithInfo): OneViewHistoryItemModel
 }
 
-internal class ViewHistoryItemUiModelMapperImpl @Inject constructor(
+internal class ViewHistoryItemUiModelMapperImpl(
     private val resources: Resources
 ) : ViewHistoryItemUiModelMapper {
     override fun map(item: ViewHistoryItemWithInfo): OneViewHistoryItemModel {

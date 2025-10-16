@@ -1,7 +1,8 @@
 package ru.samtakoy.domain.learncourse.di
 
-import dagger.Binds
-import dagger.Module
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 import ru.samtakoy.domain.learncourse.CourseProgressUseCase
 import ru.samtakoy.domain.learncourse.CourseProgressUseCaseImpl
 import ru.samtakoy.domain.learncourse.CoursesPlanner
@@ -11,17 +12,9 @@ import ru.samtakoy.domain.learncourse.NCoursesInteractorImpl
 import ru.samtakoy.domain.learncourse.ViewHistoryProgressUseCase
 import ru.samtakoy.domain.learncourse.ViewHistoryProgressUseCaseImpl
 
-@Module
-internal interface LearnCourseDomainModule {
-    @Binds
-    fun bindsCoursesInteractor(impl: NCoursesInteractorImpl): NCoursesInteractor
-
-    @Binds
-    fun bindsCourseProgressUseCase(impl: CourseProgressUseCaseImpl): CourseProgressUseCase
-
-    @Binds
-    fun bindsCoursesPlanner(impl: CoursesPlannerImpl): CoursesPlanner
-
-    @Binds
-    fun bindsViewHistoryProgressUseCase(impl: ViewHistoryProgressUseCaseImpl): ViewHistoryProgressUseCase
+fun learnCourseDomainModule() = module {
+    factoryOf(::NCoursesInteractorImpl) bind NCoursesInteractor::class
+    factoryOf(::CourseProgressUseCaseImpl) bind CourseProgressUseCase::class
+    factoryOf(::CoursesPlannerImpl) bind CoursesPlanner::class
+    factoryOf(::ViewHistoryProgressUseCaseImpl) bind ViewHistoryProgressUseCase::class
 }

@@ -3,9 +3,8 @@ package ru.samtakoy.common.coroutines
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import java.io.Closeable
-import javax.inject.Inject
 
-class ScopeProvider @Inject constructor(
+class ScopeProvider(
     contextProvider: ContextProvider
 ) : Closeable {
     private var job = SupervisorJob()

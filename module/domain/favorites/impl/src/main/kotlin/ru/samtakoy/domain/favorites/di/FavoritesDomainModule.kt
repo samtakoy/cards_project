@@ -1,12 +1,11 @@
 package ru.samtakoy.domain.favorites.di
 
-import dagger.Binds
-import dagger.Module
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 import ru.samtakoy.domain.favorites.FavoritesInteractor
 import ru.samtakoy.domain.favorites.FavoritesInteractorImpl
 
-@Module
-internal interface FavoritesDomainModule {
-    @Binds
-    fun bindsFavoritesInteractor(impl: FavoritesInteractorImpl): FavoritesInteractor
+fun favoritesDomainModule() = module {
+    factoryOf(::FavoritesInteractorImpl) bind FavoritesInteractor::class
 }

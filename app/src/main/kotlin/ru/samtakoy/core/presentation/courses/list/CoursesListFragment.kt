@@ -14,23 +14,19 @@ import android.widget.Toast
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.apache.commons.lang3.ArrayUtils
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import ru.samtakoy.R
-import ru.samtakoy.core.app.di.Di
 import ru.samtakoy.core.presentation.RouterHolder
-import ru.samtakoy.presentation.base.observe
-import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
-import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import ru.samtakoy.core.presentation.courses.CourseEditDialogFragment
 import ru.samtakoy.core.presentation.courses.info.CourseInfoFragment.Companion.buildBundle
 import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModel
 import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModel.Action
 import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModel.Event
 import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModel.State
-import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModelFactory
 import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModelImpl
 import ru.samtakoy.core.presentation.courses.model.CourseItemUiModel
 import ru.samtakoy.core.presentation.courses.model.CoursesAdapter
@@ -40,7 +36,9 @@ import ru.samtakoy.core.presentation.showDialogFragment
 import ru.samtakoy.domain.learncourse.LearnCourseMode
 import ru.samtakoy.domain.learncourse.listToPrimitiveArray
 import ru.samtakoy.domain.learncourse.primitiveArrayToList
-import javax.inject.Inject
+import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
+import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 
 class CoursesListFragment : Fragment(), CourseClickListener, ViewModelOwner {
     private var mCoursesIsEmptyLabel: TextView? = null
@@ -85,21 +83,17 @@ class CoursesListFragment : Fragment(), CourseClickListener, ViewModelOwner {
         }
     }
 
-    @Inject
-    internal lateinit var viewModelFactory: CoursesListViewModelFactory.Factory
-    private val viewModel: CoursesListViewModelImpl by viewModels {
-        viewModelFactory.create(
-            targetQPackId = readTargetPackId(),
-            targetModes = readTargetModes(),
-            targetCourseIds = readTargetCourseIds()
+    private val viewModel: CoursesListViewModel by viewModel<CoursesListViewModelImpl> {
+        parametersOf(
+            // targetQPackId
+            readTargetPackId(),
+            // targetModes
+            readTargetModes(),
+            // targetCourseIds
+            readTargetCourseIds()
         )
     }
     override fun getViewModel(): AbstractViewModel = viewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Di.appComponent.inject(this)
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

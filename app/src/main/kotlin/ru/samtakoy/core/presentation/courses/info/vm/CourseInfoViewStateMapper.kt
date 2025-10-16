@@ -10,7 +10,6 @@ import ru.samtakoy.domain.view.ViewHistoryItem
 import ru.samtakoy.presentation.utils.toStringView
 import ru.samtakoy.presentation.utils.toStringViewWithPrev
 import java.text.MessageFormat
-import javax.inject.Inject
 
 internal interface CourseInfoViewStateMapper {
     fun mapData(
@@ -19,7 +18,7 @@ internal interface CourseInfoViewStateMapper {
     ): CourseInfoViewModel.State.Type.Data
 }
 
-internal class CourseInfoViewStateMapperImpl @Inject constructor(
+internal class CourseInfoViewStateMapperImpl(
     private val resources: Resources
 ): CourseInfoViewStateMapper {
 
