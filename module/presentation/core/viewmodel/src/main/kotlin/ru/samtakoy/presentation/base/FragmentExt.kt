@@ -17,9 +17,7 @@ fun Fragment.composeContent(
         )
         id = rootViewId
         setContent {
-            MaterialTheme {
-                block()
-            }
+            block()
         }
     }
 }

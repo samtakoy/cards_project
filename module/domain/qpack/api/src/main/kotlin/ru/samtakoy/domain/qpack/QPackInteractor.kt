@@ -6,6 +6,8 @@ import java.util.Date
 interface QPackInteractor {
     suspend fun getQPack(qPackId: Long): QPack?
     fun getQPackAsFlow(qPackId: Long): Flow<QPack>
+    suspend fun addQPack(qPack: QPack): Long
+    suspend fun updateQPack(qPack: QPack)
     suspend fun deleteQPack(qPackId: Long)
     suspend fun updateQPackViewCount(qPackId: Long, currentTime: Date)
     fun getChildQPacksAsFlow(themeId: Long): Flow<List<QPack>>

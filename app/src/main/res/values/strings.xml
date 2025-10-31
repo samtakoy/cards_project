@@ -11,44 +11,8 @@
     <string name="db_request_err_message">Ошибка при запросе к базе данных</string>
     <string name="common_err_message">Что-то пошло не так</string>
 
-    <string name="fragment_themes_menu_item_add">add</string>
-    <string name="fragment_themes_menu_item_import_cards">import</string>
 
-    <!-- импорт в чистую базу -->
-    <string name="menu_item_import_from_folder_all">import from folder</string>
-    <string name="menu_item_from_folder">from folder...</string>
-
-
-    <!-- импорт в чистую базу -->
-    <string name="menu_item_import_from_zip_all">import from ZIP</string>
-    <string name="menu_item_from_zip">from ZIP...</string>
-        <!-- импортируются только паки без id (новые) -->
-        <string name="menu_item_import_new">import only new</string>
-        <!-- обновление по айдишникам, но запрещено создавать пак с id -->
-        <string name="menu_item_update_exists">update only exists</string>
-        <!-- вся информация об id в импоритруемом  файле игнорируется -->
-        <string name="menu_item_import_as_new">import/update as new</string>
-
-
-    <string name="fragment_themes_menu_item_remote_import_cards">online import</string>
-    <string name="fragment_themes_menu_item_export_all_to">export all to folder</string>
-    <string name="fragment_themes_menu_item_export_all_to_email">export all to email</string>
-    <!--string name="fragment_themes_menu_item_export_cards">export</string-->
-    <string name="fragment_themes_menu_item_send_cards">export by email</string>
-    <string name="fragment_themes_menu_item_delete_theme">delete</string>
-    <!--string name="fragment_themes_menu_item_show_courses">all courses</string-->
-    <string name="menu_item_settings">settings</string>
-
-    <string name="fragment_dialog_theme_add_title">Enter Theme name</string>
-    <string name="fragment_themes_list_cant_read_file_size_msg">File size read error</string>
-    <string name="fragment_themes_list_cant_open_file_msg">File open error</string>
-    <string name="fragment_themes_list_cant_save_file_msg">File save error</string>
-    <string name="fragment_themes_list_cant_send_file_msg">File sending error</string>
-    <string name="fragment_themes_list_cant_delete_theme_msg">Theme deleting error</string>
-    <!--string name="fragment_themes_list_cant_save_file_msg2">File save error 2</string-->
-    <string name="fragment_themes_list_cards_export_ok">File export is successful</string>
-    <string name="fragment_themes_list_cards_cards_loading_error">Cards loading error</string>
-    <string name="fragment_themes_list_not_dir_msg">Not directory was selected</string>
+    <string name="feature_themes_list_title">по темам</string>
 
     <string name="fragment_dialog_pack_import_title">Importing....</string>
     <string name="fragment_dialog_pack_import_error_msg">Error on pack importing</string>
@@ -67,7 +31,7 @@
     <string name="qpack_btn_add_to_course">add to course</string>
     <string name="qpack_btn_view_courses">view courses</string>
     <string name="qpack_menu_delete">удалить</string>
-    <string name="qpack_cards_count">Карточек: $s</string>
+    <string name="qpack_cards_count">Карточек: %s</string>
     <string name="qpack_favorites_box">Важно</string>
 
     <string-array name="qpack_viewing_types">
@@ -182,14 +146,7 @@
     <string name="clear_db_confirmation_msg">Все карточки и курсы будут удалены безвозвратно. Удалить?</string>
     <string name="bottom_sheet_cards_title">Карточки</string>
 
-    <string name="main_drawer_themes">по темам</string>
-    <string name="main_drawer_qpacks">списком</string>
-    <string name="main_drawer_favorites">избранные карточки</string>
-    <string name="main_drawer_views_history">история просмотров</string>
-    <string name="main_drawer_qpacks_selection">выбор из наборов</string>
-    <string name="main_drawer_courses">расписания</string>
-    <string name="main_drawer_settings">настройки</string>
-
+    <!-- TODO remove -->
     <string name="main_drawer_open_nav_drawer">открыть</string>
     <string name="main_drawer_close_nav_drawer">закрыть</string>
 

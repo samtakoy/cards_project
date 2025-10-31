@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_themes_list_title">по темам</string>
+    <string name="feature_qpack_title">списком</string>
+    <string name="feature_favorites_title">избранные карточки</string>
+    <string name="feature_views_history_title">история просмотров</string>
+    <string name="feature_qpack_selection_title">выбор из наборов</string>
+    <string name="feature_courses_title">расписания</string>
+    <string name="feature_settings_title">настройки</string>
+</resources>

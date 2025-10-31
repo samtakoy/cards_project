@@ -6,10 +6,13 @@ import ru.samtakoy.domain.card.domain.model.Card
 interface CardInteractor {
     suspend fun clearDb()
 
+    suspend fun updateCard(card: Card)
+    suspend fun addCard(card: Card): Long
+    suspend fun getCardQPackId(cardId: Long): Long?
     fun getCardAsFlow(cardId: Long): Flow<Card?>
 
     // TODO make suspend
-    fun deleteCardWithRelationsSync(cardId: Long)
+    suspend fun deleteCardWithRelations(cardId: Long)
 
     suspend fun setCardNewQuestionText(cardId: Long, text: String)
 

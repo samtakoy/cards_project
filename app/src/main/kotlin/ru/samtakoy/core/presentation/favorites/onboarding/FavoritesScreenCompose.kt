@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,12 +19,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.toImmutableList
 import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.presentation.base.observeActionsWithLifecycle
-import ru.samtakoy.core.presentation.design_system.base.UiOffsets
-import ru.samtakoy.core.presentation.design_system.button.MyButton
-import ru.samtakoy.core.presentation.design_system.button.MyButtonModel
-import ru.samtakoy.core.presentation.design_system.scaffold.MySimpleScreenScaffold
+import ru.samtakoy.presentation.core.design_system.base.UiOffsets
+import ru.samtakoy.presentation.core.design_system.button.MyButton
+import ru.samtakoy.presentation.core.design_system.button.MyButtonUiModel
+import ru.samtakoy.presentation.core.design_system.scaffold.MySimpleScreenScaffold
 import ru.samtakoy.core.presentation.favorites.onboarding.mapper.FavoritesButtonsMapper
 import ru.samtakoy.core.presentation.favorites.onboarding.vm.FavoritesViewModel
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 
 @Composable
 internal fun FavoritesScreen(
@@ -78,7 +78,7 @@ private fun FavoritesScreenInternal(
             modifier = Modifier
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(UiOffsets.screenContentHOffset)
+            verticalArrangement = Arrangement.spacedBy(UiOffsets.listItemOffset)
         ) {
             Spacer(modifier = Modifier.weight(1f))
 
@@ -102,13 +102,13 @@ private fun FavoritesScreenInternal(
 
 @Preview
 @Composable
-private fun FavoritesScreenInternal_Preview() = MaterialTheme {
+private fun FavoritesScreenInternal_Preview() = MyTheme {
     FavoritesScreenInternal(
         viewState = FavoritesViewModel.State(
             isLoaderVisible = true,
             buttons = listOf(
-                MyButtonModel(FavoritesButtonsMapper.ButtonId.AllFavoriteCards, "test".asAnnotated()),
-                MyButtonModel(FavoritesButtonsMapper.ButtonId.AllFavoriteCards, "test2".asAnnotated())
+                MyButtonUiModel(FavoritesButtonsMapper.ButtonId.AllFavoriteCards, "test".asAnnotated()),
+                MyButtonUiModel(FavoritesButtonsMapper.ButtonId.AllFavoriteCards, "test2".asAnnotated())
             ).toImmutableList()
         ),
         onViewEvent = {},

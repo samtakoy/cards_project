@@ -11,3 +11,12 @@ fun CharSequence.asAnnotated(): AnnotatedString {
         AnnotatedString(this.toString())
     }
 }
+
+@Stable
+fun CharSequence.asA(): AnnotatedString {
+    return if (this is AnnotatedString) {
+        this
+    } else {
+        AnnotatedString(this.toString())
+    }
+}

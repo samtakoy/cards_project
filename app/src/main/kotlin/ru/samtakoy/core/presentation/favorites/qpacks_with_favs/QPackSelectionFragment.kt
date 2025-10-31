@@ -17,6 +17,7 @@ import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectio
 import ru.samtakoy.presentation.base.composeContent
 import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 
 class QPackSelectionFragment : Fragment(), ViewModelOwner {
 
@@ -37,11 +38,13 @@ class QPackSelectionFragment : Fragment(), ViewModelOwner {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return composeContent(R.id.compose_root) {
-            QPackSelectionScreen(
-                viewModel = viewModel,
-                onNavigationAction = navigation::onAction,
-                modifier = Modifier.fillMaxSize()
-            )
+            MyTheme {
+                QPackSelectionScreen(
+                    viewModel = viewModel,
+                    onNavigationAction = navigation::onAction,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
     }
 

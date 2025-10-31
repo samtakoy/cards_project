@@ -13,9 +13,6 @@ import ru.samtakoy.data.card.model.CardWithTagsEntity
 internal interface CardDao {
 
     @Insert
-    fun addCardSync(card: CardEntity): Long
-
-    @Insert
     suspend fun addCard(card: CardEntity): Long
 
     @Query("SELECT * FROM ${CardEntity.Companion.table} WHERE ${CardEntity.Companion._id}=:id")
@@ -25,7 +22,7 @@ internal interface CardDao {
     fun getCardAsFlow(id: Long): Flow<CardEntity?>
 
     @Query("SELECT ${CardEntity.Companion._qpack_id} FROM ${CardEntity.Companion.table} WHERE ${CardEntity.Companion._id}=:id")
-    fun getCardQPackId(id: Long): Long?
+    suspend fun getCardQPackId(id: Long): Long?
 
     @Query("SELECT * FROM ${CardEntity.Companion.table} WHERE ${CardEntity.Companion._qpack_id}=:qPackId")
     suspend fun getCardsFromQPack(qPackId: Long): List<CardEntity>
@@ -47,7 +44,7 @@ internal interface CardDao {
     suspend fun updateCard(card: CardEntity)
 
     @Query("DELETE FROM ${CardEntity.Companion.table} WHERE ${CardEntity.Companion._id} = :cardId")
-    fun deleteCard(cardId: Long)
+    suspend fun deleteCard(cardId: Long)
 
     @Query("DELETE FROM ${CardEntity.Companion.table} WHERE ${CardEntity.Companion._qpack_id} = :qPackId")
     suspend fun deleteQPackCards(qPackId: Long): Int

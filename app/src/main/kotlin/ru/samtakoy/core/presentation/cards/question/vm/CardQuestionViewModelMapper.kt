@@ -7,15 +7,15 @@ import ru.samtakoy.core.presentation.cards.question.vm.CardQuestionViewModelMapp
 import ru.samtakoy.core.presentation.cards.question.vm.CardQuestionViewModelMapper.Companion.PREV_CARD_BTN_ID
 import ru.samtakoy.core.presentation.cards.question.vm.CardQuestionViewModelMapper.Companion.VIEW_ANSWER_BTN_ID
 import ru.samtakoy.core.presentation.cards.types.CardViewMode
-import ru.samtakoy.core.presentation.design_system.base.model.LongUiId
-import ru.samtakoy.core.presentation.design_system.button.MyButtonModel
-import ru.samtakoy.core.presentation.design_system.selectable_item.MySelectableItemModel
+import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
+import ru.samtakoy.presentation.core.design_system.button.MyButtonUiModel
+import ru.samtakoy.presentation.core.design_system.selectable_item.MySelectableItemModel
 import ru.samtakoy.presentation.utils.asAnnotated
 
 interface CardQuestionViewModelMapper {
-    fun mapPrevCardButton(viewMode: CardViewMode): MyButtonModel?
-    fun mapViewAnswerButton(viewMode: CardViewMode): MyButtonModel?
-    fun mapNextCardButton(viewMode: CardViewMode): MyButtonModel?
+    fun mapPrevCardButton(viewMode: CardViewMode): MyButtonUiModel?
+    fun mapViewAnswerButton(viewMode: CardViewMode): MyButtonUiModel?
+    fun mapNextCardButton(viewMode: CardViewMode): MyButtonUiModel?
     fun mapFavoriteItem(isFavorite: Boolean): MySelectableItemModel
 
     companion object {
@@ -30,11 +30,11 @@ class CardQuestionViewModelMapperImpl(
     private val resources: Resources
 ): CardQuestionViewModelMapper {
 
-    override fun mapPrevCardButton(viewMode: CardViewMode): MyButtonModel? {
+    override fun mapPrevCardButton(viewMode: CardViewMode): MyButtonUiModel? {
         return when (viewMode) {
             CardViewMode.LEARNING,
             CardViewMode.REPEATING -> {
-                MyButtonModel(
+                MyButtonUiModel(
                     id = PREV_CARD_BTN_ID,
                     text = resources.getString(R.string.cards_view_previous_btn).asAnnotated()
                 )
@@ -43,19 +43,19 @@ class CardQuestionViewModelMapperImpl(
         }
     }
 
-    override fun mapViewAnswerButton(viewMode: CardViewMode): MyButtonModel? {
-        return MyButtonModel(
+    override fun mapViewAnswerButton(viewMode: CardViewMode): MyButtonUiModel? {
+        return MyButtonUiModel(
             id = VIEW_ANSWER_BTN_ID,
             text = resources.getString(R.string.cards_view_view_answer_btn).asAnnotated()
         )
     }
 
-    override fun mapNextCardButton(viewMode: CardViewMode): MyButtonModel? {
+    override fun mapNextCardButton(viewMode: CardViewMode): MyButtonUiModel? {
         return when (viewMode) {
             CardViewMode.LEARNING,
             CardViewMode.REPEATING -> null
             CardViewMode.REPEATING_FAST -> {
-                MyButtonModel(
+                MyButtonUiModel(
                     id = NEXT_CARD_BTN_ID,
                     text = resources.getString(R.string.cards_view_next_btn).asAnnotated()
                 )

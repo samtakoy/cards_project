@@ -1,6 +1,6 @@
 package ru.samtakoy.core.presentation.courses.model
 
-import ru.samtakoy.core.presentation.design_system.base.model.LongUiId
+import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 import ru.samtakoy.domain.learncourse.LearnCourse
 import ru.samtakoy.domain.learncourse.getDynamicTitle
 import ru.samtakoy.presentation.utils.asAnnotated

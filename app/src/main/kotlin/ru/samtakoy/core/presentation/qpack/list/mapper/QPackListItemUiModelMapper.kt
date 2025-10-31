@@ -3,7 +3,7 @@ package ru.samtakoy.core.presentation.qpack.list.mapper
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import ru.samtakoy.common.utils.DateUtils.DATE_FORMAT
-import ru.samtakoy.core.presentation.design_system.base.model.LongUiId
+import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 import ru.samtakoy.core.presentation.qpack.list.model.QPackListItemUiModel
 import ru.samtakoy.core.presentation.qpack.list.model.QPackSortType
 import ru.samtakoy.domain.qpack.QPack

@@ -15,9 +15,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import ru.samtakoy.presentation.utils.asAnnotated
-import ru.samtakoy.presentation.base.getLoremIpsum
-import ru.samtakoy.core.presentation.design_system.base.MyColors
-import ru.samtakoy.core.presentation.design_system.base.MyOffsets
+import ru.samtakoy.presentation.utils.getLoremIpsum
+import ru.samtakoy.presentation.core.design_system.base.MyColors
+import ru.samtakoy.presentation.core.design_system.base.MyOffsets
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 
 @Composable
 fun OneViewItemView(
@@ -77,7 +78,7 @@ fun OneViewItemView(
 
 @Preview
 @Composable
-private fun OneViewItemView_Preview() = MaterialTheme {
+private fun OneViewItemView_Preview() = MyTheme {
     Column(
         modifier = Modifier
             .background(MyColors.getScreenBackground())

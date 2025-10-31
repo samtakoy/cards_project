@@ -1,0 +1,54 @@
+plugins {
+    id("convention.android-lib.plugin")
+    id("kotlin-parcelize")
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinx.serialization)
+}
+
+android {
+    namespace = "ru.samtakoy.presentation.themes.impl"
+    buildFeatures {
+        compose = true
+    }
+}
+
+dependencies {
+    // Compose
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.bundles.compose)
+    implementation(libs.androidx.navigation.compose)
+
+    // koin
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.compose.navigation)
+
+    // filekit
+    implementation(libs.filekit.dialogs.compose)
+
+    implementation(projects.module.common.utils)
+
+    implementation(projects.module.platform.import.api)
+    implementation(projects.module.platform.permissions.api)
+
+    // implementation(projects.module.data.task.api)
+    implementation(projects.module.domain.task.model)
+
+    implementation(projects.module.domain.export.api)
+    implementation(projects.module.domain.import.api)
+    implementation(projects.module.domain.import.model)
+    implementation(projects.module.domain.theme.api)
+    implementation(projects.module.domain.theme.model)
+    implementation(projects.module.domain.qpack.api)
+    implementation(projects.module.domain.qpack.model)
+
+    implementation(projects.module.presentation.core.viewmodel)
+    implementation(projects.module.presentation.core.designsystem)
+    implementation(projects.module.presentation.core.appelements)
+    implementation(projects.module.presentation.core.utils)
+
+    implementation(projects.module.presentation.navigation.api)
+
+    implementation(projects.module.presentation.themes.api)
+}

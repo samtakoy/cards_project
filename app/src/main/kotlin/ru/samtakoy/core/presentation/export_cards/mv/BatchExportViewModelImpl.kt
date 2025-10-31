@@ -8,8 +8,8 @@ import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.export_cards.BatchExportType
 import ru.samtakoy.core.presentation.export_cards.mv.BatchExportViewModel.Action
 import ru.samtakoy.common.utils.MyLog
-import ru.samtakoy.features.import_export.CoursesExporter
-import ru.samtakoy.features.import_export.QPacksExporter
+import ru.samtakoy.domain.exportcards.CoursesExporter
+import ru.samtakoy.domain.exportcards.QPacksExporter
 
 internal class BatchExportViewModelImpl(
     coursesExporter: CoursesExporter,

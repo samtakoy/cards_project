@@ -5,27 +5,33 @@ import ru.samtakoy.data.cardtag.TagsRepository
 internal class TagInteractorImpl(
     private val tagsRepository: TagsRepository
 ) : TagInteractor {
-    override fun addTag(tag: Tag): Long {
+    override suspend fun addTag(tag: Tag): Long {
         return tagsRepository.addTag(tag)
     }
 
-    override fun getTag(id: Long): Tag {
+    override suspend fun getTag(id: Long): Tag {
         return tagsRepository.getTag(id)
     }
 
-    override fun getAllTags(): List<Tag> {
+    override suspend fun getAllTags(): List<Tag> {
         return tagsRepository.getAllTags()
     }
 
-    override fun buildTagMap(): Map<String, Tag> {
-        return tagsRepository.buildTagMap()
+    override suspend fun buildTagMap(): ConcurrentTagMap {
+        return ConcurrentTagMap().also {
+            it.addTags(tagsRepository.getAllTags())
+        }
     }
 
-    override fun deleteAllTagsFromCard(cardId: Long) {
+    override suspend fun addTags(tags: List<Tag>): List<Tag> {
+        return tagsRepository.addTags(tags)
+    }
+
+    override suspend fun deleteAllTagsFromCard(cardId: Long) {
         tagsRepository.deleteAllTagsFromCard(cardId)
     }
 
-    override fun addCardTags(cardId: Long, tagIds: List<Long>) {
+    override suspend fun addCardTags(cardId: Long, tagIds: List<Long>) {
         tagsRepository.addCardTags(cardId, tagIds)
     }
 }

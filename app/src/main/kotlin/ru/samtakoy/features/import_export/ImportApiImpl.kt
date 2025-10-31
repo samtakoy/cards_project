@@ -1,31 +1,33 @@
 package ru.samtakoy.features.import_export
 
 import android.content.ContentResolver
+import android.content.Context
 import android.net.Uri
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Observer
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.rx2.rxObservable
 import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.data.card.CardsRepository
 import ru.samtakoy.data.qpack.QPacksRepository
 import ru.samtakoy.data.theme.ThemesRepository
 import ru.samtakoy.domain.card.CardInteractor
-import ru.samtakoy.domain.card.domain.model.CardWithTags
+import ru.samtakoy.domain.card.domain.model.Card
 import ru.samtakoy.domain.cardtag.Tag
 import ru.samtakoy.domain.cardtag.TagInteractor
 import ru.samtakoy.domain.qpack.QPack
 import ru.samtakoy.domain.theme.Theme
 import ru.samtakoy.features.import_export.helpers.ZipHelper
-import ru.samtakoy.features.import_export.utils.FromUriStreamFactory
-import ru.samtakoy.features.import_export.utils.FromZipEntryStreamFactory
-import ru.samtakoy.features.import_export.utils.ImportCardsException
-import ru.samtakoy.features.import_export.utils.ImportCardsOpts
-import ru.samtakoy.features.import_export.utils.StreamFactory
-import ru.samtakoy.features.import_export.utils.cbuild.CBuilderConst
-import ru.samtakoy.features.import_export.utils.cbuild.CardBuilder
-import ru.samtakoy.features.import_export.utils.cbuild.QPackBuilder
+import ru.samtakoy.features.import_export.utils.streams.FromUriStreamFactory
+import ru.samtakoy.features.import_export.utils.streams.FromZipEntryStreamFactory
+import ru.samtakoy.domain.importcards.batch.utils.ImportCardsException
+import ru.samtakoy.domain.importcards.model.ImportCardsOpts
+import ru.samtakoy.features.import_export.utils.streams.StreamFactory
+import ru.samtakoy.domain.importcards.batch.utils.builder.CBuilderConst
+import ru.samtakoy.domain.importcards.batch.utils.builder.CardBuilder
+import ru.samtakoy.domain.importcards.batch.utils.builder.QPackBuilder
 import ru.samtakoy.features.import_export.utils.isPackFile
 import java.io.BufferedReader
 import java.io.File
@@ -35,7 +37,7 @@ import java.nio.charset.Charset
 import java.util.Date
 
 class ImportApiImpl(
-    val contentResolver: ContentResolver,
+    val context: Context,
     val cardInteractor: CardInteractor,
     val tagInteractor: TagInteractor,
     val cardsRepository: CardsRepository,
@@ -43,88 +45,88 @@ class ImportApiImpl(
     val themesRepository: ThemesRepository
 ) : ImportApi {
 
+    private val contentResolver: ContentResolver
+        get() = context.contentResolver
 
     override fun loadCardsFromFile(selectedFileUri: Uri, targetThemeId: Long, opts: ImportCardsOpts): Completable {
         // TODO транзакции
         val streamFactory = FromUriStreamFactory(contentResolver, targetThemeId, selectedFileUri)
         return makeCardsBuilderFromFile(streamFactory, opts)
-                .filter { qPackBuilder: QPackBuilder -> isAllowedByOpts(qPackBuilder, opts) }
-                .map { qPackBuilder: QPackBuilder -> serializePack(qPackBuilder, opts) }
-                .map { qPackBuilder: QPackBuilder -> qPackBuilder.build() }
-                .flatMap { qPackBuilder: QPackBuilder -> Observable.fromIterable(qPackBuilder.cardBuilders) }
-                .map { card: CardBuilder -> serializeCard(card) }
-                .ignoreElements()
+            .filter { qPackBuilder: QPackBuilder -> isAllowedByOpts(qPackBuilder, opts) }
+            .map { qPackBuilder: QPackBuilder -> serializePack(qPackBuilder, opts) }
+            .map { qPackBuilder: QPackBuilder -> qPackBuilder.build() }
+            // TODO сохранение новых тегов
+            .concatMap { qPackBuilder: QPackBuilder -> Observable.fromIterable(qPackBuilder.cardBuilders) }
+            .map { card: CardBuilder -> runBlocking { serializeCard(card) } }
+            .ignoreElements()
     }
 
     override fun batchLoadFromFolder(
-            dirPath: String, targetThemeId: Long, opts: ImportCardsOpts
+        dirPath: String, targetThemeId: Long, opts: ImportCardsOpts
     ): Completable {
         return processImportFromObservables(
-                makeQPackBuildersFromPath(contentResolver, dirPath, targetThemeId, opts), opts)
+            makeQPackBuildersFromPath(contentResolver, dirPath, targetThemeId, opts), opts
+        )
     }
 
     override fun batchUpdateFromZip(zipFileUri: Uri, opts: ImportCardsOpts): Completable {
         return processImportFromObservables(
-                makeQPackBuildersFromZip(contentResolver, zipFileUri, opts), opts)
+            qpBuilders = makeQPackBuildersFromZip(contentResolver, zipFileUri, opts),
+            opts = opts
+        )
     }
 
     // ==========================================================
 
     private fun linesFromInputStream(
-            sf: StreamFactory //InputStream iStream
-    ): Observable<String> {
-        return object : Observable<String>() {
-            override fun subscribeActual(observer: Observer<in String>) {
-                var iStream: InputStream? = null
+        sf: StreamFactory //InputStream iStream
+    ): Flow<String> {
+        return flow {
+            var iStream: InputStream? = null
+            try {
+                iStream = sf.openStream()
+                val isr = InputStreamReader(iStream, Charset.forName(ExportConst.FILES_CHARSET))
+                val br = BufferedReader(isr)
+                var line = br.readLine()
+                while (line != null) {
+                    emit(line)
+                    line = br.readLine()
+                }
+            } finally {
                 try {
-                    iStream = sf.openStream()
-                    val isr = InputStreamReader(iStream, Charset.forName(ExportConst.FILES_CHARSET))
-                    val br = BufferedReader(isr)
-                    var line = br.readLine()
-                    while (line != null) {
-                        observer.onNext(line)
-                        line = br.readLine()
-                    }
-                    observer.onComplete()
-                } catch (e: Exception) {
-                    observer.onError(e)
-                } finally {
-                    try {
-                        iStream?.close()
-                    } catch (ignored: Exception) {
-                    }
+                    iStream?.close()
+                } catch (ignored: Exception) {
                 }
             }
         }
     }
 
     private fun makeCardsBuilderFromFile(
-            streamFactory: StreamFactory,
-            opts: ImportCardsOpts
+        streamFactory: StreamFactory,
+        opts: ImportCardsOpts
     ): Observable<QPackBuilder> {
-        return makeCardsBuilderFromInputStream(streamFactory, opts).toObservable()
+        return makeCardsBuilderFromInputStream(streamFactory, opts)
     }
 
     private fun makeCardsBuilderFromInputStream(
-            streamFactory: StreamFactory,
-            opts: ImportCardsOpts
-    ): Single<QPackBuilder> {
-        return linesFromInputStream(streamFactory)
-                .collect(
-                        {
-                            QPackBuilder(
-                                    streamFactory.themeId,
-                                    streamFactory.srcPath,
-                                    tagInteractor.buildTagMap().toMutableMap(),
-                                    streamFactory.fileName,
-                                    opts.nullifyId
-                            )
-                        }
-                ) { obj: QPackBuilder, line: String ->
-                    obj.addLine(line)
+        streamFactory: StreamFactory,
+        opts: ImportCardsOpts
+    ): Observable<QPackBuilder> {
+        return rxObservable {
+            QPackBuilder(
+                streamFactory.themeId,
+                streamFactory.srcPath,
+                // TODO TagMap + common object
+                tagInteractor.buildTagMap(),
+                streamFactory.fileName,
+                opts.nullifyId
+            ).also { qPackBuilder ->
+                linesFromInputStream(streamFactory).collect {
+                    qPackBuilder.addLine(it)
                 }
+            }
+        }
     }
-
 
     private fun isAllowedByOpts(qPackBuilder: QPackBuilder, opts: ImportCardsOpts): Boolean {
         return if (qPackBuilder.hasIncomingId()) {
@@ -136,119 +138,132 @@ class ImportApiImpl(
         }
     }
 
+    // TODO remove
     private fun makeQPackBuildersFromZip(
-            resolver: ContentResolver,
-            zipFileUri: Uri?,
-            opts: ImportCardsOpts
+        resolver: ContentResolver,
+        zipFileUri: Uri?,
+        opts: ImportCardsOpts
     ): Observable<QPackBuilder> {
         return Observable.fromCallable { resolver.openInputStream(zipFileUri!!) }
-                .concatMap { stream: InputStream -> ZipHelper.unzipStream(resolver, stream) }
-                .map { streamFactory: FromZipEntryStreamFactory -> actualizeThemes(streamFactory) }
-                .concatMap { streamFactory: FromZipEntryStreamFactory -> makeCardsBuilderFromFile(streamFactory, opts) }
+            .concatMap { stream: InputStream -> ZipHelper.unzipStream(stream) }
+            // актуализиривать темы в БД
+            .map { streamFactory: FromZipEntryStreamFactory -> actualizeThemes(streamFactory) }
+            // TODO создать парсеры QPack`ов
+            .concatMap { streamFactory: FromZipEntryStreamFactory -> makeCardsBuilderFromFile(streamFactory, opts) }
     }
 
     private fun makeQPackBuildersFromPath(
-            resolver: ContentResolver,
-            dirPath: String,
-            targetThemeId: Long,
-            opts: ImportCardsOpts
+        resolver: ContentResolver,
+        dirPath: String,
+        targetThemeId: Long,
+        opts: ImportCardsOpts
     ): Observable<QPackBuilder> {
         return Observable.fromArray(*File(dirPath).listFiles())
-                .flatMap { f1: File -> listFiles(resolver, f1, targetThemeId, opts) }
+            .flatMap { f1: File -> listFiles(resolver, f1, targetThemeId, opts) }
     }
 
     private fun processImportFromObservables(
-            qpBuilders: Observable<QPackBuilder>,
-            opts: ImportCardsOpts
+        qpBuilders: Observable<QPackBuilder>,
+        opts: ImportCardsOpts
     ): Completable {
         return qpBuilders.scan { prevBuilder: QPackBuilder, nextBuilder: QPackBuilder ->
             nextBuilder.builderNum = prevBuilder.builderNum + 1
             nextBuilder
         }
-                .toSortedList { aBuilder: QPackBuilder, bBuilder: QPackBuilder ->
-                    if (aBuilder.hasIncomingId() == bBuilder.hasIncomingId()) {
-                        return@toSortedList 0
-                    }
-                    if (aBuilder.hasIncomingId()) {
-                        // с id раньше обрабатываются
-                        return@toSortedList -1
-                    }
-                    1
-                } //.collectInto(new ArrayList<QPackBuilder>(), (builders, qPackBuilder) -> builders.add(qPackBuilder))
-                .toObservable()
-                .flatMap(
-                        { builders: List<QPackBuilder>? -> Observable.fromIterable(builders) }
-                ) { builders: List<QPackBuilder>, qPackBuilder: QPackBuilder ->
-                    qPackBuilder.buildersCount = builders.size
-                    qPackBuilder
+            .toSortedList { aBuilder: QPackBuilder, bBuilder: QPackBuilder ->
+                if (aBuilder.hasIncomingId() == bBuilder.hasIncomingId()) {
+                    return@toSortedList 0
                 }
-                .filter { qPackBuilder: QPackBuilder -> isAllowedByOpts(qPackBuilder, opts) }
-                .map { qPackBuilder: QPackBuilder -> serializePack(qPackBuilder, opts) }
-                .map { qPackBuilder: QPackBuilder -> qPackBuilder.build() }
-                .concatMap { qPackBuilder: QPackBuilder -> Observable.fromIterable(qPackBuilder.cardBuilders) }
-                .map { card: CardBuilder -> serializeCard(card) }
-                .ignoreElements()
+                if (aBuilder.hasIncomingId()) {
+                    // с id раньше обрабатываются
+                    return@toSortedList -1
+                }
+                if (bBuilder.hasIncomingId()) {
+                    // с id раньше обрабатываются
+                    return@toSortedList 1
+                }
+                0
+            } //.collectInto(new ArrayList<QPackBuilder>(), (builders, qPackBuilder) -> builders.add(qPackBuilder))
+            .toObservable()
+            .flatMap(
+                { builders: List<QPackBuilder>? -> Observable.fromIterable(builders) }
+            ) { builders: List<QPackBuilder>, qPackBuilder: QPackBuilder ->
+                qPackBuilder.buildersCount = builders.size
+                qPackBuilder
+            }
+            .filter { qPackBuilder: QPackBuilder -> isAllowedByOpts(qPackBuilder, opts) }
+
+            .map { qPackBuilder: QPackBuilder -> serializePack(qPackBuilder, opts) }
+            .map { qPackBuilder: QPackBuilder -> qPackBuilder.build() }
+            // TODO сохранение новых тегов
+            .concatMap { qPackBuilder: QPackBuilder -> Observable.fromIterable(qPackBuilder.cardBuilders) }
+            .map { card: CardBuilder -> runBlocking { serializeCard(card) } }
+            .ignoreElements()
     }
 
-
     @Throws(ImportCardsException::class)
-    private fun serializeCard(cardBuilder: CardBuilder): CardWithTags {
+    private suspend fun serializeCard(cardBuilder: CardBuilder): Card {
         val card = cardBuilder.build()
 
         if (cardBuilder.hasId()) {
-            val existingCardQPackId: Long? = cardsRepository.getCardQPackId(card.card.id)
+            val existingCardQPackId: Long? = cardsRepository.getCardQPackId(card.id)
 
             existingCardQPackId?.let {
-                val existingCardId: Long = card.card.id
+                val existingCardId: Long = card.id
                 // проверить, что карта из нашего пака
                 if (cardBuilder.qPackId != existingCardQPackId) {
-                    val errMsg = "card ${existingCardId} from pack ${existingCardQPackId}, not ${cardBuilder.qPackId}, atRemoving: ${cardBuilder.isToRemove}"
+                    val errMsg =
+                        "card ${existingCardId} from pack ${existingCardQPackId}, not ${cardBuilder.qPackId}, atRemoving: ${cardBuilder.isToRemove}"
                     throw ImportCardsException(ImportCardsException.ERR_WRONG_CARD_PACK, errMsg)
                 }
 
                 if (cardBuilder.isToRemove) {
                     // удалить
-                    cardInteractor.deleteCardWithRelationsSync(existingCardId)
+                    cardInteractor.deleteCardWithRelations(existingCardId)
                     return card
                 }
             }
 
             if (existingCardQPackId != null) {
                 // обновить
-                cardsRepository.updateCardSync(card.card)
+                cardsRepository.updateCardSync(card)
                 // будет обновлено ниже
                 tagInteractor.deleteAllTagsFromCard(cardBuilder.cardId)
             } else {
                 // создать
-                val cardId = cardsRepository.addCardSync(card.card)
+                val cardId = runBlocking { cardsRepository.addCard(card) }
                 cardBuilder.cardId = cardId
             }
 
         } else {
 
-            val cardId = cardsRepository.addCardSync(card.card)
+            val cardId = runBlocking { cardsRepository.addCard(card) }
             cardBuilder.cardId = cardId
         }
 
-        serializeCardTags(cardBuilder.cardId, card)
+        /* TODO есть в новой версии (ImportCardsZipUseCaseImpl), тут закоментировано
+        serializeCardTags(
+            cardBuilder.cardId,
+            cardBuilder.
+        )*/
 
         return card.copy(
-            card = card.card.copy(
-                id = cardBuilder.cardId
-            )
+            id = cardBuilder.cardId
         )
     }
 
-    private fun serializeCardTags(cardId: Long, card: CardWithTags) {
-        serializeNewTags(card.tags)
-        tagInteractor.addCardTags(cardId, card.tags.map{ it.id })
+    private suspend fun serializeCardTags(cardId: Long, tags: List<Tag>) {
+        tagInteractor.addCardTags(
+            cardId = cardId,
+            tagIds = serializeNewTags(tags).map { it.id }
+        )
     }
 
-    private fun serializeNewTags(tags: List<Tag>) {
-        tags.forEach { serializeIfNewTag(it) }
+    private suspend fun serializeNewTags(tags: List<Tag>): List<Tag> {
+        return tags.map { serializeIfNewTag(it) }
     }
 
-    private fun serializeIfNewTag(tag: Tag): Tag {
+    private suspend fun serializeIfNewTag(tag: Tag): Tag {
         return if (tag.id == 0L) {
             tag.copy(
                 id = tagInteractor.addTag(tag)
@@ -260,8 +275,8 @@ class ImportApiImpl(
 
     @Throws(ImportCardsException::class)
     private fun serializePack(
-            qPackBuilder: QPackBuilder,
-            opts: ImportCardsOpts
+        qPackBuilder: QPackBuilder,
+        opts: ImportCardsOpts
     ): QPackBuilder {
 
         val creationDate: Date = if (qPackBuilder.hasCreationDate()) {
@@ -320,11 +335,10 @@ class ImportApiImpl(
     }
 
     private fun listFiles(
-            resolver: ContentResolver,
-
-            f: File,
-            parentThemeId: Long,
-            opts: ImportCardsOpts
+        resolver: ContentResolver,
+        f: File,
+        parentThemeId: Long,
+        opts: ImportCardsOpts
     ): Observable<QPackBuilder>? {
         if (f.isDirectory) {
             if (!isValidThemeFolderName(f.name)) {
@@ -343,7 +357,8 @@ class ImportApiImpl(
                     themesRepository.addNewTheme(parentThemeId, f.name)?.id ?: 0L
                 }
             }
-            return Observable.fromArray(*f.listFiles()).flatMap { file: File -> listFiles(resolver, file, childThemeId, opts) }
+            return Observable.fromArray(*f.listFiles())
+                .flatMap { file: File -> listFiles(resolver, file, childThemeId, opts) }
         }
         if (!isPackFile(f)) {
             return Observable.empty()
@@ -352,7 +367,7 @@ class ImportApiImpl(
         return makeCardsBuilderFromFile(streamFactory, opts) //.toObservable();
     }
 
-
+    // TODO remove и посмотреть, почему для импорта из папки такого нет
     private fun actualizeThemes(streamFactory: FromZipEntryStreamFactory): FromZipEntryStreamFactory {
         val themesList: List<String> = streamFactory.themesPath
         if (themesList.size == 0) {
@@ -362,7 +377,7 @@ class ImportApiImpl(
         }
         var parentThemeId = CBuilderConst.NO_ID
         var newTheme = false
-        //val resolver = streamFactory.resolver
+
         for (themeName in themesList) {
             val theme: Theme? = if (newTheme) null else themesRepository.getThemeWithTitle(parentThemeId, themeName)
             if (theme != null) {
@@ -377,6 +392,5 @@ class ImportApiImpl(
         streamFactory.themeId = parentThemeId
         return streamFactory
     }
-
 
 }

@@ -6,15 +6,23 @@ import ru.samtakoy.data.qpack.QPacksRepository
 import java.util.Date
 
 internal class QPackInteractorImpl(
-    private val qPacksRepository: QPacksRepository,
+    private val qPackRepository: QPacksRepository,
     private val cardsRepository: CardsRepository
 ) : QPackInteractor {
     override suspend fun getQPack(qPackId: Long): QPack? {
-        return qPacksRepository.getQPack(qPackId)
+        return qPackRepository.getQPack(qPackId)
     }
 
     override fun getQPackAsFlow(qPackId: Long): Flow<QPack> {
-        return qPacksRepository.getQPackAsFlow(qPackId)
+        return qPackRepository.getQPackAsFlow(qPackId)
+    }
+
+    override suspend fun addQPack(qPack: QPack): Long {
+        return qPackRepository.addQPack(qPack)
+    }
+
+    override suspend fun updateQPack(qPack: QPack) {
+        qPackRepository.updateQPack(qPack)
     }
 
     override suspend fun deleteQPack(qPackId: Long) {
@@ -23,15 +31,15 @@ internal class QPackInteractorImpl(
         // пока связь тег-карточка удаляется каскадно, а теги остаются,
         // получается, надо чистить поштучно
         cardsRepository.deleteQPackCards(qPackId)
-        qPacksRepository.deletePack(qPackId)
+        qPackRepository.deletePack(qPackId)
     }
 
     override suspend fun updateQPackViewCount(qPackId: Long, currentTime: Date) {
-        qPacksRepository.updateQPackViewCount(qPackId, currentTime)
+        qPackRepository.updateQPackViewCount(qPackId, currentTime)
     }
 
     override fun getChildQPacksAsFlow(themeId: Long): Flow<List<QPack>> {
-        return qPacksRepository.getQPacksFromThemeAsFlow(themeId)
+        return qPackRepository.getQPacksFromThemeAsFlow(themeId)
     }
 
     override fun getAllQPacksByLastViewDateAscAsFlow(
@@ -39,9 +47,9 @@ internal class QPackInteractorImpl(
         onlyFavorites: Boolean
     ): Flow<List<QPack>> {
         return if (searchString.isNullOrBlank()) {
-            qPacksRepository.getAllQPacksByLastViewDateAscAsFlow(onlyFavorites = onlyFavorites)
+            qPackRepository.getAllQPacksByLastViewDateAscAsFlow(onlyFavorites = onlyFavorites)
         } else {
-            qPacksRepository.getAllQPacksByLastViewDateAscFilteredAsFlow(searchString, onlyFavorites = onlyFavorites)
+            qPackRepository.getAllQPacksByLastViewDateAscFilteredAsFlow(searchString, onlyFavorites = onlyFavorites)
         }
     }
 
@@ -50,17 +58,17 @@ internal class QPackInteractorImpl(
         onlyFavorites: Boolean
     ): Flow<List<QPack>> {
         return if (searchString.isNullOrBlank()) {
-            qPacksRepository.getAllQPacksByCreationDateDescAsFlow(onlyFavorites = onlyFavorites)
+            qPackRepository.getAllQPacksByCreationDateDescAsFlow(onlyFavorites = onlyFavorites)
         } else {
-            qPacksRepository.getAllQPacksByCreationDateDescFilteredAsFlow(searchString, onlyFavorites = onlyFavorites)
+            qPackRepository.getAllQPacksByCreationDateDescFilteredAsFlow(searchString, onlyFavorites = onlyFavorites)
         }
     }
 
     override suspend fun getQPacksByIds(ids: List<Long>): List<QPack> {
-        return qPacksRepository.getQPacksByIds(ids)
+        return qPackRepository.getQPacksByIds(ids)
     }
 
     override suspend fun getQPacksFromThemeCount(themeId: Long): Int {
-        return qPacksRepository.getQPacksFromThemeCount(themeId)
+        return qPackRepository.getQPacksFromThemeCount(themeId)
     }
 }

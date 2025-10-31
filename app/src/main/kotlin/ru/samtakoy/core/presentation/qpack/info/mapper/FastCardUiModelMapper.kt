@@ -1,6 +1,6 @@
 package ru.samtakoy.core.presentation.qpack.info.mapper
 
-import ru.samtakoy.core.presentation.design_system.base.model.LongUiId
+import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 import ru.samtakoy.core.presentation.qpack.info.FastCardUiModel
 import ru.samtakoy.domain.card.domain.model.Card
 import ru.samtakoy.presentation.utils.asAnnotated

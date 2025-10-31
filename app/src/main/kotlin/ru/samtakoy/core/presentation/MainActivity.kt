@@ -61,14 +61,7 @@ class MainActivity : AppCompatActivity(), RouterHolder {
         setupActionBarWithNavController(this, mNavController!!, mDrawerLayout)
         setupWithNavController(mNavigationView!!, mNavController!!)
 
-        if (savedInstanceState == null) {
-            setupInitialFragment()
-        }
-
         Timber.tag("mytest").e("MainActivity created")
-    }
-
-    private fun setupInitialFragment() {
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

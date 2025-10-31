@@ -8,7 +8,6 @@ android {
 
 dependencies {
     // room
-    // TODO ksp
     ksp(libs.androidx.room.compiler)
     implementation(libs.bundles.room)
 

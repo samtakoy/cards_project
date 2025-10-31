@@ -84,7 +84,7 @@ class QPackInfoFragment : Fragment(), CardViewingTypeSelectorListener, ViewModel
 
     private val mCheckListener: CompoundButton.OnCheckedChangeListener =
         object : CompoundButton.OnCheckedChangeListener {
-            override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+            override fun onCheckedChanged(p0: CompoundButton, isChecked: Boolean) {
                 viewModel.onEvent(Event.FavoriteChange(isChecked))
             }
         }

@@ -22,10 +22,6 @@ internal class CardsRepositoryImpl(
         }
     }
 
-    override fun addCardSync(card: Card): Long {
-        return cardDao.addCardSync(cardMapper.mapToEntity(card))
-    }
-
     override suspend fun addCard(card: Card): Long {
         return cardDao.addCard(cardMapper.mapToEntity(card))
     }
@@ -38,7 +34,7 @@ internal class CardsRepositoryImpl(
         return cardDao.getCardAsFlow(cardId).map { it?.let(cardMapper::mapToDomain) }
     }
 
-    override fun getCardQPackId(cardId: Long): Long? {
+    override suspend fun getCardQPackId(cardId: Long): Long? {
         return if (cardId > 0) {
             cardDao.getCardQPackId(cardId)
         } else {
@@ -70,7 +66,7 @@ internal class CardsRepositoryImpl(
         return cardDao.getAllFavoriteCardsIdsFromQPacks(qPackIds)
     }
 
-    override fun deleteCard(cardId: Long) {
+    override suspend fun deleteCard(cardId: Long) {
         cardDao.deleteCard(cardId)
     }
 

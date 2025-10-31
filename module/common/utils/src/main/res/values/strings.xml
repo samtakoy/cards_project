@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="time_min">min</string>
+    <string name="time_hour">hour</string>
+    <string name="time_day">day</string>
+    <string name="time_week">week</string>
+    <string name="time_month">month</string>
+    <string name="time_year">year</string>
+
+    <string name="db_request_err_message">Ошибка при запросе к базе данных</string>
+    <string name="common_err_message">Что-то пошло не так</string>
+
+    <string name="menu_item_log">log</string>
+    <string name="menu_item_settings">settings</string>
+
+    <string name="action_ok">Ok</string>
+    <string name="action_cancel">Отмена</string>
+</resources>

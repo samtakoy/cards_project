@@ -26,11 +26,11 @@ internal class ThemesRepositoryImpl(
         return themeMapper.mapToDomain(themeDao.getTheme(resultId)!!)
     }
 
-    override fun deleteTheme(themeId: Long): Boolean {
+    override suspend fun deleteTheme(themeId: Long): Boolean {
         return themeDao.deleteThemeById(themeId) > 0
     }
 
-    override fun getChildThemes(themeId: Long): List<Theme> {
+    override suspend fun getChildThemes(themeId: Long): List<Theme> {
         return themeDao.getChildThemes(themeId).map(themeMapper::mapToDomain)
     }
 

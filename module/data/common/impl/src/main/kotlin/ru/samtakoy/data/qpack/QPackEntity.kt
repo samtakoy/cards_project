@@ -9,8 +9,6 @@ import ru.samtakoy.data.common.db.converters.DateLongConverter
 import ru.samtakoy.data.theme.ThemeEntity
 import java.util.Date
 
-const val DEF_DATE = "01-01-2000 00:00:00"
-
 @Entity(tableName = QPackEntity.table,
         foreignKeys = [
             ForeignKey(

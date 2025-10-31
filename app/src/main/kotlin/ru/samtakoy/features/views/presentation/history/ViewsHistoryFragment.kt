@@ -16,6 +16,7 @@ import ru.samtakoy.features.views.presentation.history.vm.ViewsHistoryViewModelI
 import ru.samtakoy.presentation.base.composeContent
 import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 
 class ViewsHistoryFragment : Fragment(), ViewModelOwner {
 
@@ -36,11 +37,13 @@ class ViewsHistoryFragment : Fragment(), ViewModelOwner {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return composeContent(R.id.compose_root) {
-            ViewsHistoryScreen(
-                viewModel = viewModel,
-                onNavigation = navigation::onAction,
-                modifier = Modifier.fillMaxSize()
-            )
+            MyTheme {
+                ViewsHistoryScreen(
+                    viewModel = viewModel,
+                    onNavigation = navigation::onAction,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
     }
 }

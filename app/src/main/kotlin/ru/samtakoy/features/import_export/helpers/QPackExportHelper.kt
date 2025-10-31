@@ -2,7 +2,7 @@ package ru.samtakoy.features.import_export.helpers
 
 import ru.samtakoy.common.utils.DateUtils.DATE_FORMAT
 import ru.samtakoy.domain.card.domain.model.CardWithTags
-import ru.samtakoy.features.import_export.utils.cbuild.CBuilderConst
+import ru.samtakoy.domain.importcards.batch.utils.builder.CBuilderConst
 import ru.samtakoy.domain.qpack.QPack
 import ru.samtakoy.domain.cardtag.Tag
 import java.io.IOException

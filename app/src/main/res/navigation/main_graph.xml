@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/themesListFragment"
         android:name="ru.samtakoy.core.presentation.themes.ThemesListFragment"
-        android:label="@string/main_drawer_themes">
+        android:label="@string/feature_themes_list_title">
 
         <action
             android:id="@+id/action_themesListFragment_self"
@@ -33,7 +33,7 @@
     <fragment
         android:id="@+id/qPacksListFragment"
         android:name="ru.samtakoy.core.presentation.qpack.list.QPacksListFragment"
-        android:label="@string/main_drawer_qpacks">
+        android:label="ain_drawer_qpacks">
         <action
             android:id="@+id/action_qPacksListFragment_to_qPackInfoFragment"
             app:destination="@id/qPackInfoFragment" />
@@ -42,7 +42,7 @@
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="ru.samtakoy.core.presentation.favorites.onboarding.FavoritesFragment"
-        android:label="@string/main_drawer_favorites">
+        android:label="ain_drawer_favorites">
         <action
             android:id="@+id/action_favoritesFragment_to_cardsViewFragment"
             app:destination="@id/cardsViewFragment" />
@@ -54,7 +54,7 @@
     <fragment
         android:id="@+id/viewsHistoryFragment"
         android:name="ru.samtakoy.features.views.presentation.history.ViewsHistoryFragment"
-        android:label="@string/main_drawer_views_history">
+        android:label="ain_drawer_views_history">
         <action
             android:id="@+id/action_viewsHistoryFragment_to_cardsViewFragment"
             app:destination="@id/cardsViewFragment" />
@@ -63,7 +63,7 @@
     <fragment
         android:id="@+id/qPackSelectionFragment"
         android:name="ru.samtakoy.core.presentation.favorites.qpacks_with_favs.QPackSelectionFragment"
-        android:label="@string/main_drawer_qpacks_selection">
+        android:label="ain_drawer_qpacks_selection">
         <action
             android:id="@+id/action_qPackSelectionFragment_to_cardsViewFragment"
             app:destination="@id/cardsViewFragment" />
@@ -72,7 +72,7 @@
     <fragment
         android:id="@+id/coursesListFragment"
         android:name="ru.samtakoy.core.presentation.courses.list.CoursesListFragment"
-        android:label="@string/main_drawer_courses">
+        android:label="ain_drawer_courses">
         <argument
             android:name="ARG_TARGET_QPACK_ID"
             android:defaultValue="0L"
@@ -94,7 +94,7 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="ru.samtakoy.core.presentation.settings.SettingsFragment"
-        android:label="@string/main_drawer_settings" />
+        android:label="ain_drawer_settings" />
     <fragment
         android:id="@+id/courseInfoFragment"
         android:name="ru.samtakoy.core.presentation.courses.info.CourseInfoFragment">

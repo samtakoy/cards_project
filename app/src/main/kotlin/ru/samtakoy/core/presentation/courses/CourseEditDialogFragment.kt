@@ -20,9 +20,12 @@ class CourseEditDialogFragment : DialogFragment() {
         val args = getArguments()
         val defaultInputText = args!!.getString(ARG_TEXT)
 
+        /*
         val v = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_dialog_theme_add, null)
         mInputText = v.findViewById<View?>(R.id.fragment_dialog_theme_add_input) as EditText
         mInputText!!.setText(defaultInputText)
+         */
+        val v = View(requireContext()) // TODO временная заглушка, класс будет удален
 
         //mInputText.requestFocus();
         return AlertDialog.Builder(requireActivity())

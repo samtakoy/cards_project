@@ -1,10 +1,10 @@
 package ru.samtakoy.presentation.utils
 
 import ru.samtakoy.common.resources.Resources
+import ru.samtakoy.common.utils.R
 import ru.samtakoy.domain.learncourse.schedule.Schedule
 import ru.samtakoy.domain.learncourse.schedule.ScheduleItem
 import ru.samtakoy.domain.learncourse.schedule.ScheduleTimeUnit
-import ru.samtakoy.presentation.core.utils.R
 
 fun Schedule.toStringViewWithPrev(resources: Resources, prevSchedule: Schedule): String {
     return "(" + prevSchedule.lastItem + ")" + toStringView(resources)

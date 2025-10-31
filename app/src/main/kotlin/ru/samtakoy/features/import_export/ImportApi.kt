@@ -2,8 +2,7 @@ package ru.samtakoy.features.import_export
 
 import android.net.Uri
 import io.reactivex.Completable
-import ru.samtakoy.features.import_export.utils.ImportCardsOpts
-
+import ru.samtakoy.domain.importcards.model.ImportCardsOpts
 
 interface ImportApi {
 

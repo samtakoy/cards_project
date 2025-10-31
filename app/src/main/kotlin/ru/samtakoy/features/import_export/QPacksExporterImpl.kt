@@ -11,6 +11,7 @@ import ru.samtakoy.data.card.CardsRepository
 import ru.samtakoy.data.qpack.QPacksRepository
 import ru.samtakoy.data.theme.ThemesRepository
 import ru.samtakoy.domain.card.domain.model.CardWithTags
+import ru.samtakoy.domain.exportcards.QPacksExporter
 import ru.samtakoy.domain.qpack.QPack
 import ru.samtakoy.features.import_export.helpers.QPackExportHelper
 import ru.samtakoy.features.import_export.helpers.SendEmailHelper

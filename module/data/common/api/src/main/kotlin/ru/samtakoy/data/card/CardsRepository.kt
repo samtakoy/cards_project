@@ -9,14 +9,13 @@ interface CardsRepository {
     suspend fun clearDb()
     fun updateCardSync(card: Card)
     suspend fun updateCard(card: Card)
-    fun deleteCard(cardId: Long)
+    suspend fun deleteCard(cardId: Long)
     suspend fun deleteQPackCards(qPackId: Long)
 
-    fun addCardSync(card: Card): Long
     suspend fun addCard(card: Card): Long
     suspend fun getCard(cardId: Long): Card?
     fun getCardAsFlow(cardId: Long): Flow<Card?>
-    fun getCardQPackId(cardId: Long): Long?
+    suspend fun getCardQPackId(cardId: Long): Long?
 
     // favorites
     suspend fun updateCardFavorite(cardId: Long, favorite: Int)

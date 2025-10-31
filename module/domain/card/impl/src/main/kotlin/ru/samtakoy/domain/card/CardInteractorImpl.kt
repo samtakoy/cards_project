@@ -17,14 +17,27 @@ internal class CardInteractorImpl(
         return cardsRepository.clearDb()
     }
 
+    override suspend fun updateCard(card: Card) {
+        cardsRepository.updateCard(card)
+    }
+
+    override suspend fun addCard(card: Card): Long {
+        return cardsRepository.addCard(card)
+    }
+
+    override suspend fun getCardQPackId(cardId: Long): Long? {
+        return cardsRepository.getCardQPackId(cardId)
+    }
+
     override fun getCardAsFlow(cardId: Long): Flow<Card?> {
         return cardsRepository.getCardAsFlow(cardId)
     }
 
-    override fun deleteCardWithRelationsSync(cardId: Long) {
-        transactionRepository.withTransactionSync {
+    override suspend fun deleteCardWithRelations(cardId: Long) {
+        transactionRepository.withTransaction {
             tagInteractor.deleteAllTagsFromCard(cardId)
             cardsRepository.deleteCard(cardId)
+            // TODO также удалить неиспользуемые теги
         }
     }
 

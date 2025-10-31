@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -16,14 +15,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.toImmutableList
 import ru.samtakoy.presentation.base.observeActionsWithLifecycle
-import ru.samtakoy.core.presentation.design_system.base.UiOffsets
-import ru.samtakoy.core.presentation.design_system.scaffold.MySimpleScreenScaffold
+import ru.samtakoy.presentation.core.design_system.base.UiOffsets
+import ru.samtakoy.presentation.core.design_system.scaffold.MySimpleScreenScaffold
 import ru.samtakoy.features.views.presentation.history.components.OneViewItemView
 import ru.samtakoy.features.views.presentation.history.components.getOneViewItemViewPreviewItems
 import ru.samtakoy.features.views.presentation.history.vm.ViewsHistoryViewModel
 import ru.samtakoy.features.views.presentation.history.vm.ViewsHistoryViewModel.Action
 import ru.samtakoy.features.views.presentation.history.vm.ViewsHistoryViewModel.NavigationAction
 import ru.samtakoy.features.views.presentation.history.vm.ViewsHistoryViewModel.State
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 
 @Composable
 internal fun ViewsHistoryScreen(
@@ -77,7 +77,7 @@ private fun ViewsHistoryScreenInternal(
         LazyColumn(
             modifier = Modifier
                 .matchParentSize()
-                .padding(horizontal = UiOffsets.screenContentHOffset)
+                .padding(horizontal = UiOffsets.listItemOffset)
         ) {
             items(items = viewState.items, key = { it.id }) {
                 OneViewItemView(
@@ -95,7 +95,7 @@ private fun ViewsHistoryScreenInternal(
 
 @Preview
 @Composable
-private fun FavoritesScreenInternal_Preview() = MaterialTheme {
+private fun FavoritesScreenInternal_Preview() = MyTheme {
     ViewsHistoryScreenInternal(
         viewState = State(
             type = State.Type.Data,

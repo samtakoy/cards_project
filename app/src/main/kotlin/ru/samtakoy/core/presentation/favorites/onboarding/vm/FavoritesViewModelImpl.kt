@@ -7,7 +7,7 @@ import ru.samtakoy.common.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.domain.favorites.FavoritesInteractor
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
-import ru.samtakoy.core.presentation.design_system.base.model.UiId
+import ru.samtakoy.presentation.core.design_system.base.model.UiId
 import ru.samtakoy.core.presentation.favorites.onboarding.mapper.FavoritesButtonsMapper
 import ru.samtakoy.core.presentation.favorites.onboarding.vm.FavoritesViewModel.Action
 import ru.samtakoy.domain.view.ViewHistoryInteractor

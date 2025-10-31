@@ -9,8 +9,8 @@ interface ThemesRepository {
     fun getThemeWithTitle(parentThemeId: Long, title: String): Theme?
 
     suspend fun addNewTheme(parentThemeId: Long, title: String): Theme?
-    fun deleteTheme(themeId: Long): Boolean
-    fun getChildThemes(themeId: Long): List<Theme>
+    suspend fun deleteTheme(themeId: Long): Boolean
+    suspend fun getChildThemes(themeId: Long): List<Theme>
     fun getChildThemesAsFlow(themeId: Long): Flow<List<Theme>>
 
 }

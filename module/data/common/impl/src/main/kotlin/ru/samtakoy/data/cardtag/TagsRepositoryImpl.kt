@@ -11,40 +11,32 @@ internal class TagsRepositoryImpl(
     private val tagMapper: TagEntityMapper
 ) : TagsRepository {
 
-    override fun addTag(tag: Tag): Long {
+    override suspend fun addTag(tag: Tag): Long {
         return tagDao.addTag(tagMapper.mapToEntity(tag))
     }
 
-    override fun getTag(id: Long): Tag {
+    override suspend fun getTag(id: Long): Tag {
         return tagDao.getTag(id).let(tagMapper::mapToDomain)
     }
 
-    override fun getAllTags(): List<Tag> {
+    override suspend fun getAllTags(): List<Tag> {
         return tagDao.getAllTags().map(tagMapper::mapToDomain)
     }
 
-    override fun buildTagMap(): Map<String, Tag> {
-        val tags: List<Tag> = getAllTags()
-        val result = mutableMapOf<String, Tag>()
-        for (tag in tags) {
-            result[tagToKey(tag)] = tag
-        }
-        return result
+    override suspend fun addTags(tags: List<Tag>): List<Tag> {
+        val ids = tagDao.addTags(tags.map(tagMapper::mapToEntity))
+        return tagDao.getAllById(ids).map(tagMapper::mapToDomain)
     }
 
-    override fun deleteAllTagsFromCard(cardId: Long) {
+    override suspend fun deleteAllTagsFromCard(cardId: Long) {
         cardTagDao.deleteAllFromCard(cardId)
     }
 
-    override fun addCardTags(cardId: Long, tagIds: List<Long>) {
+    override suspend fun addCardTags(cardId: Long, tagIds: List<Long>) {
         cardTagDao.addTags(
             tagIds.map {
                 CardTagEntity(cardId, it)
             }
         )
-    }
-
-    private fun tagToKey(tag: Tag): String {
-        return tag.toStringKey()
     }
 }

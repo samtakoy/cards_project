@@ -50,19 +50,21 @@ dependencies {
     // navigation
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
+    // см. ниже для Compose
 
     // result api
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.fragment.ktx)
 
     // room
-    // TODO ksp
     ksp(libs.androidx.room.compiler)
     implementation(libs.bundles.room)
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
+    implementation(libs.androidx.navigation.compose)
+
 
     // misc
     implementation(libs.android.support.multidex)
@@ -91,42 +93,81 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.androidx.compose.navigation)
+    implementation(libs.koin.androidx.workmanager)
 
     // retrofit
     implementation(libs.bundles.squareup)
 
-    implementation(project(":module:platform:api"))
-    implementation(project(":module:platform:impl"))
+    implementation(projects.module.platform.api)
+    implementation(projects.module.platform.impl)
 
-    implementation(project(":module:data:common:api"))
-    implementation(project(":module:data:common:impl"))
+    implementation(projects.module.platform.import.implAndroid)
+    implementation(projects.module.platform.notification.implAndroid)
+    implementation(projects.module.platform.permissions.implAndroid)
 
-    implementation(project(":module:domain:card:api"))
-    implementation(project(":module:domain:card:model"))
-    implementation(project(":module:domain:card:impl"))
+    implementation(projects.module.data.common.api)
+    implementation(projects.module.data.common.impl)
 
-    implementation(project(":module:domain:learncourse:api"))
-    implementation(project(":module:domain:learncourse:model"))
-    implementation(project(":module:domain:learncourse:impl"))
+    implementation(projects.module.data.task.api)
+    implementation(projects.module.data.task.impl)
 
-    implementation(project(":module:domain:qpack:api"))
-    implementation(project(":module:domain:qpack:model"))
-    implementation(project(":module:domain:qpack:impl"))
+    implementation(projects.module.domain.card.api)
+    implementation(projects.module.domain.card.model)
+    implementation(projects.module.domain.card.impl)
 
-    implementation(project(":module:domain:theme:api"))
-    implementation(project(":module:domain:theme:model"))
-    implementation(project(":module:domain:theme:impl"))
+    implementation(projects.module.domain.learncourse.api)
+    implementation(projects.module.domain.learncourse.model)
+    implementation(projects.module.domain.learncourse.impl)
 
-    implementation(project(":module:domain:view:api"))
-    implementation(project(":module:domain:view:model"))
-    implementation(project(":module:domain:view:impl"))
+    implementation(projects.module.domain.qpack.api)
+    implementation(projects.module.domain.qpack.model)
+    implementation(projects.module.domain.qpack.impl)
 
-    implementation(project(":module:domain:favorites:api"))
-    implementation(project(":module:domain:favorites:impl"))
+    implementation(projects.module.domain.theme.api)
+    implementation(projects.module.domain.theme.model)
+    implementation(projects.module.domain.theme.impl)
 
-    implementation(project(":module:presentation:core:utils"))
-    implementation(project(":module:presentation:core:viewmodel"))
-    implementation(project(":module:presentation:core:designsystem"))
+    implementation(projects.module.domain.view.api)
+    implementation(projects.module.domain.view.model)
+    implementation(projects.module.domain.view.impl)
 
-    implementation(project(":module:common:utils"))
+    implementation(projects.module.domain.favorites.api)
+    implementation(projects.module.domain.favorites.impl)
+
+    implementation(projects.module.data.import.api)
+    implementation(projects.module.data.import.impl)
+
+    implementation(projects.module.domain.export.api)
+    implementation(projects.module.domain.import.api)
+    implementation(projects.module.domain.import.model)
+    implementation(projects.module.domain.import.impl)
+
+    implementation(projects.module.presentation.core.utils)
+    implementation(projects.module.presentation.core.viewmodel)
+    implementation(projects.module.presentation.core.designsystem)
+
+    implementation(projects.module.presentation.navigation.api)
+
+    implementation(projects.module.presentation.main.api)
+    implementation(projects.module.presentation.main.impl)
+
+    implementation(projects.module.presentation.themes.api)
+    implementation(projects.module.presentation.themes.impl)
+
+    implementation(projects.module.presentation.qpacks.api)
+    implementation(projects.module.presentation.qpacks.impl)
+
+    implementation(projects.module.presentation.settings.api)
+    implementation(projects.module.presentation.settings.impl)
+
+    implementation(projects.module.presentation.courses.api)
+    implementation(projects.module.presentation.courses.impl)
+
+    implementation(projects.module.presentation.viewshistory.api)
+    implementation(projects.module.presentation.viewshistory.impl)
+
+    implementation(projects.module.presentation.favorites.api)
+    implementation(projects.module.presentation.favorites.impl)
+
+    implementation(projects.module.common.utils)
 }

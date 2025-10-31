@@ -6,8 +6,8 @@ import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.core.presentation.cards.question.vm.CardQuestionViewModel.Action
 import ru.samtakoy.core.presentation.cards.question.vm.CardQuestionViewModel.Event
 import ru.samtakoy.core.presentation.cards.question.vm.CardQuestionViewModel.State
-import ru.samtakoy.core.presentation.design_system.button.MyButtonModel
-import ru.samtakoy.core.presentation.design_system.selectable_item.MySelectableItemModel
+import ru.samtakoy.presentation.core.design_system.button.MyButtonUiModel
+import ru.samtakoy.presentation.core.design_system.selectable_item.MySelectableItemModel
 
 @Immutable
 interface CardQuestionViewModel : BaseViewModel<State, Action, Event> {
@@ -15,9 +15,9 @@ interface CardQuestionViewModel : BaseViewModel<State, Action, Event> {
     data class State(
         val question: AnnotatedString,
         val isFavorite: MySelectableItemModel?,
-        val prevCardButton: MyButtonModel?,
-        val viewAnswerButton: MyButtonModel?,
-        val nextCardButton: MyButtonModel?,
+        val prevCardButton: MyButtonUiModel?,
+        val viewAnswerButton: MyButtonUiModel?,
+        val nextCardButton: MyButtonUiModel?,
     )
 
     sealed interface Action {

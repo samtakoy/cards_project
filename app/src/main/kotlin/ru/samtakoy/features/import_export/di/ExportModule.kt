@@ -5,9 +5,9 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import ru.samtakoy.core.presentation.export_cards.mv.BatchExportViewModelImpl
-import ru.samtakoy.features.import_export.CoursesExporter
+import ru.samtakoy.domain.exportcards.CoursesExporter
+import ru.samtakoy.domain.exportcards.QPacksExporter
 import ru.samtakoy.features.import_export.CoursesExporterImpl
-import ru.samtakoy.features.import_export.QPacksExporter
 import ru.samtakoy.features.import_export.QPacksExporterImpl
 
 internal fun exportModule() = module {

@@ -2,17 +2,17 @@ package ru.samtakoy.core.presentation.favorites.qpacks_with_favs.mapper
 
 import ru.samtakoy.R
 import ru.samtakoy.common.resources.Resources
-import ru.samtakoy.core.presentation.design_system.base.model.LongUiId
-import ru.samtakoy.core.presentation.design_system.base.model.StringUiId
-import ru.samtakoy.core.presentation.design_system.button.MyButtonModel
-import ru.samtakoy.core.presentation.design_system.selectable_item.MySelectableItemModel
+import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
+import ru.samtakoy.presentation.core.design_system.base.model.StringUiId
+import ru.samtakoy.presentation.core.design_system.button.MyButtonUiModel
+import ru.samtakoy.presentation.core.design_system.selectable_item.MySelectableItemModel
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.mapper.QPacksWithFavsItemsMapper.Companion.ACTION_BUTTON_ID
 import ru.samtakoy.domain.qpack.QPack
 import ru.samtakoy.presentation.utils.asAnnotated
 
 interface QPacksWithFavsItemsMapper {
     fun map(item: QPack, isSelected: Boolean): MySelectableItemModel
-    fun mapActionButton(): MyButtonModel
+    fun mapActionButton(): MyButtonUiModel
 
     companion object {
         const val ACTION_BUTTON_ID = "actionButton"
@@ -32,8 +32,8 @@ internal class QPacksWithFavsItemsMapperImpl(
         )
     }
 
-    override fun mapActionButton(): MyButtonModel {
-        return MyButtonModel(
+    override fun mapActionButton(): MyButtonUiModel {
+        return MyButtonUiModel(
             id = StringUiId(ACTION_BUTTON_ID),
             text = resources.getString(R.string.qpacks_with_favs_action_button_title).asAnnotated()
         )

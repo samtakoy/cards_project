@@ -4,23 +4,23 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/themesListFragment"
-            android:title="@string/main_drawer_themes"
+            android:title="ain_drawer_themes"
             android:checked="true" />
         <item
             android:id="@+id/qPacksListFragment"
-            android:title="@string/main_drawer_qpacks" />
+            android:title="ain_drawer_qpacks" />
         <item
             android:id="@+id/favoritesFragment"
-            android:title="@string/main_drawer_favorites" />
+            android:title="ain_drawer_favorites" />
         <item
             android:id="@+id/viewsHistoryFragment"
-            android:title="@string/main_drawer_views_history" />
+            android:title="ain_drawer_views_history" />
         <item
             android:id="@+id/coursesListFragment"
-            android:title="@string/main_drawer_courses" />
+            android:title="ain_drawer_courses" />
         <item
             android:id="@+id/settingsFragment"
-            android:title="@string/main_drawer_settings" />
+            android:title="ain_drawer_settings" />
     </group>
 
 

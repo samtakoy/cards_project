@@ -16,7 +16,7 @@ internal interface ThemeDao {
     fun getThemeWithTitle(parentThemeId: Long, title: String): ThemeEntity?
 
     @Query("SELECT * FROM ${ThemeEntity.Companion.table} WHERE ${ThemeEntity.Companion._parent}=:parentId")
-    fun getChildThemes(parentId: Long): List<ThemeEntity>
+    suspend fun getChildThemes(parentId: Long): List<ThemeEntity>
 
     @Query("SELECT * FROM ${ThemeEntity.Companion.table} WHERE ${ThemeEntity.Companion._parent}=:parentId")
     fun getChildThemesAsFlow(parentId: Long): Flow<List<ThemeEntity>>
@@ -25,7 +25,7 @@ internal interface ThemeDao {
     suspend fun addTheme(theme: ThemeEntity): Long
 
     @Query("DELETE FROM ${ThemeEntity.Companion.table} WHERE ${ThemeEntity.Companion._id}=:id")
-    fun deleteThemeById(id: Long): Int
+    suspend fun deleteThemeById(id: Long): Int
 
 
 }

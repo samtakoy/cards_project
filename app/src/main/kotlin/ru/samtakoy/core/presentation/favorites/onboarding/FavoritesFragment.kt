@@ -16,6 +16,7 @@ import ru.samtakoy.core.presentation.favorites.onboarding.vm.FavoritesViewModelI
 import ru.samtakoy.presentation.base.composeContent
 import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 
 class FavoritesFragment : Fragment(), ViewModelOwner {
 
@@ -36,11 +37,13 @@ class FavoritesFragment : Fragment(), ViewModelOwner {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return composeContent(R.id.compose_root) {
-            FavoritesScreen(
-                viewModel = viewModel,
-                onNavigationAction = navigation::onAction,
-                modifier = Modifier.fillMaxSize()
-            )
+            MyTheme {
+                FavoritesScreen(
+                    viewModel = viewModel,
+                    onNavigationAction = navigation::onAction,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
     }
 

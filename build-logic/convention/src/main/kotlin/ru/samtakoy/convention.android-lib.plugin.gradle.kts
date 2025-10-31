@@ -23,6 +23,7 @@ android {
 }
 
 dependencies {
-    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.bundles.kotlinx.pure)
+
     implementation(libs.jakewharton.timber)
 }

@@ -6,7 +6,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe
 import ru.samtakoy.common.utils.MyLog.add
-import ru.samtakoy.features.import_export.utils.FromZipEntryStreamFactory
+import ru.samtakoy.features.import_export.utils.streams.FromZipEntryStreamFactory
 import ru.samtakoy.features.import_export.utils.isPackFile
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
@@ -22,7 +22,6 @@ import java.util.zip.ZipOutputStream
 
 object ZipHelper {
     fun unzipStream(
-        resolver: ContentResolver,
         zippedFileInputStream: InputStream
     ): Observable<FromZipEntryStreamFactory> {
         return Observable.create<FromZipEntryStreamFactory>(ObservableOnSubscribe { emitter: ObservableEmitter<FromZipEntryStreamFactory> ->
@@ -61,7 +60,8 @@ object ZipHelper {
         })
     }
 
-    @Throws(IOException::class) fun zipDirectory(dir: File, zipFile: File?) {
+    @Throws(IOException::class)
+    fun zipDirectory(dir: File, zipFile: File?) {
         val fout = FileOutputStream(zipFile)
         val zout = ZipOutputStream(BufferedOutputStream(fout))
         try {
