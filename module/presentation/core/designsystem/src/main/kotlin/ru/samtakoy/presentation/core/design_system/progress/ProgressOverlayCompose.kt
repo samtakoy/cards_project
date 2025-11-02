@@ -56,11 +56,11 @@ fun ProgressOverlayView(
         Surface(
             modifier = modifier
                 .padding(
-                    horizontal = UiOffsets.screenContentHOffset,
-                    vertical = UiOffsets.screenContentVOffset
+                    horizontal = UiOffsets.screenContentHPadding,
+                    vertical = UiOffsets.screenContentVPadding
                 )
                 .wrapContentSize()
-                .clip(getRoundedShape(UiRadiuses.panelBg))
+                .clip(getRoundedShape(UiRadiuses.windowPanelBg))
                 .align(Alignment.Center)
         ) {
             Column(
@@ -69,8 +69,8 @@ fun ProgressOverlayView(
                         minWidth = LocalWindowInfo.current.containerSize.width.toDp() * .6f
                     )
                     .padding(
-                        horizontal = UiOffsets.screenContentHOffset,
-                        vertical = UiOffsets.screenContentVOffset
+                        horizontal = UiOffsets.screenContentHPadding,
+                        vertical = UiOffsets.screenContentVPadding
                     )
             ) {
                 Text(

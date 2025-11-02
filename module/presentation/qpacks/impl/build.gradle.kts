@@ -26,6 +26,12 @@ dependencies {
 
     implementation(projects.module.common.utils)
 
+    implementation(projects.module.domain.card.api)
+    implementation(projects.module.domain.qpack.api)
+    implementation(projects.module.domain.favorites.api)
+    implementation(projects.module.domain.learncourse.api)
+    implementation(projects.module.domain.view.api)
+
     implementation(projects.module.presentation.core.viewmodel)
     implementation(projects.module.presentation.core.designsystem)
     implementation(projects.module.presentation.core.appelements)

@@ -13,10 +13,10 @@ import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.mapper.QPacksWit
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModelImpl
 import ru.samtakoy.presentation.favorites.FavoritesRoute
 import ru.samtakoy.presentation.favorites.entry.FavoritesEntryImpl
-import ru.samtakoy.presentation.navigation.MainFeatureEntry
+import ru.samtakoy.presentation.navigation.MainTabFeatureEntry
 
 internal fun favoritesPresentationModule() = module {
-    factory<MainFeatureEntry>(named<FavoritesRoute>()) { FavoritesEntryImpl(get()) }
+    factory<MainTabFeatureEntry>(named<FavoritesRoute>()) { FavoritesEntryImpl(get()) }
 
     factoryOf(::QPacksWithFavsItemsMapperImpl) bind QPacksWithFavsItemsMapper::class
     viewModelOf(::QPackSelectionViewModelImpl)

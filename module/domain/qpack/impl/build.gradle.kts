@@ -11,7 +11,6 @@ dependencies {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
 
-    implementation(project(":module:domain:qpack:model"))
     implementation(project(":module:domain:qpack:api"))
     // implementation(project(":module:domain:view:api"))
 

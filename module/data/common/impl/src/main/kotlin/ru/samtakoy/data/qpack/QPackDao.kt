@@ -13,7 +13,7 @@ internal interface QPackDao {
     suspend fun getQPack(id: Long): QPackEntity?
 
     @Query("SELECT * FROM ${QPackEntity.Companion.table} WHERE ${QPackEntity.Companion._id}=:id")
-    fun getQPackAsFlow(id: Long): Flow<QPackEntity>
+    fun getQPackAsFlow(id: Long): Flow<QPackEntity?>
 
     @Query("SELECT * FROM ${QPackEntity.Companion.table} WHERE ${QPackEntity.Companion._theme_id}=:themeId")
     fun getQPacksFromTheme(themeId: Long): List<QPackEntity>
@@ -86,8 +86,10 @@ internal interface QPackDao {
     @TypeConverters(DateLongConverter::class)
     suspend fun updateQPackViewCount(qPackId: Long, currentTime: Date)
 
-    @Query("UPDATE ${QPackEntity.Companion.table} SET ${QPackEntity.Companion._favorite}=:favorite WHERE ${QPackEntity.Companion._id}=:qPackId")
-    fun updateQPackFavorite(qPackId: Long, favorite: Int)
+    @Query(
+        "UPDATE ${QPackEntity.Companion.table} SET ${QPackEntity.Companion._favorite}=:favorite WHERE ${QPackEntity.Companion._id}=:qPackId"
+    )
+    suspend fun updateQPackFavorite(qPackId: Long, favorite: Int)
 
     @Query("DELETE FROM ${QPackEntity.Companion.table} WHERE ${QPackEntity.Companion._id}=:id")
     suspend fun deleteQPackById(id: Long): Int

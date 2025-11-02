@@ -1,28 +1,31 @@
-package ru.samtakoy.core.presentation.qpack.info.vm
+package ru.samtakoy.presentation.qpacks.screens.info.vm
 
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
-import org.apache.commons.lang3.exception.ExceptionUtils
-import ru.samtakoy.R
 import ru.samtakoy.common.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
-import ru.samtakoy.presentation.utils.asAnnotated
+import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.domain.card.CardInteractor
 import ru.samtakoy.domain.favorites.FavoritesInteractor
 import ru.samtakoy.domain.learncourse.NCoursesInteractor
-import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
-import ru.samtakoy.common.utils.MyLog
-import ru.samtakoy.core.presentation.qpack.info.mapper.FastCardUiModelMapper
-import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModel.Action
-import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModel.Event
-import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModel.NavigationAction
-import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModel.State
-import ru.samtakoy.domain.card.CardInteractor
 import ru.samtakoy.domain.qpack.QPack
 import ru.samtakoy.domain.qpack.QPackInteractor
 import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.domain.view.ViewHistoryItem
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
+import ru.samtakoy.presentation.core.design_system.base.model.UiId
+import ru.samtakoy.presentation.qpacks.impl.R
+import ru.samtakoy.presentation.qpacks.screens.fastlist.mapper.FastCardUiModelMapper
+import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoButtonsMapper
+import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoDialogMapper
+import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoMenuMapper
+import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.Action
+import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.Event
+import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.NavigationAction
+import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.State
+import ru.samtakoy.presentation.utils.asAnnotated
 
 internal class QPackInfoViewModelImpl(
     private val cardInteractor: CardInteractor,
@@ -32,6 +35,9 @@ internal class QPackInfoViewModelImpl(
     private val viewHistoryInteractor: ViewHistoryInteractor,
     private val resources: Resources,
     private val cardsMapper: FastCardUiModelMapper,
+    private val buttonsMapper: QPackInfoButtonsMapper,
+    private val choiceDialogMapper: QPackInfoDialogMapper,
+    private val toolbarMenuMapper: QPackInfoMenuMapper,
     scopeProvider: ScopeProvider,
     private val qPackId: Long
 ) : BaseViewModelImpl<State, Action, Event>(
@@ -39,9 +45,10 @@ internal class QPackInfoViewModelImpl(
     initialState = State(
         isLoading = false,
         title = "".asAnnotated(),
+        toolbarMenu = toolbarMenuMapper.map(),
         cardsCountText = "".asAnnotated(),
         isFavoriteChecked = false,
-        uncompletedButton = null,
+        buttons = buttonsMapper.map(null).toImmutableList(),
         fastCards = State.CardsState.NotInit
     )
 ), QPackInfoViewModel {
@@ -49,27 +56,55 @@ internal class QPackInfoViewModelImpl(
     private var isPackEmpty: Boolean = false
     private var lastUncompletedView: ViewHistoryItem? = null
 
-    override fun onInit() {
-        super.onInit()
+    init {
         subscribeData()
     }
 
     override fun onEvent(event: Event) {
         when (event) {
             is Event.AddCardsToCourseCommit -> onUiAddCardsToCourseCommit(event.courseId)
-            Event.AddFakeCard -> onUiAddFakeCard()
-            Event.AddToExistsCourse -> onUiAddToExistsCourse()
-            Event.AddToNewCourse -> onUiAddToNewCourse()
             Event.CardsFastView -> onUiCardsFastView()
-            Event.DeletePack -> onUiDeletePack()
             is Event.NewCourseCommit -> onUiNewCourseCommit(event.courseTitle)
-            Event.ShowPackCourses -> onUiShowPackCourses()
-            Event.ViewPackCards -> onUiViewPackCards()
-            Event.ViewPackCardsInList -> onUiViewPackCardsInList()
-            Event.ViewPackCardsOrdered -> onViewPackCards(false)
-            Event.ViewPackCardsRandomly -> onViewPackCards(true)
-            Event.ViewUncompletedClick -> onUiViewUncompletedClick()
-            is Event.FavoriteChange -> onUiFavoriteChange(event.isChecked)
+            is Event.ViewTypeCommit -> onUiViewTypeCommit(event.itemId)
+            is Event.FavoriteChange -> onUiFavoriteChange(event.wasChecked)
+            is Event.ButtonClick -> onUiButtonClick(event.btnId)
+            is Event.ToolbarMenuItemClick -> onUiToolbarMenuItemClick(event.menuItemId)
+        }
+    }
+
+    private fun onUiToolbarMenuItemClick(itemId: UiId) {
+        when (itemId) {
+            QPackInfoMenuMapper.IdItemDeletePack -> onUiDeletePack()
+            QPackInfoMenuMapper.IdItemAddFakeCard -> onUiAddFakeCard()
+        }
+    }
+
+    private fun onUiViewTypeCommit(selectedId: UiId) {
+        when (selectedId) {
+            QPackInfoDialogMapper.IdItemOrdered -> onUiViewPackCards(shuffleCards = false)
+            QPackInfoDialogMapper.IdItemRandomly -> onUiViewPackCards(shuffleCards = true)
+            QPackInfoDialogMapper.IdItemInList -> onUiViewPackCardsInList()
+        }
+    }
+
+    private fun onUiViewPackCardsInList() {
+        sendAction(Action.OpenCardsInBottomList)
+    }
+
+    private fun onUiViewPackCards(shuffleCards: Boolean) {
+        launchWithLoader {
+            val view = viewHistoryInteractor.addNewViewItemForPack(qPackId = qPackId, shuffleCards = shuffleCards)
+            sendAction(NavigationAction.NavigateToCardsView(viewItemId = view.id))
+        }
+    }
+
+    private fun onUiButtonClick(id: UiId) {
+        when (id) {
+            QPackInfoButtonsMapper.IdBtnViewCards -> onUiViewPackCards()
+            QPackInfoButtonsMapper.IdBtnViewUncompleted -> onUiViewUncompletedClick()
+            QPackInfoButtonsMapper.IdBtnAddToNewCourse -> onUiAddToNewCourse()
+            QPackInfoButtonsMapper.IdBtnAddToCourse -> onUiAddToExistsCourse()
+            QPackInfoButtonsMapper.IdBtnViewCourses -> onUiShowPackCourses()
         }
     }
 
@@ -117,17 +152,17 @@ internal class QPackInfoViewModelImpl(
     }
 
     private fun onUiViewPackCards() {
-        sendAction(Action.ShowLearnCourseCardsViewingType)
+        sendAction(
+            Action.ShowLearnCourseCardsViewingType(
+                dialogModel = choiceDialogMapper.mapViewTypeDialog()
+            )
+        )
     }
 
     private fun onUiViewUncompletedClick() {
         lastUncompletedView?.let {
             sendAction(NavigationAction.NavigateToCardsView(it.id))
         }
-    }
-
-    private fun onUiViewPackCardsInList() {
-        sendAction(Action.OpenCardsInBottomList)
     }
 
     private fun onUiCardsFastView() {
@@ -142,25 +177,22 @@ internal class QPackInfoViewModelImpl(
     private fun onUiAddFakeCard() {
         launchWithLoader {
             cardInteractor.addFakeCard(qPackId)
-            sendAction(Action.ShowErrorMessage(resources.getString(R.string.btn_ok)))
+            sendAction(
+                Action.ShowErrorMessage(
+                    resources.getString(ru.samtakoy.common.utils.R.string.action_ok)
+                )
+            )
         }
     }
 
-    private fun onUiFavoriteChange(isChecked: Boolean) {
+    private fun onUiFavoriteChange(wasChecked: Boolean) {
         launchCatching(
             onError = ::onGetError
         ) {
             favoritesInteractor.setQPackFavorite(
                 qPackId = qPackId,
-                favorite = if (isChecked) 1 else 0
+                favorite = if (wasChecked) 0 else 1
             )
-        }
-    }
-
-    private fun onViewPackCards(shuffleCards: Boolean) {
-        launchWithLoader {
-            val view = viewHistoryInteractor.addNewViewItemForPack(qPackId = qPackId, shuffleCards = shuffleCards)
-            sendAction(NavigationAction.NavigateToCardsView(viewItemId = view.id))
         }
     }
 
@@ -173,21 +205,20 @@ internal class QPackInfoViewModelImpl(
             viewHistoryInteractor.getLastViewHistoryItemForAsFlow(qPackId)
                 .distinctUntilChanged()
         ) { qPack, cardIds, lastView ->
-            mQPack = qPack
+            mQPack = qPack ?: return@combine
             isPackEmpty = cardIds.isEmpty()
-            val cardsCountInUncompleted = lastView?.let { it.todoCardIds + it.viewedCardIds } ?: 0
+            val cardsCountInUncompleted = lastView?.let { it.todoCardIds.size + it.viewedCardIds.size } ?: 0
             viewState = viewState.copy(
                 title = qPack.title.asAnnotated(),
                 cardsCountText = resources.getString(R.string.qpack_cards_count, cardIds.size).asAnnotated(),
                 isFavoriteChecked = qPack.favorite > 0,
-                uncompletedButton = if (lastView != null && lastView.todoCardIds.isNotEmpty()) {
-                    resources.getString(
-                        R.string.qpack_btn_view_uncompleted,
-                        "${lastView.viewedCardIds.size}/$cardsCountInUncompleted"
-                    ).asAnnotated()
+                buttons = if (lastView != null && lastView.todoCardIds.isNotEmpty()) {
+                    buttonsMapper.map(
+                        QPackInfoButtonsMapper.Uncompleted(lastView.viewedCardIds.size, cardsCountInUncompleted)
+                    )
                 } else {
-                    null
-                }
+                    buttonsMapper.map(null)
+                }.toImmutableList()
             )
         }.launchIn(mainScope)
     }
@@ -200,10 +231,13 @@ internal class QPackInfoViewModelImpl(
         /* if (t is MessageException) {
             // TODO
             sendAction(Action.ShowErrorMessage(resources.getString(t.msgId)))
-        } else */ {
-            MyLog.add(ExceptionUtils.getMessage(t), t)
-            sendAction(Action.ShowErrorMessage(resources.getString(R.string.db_request_err_message)))
-        }
+        } else */
+            MyLog.add(t.message.orEmpty(), t)
+            sendAction(
+                Action.ShowErrorMessage(
+                    resources.getString(ru.samtakoy.common.utils.R.string.db_request_err_message)
+                )
+            )
         return true
     }
 

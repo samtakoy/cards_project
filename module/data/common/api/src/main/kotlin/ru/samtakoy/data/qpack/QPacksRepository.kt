@@ -9,7 +9,7 @@ interface QPacksRepository {
     fun addQPack(qPack: QPack): Long
 
     suspend fun getQPack(qPackId: Long): QPack?
-    fun getQPackAsFlow(qPackId: Long): Flow<QPack>
+    fun getQPackAsFlow(qPackId: Long): Flow<QPack?>
     suspend fun deletePack(qPackId: Long)
 
     fun updateQPack(qPack: QPack)

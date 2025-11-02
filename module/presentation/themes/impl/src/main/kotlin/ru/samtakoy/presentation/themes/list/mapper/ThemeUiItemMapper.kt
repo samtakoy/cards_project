@@ -8,7 +8,7 @@ import ru.samtakoy.domain.theme.Theme
 import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
 import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 import ru.samtakoy.presentation.core.design_system.button.MyButtonUiModel
-import ru.samtakoy.presentation.core.design_system.dialogs.MyAlertDialogUiModel
+import ru.samtakoy.presentation.core.design_system.dialogs.alert.MyAlertDialogUiModel
 import ru.samtakoy.presentation.themes.impl.R
 import ru.samtakoy.presentation.themes.list.model.ThemeUiItem
 import ru.samtakoy.presentation.utils.asA

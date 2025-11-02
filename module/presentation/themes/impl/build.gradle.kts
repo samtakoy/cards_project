@@ -37,11 +37,8 @@ dependencies {
 
     implementation(projects.module.domain.export.api)
     implementation(projects.module.domain.import.api)
-    implementation(projects.module.domain.import.model)
     implementation(projects.module.domain.theme.api)
-    implementation(projects.module.domain.theme.model)
     implementation(projects.module.domain.qpack.api)
-    implementation(projects.module.domain.qpack.model)
 
     implementation(projects.module.presentation.core.viewmodel)
     implementation(projects.module.presentation.core.designsystem)
@@ -51,4 +48,5 @@ dependencies {
     implementation(projects.module.presentation.navigation.api)
 
     implementation(projects.module.presentation.themes.api)
+    implementation(projects.module.presentation.qpacks.api)
 }

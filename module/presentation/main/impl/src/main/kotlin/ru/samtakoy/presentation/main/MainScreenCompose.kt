@@ -19,7 +19,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,7 +30,8 @@ import kotlinx.coroutines.launch
 import org.koin.compose.currentKoinScope
 import ru.samtakoy.presentation.main.navigation.MainFlowRoute
 import ru.samtakoy.presentation.main.vm.MainScreenViewModel
-import ru.samtakoy.presentation.navigation.MainFeatureEntry
+import ru.samtakoy.presentation.navigation.MainTabFeatureEntry
+import ru.samtakoy.presentation.navigation.RootFeatureEntry
 import ru.samtakoy.presentation.themes.list.ThemeListRoute
 import timber.log.Timber
 
@@ -60,6 +60,11 @@ private fun MainScreenInternal(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
+    val koin = currentKoinScope()
+    val rootFeatureEntries: ImmutableList<RootFeatureEntry> = remember {
+        koin.getAll< RootFeatureEntry>().toImmutableList()
+    }
+
     NavHost(
         navController = rootNavController,
         startDestination = MainFlowRoute.Tabs,
@@ -75,7 +80,12 @@ private fun MainScreenInternal(
                 coroutineScope = coroutineScope
             )
         }
-        TopScreensGraph(rootNavController)
+        rootFeatureEntries.forEach { featureEntry ->
+            featureEntry.registerGraph(
+                navGraphBuilder = this,
+                rootNavController = rootNavController
+            )
+        }
     }
 }
 
@@ -89,8 +99,8 @@ private fun TabsView(
     coroutineScope: CoroutineScope
 ) {
     val koin = currentKoinScope()
-    val mainFeatureEntries: ImmutableList<MainFeatureEntry> = remember {
-        koin.getAll<MainFeatureEntry>().toImmutableList()
+    val mainTabFeatureEntries: ImmutableList<MainTabFeatureEntry> = remember {
+        koin.getAll<MainTabFeatureEntry>().toImmutableList()
     }
 
     ModalNavigationDrawer(
@@ -117,10 +127,10 @@ private fun TabsView(
     ) {
         NavHost(
             navController = tabsNavController,
-            startDestination = remember { mainFeatureEntries.find { it.route is ThemeListRoute }!!.route },
+            startDestination = remember { mainTabFeatureEntries.find { it.route is ThemeListRoute }!!.route },
             modifier = Modifier.fillMaxSize()
         ) {
-            mainFeatureEntries.forEach { featureEntry ->
+            mainTabFeatureEntries.forEach { featureEntry ->
                 featureEntry.registerGraph(
                     navGraphBuilder = this,
                     rootNavController = rootNavController,
@@ -133,10 +143,6 @@ private fun TabsView(
             }
         }
     }
-}
-
-private fun NavGraphBuilder.TopScreensGraph(navController: NavHostController) {
-    // TODO
 }
 
 fun NavController.isTabsVisible(): Boolean {

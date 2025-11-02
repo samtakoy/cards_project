@@ -13,11 +13,11 @@ import ru.samtakoy.core.presentation.courses.model.CourseItemUiMapper
 import ru.samtakoy.core.presentation.courses.model.CourseItemUiMapperImpl
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModelImpl
 import ru.samtakoy.presentation.courses.CourseListRoute
-import ru.samtakoy.presentation.navigation.MainFeatureEntry
+import ru.samtakoy.presentation.navigation.MainTabFeatureEntry
 import ru.samtakoy.presentation.themes.entry.CourseListEntryImpl
 
 fun coursesPresentationModule() = module {
-    factory<MainFeatureEntry>(named<CourseListRoute>()) { CourseListEntryImpl(get()) }
+    factory<MainTabFeatureEntry>(named<CourseListRoute>()) { CourseListEntryImpl(get()) }
 
     factoryOf(::CourseItemUiMapperImpl) bind CourseItemUiMapper::class
 

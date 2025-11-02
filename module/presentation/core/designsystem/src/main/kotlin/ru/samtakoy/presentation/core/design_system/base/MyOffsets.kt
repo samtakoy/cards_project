@@ -15,12 +15,24 @@ object MyOffsets {
 }
 
 object UiOffsets {
-    val screenContentHOffset: Dp = MyOffsets.medium
-    val screenContentVOffset: Dp = MyOffsets.medium
+    // Вертикальные отступы м/у элементами на экране
+    val itemsSmallVOffset: Dp = MyOffsets.small
+    val itemsStandartVOffset: Dp = MyOffsets.medium
+
+    // Отступы контента экрана от краев
+    val screenContentHPadding: Dp = MyOffsets.medium
+    val screenContentVPadding: Dp = MyOffsets.medium
+
+    // Отступы списковых элементов
     val listItemContentHPadding: Dp = MyOffsets.small
     val listItemContentVPadding: Dp = MyOffsets.xxsmall
     val listItemOffset: Dp = MyOffsets.small
+
+    // Константы диалога
+    /** Минимальные отступы внешней панели от краев экрана */
     val dialogSurfacePaddings: Dp = MyOffsets.medium
+    /** Отступы контента от краев панели */
     val dialogContentPaddings: Dp = MyOffsets.medium
+    /** Подъем панели */
     val dialogSurfaceElevation: Dp = MyOffsets.small
 }

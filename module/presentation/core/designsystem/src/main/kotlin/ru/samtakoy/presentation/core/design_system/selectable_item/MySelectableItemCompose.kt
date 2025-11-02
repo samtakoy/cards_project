@@ -19,16 +19,21 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import ru.samtakoy.presentation.core.design_system.base.MyColors
 import ru.samtakoy.presentation.core.design_system.base.MyOffsets
+import ru.samtakoy.presentation.core.design_system.base.UiOffsets
+import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
 import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
+import ru.samtakoy.presentation.utils.getALoremIpsum
 
 @Composable
 fun MySelectableItem(
     model: MySelectableItemModel,
     onClick: ((MySelectableItemModel) -> Unit)?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    maxLines: Int = Int.MAX_VALUE
 ) {
     val updatedModel = rememberUpdatedState(model)
     val updatedOnClick = rememberUpdatedState(onClick)
@@ -53,7 +58,9 @@ fun MySelectableItem(
         Text(
             text = model.text,
             color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = maxLines,
         )
     }
 }
@@ -65,7 +72,7 @@ private fun MySelectableItem_Preview() = MyTheme {
         modifier = Modifier.Companion
             .background(MyColors.getScreenBackground())
             .padding(MyOffsets.small),
-        verticalArrangement = Arrangement.spacedBy(MyOffsets.small)
+        verticalArrangement = Arrangement.spacedBy(UiOffsets.listItemOffset)
     ) {
         getPreviewSelectableItems().forEach {
             MySelectableItem(
@@ -73,5 +80,10 @@ private fun MySelectableItem_Preview() = MyTheme {
                 onClick = null
             )
         }
+        MySelectableItem(
+            model = MySelectableItemModel(AnyUiId(), getALoremIpsum(12), true, true),
+            onClick = null,
+            maxLines = 1
+        )
     }
 }

@@ -7,5 +7,5 @@ android {
 }
 
 dependencies {
-    implementation(project(":module:domain:theme:model"))
+    api(project(":module:domain:theme:model"))
 }

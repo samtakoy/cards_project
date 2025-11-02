@@ -6,8 +6,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 
 @Immutable
-interface MainFeatureEntry {
-    val route: MainRoute
+interface MainTabFeatureEntry {
+    val route: MainTabRoute
     @Deprecated("не используется")
     val routeTitle: AnnotatedString
 

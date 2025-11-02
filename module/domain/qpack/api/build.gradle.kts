@@ -7,5 +7,5 @@ android {
 }
 
 dependencies {
-    implementation(project(":module:domain:qpack:model"))
+    api(project(":module:domain:qpack:model"))
 }

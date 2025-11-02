@@ -1,13 +1,17 @@
-package ru.samtakoy.core.presentation.qpack.info.vm
+package ru.samtakoy.presentation.qpacks.screens.info.vm
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.AnnotatedString
 import kotlinx.collections.immutable.ImmutableList
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
-import ru.samtakoy.core.presentation.qpack.info.FastCardUiModel
-import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModel.Action
-import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModel.Event
-import ru.samtakoy.core.presentation.qpack.info.vm.QPackInfoViewModel.State
+import ru.samtakoy.presentation.qpacks.screens.fastlist.model.FastCardUiModel
+import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.Action
+import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.Event
+import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.State
+import ru.samtakoy.presentation.core.design_system.base.model.UiId
+import ru.samtakoy.presentation.core.design_system.button.MyButtonUiModel
+import ru.samtakoy.presentation.core.design_system.dialogs.choice.MyChoiceDialogUiModel
+import ru.samtakoy.presentation.core.design_system.dropdown.DropDownMenuUiModel
 
 @Immutable
 internal interface QPackInfoViewModel : BaseViewModel<State, Action, Event> {
@@ -15,9 +19,10 @@ internal interface QPackInfoViewModel : BaseViewModel<State, Action, Event> {
     data class State(
         val isLoading: Boolean,
         val title: AnnotatedString,
+        val toolbarMenu: DropDownMenuUiModel,
         val cardsCountText: AnnotatedString,
         val isFavoriteChecked: Boolean,
-        val uncompletedButton: AnnotatedString?,
+        val buttons: ImmutableList<MyButtonUiModel>,
         val fastCards: CardsState
     ) {
         sealed interface CardsState {
@@ -32,7 +37,7 @@ internal interface QPackInfoViewModel : BaseViewModel<State, Action, Event> {
         class ShowErrorMessage(val message: String) : Action
         class RequestNewCourseCreation(val title: String) : Action
         class RequestsSelectCourseToAdd(val qPackId: Long) : Action
-        object ShowLearnCourseCardsViewingType : Action
+        class ShowLearnCourseCardsViewingType(val dialogModel: MyChoiceDialogUiModel) : Action
         object OpenCardsInBottomList : Action
     }
 
@@ -45,19 +50,12 @@ internal interface QPackInfoViewModel : BaseViewModel<State, Action, Event> {
     }
 
     sealed interface Event {
-        object DeletePack : Event
         class NewCourseCommit(val courseTitle: String) : Event
-        object ShowPackCourses : Event
-        object AddToNewCourse : Event
-        object AddToExistsCourse : Event
+        class ButtonClick(val btnId: UiId) : Event
         class AddCardsToCourseCommit(val courseId: Long) : Event
-        object ViewPackCards : Event
-        object ViewUncompletedClick : Event
-        object ViewPackCardsRandomly : Event
-        object ViewPackCardsOrdered : Event
-        object ViewPackCardsInList : Event
+        class ViewTypeCommit(val itemId: UiId) : Event
         object CardsFastView : Event
-        object AddFakeCard : Event
-        class FavoriteChange(val isChecked: Boolean) : Event
+        class ToolbarMenuItemClick(val menuItemId: UiId) : Event
+        class FavoriteChange(val wasChecked: Boolean) : Event
     }
 }

@@ -11,7 +11,6 @@ dependencies {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
 
-    implementation(project(":module:domain:card:model"))
     implementation(project(":module:domain:card:api"))
     implementation(project(":module:data:common:api"))
 }

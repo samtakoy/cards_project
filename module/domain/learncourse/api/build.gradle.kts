@@ -7,6 +7,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":module:domain:learncourse:model"))
-    implementation(project(":module:domain:view:model"))
+    api(project(":module:domain:learncourse:model"))
+    api(project(":module:domain:view:model"))
 }

@@ -6,7 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ru.samtakoy.R
+import ru.samtakoy.presentation.qpacks.screens.fastlist.model.FastCardUiModel
 
+// TODO remove
 internal class CardsFastViewAdapter : RecyclerView.Adapter<CardsFastViewAdapter.MyViewHolder>() {
     private var mCards: List<FastCardUiModel>
 

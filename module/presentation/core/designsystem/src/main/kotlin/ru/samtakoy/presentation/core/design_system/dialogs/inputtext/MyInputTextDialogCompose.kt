@@ -17,10 +17,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import ru.samtakoy.presentation.core.design_system.base.MyOffsets
 import ru.samtakoy.presentation.core.design_system.base.UiOffsets
 import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
@@ -32,7 +34,7 @@ import ru.samtakoy.presentation.utils.asA
 @Composable
 fun MyInputTextDialogView(
     dialogState: MutableState<MyInputTextDialogUiModel?>,
-    onOkClick: (dialogId: UiId?, result: String) -> Unit,
+    onButtonClick: (dialogId: UiId?, result: String) -> Unit,
     onDismiss: (() -> Unit)? = null
 ) {
     val dialogModel = dialogState.value
@@ -69,13 +71,13 @@ fun MyInputTextDialogView(
                     )
                     Spacer(Modifier.height(24.dp))
                     Row(
-                        horizontalArrangement = Arrangement.End,
-                        modifier = Modifier.fillMaxWidth()
+                        horizontalArrangement = Arrangement.spacedBy(MyOffsets.small, Alignment.End),
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         MyButton(
                             model = dialogModel.okButton,
                             onClick = {
-                                onOkClick(dialogModel.id, inputText)
+                                onButtonClick(dialogModel.id, inputText)
                                 dialogState.value = null
                             }
                         )
@@ -106,6 +108,6 @@ private fun MyInputTextDialogView_Preview() = MyTheme {
                 )
             )
         },
-        onOkClick = { a, b -> Unit }
+        onButtonClick = { a, b -> Unit }
     )
 }

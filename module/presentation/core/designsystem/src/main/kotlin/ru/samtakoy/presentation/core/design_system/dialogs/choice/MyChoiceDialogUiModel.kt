@@ -1,15 +1,18 @@
-package ru.samtakoy.presentation.core.design_system.dialogs
+package ru.samtakoy.presentation.core.design_system.dialogs.choice
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.AnnotatedString
 import kotlinx.collections.immutable.ImmutableList
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
 import ru.samtakoy.presentation.core.design_system.button.MyButtonUiModel
+import ru.samtakoy.presentation.core.design_system.radio.MyRadioItemUiModel
 
 @Immutable
-data class MyAlertDialogUiModel(
+data class MyChoiceDialogUiModel(
     val id: UiId?,
     val title: AnnotatedString,
     val description: AnnotatedString?,
-    val buttons: ImmutableList<MyButtonUiModel>
+    val items: ImmutableList<MyRadioItemUiModel>,
+    val okButton: MyButtonUiModel,
+    val cancelButton: MyButtonUiModel? = null,
 )

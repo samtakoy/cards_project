@@ -10,11 +10,9 @@ dependencies {
     // filekit
     implementation(libs.filekit.dialogs.compose)
 
-    implementation(projects.module.domain.card.model)
-    implementation(projects.module.domain.qpack.model)
-    implementation(projects.module.domain.theme.model)
-
-    implementation(projects.module.domain.task.model)
-
-    implementation(projects.module.domain.import.model)
+    api(projects.module.domain.card.model)
+    api(projects.module.domain.qpack.model)
+    api(projects.module.domain.theme.model)
+    api(projects.module.domain.task.model)
+    api(projects.module.domain.import.model)
 }

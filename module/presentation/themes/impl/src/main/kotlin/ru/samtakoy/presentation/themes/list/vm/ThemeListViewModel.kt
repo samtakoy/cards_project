@@ -13,7 +13,7 @@ import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.State
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
-import ru.samtakoy.presentation.core.design_system.dialogs.MyAlertDialogUiModel
+import ru.samtakoy.presentation.core.design_system.dialogs.alert.MyAlertDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.inputtext.MyInputTextDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dropdown.DropDownMenuUiModel
 import ru.samtakoy.presentation.core.design_system.progress.ProgressOverlayUiModel

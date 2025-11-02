@@ -7,5 +7,5 @@ android {
 }
 
 dependencies {
-    implementation(project(":module:domain:card:model"))
+    api(project(":module:domain:card:model"))
 }

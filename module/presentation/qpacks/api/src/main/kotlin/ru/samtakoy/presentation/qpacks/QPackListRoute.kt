@@ -1,7 +1,7 @@
 package ru.samtakoy.presentation.qpacks
 
 import kotlinx.serialization.Serializable
-import ru.samtakoy.presentation.navigation.MainRoute
+import ru.samtakoy.presentation.navigation.MainTabRoute
 
 @Serializable
-object QPackListRoute : MainRoute
+object QPackListRoute : MainTabRoute

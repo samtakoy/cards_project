@@ -20,14 +20,10 @@ dependencies {
 
     implementation(projects.module.data.import.api)
     implementation(projects.module.domain.import.api)
-    implementation(projects.module.domain.import.model)
 
     implementation(projects.module.domain.task.model)
 
-    implementation(projects.module.domain.card.model)
     implementation(projects.module.domain.card.api)
-    implementation(projects.module.domain.qpack.model)
     implementation(projects.module.domain.qpack.api)
-    implementation(projects.module.domain.theme.model)
     implementation(projects.module.domain.theme.api)
 }

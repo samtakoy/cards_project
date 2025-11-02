@@ -9,12 +9,7 @@ internal class ListOfLongConverter {
 
     @TypeConverter
     fun fromString(srcString: String): List<Long> {
-        var result = ArrayList<Long>()
-        val separated = srcString.split(',')
-        for (strNumber in separated) {
-            result.add(java.lang.Long.valueOf(strNumber))
-        }
-        return result
+        return srcString.split(',').mapNotNull { it.toLongOrNull() }
     }
 
 }

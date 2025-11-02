@@ -23,23 +23,6 @@
     <string name="fragment_dialog_batch_export_title">Exporting....</string>
     <string name="fragment_dialog_batch_export_error_msg">Error on batch exporting</string>
 
-    <string name="msg_there_is_no_cards_in_pack">Нет ни одной карточки в наборе</string>
-    <string name="msg_there_is_no_new_cards_to_learn">Нет новых карточек для изучения</string>
-    <string name="qpack_btn_view_cards">view cards</string>
-    <string name="qpack_btn_view_uncompleted">view uncompleted: %1$s</string>
-    <string name="qpack_btn_add_to_new_course">a new course</string>
-    <string name="qpack_btn_add_to_course">add to course</string>
-    <string name="qpack_btn_view_courses">view courses</string>
-    <string name="qpack_menu_delete">удалить</string>
-    <string name="qpack_cards_count">Карточек: %s</string>
-    <string name="qpack_favorites_box">Важно</string>
-
-    <string-array name="qpack_viewing_types">
-        <item>Карточки произволньно</item>
-        <item>Карточки по порядку</item>
-        <item>Список</item>
-    </string-array>
-    <string name="qpack_viewing_types_title">Тип просмотра</string>
 
     <string name="cards_view_no_course_msg">Some error</string>
     <string name="cards_view_some_err_msg">Some error</string>

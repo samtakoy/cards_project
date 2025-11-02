@@ -10,5 +10,6 @@ object MyRadiuses {
 
 object UiRadiuses {
     val listItemBg: Dp = MyRadiuses.r8
-    val panelBg: Dp = MyRadiuses.r16
+    val innerPanelBg: Dp = MyRadiuses.r8
+    val windowPanelBg: Dp = MyRadiuses.r16
 }

@@ -13,7 +13,7 @@ internal class QPackInteractorImpl(
         return qPackRepository.getQPack(qPackId)
     }
 
-    override fun getQPackAsFlow(qPackId: Long): Flow<QPack> {
+    override fun getQPackAsFlow(qPackId: Long): Flow<QPack?> {
         return qPackRepository.getQPackAsFlow(qPackId)
     }
 

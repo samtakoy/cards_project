@@ -74,10 +74,11 @@ internal class QPacksListViewModelImpl(
         saveScope = ioScope
     )
 
-    override fun onInit() {
-        super.onInit()
+    init {
         subscribeData()
-        sendAction(Action.SearchText(searchText.value))
+        launchCatching {
+            sendAction(Action.SearchText(searchText.value))
+        }
     }
 
     override fun onEvent(event: Event) {

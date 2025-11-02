@@ -1,4 +1,4 @@
-package ru.samtakoy.core.presentation.qpack.info
+package ru.samtakoy.presentation.qpacks.screens.fastlist.model
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.AnnotatedString

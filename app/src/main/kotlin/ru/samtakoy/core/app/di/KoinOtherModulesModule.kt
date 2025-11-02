@@ -20,6 +20,7 @@ import ru.samtakoy.platform.importcards.di.importCardsFromZipPlatformModule
 import ru.samtakoy.platform.notification.di.notificationPlatformModule
 import ru.samtakoy.platform.permissions.di.permissionsPlatformAndroidModule
 import ru.samtakoy.presentation.main.di.mainScreenPresentationModule
+import ru.samtakoy.presentation.qpacks.di.qPackPresentationModule
 import ru.samtakoy.presentation.settings.di.settingsPresentationModule
 import ru.samtakoy.presentation.themes.di.themesPresentationModule
 
@@ -41,6 +42,7 @@ fun koinOtherModulesModule() = module {
         platformModule(),
 
         mainScreenPresentationModule(),
+        qPackPresentationModule(),
         themesPresentationModule(),
         coursesPresentationModule(),
         favoritesPresentationModule(),

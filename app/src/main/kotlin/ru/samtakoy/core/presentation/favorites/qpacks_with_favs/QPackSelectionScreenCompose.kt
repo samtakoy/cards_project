@@ -85,8 +85,8 @@ private fun QPackSelectionScreenInternal(
                     .fillMaxWidth()
                     .weight(1f)
                     .padding(
-                        horizontal = UiOffsets.screenContentHOffset,
-                        vertical = UiOffsets.screenContentVOffset
+                        horizontal = UiOffsets.screenContentHPadding,
+                        vertical = UiOffsets.screenContentVPadding
                     )
             ) {
                 items(

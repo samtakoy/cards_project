@@ -20,8 +20,10 @@ internal class QPacksRepositoryImpl(
         return qPackDao.getQPack(qPackId)?.let(qPackMapper::mapToDomain)
     }
 
-    override fun getQPackAsFlow(qPackId: Long): Flow<QPack> {
-        return qPackDao.getQPackAsFlow(qPackId).map(qPackMapper::mapToDomain)
+    override fun getQPackAsFlow(qPackId: Long): Flow<QPack?> {
+        return qPackDao.getQPackAsFlow(qPackId).map {
+            it?.let(qPackMapper::mapToDomain)
+        }
     }
 
     override suspend fun deletePack(qPackId: Long) {

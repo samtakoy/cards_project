@@ -14,7 +14,6 @@ dependencies {
     implementation(project(":module:data:common:api"))
     implementation(project(":module:data:common:api"))
 
-    implementation(project(":module:domain:view:model"))
     implementation(project(":module:domain:view:api"))
     implementation(project(":module:domain:card:api"))
 

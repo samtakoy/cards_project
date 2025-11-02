@@ -1,7 +1,7 @@
 package ru.samtakoy.presentation.favorites
 
 import kotlinx.serialization.Serializable
-import ru.samtakoy.presentation.navigation.MainRoute
+import ru.samtakoy.presentation.navigation.MainTabRoute
 
 @Serializable
-object FavoritesRoute : MainRoute
+object FavoritesRoute : MainTabRoute

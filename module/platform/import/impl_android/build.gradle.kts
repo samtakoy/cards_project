@@ -33,5 +33,4 @@ dependencies {
     implementation(projects.module.domain.task.model)
 
     implementation(projects.module.domain.import.api)
-    implementation(projects.module.domain.import.model)
 }

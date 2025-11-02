@@ -7,17 +7,17 @@ import androidx.navigation.compose.composable
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.presentation.favorites.FavoritesRoute
 import ru.samtakoy.presentation.favorites.impl.R
-import ru.samtakoy.presentation.navigation.MainFeatureEntry
-import ru.samtakoy.presentation.navigation.MainRoute
+import ru.samtakoy.presentation.navigation.MainTabFeatureEntry
+import ru.samtakoy.presentation.navigation.MainTabRoute
 import ru.samtakoy.presentation.themes.entry.FavoritesEntry
 import ru.samtakoy.presentation.utils.asA
 
 // internal
 class FavoritesEntryImpl(
     private val resources: Resources
-) : MainFeatureEntry {
+) : MainTabFeatureEntry {
 
-    override val route: MainRoute
+    override val route: MainTabRoute
         get() = FavoritesRoute
 
     override val routeTitle: AnnotatedString

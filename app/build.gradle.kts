@@ -112,23 +112,18 @@ dependencies {
     implementation(projects.module.data.task.impl)
 
     implementation(projects.module.domain.card.api)
-    implementation(projects.module.domain.card.model)
     implementation(projects.module.domain.card.impl)
 
     implementation(projects.module.domain.learncourse.api)
-    implementation(projects.module.domain.learncourse.model)
     implementation(projects.module.domain.learncourse.impl)
 
     implementation(projects.module.domain.qpack.api)
-    implementation(projects.module.domain.qpack.model)
     implementation(projects.module.domain.qpack.impl)
 
     implementation(projects.module.domain.theme.api)
-    implementation(projects.module.domain.theme.model)
     implementation(projects.module.domain.theme.impl)
 
     implementation(projects.module.domain.view.api)
-    implementation(projects.module.domain.view.model)
     implementation(projects.module.domain.view.impl)
 
     implementation(projects.module.domain.favorites.api)
@@ -139,7 +134,6 @@ dependencies {
 
     implementation(projects.module.domain.export.api)
     implementation(projects.module.domain.import.api)
-    implementation(projects.module.domain.import.model)
     implementation(projects.module.domain.import.impl)
 
     implementation(projects.module.presentation.core.utils)

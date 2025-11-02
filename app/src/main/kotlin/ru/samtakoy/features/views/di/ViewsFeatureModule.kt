@@ -8,13 +8,13 @@ import org.koin.dsl.module
 import ru.samtakoy.features.views.presentation.history.mapper.ViewHistoryItemUiModelMapper
 import ru.samtakoy.features.views.presentation.history.mapper.ViewHistoryItemUiModelMapperImpl
 import ru.samtakoy.features.views.presentation.history.vm.ViewsHistoryViewModelImpl
-import ru.samtakoy.presentation.navigation.MainFeatureEntry
+import ru.samtakoy.presentation.navigation.MainTabFeatureEntry
 import ru.samtakoy.presentation.themes.entry.ViewsHistoryEntryImpl
 import ru.samtakoy.presentation.viewshistory.ViewsHistoryRoute
 
 internal fun viewsFeatureModule() = module {
     // presentation
-    factory<MainFeatureEntry>(named<ViewsHistoryRoute>()) { ViewsHistoryEntryImpl(get()) }
+    factory<MainTabFeatureEntry>(named<ViewsHistoryRoute>()) { ViewsHistoryEntryImpl(get()) }
 
     factoryOf(::ViewHistoryItemUiModelMapperImpl) bind ViewHistoryItemUiModelMapper::class
     viewModelOf(::ViewsHistoryViewModelImpl)

@@ -34,7 +34,7 @@ import ru.samtakoy.presentation.core.appelements.themelistitem.ThemeListItemView
 import ru.samtakoy.presentation.core.design_system.base.UiOffsets
 import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
-import ru.samtakoy.presentation.core.design_system.dialogs.MyAlertDialogUiModel
+import ru.samtakoy.presentation.core.design_system.dialogs.alert.MyAlertDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.alert.MyAlertDialogView
 import ru.samtakoy.presentation.core.design_system.dialogs.inputtext.MyInputTextDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.inputtext.MyInputTextDialogView
@@ -61,6 +61,12 @@ internal fun ThemeListScreen(
 ) {
     val snackbarHostState by remember { mutableStateOf(SnackbarHostState()) }
     val viewState by viewModel.getViewStateAsFlow().collectAsStateWithLifecycle()
+    var inputDialogState: MutableState<MyInputTextDialogUiModel?> =  remember {
+        mutableStateOf(null)
+    }
+    var alertDialogState: MutableState<MyAlertDialogUiModel?> =  remember {
+        mutableStateOf(null)
+    }
 
     ThemesListScreenInternal(
         viewState = viewState,
@@ -69,14 +75,6 @@ internal fun ThemeListScreen(
         snackbarHostState = snackbarHostState,
         modifier = modifier
     )
-
-    var inputDialogState: MutableState<MyInputTextDialogUiModel?> =  remember {
-        mutableStateOf(null)
-    }
-
-    var alertDialogState: MutableState<MyAlertDialogUiModel?> =  remember {
-        mutableStateOf(null)
-    }
 
     HandleActions(
         viewModel = viewModel,
@@ -102,7 +100,7 @@ private fun ScreenDialogs(
 ) {
     MyInputTextDialogView(
         dialogState = inputDialogState,
-        onOkClick = { dialogId, result ->
+        onButtonClick = { dialogId, result ->
             onEvent(Event.InputDialogResult(dialogId, result))
         },
         onDismiss = null
@@ -224,8 +222,8 @@ private fun ThemesListScreenInternal(
                 modifier = Modifier
                     .weight(1f)
                     .padding(
-                        horizontal = UiOffsets.screenContentHOffset,
-                        vertical = UiOffsets.screenContentVOffset
+                        horizontal = UiOffsets.screenContentHPadding,
+                        vertical = UiOffsets.screenContentVPadding
                     ),
                 verticalArrangement = Arrangement.spacedBy(UiOffsets.listItemOffset)
             ) {
