@@ -49,6 +49,12 @@ object MyColors {
 
     @Composable
     @ReadOnlyComposable
+    fun getSecondTextColor(): Color {
+        return MaterialTheme.colorScheme.secondary
+    }
+
+    @Composable
+    @ReadOnlyComposable
     fun getOverlayColor(): Color {
         return MaterialTheme.colorScheme.onSurface.copy(alpha = 0.32f)
     }

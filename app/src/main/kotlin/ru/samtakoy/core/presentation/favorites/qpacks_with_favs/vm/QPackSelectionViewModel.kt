@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 import ru.samtakoy.core.presentation.RouterHolder
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
-import ru.samtakoy.presentation.core.design_system.button.MyButtonUiModel
+import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.core.design_system.selectable_item.MySelectableItemModel
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModel.Action
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModel.Event

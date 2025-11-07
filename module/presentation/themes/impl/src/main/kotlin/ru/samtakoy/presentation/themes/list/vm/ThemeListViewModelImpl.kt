@@ -28,7 +28,7 @@ import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
-import ru.samtakoy.presentation.core.design_system.button.MyButtonUiModel
+import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.inputtext.MyInputTextDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dropdown.DropDownMenuUiModel
 import ru.samtakoy.presentation.core.design_system.progress.ProgressOverlayUiModel

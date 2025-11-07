@@ -23,7 +23,6 @@ import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel.Action
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel.State
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModelImpl
-import ru.samtakoy.core.presentation.qpack.info.QPackInfoFragment
 import ru.samtakoy.presentation.base.observe
 import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
@@ -128,6 +127,7 @@ class SelectCourseDialogFragment : AppCompatDialogFragment(), ViewModelOwner {
 
         const val RESULT_EXTRA_COURSE_ID: String = "RESULT_EXTRA_COURSE_ID"
 
+        /*
         @JvmStatic fun newFragment(
             targetQPackId: Long?,
             targetFragment: QPackInfoFragment,
@@ -139,6 +139,6 @@ class SelectCourseDialogFragment : AppCompatDialogFragment(), ViewModelOwner {
             result.setArguments(args)
             result.setTargetFragment(targetFragment, requestCode)
             return result
-        }
+        }*/
     }
 }

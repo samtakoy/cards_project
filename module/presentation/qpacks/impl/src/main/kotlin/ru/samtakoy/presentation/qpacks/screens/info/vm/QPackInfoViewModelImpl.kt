@@ -228,16 +228,12 @@ internal class QPackInfoViewModelImpl(
     }
 
     private fun onGetError(t: Throwable): Boolean {
-        /* if (t is MessageException) {
-            // TODO
-            sendAction(Action.ShowErrorMessage(resources.getString(t.msgId)))
-        } else */
-            MyLog.add(t.message.orEmpty(), t)
-            sendAction(
-                Action.ShowErrorMessage(
-                    resources.getString(ru.samtakoy.common.utils.R.string.db_request_err_message)
-                )
+        MyLog.add(t.message.orEmpty(), t)
+        sendAction(
+            Action.ShowErrorMessage(
+                resources.getString(ru.samtakoy.common.utils.R.string.db_request_err_message)
             )
+        )
         return true
     }
 

@@ -13,8 +13,8 @@ import androidx.compose.ui.text.style.TextOverflow
 @Composable
 fun ToolbarTitleView(
     title: AnnotatedString?,
-    subtitle: AnnotatedString?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    subtitle: AnnotatedString? = null
 ) {
     Column(
         modifier = modifier,

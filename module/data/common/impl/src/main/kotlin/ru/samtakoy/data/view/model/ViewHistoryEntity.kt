@@ -16,7 +16,7 @@ import java.util.Date
         ForeignKey(
             entity = QPackEntity::class,
             parentColumns = [QPackEntity._id],
-            childColumns = [ViewHistoryEntity.ID],
+            childColumns = [ViewHistoryEntity.QPACK_ID],
             onDelete = ForeignKey.CASCADE
         )
     ]

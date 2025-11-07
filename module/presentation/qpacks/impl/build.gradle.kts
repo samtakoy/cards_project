@@ -38,6 +38,7 @@ dependencies {
     implementation(projects.module.presentation.core.utils)
 
     implementation(projects.module.presentation.navigation.api)
+    implementation(projects.module.presentation.cards.api)
 
     implementation(projects.module.presentation.qpacks.api)
 }

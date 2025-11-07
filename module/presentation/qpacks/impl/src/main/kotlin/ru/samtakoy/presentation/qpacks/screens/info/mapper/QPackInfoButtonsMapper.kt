@@ -2,7 +2,7 @@ package ru.samtakoy.presentation.qpacks.screens.info.mapper
 
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
-import ru.samtakoy.presentation.core.design_system.button.MyButtonUiModel
+import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.qpacks.impl.R
 import ru.samtakoy.presentation.utils.asA
 

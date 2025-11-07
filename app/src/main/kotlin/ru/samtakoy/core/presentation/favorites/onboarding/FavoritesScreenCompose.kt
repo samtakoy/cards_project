@@ -20,8 +20,8 @@ import kotlinx.collections.immutable.toImmutableList
 import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.presentation.base.observeActionsWithLifecycle
 import ru.samtakoy.presentation.core.design_system.base.UiOffsets
-import ru.samtakoy.presentation.core.design_system.button.MyButton
-import ru.samtakoy.presentation.core.design_system.button.MyButtonUiModel
+import ru.samtakoy.presentation.core.design_system.button.usual.MyButton
+import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.core.design_system.scaffold.MySimpleScreenScaffold
 import ru.samtakoy.core.presentation.favorites.onboarding.mapper.FavoritesButtonsMapper
 import ru.samtakoy.core.presentation.favorites.onboarding.vm.FavoritesViewModel

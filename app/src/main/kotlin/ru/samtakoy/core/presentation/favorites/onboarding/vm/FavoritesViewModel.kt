@@ -5,7 +5,7 @@ import kotlinx.collections.immutable.ImmutableList
 import ru.samtakoy.core.presentation.RouterHolder
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
-import ru.samtakoy.presentation.core.design_system.button.MyButtonUiModel
+import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.core.presentation.favorites.onboarding.vm.FavoritesViewModel.Action
 import ru.samtakoy.core.presentation.favorites.onboarding.vm.FavoritesViewModel.Event
 import ru.samtakoy.core.presentation.favorites.onboarding.vm.FavoritesViewModel.State

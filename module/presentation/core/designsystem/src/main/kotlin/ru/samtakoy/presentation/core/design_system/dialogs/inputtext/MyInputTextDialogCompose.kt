@@ -27,8 +27,8 @@ import ru.samtakoy.presentation.core.design_system.base.UiOffsets
 import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
 import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
-import ru.samtakoy.presentation.core.design_system.button.MyButton
-import ru.samtakoy.presentation.core.design_system.button.MyButtonUiModel
+import ru.samtakoy.presentation.core.design_system.button.usual.MyButton
+import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.utils.asA
 
 @Composable

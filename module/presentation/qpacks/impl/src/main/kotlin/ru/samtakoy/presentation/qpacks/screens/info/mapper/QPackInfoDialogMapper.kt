@@ -4,7 +4,7 @@ import kotlinx.collections.immutable.toImmutableList
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.common.utils.R as RUtils
 import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
-import ru.samtakoy.presentation.core.design_system.button.MyButtonUiModel
+import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.choice.MyChoiceDialogUiModel
 import ru.samtakoy.presentation.core.design_system.radio.MyRadioItemUiModel
 import ru.samtakoy.presentation.qpacks.impl.R

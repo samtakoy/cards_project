@@ -17,6 +17,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,7 +33,7 @@ import ru.samtakoy.presentation.base.observeActionsWithLifecycle
 import ru.samtakoy.presentation.core.design_system.base.UiOffsets
 import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
 import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
-import ru.samtakoy.presentation.core.design_system.button.MyButton
+import ru.samtakoy.presentation.core.design_system.button.usual.MyButton
 import ru.samtakoy.presentation.core.design_system.dialogs.choice.MyChoiceDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.choice.MyChoiceDialogView
 import ru.samtakoy.presentation.core.design_system.dropdown.MyDropDownMenuBox
@@ -137,10 +138,6 @@ private fun QPackInfoScreenInternal(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    horizontal = UiOffsets.screenContentHPadding,
-                    vertical = UiOffsets.screenContentVPadding
-                )
         ) {
             TopAppBar(
                 title = { ToolbarTitleView(title = viewState.title, subtitle = null) },
@@ -157,33 +154,45 @@ private fun QPackInfoScreenInternal(
                     }
                 }
             )
-            Text(
-                text = viewState.cardsCountText,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                style = MaterialTheme.typography.titleSmall
-            )
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = UiOffsets.screenContentVPadding)
-                    .weight(1f),
-                verticalArrangement = Arrangement.spacedBy(UiOffsets.itemsStandartVOffset, Alignment.CenterVertically),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.padding(
+                    horizontal = UiOffsets.screenContentHPadding,
+                    vertical = UiOffsets.screenContentVPadding
+                )
             ) {
-                viewState.buttons.forEach {
-                    MyButton(
-                        model = it,
-                        onClick = { onEvent(Event.ButtonClick(it.id)) }
-                    )
+                Text(
+                    text = viewState.cardsCountText,
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    style = MaterialTheme.typography.titleSmall
+                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = UiOffsets.screenContentVPadding)
+                        .weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(
+                        UiOffsets.itemsStandartVOffset,
+                        Alignment.CenterVertically
+                    ),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    viewState.buttons.forEach {
+                        key(it.id) {
+                            MyButton(
+                                model = it,
+                                onClick = { onEvent(Event.ButtonClick(it.id)) }
+                            )
+                        }
+                    }
                 }
+                MySelectableItem(
+                    model = getIsFavoriteModel(viewState.isFavoriteChecked),
+                    onClick = { onEvent(Event.FavoriteChange(it.isChecked)) },
+                    maxLines = 1,
+                    modifier = Modifier
+                        .align(Alignment.End)
+                )
             }
-            MySelectableItem(
-                model = getIsFavoriteModel(viewState.isFavoriteChecked),
-                onClick = { onEvent(Event.FavoriteChange(it.isChecked)) },
-                maxLines = 1,
-                modifier = Modifier
-                    .align(Alignment.End)
-            )
         }
     }
 }

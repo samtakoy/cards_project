@@ -7,6 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import ru.samtakoy.presentation.cards.CardsViewRoute
+import ru.samtakoy.presentation.cards.view.model.CardViewMode
 import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel
 import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModelImpl
 
@@ -25,7 +27,9 @@ internal fun QPackInfoEntry(
                     rootNavController.popBackStack()
                 }
                 is QPackInfoViewModel.NavigationAction.NavigateToCardsView -> {
-                    // TODO()
+                    rootNavController.navigate(
+                        CardsViewRoute(action.viewItemId, CardViewMode.LEARNING)
+                    )
                 }
                 is QPackInfoViewModel.NavigationAction.NavigateToPackCourses -> Unit // TODO()
                 is QPackInfoViewModel.NavigationAction.ShowCourseScreen -> Unit // TODO()

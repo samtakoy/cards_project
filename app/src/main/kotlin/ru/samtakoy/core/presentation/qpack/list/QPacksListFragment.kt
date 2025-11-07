@@ -23,7 +23,6 @@ import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.samtakoy.R
 import ru.samtakoy.core.presentation.RouterHolder
-import ru.samtakoy.core.presentation.qpack.info.QPackInfoFragment.Companion.buildBundle
 import ru.samtakoy.core.presentation.qpack.list.QPacksListAdapter.ItemClickListener
 import ru.samtakoy.core.presentation.qpack.list.model.QPackListItemUiModel
 import ru.samtakoy.core.presentation.qpack.list.model.QPackSortType
@@ -219,10 +218,11 @@ open class QPacksListFragment : Fragment(), ViewModelOwner {
     }
 
     private fun showPackInfo(qPackId: Long) {
+        /*
         mRouterHolder!!.navController.navigate(
             R.id.action_qPacksListFragment_to_qPackInfoFragment,
             buildBundle(qPackId)
-        )
+        )*/
     }
 
     private fun showError(message: String) {

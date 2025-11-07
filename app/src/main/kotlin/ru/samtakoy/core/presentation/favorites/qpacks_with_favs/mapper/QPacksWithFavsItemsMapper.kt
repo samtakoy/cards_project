@@ -4,7 +4,7 @@ import ru.samtakoy.R
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 import ru.samtakoy.presentation.core.design_system.base.model.StringUiId
-import ru.samtakoy.presentation.core.design_system.button.MyButtonUiModel
+import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.core.design_system.selectable_item.MySelectableItemModel
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.mapper.QPacksWithFavsItemsMapper.Companion.ACTION_BUTTON_ID
 import ru.samtakoy.domain.qpack.QPack

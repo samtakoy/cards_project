@@ -1,6 +1,6 @@
 package ru.samtakoy.data.common.db
 
-const val DB_VERSION = 9
+const val DB_VERSION = 10
 const val DB_NAME = "cards.db"
 
 /*

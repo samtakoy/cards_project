@@ -18,7 +18,7 @@ import ru.samtakoy.domain.learncourse.CourseProgressUseCase
 import ru.samtakoy.domain.learncourse.CoursesPlanner
 import ru.samtakoy.domain.learncourse.NCoursesInteractor
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
-import ru.samtakoy.core.presentation.cards.types.CardViewMode
+import ru.samtakoy.presentation.cards.view.model.CardViewMode
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.Action
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.Event
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.NavigationAction

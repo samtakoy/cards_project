@@ -151,6 +151,9 @@ dependencies {
     implementation(projects.module.presentation.qpacks.api)
     implementation(projects.module.presentation.qpacks.impl)
 
+    implementation(projects.module.presentation.cards.api)
+    implementation(projects.module.presentation.cards.impl)
+
     implementation(projects.module.presentation.settings.api)
     implementation(projects.module.presentation.settings.impl)
 

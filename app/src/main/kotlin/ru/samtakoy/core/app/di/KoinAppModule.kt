@@ -4,7 +4,6 @@ import org.koin.dsl.module
 import ru.samtakoy.core.app.di.modules.apiDataModule
 import ru.samtakoy.core.app.di.modules.dialogPresentationModule
 import ru.samtakoy.core.app.di.modules.workerFactoryModule
-import ru.samtakoy.core.presentation.cards.di.cardsViewPresentationModule
 import ru.samtakoy.core.presentation.qpack.di.qPackPresentationModuleFragment
 import ru.samtakoy.features.import_export.di.exportModule
 import ru.samtakoy.features.import_export.di.importModule
@@ -20,7 +19,6 @@ fun koinAppModule() = module {
 
         viewsFeatureModule(),
         qPackPresentationModuleFragment(),
-        cardsViewPresentationModule(),
         dialogPresentationModule(),
 
         importModule(),

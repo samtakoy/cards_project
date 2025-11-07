@@ -88,6 +88,9 @@
             <option value="$PROJECT_DIR$/module/platform/permissions/api" />
             <option value="$PROJECT_DIR$/module/platform/permissions/impl_android" />
             <option value="$PROJECT_DIR$/module/presentation" />
+            <option value="$PROJECT_DIR$/module/presentation/cards" />
+            <option value="$PROJECT_DIR$/module/presentation/cards/api" />
+            <option value="$PROJECT_DIR$/module/presentation/cards/impl" />
             <option value="$PROJECT_DIR$/module/presentation/core" />
             <option value="$PROJECT_DIR$/module/presentation/core/appelements" />
             <option value="$PROJECT_DIR$/module/presentation/core/designsystem" />
@@ -120,5 +123,6 @@
         </option>
       </GradleProjectSettings>
     </option>
+    <option name="offlineMode" value="true" />
   </component>
 </project>

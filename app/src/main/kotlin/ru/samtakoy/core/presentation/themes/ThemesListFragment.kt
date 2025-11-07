@@ -24,7 +24,6 @@ import ru.samtakoy.core.presentation.import_cards.BatchImportDialogFragment
 import ru.samtakoy.core.presentation.import_cards.ImportPackDialogFragment
 import ru.samtakoy.core.presentation.import_cards.ImportZipDialogFragment
 import ru.samtakoy.core.presentation.log.LogActivity
-import ru.samtakoy.core.presentation.qpack.info.QPackInfoFragment
 import ru.samtakoy.domain.importcards.model.ImportCardsOpts
 import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner

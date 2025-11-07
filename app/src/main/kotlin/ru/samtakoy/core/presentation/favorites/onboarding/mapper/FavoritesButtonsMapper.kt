@@ -4,7 +4,7 @@ import kotlinx.parcelize.Parcelize
 import ru.samtakoy.R
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
-import ru.samtakoy.presentation.core.design_system.button.MyButtonUiModel
+import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.utils.asAnnotated
 
 interface FavoritesButtonsMapper {

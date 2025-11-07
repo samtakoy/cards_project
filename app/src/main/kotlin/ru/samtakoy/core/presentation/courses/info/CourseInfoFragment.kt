@@ -18,8 +18,7 @@ import org.koin.core.parameter.parametersOf
 import ru.samtakoy.R
 import ru.samtakoy.core.presentation.DialogHelper
 import ru.samtakoy.core.presentation.RouterHolder
-import ru.samtakoy.core.presentation.cards.CardsViewFragment.Companion.buildBundle
-import ru.samtakoy.core.presentation.cards.types.CardViewMode
+import ru.samtakoy.presentation.cards.view.model.CardViewMode
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.Event
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModelImpl
@@ -145,10 +144,11 @@ class CourseInfoFragment : Fragment(), ViewModelOwner {
         viewHistoryItemId: Long,
         viewMode: CardViewMode
     ) {
+        /*
         mRouterHolder!!.navController.navigate(
             R.id.action_courseInfoFragment_to_cardsViewFragment,
             buildBundle(viewHistoryItemId, viewMode)
-        )
+        )*/
     }
 
     private fun requestExtraordinaryRepeating() {

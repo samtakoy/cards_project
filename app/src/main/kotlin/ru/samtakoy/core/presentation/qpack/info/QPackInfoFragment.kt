@@ -3,11 +3,7 @@ package ru.samtakoy.core.presentation.qpack.info
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.view.animation.DecelerateInterpolator
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.CompoundButton
@@ -16,35 +12,30 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.AutoTransition
-import androidx.transition.TransitionManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import ru.samtakoy.R
 import ru.samtakoy.core.presentation.RouterHolder
-import ru.samtakoy.core.presentation.cards.CardsViewFragment.Companion.buildBundle
-import ru.samtakoy.core.presentation.cards.types.CardViewMode
 import ru.samtakoy.core.presentation.courses.CourseEditDialogFragment
 import ru.samtakoy.core.presentation.courses.info.CourseInfoFragment
 import ru.samtakoy.core.presentation.courses.list.CoursesListFragment.Companion.buildBundle
 import ru.samtakoy.core.presentation.courses.select.SelectCourseDialogFragment
-import ru.samtakoy.core.presentation.courses.select.SelectCourseDialogFragment.Companion.newFragment
 import ru.samtakoy.core.presentation.showDialogFragment
+import ru.samtakoy.presentation.cards.view.model.CardViewMode
 import kotlin.math.max
 
+/*
 class QPackInfoFragment : Fragment() {
 
-    /*
     private val viewModel: QPackInfoViewModel by viewModel<QPackInfoViewModelImpl> {
         parametersOf(requireArguments().getLong(ARG_QPACK_ID, -1))
     }
     override fun getViewModel(): AbstractViewModel = viewModel
-     */
+
 
     private var mQPackTitle: TextView? = null
     private var mQPackCardsCount: TextView? = null
@@ -74,6 +65,7 @@ class QPackInfoFragment : Fragment() {
                 // viewModel.onEvent(Event.FavoriteChange(isChecked))
             }
         }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_qpack_info, container, false)
@@ -126,17 +118,20 @@ class QPackInfoFragment : Fragment() {
             prepareAnim()
             Handler().post(Runnable { startAnim() })
         }
-
         return v
     }
 
     private fun prepareAnim() {
+
         val cs = ConstraintSet()
         cs.clone(getContext(), R.layout.fragment_qpack_info_frame1)
         cs.applyTo(mConstraintLayout)
+
+
     }
 
     private fun startAnim() {
+
         val cs = ConstraintSet()
         cs.clone(getContext(), R.layout.fragment_qpack_info_frame2)
 
@@ -146,22 +141,26 @@ class QPackInfoFragment : Fragment() {
 
         TransitionManager.beginDelayedTransition(mConstraintLayout!!, transition)
         cs.applyTo(mConstraintLayout)
+
+
     }
 
     private fun initAnimationContainers(v: View) {
         //mExternalContainer = v.findViewById(R.id.externalContainer);
-        mConstraintLayout = v.findViewById<ConstraintLayout>(R.id.innerContainer)
+        // mConstraintLayout = v.findViewById<ConstraintLayout>(R.id.innerContainer)
     }
 
     override fun onDestroyView() {
+
         if (mBottomSheetCallback != null) {
             mBottomSheetBehavior!!.removeBottomSheetCallback(mBottomSheetCallback!!)
             mBottomSheetCallback = null
         }
 
         super.onDestroyView()
+
     }
-    /*
+
     private fun onAction(action : Action) {
         when (action) {
             Action.OpenCardsInBottomList -> openCardsInBottomList()
@@ -174,9 +173,8 @@ class QPackInfoFragment : Fragment() {
             is QPackInfoViewModel.NavigationAction.NavigateToPackCourses -> navigateToPackCourses(action.qPackId)
             is QPackInfoViewModel.NavigationAction.ShowCourseScreen -> showCourseScreen(action.courseId)
         }
-    }*/
+    }
 
-    /*
     private fun onViewState(state: State) {
         mQPackTitle!!.setText(state.title)
         mQPackCardsCount!!.setText(state.cardsCountText)
@@ -199,7 +197,7 @@ class QPackInfoFragment : Fragment() {
                 mCardsFastViewAdapter!!.setCards(emptyList())
             }
         }
-    }*/
+    }
 
     private fun initBottomSheet(v: View) {
         mLinearLayoutBSheet = v.findViewById<LinearLayout>(R.id.bottomSheet)
@@ -333,3 +331,4 @@ class QPackInfoFragment : Fragment() {
         }
     }
 }
+*/
