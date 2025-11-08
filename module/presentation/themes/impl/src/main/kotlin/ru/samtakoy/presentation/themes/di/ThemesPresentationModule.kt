@@ -15,7 +15,7 @@ import ru.samtakoy.presentation.themes.list.mapper.ThemeListMenuItemsMapperImpl
 import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModelImpl
 
 fun themesPresentationModule() = module {
-    factory<MainTabFeatureEntry>(named<ThemeListRoute>()) { ThemeListEntryImpl(get()) }
+    factory<MainTabFeatureEntry>(named<ThemeListRoute>()) { ThemeListEntryImpl() }
 
     factoryOf(::ThemeUiItemMapperImpl) bind ThemeUiItemMapper::class
     factoryOf(::ThemeListMenuItemsMapperImpl) bind ThemeListMenuItemsMapper::class
@@ -28,7 +28,6 @@ fun themesPresentationModule() = module {
             importCardsFromZipTask = get(),
             uiItemsMapper = get(),
             menuItemMapper = get(),
-            resources = get(),
             savedStateHandle = get(),
             scopeProvider = get(),
             themeId = themeId,

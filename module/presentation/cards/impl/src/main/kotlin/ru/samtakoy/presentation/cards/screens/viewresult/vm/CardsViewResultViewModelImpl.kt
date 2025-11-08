@@ -4,9 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import org.jetbrains.compose.resources.getString
 import ru.samtakoy.common.coroutines.ScopeProvider
-import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.common.utils.MyLog
 import ru.samtakoy.domain.learncourse.CoursesPlanner
 import ru.samtakoy.domain.learncourse.schedule.Schedule
@@ -17,20 +16,19 @@ import ru.samtakoy.domain.learncourse.schedule.serialize.toParcelable
 import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.base.viewmodel.savedstate.SavedStateValue
-import ru.samtakoy.presentation.cards.impl.R
-import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel
 import ru.samtakoy.presentation.cards.screens.viewresult.vm.CardsViewResultViewModel.Action
 import ru.samtakoy.presentation.cards.screens.viewresult.vm.CardsViewResultViewModel.Event
 import ru.samtakoy.presentation.cards.screens.viewresult.vm.CardsViewResultViewModel.State
 import ru.samtakoy.presentation.cards.screens.viewresult.vm.mapper.CardsViewResultMapper
 import ru.samtakoy.presentation.cards.view.model.CardViewMode
-import ru.samtakoy.presentation.utils.toStringView
+import ru.samtakoy.resources.Res
+import ru.samtakoy.resources.common_err_message
+import ru.samtakoy.resources.db_request_err_message
 
 internal class CardsViewResultViewModelImpl(
     private val viewHistoryInteractor: ViewHistoryInteractor,
     private val coursesPlanner: CoursesPlanner,
     private val mapper: CardsViewResultMapper,
-    private val resources: Resources,
     savedStateHandle: SavedStateHandle,
     scopeProvider: ScopeProvider,
     private val viewItemId: Long,
@@ -109,12 +107,14 @@ internal class CardsViewResultViewModelImpl(
     }
 
     private fun onGetError(t: Throwable) {
-        MyLog.add(t.message ?: resources.getString(ru.samtakoy.common.utils.R.string.common_err_message), t)
-        sendAction(
-            Action.ShowErrorMessage(
-                resources.getString(ru.samtakoy.common.utils.R.string.db_request_err_message)
+        launchCatching {
+            MyLog.add(t.message ?: getString(Res.string.common_err_message), t)
+            sendAction(
+                Action.ShowErrorMessage(
+                    getString(Res.string.db_request_err_message)
+                )
             )
-        )
+        }
     }
 
     private fun launchWithLoader(

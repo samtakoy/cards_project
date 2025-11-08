@@ -1,14 +1,19 @@
 package ru.samtakoy.presentation.cards.screens.view.vm.mapper
 
-import ru.samtakoy.common.resources.Resources
+import org.jetbrains.compose.resources.getString
+import ru.samtakoy.common.coroutines.SuspendLazy
 import ru.samtakoy.presentation.cards.impl.R
 import ru.samtakoy.presentation.cards.view.model.CardViewMode
 import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.utils.asAnnotated
+import ru.samtakoy.resources.Res
+import ru.samtakoy.resources.cards_view_back_from_answer_btn
+import ru.samtakoy.resources.cards_view_next_btn
+import ru.samtakoy.resources.cards_view_wrong_btn
 
 internal interface AnswerButtonsMapper {
-    fun map(viewMode: CardViewMode): List<MyButtonUiModel>
+    suspend fun map(viewMode: CardViewMode): List<MyButtonUiModel>
 
     companion object {
         val IdBackBtn = AnyUiId()
@@ -17,11 +22,9 @@ internal interface AnswerButtonsMapper {
     }
 }
 
-internal class AnswerButtonsMapperImpl(
-    private val resources: Resources
-) : AnswerButtonsMapper {
+internal class AnswerButtonsMapperImpl : AnswerButtonsMapper {
 
-    override fun map(viewMode: CardViewMode): List<MyButtonUiModel> {
+    override suspend fun map(viewMode: CardViewMode): List<MyButtonUiModel> {
         return buildList {
             mapBackButton(viewMode)?.let { add(it) }
             mapWrongButton(viewMode)?.let { add(it) }
@@ -29,48 +32,48 @@ internal class AnswerButtonsMapperImpl(
         }
     }
 
-    private fun mapBackButton(viewMode: CardViewMode): MyButtonUiModel? {
+    private suspend fun mapBackButton(viewMode: CardViewMode): MyButtonUiModel? {
         return when (viewMode) {
-            CardViewMode.LEARNING -> backButton
+            CardViewMode.LEARNING -> backButton.getValue()
             CardViewMode.REPEATING,
             CardViewMode.REPEATING_FAST -> null
         }
     }
 
-    private fun mapWrongButton(viewMode: CardViewMode): MyButtonUiModel? {
+    private suspend fun mapWrongButton(viewMode: CardViewMode): MyButtonUiModel? {
         return when (viewMode) {
             CardViewMode.LEARNING -> null
             CardViewMode.REPEATING,
-            CardViewMode.REPEATING_FAST -> wrongButton
+            CardViewMode.REPEATING_FAST -> wrongButton.getValue()
         }
     }
 
-    private fun mapNextCardButton(viewMode: CardViewMode): MyButtonUiModel? {
+    private suspend fun mapNextCardButton(viewMode: CardViewMode): MyButtonUiModel? {
         return when (viewMode) {
             CardViewMode.LEARNING,
             CardViewMode.REPEATING,
-            CardViewMode.REPEATING_FAST -> nextButton
+            CardViewMode.REPEATING_FAST -> nextButton.getValue()
         }
     }
 
-    private val backButton: MyButtonUiModel by lazy {
+    private val backButton = SuspendLazy {
         MyButtonUiModel(
             id = AnswerButtonsMapper.IdBackBtn,
-            text = resources.getString(R.string.cards_view_back_from_answer_btn).asAnnotated()
+            text = getString(Res.string.cards_view_back_from_answer_btn).asAnnotated()
         )
     }
 
-    private val wrongButton: MyButtonUiModel by lazy {
+    private val wrongButton = SuspendLazy {
         MyButtonUiModel(
             id = AnswerButtonsMapper.IdWrongBtn,
-            text = resources.getString(R.string.cards_view_wrong_btn).asAnnotated()
+            text = getString(Res.string.cards_view_wrong_btn).asAnnotated()
         )
     }
 
-    private val nextButton: MyButtonUiModel by lazy {
+    private val nextButton = SuspendLazy {
         MyButtonUiModel(
             id = AnswerButtonsMapper.IdNextCardBtn,
-            text = resources.getString(R.string.cards_view_next_btn).asAnnotated()
+            text = getString(Res.string.cards_view_next_btn).asAnnotated()
         )
     }
 }

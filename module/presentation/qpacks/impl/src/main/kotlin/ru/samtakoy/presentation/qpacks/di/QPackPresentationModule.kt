@@ -39,8 +39,8 @@ fun qPackPresentationModule() = module {
     factoryOf(::FastCardUiModelMapperImpl) bind FastCardUiModelMapper::class
 
     // список
-    factory<MainTabFeatureEntry>(named<QPackListRoute>()) { QPackListEntryImpl(get()) }
+    factory<MainTabFeatureEntry>(named<QPackListRoute>()) { QPackListEntryImpl() }
 
     // выбор
-    factory<MainTabFeatureEntry>(named< QPackSelectionRoute>()) { QPackSelectionEntryImpl(get()) }
+    factory<MainTabFeatureEntry>(named< QPackSelectionRoute>()) { QPackSelectionEntryImpl() }
 }

@@ -5,9 +5,11 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.kotlin.support) apply false
     alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.jetbrains.compose) apply false
+    alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.kotlinx.serialization) apply false
-    alias(libs.plugins.androidx.navigation.safeargs) apply false
     alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.android.kotlin.multiplatform.library) apply false
 }
 
 tasks.register("clean", Delete::class) {

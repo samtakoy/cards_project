@@ -23,10 +23,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.runBlocking
+import org.jetbrains.compose.resources.stringResource
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.KoinApplication
 import ru.samtakoy.presentation.base.observeActionsWithLifecycle
@@ -43,7 +44,6 @@ import ru.samtakoy.presentation.core.design_system.selectable_item.MySelectableI
 import ru.samtakoy.presentation.core.design_system.selectable_item.MySelectableItemModel
 import ru.samtakoy.presentation.core.design_system.toolbar.ToolbarTitleView
 import ru.samtakoy.presentation.qpacks.di.qPackPresentationModule
-import ru.samtakoy.presentation.qpacks.impl.R
 import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoButtonsMapper
 import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoButtonsMapper.Uncompleted
 import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel
@@ -51,6 +51,8 @@ import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.Event
 import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.NavigationAction
 import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.State
 import ru.samtakoy.presentation.utils.asA
+import ru.samtakoy.resources.Res
+import ru.samtakoy.resources.qpack_favorites_box
 
 @Composable
 internal fun QPackInfoScreen(
@@ -199,7 +201,7 @@ private fun QPackInfoScreenInternal(
 
 @Composable
 private fun getIsFavoriteModel(isFavoriteChecked: Boolean): MySelectableItemModel {
-    val title = stringResource(R.string.qpack_favorites_box).asA()
+    val title = stringResource(Res.string.qpack_favorites_box).asA()
     return remember(isFavoriteChecked) {
         MySelectableItemModel(
             AnyUiId(),
@@ -227,7 +229,7 @@ private fun QPackInfoScreenInternal_Preview() = MyTheme {
             toolbarMenu = getEmptyMenu(),
             cardsCountText = "2/3".asA(),
             isFavoriteChecked = true,
-            buttons = mapper.map(Uncompleted(2, 10)).toImmutableList(),
+            buttons = runBlocking { mapper.map(Uncompleted(2, 10)).toImmutableList() },
             fastCards = State.CardsState.NotInit
         ),
         onEvent = { },

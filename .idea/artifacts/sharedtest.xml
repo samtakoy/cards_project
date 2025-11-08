@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="sharedtest">
+    <output-path>$PROJECT_DIR$/module/platform/common/sharedtest/build/libs</output-path>
+    <root id="archive" name="sharedtest.jar">
+      <element id="module-output" name="cards.module.platform.common.sharedtest.androidMain" />
+    </root>
+  </artifact>
+</component>

@@ -27,13 +27,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.runBlocking
+import org.jetbrains.compose.resources.stringResource
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.KoinApplication
 import ru.samtakoy.common.di.commonUtilsModule
@@ -64,6 +65,8 @@ import ru.samtakoy.presentation.core.design_system.toolbar.ToolbarTitleView
 import ru.samtakoy.presentation.utils.asA
 import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.presentation.utils.getALoremIpsum
+import ru.samtakoy.resources.Res
+import ru.samtakoy.resources.cards_view_favorite_box
 import timber.log.Timber
 
 @Composable
@@ -302,14 +305,14 @@ private fun ColumnScope.FavoriteCheckBox(
     modifier: Modifier = Modifier
 ) {
     MySelectableItem(
-        text = stringResource(R.string.cards_view_favorite_box).asAnnotated(),
+        text = stringResource(Res.string.cards_view_favorite_box).asAnnotated(),
         isChecked = isChecked,
         isEnabled = true,
         onClick = {
             onEvent(Event.FavoriteClick)
         },
         modifier = modifier,
-        contentDescription = stringResource(R.string.cards_view_favorite_box)
+        contentDescription = stringResource(Res.string.cards_view_favorite_box)
     )
 }
 
@@ -414,8 +417,8 @@ private fun CardsViewScreenInternal_Preview() = MyTheme {
             ),
             isLoading = false,
             cardItems = cards,
-            questionButtons = questionMapper.map(CardViewMode.LEARNING).toImmutableList(),
-            answerButtons = answerMapper.map(CardViewMode.LEARNING).toImmutableList(),
+            questionButtons = runBlocking { questionMapper.map(CardViewMode.LEARNING).toImmutableList() },
+            answerButtons = runBlocking { answerMapper.map(CardViewMode.LEARNING).toImmutableList() },
         ),
         onEvent = {},
         snackbarHostState = remember { SnackbarHostState() }

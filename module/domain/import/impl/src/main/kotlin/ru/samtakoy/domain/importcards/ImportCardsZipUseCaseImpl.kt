@@ -3,12 +3,12 @@ package ru.samtakoy.domain.importcards
 import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
-import ru.samtakoy.common.resources.Resources
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 import ru.samtakoy.common.utils.MyLog
 import ru.samtakoy.data.common.transaction.TransactionRepository
 import ru.samtakoy.data.importcards.CardsSourceRepository
@@ -18,9 +18,17 @@ import ru.samtakoy.domain.cardtag.TagInteractor
 import ru.samtakoy.domain.importcards.batch.ImportCardsZipUseCase
 import ru.samtakoy.domain.importcards.batch.utils.ImportCardsException
 import ru.samtakoy.domain.importcards.batch.utils.builder.QPackBuilder
-import ru.samtakoy.domain.importcards.impl.R
 import ru.samtakoy.domain.importcards.model.ImportCardsOpts
 import ru.samtakoy.domain.task.model.TaskStateData
+import ru.samtakoy.resources.Res
+import ru.samtakoy.resources.batch_zip_import_status_cards_saving
+import ru.samtakoy.resources.batch_zip_import_status_qpacks_preparing
+import ru.samtakoy.resources.batch_zip_import_status_qpacks_saving
+import ru.samtakoy.resources.batch_zip_import_status_reading_from_zip
+import ru.samtakoy.resources.batch_zip_import_status_tags_saving
+import ru.samtakoy.resources.batch_zip_import_status_theme_actualization
+import ru.samtakoy.resources.common_err_message
+import ru.samtakoy.resources.getFormatted
 import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
@@ -30,8 +38,7 @@ internal class ImportCardsZipUseCaseImpl(
     private val qPackBuilderInteractor: QPackBuilderInteractorImpl,
     private val tagInteractor: TagInteractor,
     private val sourceRepository: CardsSourceRepository,
-    private val transactionRepository: TransactionRepository,
-    private val resources: Resources
+    private val transactionRepository: TransactionRepository
 ) : ImportCardsZipUseCase {
 
     @OptIn(ExperimentalAtomicApi::class, ExperimentalCoroutinesApi::class)
@@ -46,11 +53,11 @@ internal class ImportCardsZipUseCaseImpl(
             }
             reportCallback(TaskStateData.Success)
         } catch (ex: ImportCardsException) {
-            val errMessage = ex.message ?: resources.getString(ru.samtakoy.common.utils.R.string.common_err_message)
+            val errMessage = ex.message ?: getString(Res.string.common_err_message)
             reportCallback(TaskStateData.Error(errMessage))
         } catch (t: Throwable) {
             MyLog.add(t.message.orEmpty(), t)
-            val errMessage = resources.getString(ru.samtakoy.common.utils.R.string.common_err_message)
+            val errMessage = getString(Res.string.common_err_message)
             reportCallback(TaskStateData.Error(errMessage))
         }
     }
@@ -61,30 +68,30 @@ internal class ImportCardsZipUseCaseImpl(
         zipFile: PlatformFile,
         opts: ImportCardsOpts
     ) {
-        reportCallback.status(0f, R.string.batch_zip_import_status_reading_from_zip)
+        reportCallback.status(0f, Res.string.batch_zip_import_status_reading_from_zip)
 
         val sourceList = sourceRepository
             .getFromZip(zipFile)
             .toList().also {
                 // Сохранить темы
-                reportCallback.status(0f, R.string.batch_zip_import_status_theme_actualization)
+                reportCallback.status(0f, Res.string.batch_zip_import_status_theme_actualization)
             }.map { source: QPackSource ->
                 val themeId = qPackBuilderInteractor.actualizeThemePaths(source.parentThemeNames)
                 source.copy(themeId = themeId)
             }
 
         // Подготовка построителей моделек
-        reportCallback.status(0f, R.string.batch_zip_import_status_qpacks_preparing)
+        reportCallback.status(0f, Res.string.batch_zip_import_status_qpacks_preparing)
         val allTagMap = tagInteractor.buildTagMap()
         var buildersList = prepareBuilders(sourceList, allTagMap, opts)
 
         // Сохранить паки
-        reportCallback.status(0f, R.string.batch_zip_import_status_qpacks_saving)
+        reportCallback.status(0f, Res.string.batch_zip_import_status_qpacks_saving)
         buildersList = saveQPacks(buildersList, opts)
 
         val newTags = allTagMap.getNewTags()
         if (newTags.isNotEmpty()) {
-            reportCallback.status(0f, R.string.batch_zip_import_status_tags_saving, newTags.size)
+            reportCallback.status(0f, Res.string.batch_zip_import_status_tags_saving, newTags.size)
             // Сохранить новые теги
             val updatedTags = tagInteractor.addTags(newTags)
             allTagMap.addTags(updatedTags)
@@ -96,7 +103,7 @@ internal class ImportCardsZipUseCaseImpl(
         // Сохранить карточки
         reportCallback.status(
             progress = 0f,
-            stringId = R.string.batch_zip_import_status_cards_saving,
+            stringId = Res.string.batch_zip_import_status_cards_saving,
             processedCards.load(),
             cardsCount
         )
@@ -104,7 +111,7 @@ internal class ImportCardsZipUseCaseImpl(
             processedCards.addAndFetch(builder.cardBuilders.size)
             reportCallback.status(
                 progress = processedCards.load().toFloat() / cardsCount,
-                stringId = R.string.batch_zip_import_status_cards_saving,
+                stringId = Res.string.batch_zip_import_status_cards_saving,
                 processedCards.load(),
                 cardsCount
             )
@@ -165,12 +172,12 @@ internal class ImportCardsZipUseCaseImpl(
 
     private suspend fun StateReportCallback.status(
         progress: Float,
-        stringId: Int,
+        stringId: StringResource,
         vararg formatArgs: Any?
     ) {
         invoke(
             TaskStateData.ActiveStatus(
-                message = resources.getString(stringId, *formatArgs),
+                message = getFormatted(stringId, *formatArgs),
                 progress = progress
             )
         )

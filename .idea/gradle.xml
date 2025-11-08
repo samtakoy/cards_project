@@ -22,11 +22,13 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/androidApp" />
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/build-logic/convention" />
             <option value="$PROJECT_DIR$/module" />
             <option value="$PROJECT_DIR$/module/common" />
+            <option value="$PROJECT_DIR$/module/common/oldresources" />
+            <option value="$PROJECT_DIR$/module/common/resources" />
             <option value="$PROJECT_DIR$/module/common/utils" />
             <option value="$PROJECT_DIR$/module/data" />
             <option value="$PROJECT_DIR$/module/data/common" />
@@ -72,9 +74,6 @@
             <option value="$PROJECT_DIR$/module/domain/view/model" />
             <option value="$PROJECT_DIR$/module/platform" />
             <option value="$PROJECT_DIR$/module/platform/api" />
-            <option value="$PROJECT_DIR$/module/platform/data" />
-            <option value="$PROJECT_DIR$/module/platform/data/api" />
-            <option value="$PROJECT_DIR$/module/platform/data/impl" />
             <option value="$PROJECT_DIR$/module/platform/impl" />
             <option value="$PROJECT_DIR$/module/platform/import" />
             <option value="$PROJECT_DIR$/module/platform/import/api" />
@@ -123,6 +122,5 @@
         </option>
       </GradleProjectSettings>
     </option>
-    <option name="offlineMode" value="true" />
   </component>
 </project>

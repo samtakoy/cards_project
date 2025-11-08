@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="notification_work_channel_name">Обработка данных</string>
-
-    <string name="notification_import_zip_title">Импорт из zip файла: %s</string>
-    <string name="notification_import_zip_status">Статус: %s</string>
-</resources>

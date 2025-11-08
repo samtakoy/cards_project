@@ -17,8 +17,8 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.parcelize.Parcelize
+import org.jetbrains.compose.resources.getString
 import ru.samtakoy.common.coroutines.ScopeProvider
-import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.common.utils.MyLog
 import ru.samtakoy.domain.card.CardInteractor
 import ru.samtakoy.domain.card.domain.model.Card
@@ -41,9 +41,12 @@ import ru.samtakoy.presentation.cards.screens.view.vm.mapper.CardsViewViewStateM
 import ru.samtakoy.presentation.cards.screens.view.vm.mapper.QuestionButtonsMapper
 import ru.samtakoy.presentation.cards.view.model.CardViewMode
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
+import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.utils.asAnnotated
+import ru.samtakoy.resources.Res
+import ru.samtakoy.resources.common_err_message
+import ru.samtakoy.resources.db_request_err_message
 import timber.log.Timber
-import ru.samtakoy.common.utils.R as RUtils
 
 internal class CardsViewViewModelImpl(
     private val cardInteractor: CardInteractor,
@@ -53,7 +56,6 @@ internal class CardsViewViewModelImpl(
     private val viewStateMapper: CardsViewViewStateMapper,
     questionButtonsMapper: QuestionButtonsMapper,
     answerButtonsMapper: AnswerButtonsMapper,
-    private val resources: Resources,
     private val savedStateHandle: SavedStateHandle,
     scopeProvider: ScopeProvider,
     private val viewHistoryItemId: Long,
@@ -64,8 +66,8 @@ internal class CardsViewViewModelImpl(
         type = State.Type.Initialization,
         isLoading = true,
         cardItems = listOf<CardsViewViewModel.CardState>().toImmutableList(),
-        questionButtons = questionButtonsMapper.map(viewMode).toImmutableList(),
-        answerButtons = answerButtonsMapper.map(viewMode).toImmutableList()
+        questionButtons = emptyList<MyButtonUiModel>().toImmutableList(),
+        answerButtons = emptyList<MyButtonUiModel>().toImmutableList()
     )
 ), CardsViewViewModel {
 
@@ -98,7 +100,9 @@ internal class CardsViewViewModelImpl(
             val viewHistoryItem = viewHistoryInteractor.getViewItem(viewHistoryItemId)!!
             val allCardsIds = viewHistoryItem.viewedCardIds + viewHistoryItem.todoCardIds
             viewState = viewState.copy(
-                cardItems = createInitialCardItems(allCardsIds).toImmutableList()
+                cardItems = createInitialCardItems(allCardsIds).toImmutableList(),
+                questionButtons = questionButtonsMapper.map(viewMode).toImmutableList(),
+                answerButtons = answerButtonsMapper.map(viewMode).toImmutableList()
             )
             dataState.update { DataState(allCardIds =  allCardsIds, cardInfo = null) }
             if (viewHistoryItem.todoCardIds.isEmpty()) {
@@ -332,11 +336,13 @@ internal class CardsViewViewModelImpl(
     private fun switchToNextCard(withError: Boolean) {
         val curCardId: Long? = curCardState.value.cardId
         if (curCardId == null) {
-            sendAction(
-                Action.ShowErrorMessage(
-                    resources.getString(RUtils.string.common_err_message)
+            launchCatching {
+                sendAction(
+                    Action.ShowErrorMessage(
+                        getString(Res.string.common_err_message)
+                    )
                 )
-            )
+            }
             return
         }
 
@@ -368,11 +374,13 @@ internal class CardsViewViewModelImpl(
 
     private fun onGetError(t: Throwable) {
         MyLog.add(t.message.orEmpty(), t)
-        sendAction(
-            Action.ShowErrorMessage(
-                resources.getString(RUtils.string.db_request_err_message)
+        launchCatching {
+            sendAction(
+                Action.ShowErrorMessage(
+                    getString(Res.string.db_request_err_message)
+                )
             )
-        )
+        }
     }
 
     private fun updateBackupInfo(

@@ -1,30 +1,31 @@
 plugins {
     id("convention.android-lib.plugin")
     id("kotlin-parcelize")
+    alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
     namespace = "ru.samtakoy.presentation.qpacks.impl"
-    buildFeatures {
-        compose = true
-    }
 }
 
 dependencies {
     // Compose
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.bundles.compose)
     implementation(libs.androidx.navigation.compose)
+    implementation(compose.runtime)
+    implementation(compose.ui)
+    implementation(compose.material3)
+    implementation(compose.preview)
+    implementation(compose.materialIconsExtended)
 
     // koin
-    implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.androidx.compose.navigation)
 
     implementation(projects.module.common.utils)
+    implementation(projects.module.common.resources)
 
     implementation(projects.module.domain.card.api)
     implementation(projects.module.domain.qpack.api)

@@ -8,7 +8,6 @@ android {
 
 dependencies {
     // koin
-    implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
 
     implementation(projects.module.data.task.api)

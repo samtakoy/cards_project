@@ -6,16 +6,16 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import ru.samtakoy.common.resources.Resources
-import ru.samtakoy.platform.notification.impl_android.R
+import org.jetbrains.compose.resources.getString
+import ru.samtakoy.resources.Res
+import ru.samtakoy.resources.notification_import_zip_title
 
 class AndroidNotificationRepositoryImpl(
-    private val context: Context,
-    private val resources: Resources
+    private val context: Context
 ) {
     fun getImportZipNotificationId(): Int = NotificationConst.IMPORT_ZIP_NOTIFICATION_ID
 
-    fun buildImportZipNotification(
+    suspend fun buildImportZipNotification(
         zipName: String,
         status: String,
         curProgress: Int,
@@ -26,7 +26,7 @@ class AndroidNotificationRepositoryImpl(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
-                resources.getString(NotificationConst.WORK_CHANNEL_NAME_STRING_ID),
+                getString(NotificationConst.WORK_CHANNEL_NAME_STRING_ID),
                 NotificationManager.IMPORTANCE_LOW
             )
             val manager = context.getSystemService(NotificationManager::class.java)
@@ -35,8 +35,8 @@ class AndroidNotificationRepositoryImpl(
 
         return NotificationCompat.Builder(context, channelId)
             .setContentTitle(
-                resources.getString(
-                    R.string.notification_import_zip_title,
+                getString(
+                    Res.string.notification_import_zip_title,
                     zipName
                 )
             )

@@ -4,8 +4,8 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
+import org.jetbrains.compose.resources.getString
 import ru.samtakoy.common.coroutines.ScopeProvider
-import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.common.utils.MyLog
 import ru.samtakoy.domain.card.CardInteractor
 import ru.samtakoy.domain.favorites.FavoritesInteractor
@@ -16,7 +16,8 @@ import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.domain.view.ViewHistoryItem
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
-import ru.samtakoy.presentation.qpacks.impl.R
+import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
+import ru.samtakoy.presentation.core.design_system.dropdown.getEmptyMenu
 import ru.samtakoy.presentation.qpacks.screens.fastlist.mapper.FastCardUiModelMapper
 import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoButtonsMapper
 import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoDialogMapper
@@ -26,6 +27,12 @@ import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.Event
 import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.NavigationAction
 import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.State
 import ru.samtakoy.presentation.utils.asAnnotated
+import ru.samtakoy.resources.Res
+import ru.samtakoy.resources.action_ok
+import ru.samtakoy.resources.db_request_err_message
+import ru.samtakoy.resources.getFormatted
+import ru.samtakoy.resources.msg_there_is_no_cards_in_pack
+import ru.samtakoy.resources.qpack_cards_count
 
 internal class QPackInfoViewModelImpl(
     private val cardInteractor: CardInteractor,
@@ -33,7 +40,6 @@ internal class QPackInfoViewModelImpl(
     private val favoritesInteractor: FavoritesInteractor,
     private val coursesInteractor: NCoursesInteractor,
     private val viewHistoryInteractor: ViewHistoryInteractor,
-    private val resources: Resources,
     private val cardsMapper: FastCardUiModelMapper,
     private val buttonsMapper: QPackInfoButtonsMapper,
     private val choiceDialogMapper: QPackInfoDialogMapper,
@@ -45,10 +51,10 @@ internal class QPackInfoViewModelImpl(
     initialState = State(
         isLoading = false,
         title = "".asAnnotated(),
-        toolbarMenu = toolbarMenuMapper.map(),
+        toolbarMenu = getEmptyMenu(),
         cardsCountText = "".asAnnotated(),
         isFavoriteChecked = false,
-        buttons = buttonsMapper.map(null).toImmutableList(),
+        buttons = emptyList<MyButtonUiModel>().toImmutableList(),
         fastCards = State.CardsState.NotInit
     )
 ), QPackInfoViewModel {
@@ -58,6 +64,11 @@ internal class QPackInfoViewModelImpl(
 
     init {
         subscribeData()
+        launchCatching {
+            viewState = viewState.copy(
+                toolbarMenu = toolbarMenuMapper.map()
+            )
+        }
     }
 
     override fun onEvent(event: Event) {
@@ -129,18 +140,26 @@ internal class QPackInfoViewModelImpl(
     }
 
     private fun onUiAddToNewCourse() {
-        if (!hasPackCards()) {
-            sendAction(Action.ShowErrorMessage(resources.getString(R.string.msg_there_is_no_cards_in_pack)))
-        } else {
-            sendAction(Action.RequestNewCourseCreation(mQPack!!.title))
+        launchCatching {
+            if (!hasPackCards()) {
+                sendAction(
+                    Action.ShowErrorMessage(
+                        getString(Res.string.msg_there_is_no_cards_in_pack)
+                    )
+                )
+            } else {
+                sendAction(Action.RequestNewCourseCreation(mQPack!!.title))
+            }
         }
     }
 
     private fun onUiAddToExistsCourse() {
-        if (!hasPackCards()) {
-            sendAction(Action.ShowErrorMessage(resources.getString(R.string.msg_there_is_no_cards_in_pack)))
-        } else {
-            sendAction(Action.RequestsSelectCourseToAdd(qPackId))
+        launchCatching {
+            if (!hasPackCards()) {
+                sendAction(Action.ShowErrorMessage(getString(Res.string.msg_there_is_no_cards_in_pack)))
+            } else {
+                sendAction(Action.RequestsSelectCourseToAdd(qPackId))
+            }
         }
     }
 
@@ -152,11 +171,13 @@ internal class QPackInfoViewModelImpl(
     }
 
     private fun onUiViewPackCards() {
-        sendAction(
-            Action.ShowLearnCourseCardsViewingType(
-                dialogModel = choiceDialogMapper.mapViewTypeDialog()
+        launchCatching(onError = ::onGetError) {
+            sendAction(
+                Action.ShowLearnCourseCardsViewingType(
+                    dialogModel = choiceDialogMapper.mapViewTypeDialog()
+                )
             )
-        )
+        }
     }
 
     private fun onUiViewUncompletedClick() {
@@ -178,9 +199,7 @@ internal class QPackInfoViewModelImpl(
         launchWithLoader {
             cardInteractor.addFakeCard(qPackId)
             sendAction(
-                Action.ShowErrorMessage(
-                    resources.getString(ru.samtakoy.common.utils.R.string.action_ok)
-                )
+                Action.ShowErrorMessage(getString(Res.string.action_ok))
             )
         }
     }
@@ -210,7 +229,7 @@ internal class QPackInfoViewModelImpl(
             val cardsCountInUncompleted = lastView?.let { it.todoCardIds.size + it.viewedCardIds.size } ?: 0
             viewState = viewState.copy(
                 title = qPack.title.asAnnotated(),
-                cardsCountText = resources.getString(R.string.qpack_cards_count, cardIds.size).asAnnotated(),
+                cardsCountText = getFormatted(Res.string.qpack_cards_count, cardIds.size).asAnnotated(),
                 isFavoriteChecked = qPack.favorite > 0,
                 buttons = if (lastView != null && lastView.todoCardIds.isNotEmpty()) {
                     buttonsMapper.map(
@@ -227,14 +246,13 @@ internal class QPackInfoViewModelImpl(
         return isPackEmpty.not()
     }
 
-    private fun onGetError(t: Throwable): Boolean {
+    private fun onGetError(t: Throwable) {
         MyLog.add(t.message.orEmpty(), t)
-        sendAction(
-            Action.ShowErrorMessage(
-                resources.getString(ru.samtakoy.common.utils.R.string.db_request_err_message)
+        launchCatching {
+            sendAction(
+                Action.ShowErrorMessage(getString(Res.string.db_request_err_message))
             )
-        )
-        return true
+        }
     }
 
     private fun launchWithLoader(

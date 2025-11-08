@@ -8,11 +8,9 @@ android {
 
 dependencies {
     // koin
-    implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
 
     implementation(libs.kmpio)
-    // implementation(libs.kmpio.zip)
     implementation(libs.filekit.core)
 
     implementation(projects.module.data.import.api)

@@ -26,6 +26,7 @@ internal class AndroidPlatformPermissionsMapperImpl : AndroidPlatformPermissions
     }
 
     override fun mapToStateDelegate(permission: MyPermission): PermissionDelegate {
+        @Suppress("REDUNDANT_ELSE_IN_WHEN")
         return when (permission) {
             MyPermission.Notifications -> NotificationsPermissionDelegate()
             else -> EmptyPermissionDelegate

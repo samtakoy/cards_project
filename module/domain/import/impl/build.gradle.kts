@@ -8,13 +8,13 @@ android {
 
 dependencies {
     // koin
-    implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
 
     // filekit
     implementation(libs.filekit.dialogs.compose)
 
     implementation(projects.module.common.utils)
+    implementation(projects.module.common.resources)
 
     implementation(projects.module.data.common.api)
 

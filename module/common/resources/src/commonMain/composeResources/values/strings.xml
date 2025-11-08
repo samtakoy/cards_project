@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ******************************************************************************* -->
+    <!-- Common -->
+
+    <string name="time_min">min</string>
+    <string name="time_hour">hour</string>
+    <string name="time_day">day</string>
+    <string name="time_week">week</string>
+    <string name="time_month">month</string>
+    <string name="time_year">year</string>
+
+    <string name="db_request_err_message">Ошибка при запросе к базе данных</string>
+    <string name="common_err_message">Что-то пошло не так</string>
+
+    <string name="menu_item_log">log</string>
+    <string name="menu_item_settings">settings</string>
+
+    <string name="action_ok">Ok</string>
+    <string name="action_cancel">Отмена</string>
+
+    <!-- ******************************************************************************* -->
+    <!-- Android notification module -->
+
+    <string name="notification_work_channel_name">Обработка данных</string>
+
+    <string name="notification_import_zip_title">Импорт из zip файла: %s</string>
+    <string name="notification_import_zip_status">Статус: %s</string>
+
+    <!-- ******************************************************************************* -->
+    <!-- Import module -->
+
+    <string name="batch_zip_import_status_reading_from_zip">Чтение файлов из zip</string>
+    <string name="batch_zip_import_status_theme_actualization">Проверка и создание тем</string>
+    <string name="batch_zip_import_status_qpacks_preparing">Подготовка qpack`ов</string>
+    <string name="batch_zip_import_status_qpacks_saving">Сохранение qpack`ов</string>
+    <string name="batch_zip_import_status_tags_saving">Сохранение новых тегов: %s шт.</string>
+    <string name="batch_zip_import_status_cards_saving">Сохранение карточек: %1$s/%2$s</string>
+
+    <!-- ******************************************************************************* -->
+    <!-- Platform import module -->
+
+    <string name="batch_zip_import_status_init">Запуск задачи</string>
+    <string name="batch_zip_import_status_cancelled">Отменено</string>
+    <string name="batch_zip_import_status_success">Успешно</string>
+
+    <!-- ******************************************************************************* -->
+    <!-- Main screen module -->
+
+    <string name="main_themes_list_title">по темам</string>
+    <string name="main_qpack_title">списком</string>
+    <string name="main_favorites_title">избранные карточки</string>
+    <string name="main_views_history_title">история просмотров</string>
+    <string name="main_qpack_selection_title">выбор из наборов</string>
+    <string name="main_courses_title">расписания</string>
+    <string name="main_settings_title">настройки</string>
+
+    <!-- ******************************************************************************* -->
+    <!-- QPack module -->
+
+    <string name="feature_qpack_title">списком</string>
+    <string name="feature_qpack_selection_title">выбор из наборов</string>
+    <!-- info screen -->
+    <string name="qpack_cards_count">Карточек: %s</string>
+    <string name="qpack_viewing_types_title">Тип просмотра</string>
+    <string name="qpack_viewing_type_ordered">Карточки по порядку</string>
+    <string name="qpack_viewing_type_randomly">Карточки произвольно</string>
+    <string name="qpack_viewing_type_inlist">Список</string>
+
+    <string name="qpack_menu_delete">удалить</string>
+    <string name="qpack_menu_add_fake_card">добавить fake-card</string>
+
+    <string name="qpack_btn_view_cards">view cards</string>
+    <string name="qpack_btn_view_uncompleted">view uncompleted: %1$s</string>
+    <string name="qpack_btn_add_to_new_course">a new course</string>
+    <string name="qpack_btn_add_to_course">add to course</string>
+    <string name="qpack_btn_view_courses">view courses</string>
+
+    <string name="qpack_favorites_box">Важно</string>
+    <string name="msg_there_is_no_cards_in_pack">Нет ни одной карточки в наборе</string>
+
+    <!-- ******************************************************************************* -->
+    <!-- Themes list module -->
+
+    <string name="feature_themes_list_title">по темам</string>
+
+    <string name="fragment_themes_list_cant_read_file_size_msg">File size read error</string>
+    <string name="fragment_themes_list_cant_open_file_msg">File open error</string>
+    <string name="fragment_themes_list_cant_save_file_msg">File save error</string>
+    <string name="fragment_themes_list_cant_send_file_msg">File sending error</string>
+    <string name="fragment_themes_list_cant_delete_theme_msg">Theme deleting error</string>
+    <!--string name="fragment_themes_list_cant_save_file_msg2">File save error 2</string-->
+    <string name="fragment_themes_list_cards_export_ok">File export is successful</string>
+    <string name="fragment_themes_list_cards_cards_loading_error">Cards loading error</string>
+    <string name="fragment_themes_list_not_dir_msg">Not directory was selected</string>
+
+    <string name="fragment_themes_menu_item_add">add</string>
+    <string name="fragment_themes_menu_item_import_cards">import</string>
+    <!-- импорт в чистую базу -->
+    <string name="menu_item_import_from_folder_all">import from folder</string>
+    <string name="menu_item_from_folder">from folder...</string>
+    <!-- импорт в чистую базу -->
+    <string name="menu_item_import_from_zip_all">import from ZIP</string>
+    <string name="menu_item_from_zip">from ZIP...</string>
+    <!-- импортируются только паки без id (новые) -->
+    <string name="menu_item_import_new">import only new</string>
+    <!-- обновление по айдишникам, но запрещено создавать пак с id -->
+    <string name="menu_item_update_exists">update only exists</string>
+    <!-- вся информация об id в импоритруемом  файле игнорируется -->
+    <string name="menu_item_import_as_new">import/update as new</string>
+
+    <string name="fragment_themes_menu_item_remote_import_cards">online import</string>
+    <string name="fragment_themes_menu_item_export_all_to">export all to folder</string>
+    <string name="fragment_themes_menu_item_export_all_to_email">export all to email</string>
+    <!--string name="fragment_themes_menu_item_show_courses">all courses</string-->
+
+    <string name="fragment_themes_menu_item_send_cards">export by email</string>
+    <string name="fragment_themes_menu_item_delete_theme">delete</string>
+
+    <string name="fragment_dialog_theme_add_title">Enter Theme name</string>
+
+    <!-- dialogs and panels -->
+    <string name="theme_list_screen_import_from_zip_title">Импорт из zip</string>
+    <string name="theme_list_screen_import_from_zip_init">инициализация...</string>
+
+    <string name="theme_list_screen_notifications_alert_title">Требуется разрешение</string>
+    <string name="theme_list_screen_notifications_alert_desc">Для корректного импорта необходимо предоставить разрешение на показ нотификаций</string>
+
+    <!-- ******************************************************************************* -->
+    <!-- Cards view module -->
+    <string name="cards_view_favorite_box">Важно</string>
+
+    <string name="cards_view_previous_btn">prev</string>
+    <string name="cards_view_next_btn">next</string>
+    <string name="cards_view_view_answer_btn">view answer</string>
+    <string name="cards_view_wrong_btn">i dont now</string>
+    <string name="cards_view_back_from_answer_btn">back</string>
+
+    <!-- results screen -->
+    <string name="cards_view_res_title">Result:</string>
+    <string name="cards_view_res_viewed_cards">viewed: %s</string>
+    <string name="cards_view_res_err_cards">errors: %s</string>
+    <string name="cards_view_res_schedule_text">repeat error cards after:</string>
+    <string name="cards_view_res_schedule_none">(=none)</string>
+</resources>

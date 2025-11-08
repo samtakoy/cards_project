@@ -102,7 +102,7 @@ fun LearnCourse.hasRealizedSchedule(): Boolean {
 }
 
 fun LearnCourse.hasRestSchedule(): Boolean {
-    return restSchedule != null && !restSchedule.isEmpty
+    return !restSchedule.isEmpty
 }
 
 fun LearnCourse.getRepeatDateDebug(learnCourse: LearnCourse): Long {

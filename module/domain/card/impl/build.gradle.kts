@@ -8,7 +8,6 @@ android {
 
 dependencies {
     // koin
-    implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
 
     implementation(project(":module:domain:card:api"))

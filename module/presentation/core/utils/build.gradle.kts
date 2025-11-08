@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.compose.compiler)
     id("convention.android-lib.plugin")
 }
@@ -12,8 +13,13 @@ android {
 
 dependencies {
     // Compose
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.bundles.compose)
+    implementation(libs.androidx.navigation.compose)
+    implementation(compose.runtime)
+    implementation(compose.ui)
+    implementation(compose.material3)
+    implementation(compose.preview)
+
+    implementation(projects.module.common.resources)
 
     implementation(project(":module:platform:api"))
     implementation(project(":module:common:utils"))

@@ -9,19 +9,22 @@ import androidx.work.WorkerParameters
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.name
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import org.jetbrains.compose.resources.getString
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.data.task.TaskStateRepository
 import ru.samtakoy.domain.importcards.batch.ImportCardsZipUseCase
 import ru.samtakoy.domain.importcards.model.ImportCardsOpts
 import ru.samtakoy.domain.task.model.TaskStateData
 import ru.samtakoy.domain.task.model.TaskStateId
-import ru.samtakoy.platform.importcards.api.R
 import ru.samtakoy.platform.notification.AndroidNotificationRepositoryImpl
+import ru.samtakoy.resources.Res
+import ru.samtakoy.resources.batch_zip_import_status_cancelled
+import ru.samtakoy.resources.batch_zip_import_status_init
+import ru.samtakoy.resources.batch_zip_import_status_success
+import ru.samtakoy.resources.common_err_message
 
 internal class ImportCardsFromZipWorker(
     appContext: Context,
@@ -34,7 +37,6 @@ internal class ImportCardsFromZipWorker(
     private val importCardsUseCase: ImportCardsZipUseCase by inject()
     private val stateRepository: TaskStateRepository by inject()
     private val notificationRepository: AndroidNotificationRepositoryImpl by inject()
-    private val resources: Resources by inject()
 
     private var taskId: TaskStateId? = null
     private var targetFileName: String = ""
@@ -73,7 +75,7 @@ internal class ImportCardsFromZipWorker(
             try {
                 reportProgress(
                     TaskStateData.ActiveStatus(
-                        resources.getString(R.string.batch_zip_import_status_init)
+                        getString(Res.string.batch_zip_import_status_init)
                     )
                 )
                 importCardsUseCase.import(
@@ -87,7 +89,7 @@ internal class ImportCardsFromZipWorker(
                 reportProgress(
                     TaskStateData.Error(
                         e.message
-                            ?: resources.getString(ru.samtakoy.common.utils.R.string.common_err_message)
+                            ?: getString(Res.string.common_err_message)
                     )
                 )
                 Result.failure()
@@ -106,7 +108,7 @@ internal class ImportCardsFromZipWorker(
         setForeground(getForegroundInfo())
     }
 
-    private fun resolveProgressTitle(
+    private suspend fun resolveProgressTitle(
         taskState: TaskStateData
     ): String {
         return when (taskState) {
@@ -117,11 +119,11 @@ internal class ImportCardsFromZipWorker(
                 taskState.message
             }
             TaskStateData.Cancelled -> {
-                resources.getString(R.string.batch_zip_import_status_cancelled)
+                getString(Res.string.batch_zip_import_status_cancelled)
             }
             is TaskStateData.Error -> taskState.message
             TaskStateData.Success -> {
-                resources.getString(R.string.batch_zip_import_status_success)
+                getString(Res.string.batch_zip_import_status_success)
             }
             else -> ""
         }

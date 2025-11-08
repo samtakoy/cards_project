@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.parcelize.Parcelize
+import org.jetbrains.compose.resources.getString
 import ru.samtakoy.common.coroutines.ScopeProvider
-import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.common.utils.MyLog
 import ru.samtakoy.domain.exportcards.QPacksExporter
 import ru.samtakoy.domain.importcards.model.ImportCardsOpts
@@ -31,8 +31,8 @@ import ru.samtakoy.presentation.core.design_system.base.model.UiId
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.inputtext.MyInputTextDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dropdown.DropDownMenuUiModel
+import ru.samtakoy.presentation.core.design_system.dropdown.getEmptyMenu
 import ru.samtakoy.presentation.core.design_system.progress.ProgressOverlayUiModel
-import ru.samtakoy.presentation.themes.impl.R
 import ru.samtakoy.presentation.themes.list.mapper.ThemeListMenuItemsMapper
 import ru.samtakoy.presentation.themes.list.mapper.ThemeUiItemMapper
 import ru.samtakoy.presentation.themes.list.model.ItemContextMenuId
@@ -44,6 +44,15 @@ import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.NavigationActi
 import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.State
 import ru.samtakoy.presentation.utils.asA
 import ru.samtakoy.presentation.utils.asAnnotated
+import ru.samtakoy.resources.Res
+import ru.samtakoy.resources.action_ok
+import ru.samtakoy.resources.db_request_err_message
+import ru.samtakoy.resources.feature_themes_list_title
+import ru.samtakoy.resources.fragment_dialog_theme_add_title
+import ru.samtakoy.resources.fragment_themes_list_cant_delete_theme_msg
+import ru.samtakoy.resources.fragment_themes_list_cant_send_file_msg
+import ru.samtakoy.resources.theme_list_screen_import_from_zip_init
+import ru.samtakoy.resources.theme_list_screen_import_from_zip_title
 
 @OptIn(FlowPreview::class)
 internal class ThemeListViewModelImpl(
@@ -54,7 +63,6 @@ internal class ThemeListViewModelImpl(
     private val importCardsFromZipTask: ImportCardsFromZipTask,
     private val uiItemsMapper: ThemeUiItemMapper,
     private val menuItemMapper: ThemeListMenuItemsMapper,
-    private val resources: Resources,
     savedStateHandle: SavedStateHandle,
     scopeProvider: ScopeProvider,
     themeId: Long,
@@ -64,11 +72,11 @@ internal class ThemeListViewModelImpl(
     initialState = State(
         isLoading = false,
         progressPanel = null,
-        toolbarTitle = (themeTitle ?: resources.getString(R.string.feature_themes_list_title)).asAnnotated(),
+        toolbarTitle = "".asAnnotated(),
         toolbarSubtitle = "".asAnnotated(),
-        toolbarMenu = menuItemMapper.mapShort(),
-        themeContextMenu = menuItemMapper.mapThemeContextMenu(),
-        qPackContextMenu = menuItemMapper.mapQPackContextMenu(),
+        toolbarMenu = getEmptyMenu(),
+        themeContextMenu = getEmptyMenu(),
+        qPackContextMenu = getEmptyMenu(),
         isExportAllMenuItemVisible = false,
         isToBlankDbMenuItemVisible = false,
         items = emptyList<ThemeUiItem>().toImmutableList()
@@ -87,8 +95,8 @@ internal class ThemeListViewModelImpl(
     )
 
     init {
-        bindTheme(themeId)
-        bindData(themeId)
+        bindTheme(themeId, themeTitle)
+        subscribeData(themeId)
         subscribeTasksProgress()
     }
 
@@ -136,7 +144,7 @@ internal class ThemeListViewModelImpl(
                 if(!themeInteractor.deleteTheme(themeId = themeItem.id.value)) {
                     sendAction(
                         Action.ShowErrorMessage(
-                            resources.getString(R.string.fragment_themes_list_cant_delete_theme_msg)
+                            getString(Res.string.fragment_themes_list_cant_delete_theme_msg)
                         )
                     )
                 }
@@ -153,7 +161,7 @@ internal class ThemeListViewModelImpl(
                 onError = {
                     MyLog.add(it.stackTraceToString())
                     sendAction(
-                        Action.ShowErrorMessage(resources.getString(R.string.fragment_themes_list_cant_send_file_msg))
+                        Action.ShowErrorMessage(getString(Res.string.fragment_themes_list_cant_send_file_msg))
                     )
                 }
             ) {
@@ -200,22 +208,24 @@ internal class ThemeListViewModelImpl(
     }
 
     private fun onUiAddNewThemeRequest() {
-        sendAction(
-            Action.ShowInputThemeTitleDialog(
-                MyInputTextDialogUiModel(
-                    id = null,
-                    title = resources.getString(R.string.fragment_dialog_theme_add_title).asAnnotated(),
-                    description = null,
-                    inputHint = null,
-                    initialText = "",
-                    okButton = MyButtonUiModel(
-                        id = LongUiId(0L),
-                        text = resources.getString(ru.samtakoy.common.utils.R.string.action_ok).asAnnotated(),
-                        isEnabled = true
+        launchCatching {
+            sendAction(
+                Action.ShowInputThemeTitleDialog(
+                    MyInputTextDialogUiModel(
+                        id = null,
+                        title = getString(Res.string.fragment_dialog_theme_add_title).asAnnotated(),
+                        description = null,
+                        inputHint = null,
+                        initialText = "",
+                        okButton = MyButtonUiModel(
+                            id = LongUiId(0L),
+                            text = getString(Res.string.action_ok).asAnnotated(),
+                            isEnabled = true
+                        )
                     )
                 )
             )
-        )
+        }
     }
 
     private fun onUiSettingsClick() {
@@ -334,17 +344,25 @@ internal class ThemeListViewModelImpl(
         return if (parentTheme == null) 0L else parentTheme!!.id
     }
 
-    private fun bindTheme(themeId: Long) {
-        if (themeId > 0) {
-            launchWithLoader(
-                onError = {
-                    viewState = viewState.copy(
-                        toolbarTitle = "?".asAnnotated(),
-                        toolbarSubtitle = "?".asAnnotated()
-                    )
-                    onGetError(it)
-                }
-            ) {
+    private fun bindTheme(themeId: Long, themeTitle: String?) {
+        launchWithLoader(
+            onError = {
+                viewState = viewState.copy(
+                    toolbarTitle = "?".asAnnotated(),
+                    toolbarSubtitle = "?".asAnnotated()
+                )
+                onGetError(it)
+            }
+        ) {
+            // Начальная инициализация меню и заголовка
+            viewState = viewState.copy(
+                toolbarTitle = (themeTitle ?: getString(Res.string.feature_themes_list_title)).asAnnotated(),
+                toolbarMenu = menuItemMapper.mapShort(),
+                themeContextMenu = menuItemMapper.mapThemeContextMenu(),
+                qPackContextMenu = menuItemMapper.mapQPackContextMenu(),
+            )
+
+            if (themeId > 0) {
                 parentTheme = themeInteractor.getTheme(themeId)
                 if (parentTheme != null) {
                     viewState = viewState.copy(
@@ -358,7 +376,7 @@ internal class ThemeListViewModelImpl(
                         )
                     } else {
                         viewState = viewState.copy(
-                            toolbarTitle = resources.getString(R.string.feature_themes_list_title).asAnnotated()
+                            toolbarTitle = getString(Res.string.feature_themes_list_title).asAnnotated()
                         )
                     }
                 }
@@ -366,7 +384,7 @@ internal class ThemeListViewModelImpl(
         }
     }
 
-    private fun bindData(themeId: Long) {
+    private fun subscribeData(themeId: Long) {
         combine(
             themeInteractor.getChildThemesAsFlow(themeId)
                 .debounce(DEBOUNCE_MILLI)
@@ -384,23 +402,27 @@ internal class ThemeListViewModelImpl(
     }
 
     private fun updateMenuState() {
-        val isExportAllMenuItemVisible = parentTheme == null
-        val isToBlankDbMenuItemVisible = parentTheme == null && viewState.items.isEmpty()
-        viewState = viewState.copy(
-            isExportAllMenuItemVisible = isExportAllMenuItemVisible,
-            isToBlankDbMenuItemVisible = isToBlankDbMenuItemVisible,
-            toolbarMenu = menuItemMapper.map(
+        launchCatching {
+            val isExportAllMenuItemVisible = parentTheme == null
+            val isToBlankDbMenuItemVisible = parentTheme == null && viewState.items.isEmpty()
+            viewState = viewState.copy(
                 isExportAllMenuItemVisible = isExportAllMenuItemVisible,
-                isToBlankDbMenuItemVisible = isToBlankDbMenuItemVisible
+                isToBlankDbMenuItemVisible = isToBlankDbMenuItemVisible,
+                toolbarMenu = menuItemMapper.map(
+                    isExportAllMenuItemVisible = isExportAllMenuItemVisible,
+                    isToBlankDbMenuItemVisible = isToBlankDbMenuItemVisible
+                )
             )
-        )
+        }
     }
 
     private fun onGetError(t: Throwable) {
         MyLog.add(t.stackTraceToString())
-        sendAction(
-            Action.ShowErrorMessage(resources.getString(ru.samtakoy.common.utils.R.string.db_request_err_message))
-        )
+        launchCatching {
+            sendAction(
+                Action.ShowErrorMessage(getString(Res.string.db_request_err_message))
+            )
+        }
     }
 
     private fun subscribeTasksProgress() {
@@ -413,13 +435,13 @@ internal class ThemeListViewModelImpl(
                     val panelState = when (state) {
                         TaskStateData.Init -> {
                             ProgressOverlayUiModel(
-                                title = resources.getString(R.string.theme_list_screen_import_from_zip_title).asA(),
-                                subtitle = resources.getString(R.string.theme_list_screen_import_from_zip_init).asA()
+                                title = getString(Res.string.theme_list_screen_import_from_zip_title).asA(),
+                                subtitle = getString(Res.string.theme_list_screen_import_from_zip_init).asA()
                             )
                         }
                         is TaskStateData.ActiveStatus -> {
                             ProgressOverlayUiModel(
-                                title = resources.getString(R.string.theme_list_screen_import_from_zip_title).asA(),
+                                title = getString(Res.string.theme_list_screen_import_from_zip_title).asA(),
                                 subtitle = state.message.asA()
                             )
                         }

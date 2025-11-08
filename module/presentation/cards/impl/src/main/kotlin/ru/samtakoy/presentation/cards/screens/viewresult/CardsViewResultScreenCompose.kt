@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.KoinApplication
 import ru.samtakoy.common.di.commonUtilsModule
@@ -177,19 +178,21 @@ private fun CardsViewResultScreenInternal_Preview() = MyTheme {
     CardsViewResultScreenInternal(
         viewState = State(
             isLoading = false,
-            content = stateMapper.map(
-                CardViewMode.REPEATING,
-                ViewHistoryItem(
-                    id = 0,
-                    qPackId = 0,
-                    viewedCardIds = listOf(1,2,3,4,5,6,7,8),
-                    todoCardIds = listOf(),
-                    errorCardIds = listOf(1,2,3),
-                    addedToFavsCardIds = listOf(3,4,5),
-                    lastViewDate = Date()
-                ),
-            Schedule(emptyList())
-            )
+            content = runBlocking {
+                stateMapper.map(
+                    CardViewMode.REPEATING,
+                    ViewHistoryItem(
+                        id = 0,
+                        qPackId = 0,
+                        viewedCardIds = listOf(1, 2, 3, 4, 5, 6, 7, 8),
+                        todoCardIds = listOf(),
+                        errorCardIds = listOf(1, 2, 3),
+                        addedToFavsCardIds = listOf(3, 4, 5),
+                        lastViewDate = Date()
+                    ),
+                    Schedule(emptyList())
+                )
+            }
         ),
         onEvent = {},
         snackbarHostState = remember { SnackbarHostState() }

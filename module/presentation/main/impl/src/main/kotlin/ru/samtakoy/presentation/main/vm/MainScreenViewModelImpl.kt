@@ -5,7 +5,6 @@ import ru.samtakoy.common.coroutines.ScopeProvider
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.main.mapper.MainScreenContentMapper
 import ru.samtakoy.presentation.main.mapper.MainScreenContentMapper.Companion.IdThemeListRoute
-import ru.samtakoy.presentation.themes.list.ThemeListRoute
 
 internal class MainScreenViewModelImpl(
     private val contentMapper: MainScreenContentMapper,
@@ -13,10 +12,18 @@ internal class MainScreenViewModelImpl(
 ) : BaseViewModelImpl<MainScreenViewModel.State, MainScreenViewModel.Action, MainScreenViewModel.Event>(
     scopeProvider = scopeProvider,
     initialState = MainScreenViewModel.State(
-        menuItems = contentMapper.mapMenuItems().toImmutableList(),
+        menuItems = emptyList<MainScreenViewModel.MenuItem>().toImmutableList(),
         selectedItemId = IdThemeListRoute
     )
 ), MainScreenViewModel {
+
+    init {
+        launchCatching {
+            viewState = viewState.copy(
+                menuItems = contentMapper.mapMenuItems().toImmutableList(),
+            )
+        }
+    }
 
     override fun onEvent(event: MainScreenViewModel.Event) {
         when (event) {

@@ -8,7 +8,6 @@ android {
 
 dependencies {
     // koin
-    implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.workmanager)
 
@@ -25,6 +24,7 @@ dependencies {
     implementation(projects.module.platform.notification.implAndroid)
 
     implementation(projects.module.common.utils)
+    implementation(projects.module.common.resources)
 
     implementation(projects.module.platform.import.api)
     implementation(projects.module.platform.import.impl)

@@ -8,9 +8,9 @@ android {
 
 dependencies {
     // koin
-    implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.workmanager)
 
     implementation(projects.module.common.utils)
+    implementation(projects.module.common.resources)
 }

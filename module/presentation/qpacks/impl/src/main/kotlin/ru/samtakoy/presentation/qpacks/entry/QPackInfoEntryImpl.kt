@@ -8,7 +8,7 @@ import ru.samtakoy.presentation.navigation.RootFeatureEntry
 import ru.samtakoy.presentation.qpacks.QPackInfoRoute
 import ru.samtakoy.presentation.qpacks.screens.info.QPackInfoEntry
 
-class QPackInfoEntryImpl : RootFeatureEntry {
+internal class QPackInfoEntryImpl : RootFeatureEntry {
     override fun registerGraph(
         navGraphBuilder: NavGraphBuilder,
         rootNavController: NavHostController

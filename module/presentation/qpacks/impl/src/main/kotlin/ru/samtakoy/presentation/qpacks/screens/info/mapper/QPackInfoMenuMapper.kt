@@ -1,16 +1,19 @@
 package ru.samtakoy.presentation.qpacks.screens.info.mapper
 
 import kotlinx.collections.immutable.toImmutableList
-import ru.samtakoy.common.resources.Resources
-import ru.samtakoy.presentation.qpacks.impl.R
+import org.jetbrains.compose.resources.getString
 import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
 import ru.samtakoy.presentation.core.design_system.dropdown.DropDownMenuUiModel
 import ru.samtakoy.presentation.core.design_system.dropdown.DropDownMenuUiModel.ItemType
 import ru.samtakoy.presentation.core.design_system.dropdown.DropDownMenuUiModel.Menu
+import ru.samtakoy.presentation.qpacks.impl.R
 import ru.samtakoy.presentation.utils.asAnnotated
+import ru.samtakoy.resources.Res
+import ru.samtakoy.resources.qpack_menu_add_fake_card
+import ru.samtakoy.resources.qpack_menu_delete
 
 internal interface QPackInfoMenuMapper {
-    fun map(): DropDownMenuUiModel
+    suspend fun map(): DropDownMenuUiModel
 
     companion object {
         val IdMenu = AnyUiId()
@@ -19,10 +22,8 @@ internal interface QPackInfoMenuMapper {
     }
 }
 
-internal class QPackInfoMenuMapperImpl(
-    private val resources: Resources
-) : QPackInfoMenuMapper {
-    override fun map(): DropDownMenuUiModel {
+internal class QPackInfoMenuMapperImpl : QPackInfoMenuMapper {
+    override suspend fun map(): DropDownMenuUiModel {
         return DropDownMenuUiModel(
             menu = Menu(
                 id = QPackInfoMenuMapper.IdMenu,
@@ -32,18 +33,18 @@ internal class QPackInfoMenuMapperImpl(
         )
     }
 
-    private fun buildItems(): List<ItemType> {
+    private suspend fun buildItems(): List<ItemType> {
         return buildList {
             add(
                 ItemType.Item(
                     id = QPackInfoMenuMapper.IdItemDeletePack,
-                    title = resources.getString(R.string.qpack_menu_delete).asAnnotated()
+                    title = getString(Res.string.qpack_menu_delete).asAnnotated()
                 )
             )
             add(
                 ItemType.Item(
                     id = QPackInfoMenuMapper.IdItemAddFakeCard,
-                    title = resources.getString(R.string.qpack_menu_add_fake_card).asAnnotated()
+                    title = getString(Res.string.qpack_menu_add_fake_card).asAnnotated()
                 )
             )
         }

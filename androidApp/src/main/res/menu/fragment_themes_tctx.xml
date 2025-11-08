@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/menu_item_delete"
+        android:title="fragment_themes_menu_item_delete_theme"
+        android:icon="@drawable/ic_action_export_cards" />
+
+</menu>

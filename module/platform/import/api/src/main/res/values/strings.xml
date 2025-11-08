@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="batch_zip_import_status_init">Запуск задачи</string>
-    <string name="batch_zip_import_status_cancelled">Отменено</string>
-    <string name="batch_zip_import_status_success">Успешно</string>
-</resources>
