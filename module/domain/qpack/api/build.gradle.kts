@@ -1,11 +1,15 @@
 plugins {
-    id("convention.android-lib.plugin")
+    id("convention.kmp-lib.plugin")
+}
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            api(project(":module:domain:qpack:model"))
+        }
+    }
 }
 
 android {
     namespace = "ru.samtakoy.domain.qpack.api"
-}
-
-dependencies {
-    api(project(":module:domain:qpack:model"))
 }

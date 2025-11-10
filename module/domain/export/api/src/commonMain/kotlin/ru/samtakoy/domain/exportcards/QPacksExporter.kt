@@ -1,18 +1,17 @@
 package ru.samtakoy.domain.exportcards
 
-import androidx.annotation.WorkerThread
 import ru.samtakoy.domain.qpack.QPack
 
 interface QPacksExporter {
-    @WorkerThread
+    // @WorkerThread
     suspend fun exportQPackToEmail(qPackId: Long)
 
-    @WorkerThread
+    // @WorkerThread
     suspend fun exportQPack(qPack: QPack)
 
-    @WorkerThread
+    // @WorkerThread
     suspend fun exportAllToEmail()
 
-    @WorkerThread
+    // @WorkerThread
     suspend fun exportAllToFolder(exportDirPath: String)
 }

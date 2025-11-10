@@ -1,15 +1,19 @@
 plugins {
-    id("convention.android-lib.plugin")
+    id("convention.kmp-lib.plugin")
+}
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            // koin
+            implementation(libs.koin.core)
+
+            implementation(project(":module:domain:card:api"))
+            implementation(project(":module:data:common:api"))
+        }
+    }
 }
 
 android {
     namespace = "ru.samtakoy.domain.card.impl"
-}
-
-dependencies {
-    // koin
-    implementation(libs.koin.core)
-
-    implementation(project(":module:domain:card:api"))
-    implementation(project(":module:data:common:api"))
 }

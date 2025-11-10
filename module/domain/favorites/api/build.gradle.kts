@@ -1,11 +1,7 @@
 plugins {
-    id("convention.android-lib.plugin")
+    id("convention.kmp-lib.plugin")
 }
 
 android {
     namespace = "ru.samtakoy.domain.favorites.api"
-}
-
-dependencies {
-
 }

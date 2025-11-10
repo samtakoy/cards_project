@@ -8,9 +8,6 @@ kotlin {
             implementation(libs.koin.core)
             api(libs.gson)
         }
-        androidMain.dependencies {
-            //
-        }
     }
 }
 

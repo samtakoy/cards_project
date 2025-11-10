@@ -1,14 +1,15 @@
 plugins {
-    id("convention.android-lib.plugin")
+    id("convention.kmp-lib.plugin")
+}
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(projects.module.domain.qpack.model)
+        }
+    }
 }
 
 android {
     namespace = "ru.samtakoy.domain.exportcards.api"
-}
-
-dependencies {
-    // @WorkerThread
-    implementation(libs.androidx.core.ktx)
-
-    implementation(projects.module.domain.qpack.model)
 }
