@@ -12,10 +12,4 @@ import ru.samtakoy.data.common.transaction.TransactionRepository
 
 internal fun commonDataModule() = module {
     singleOf(::TransactionRepositoryImpl) bind TransactionRepository::class
-    single<MyRoomDb> {
-        Room.databaseBuilder(get<Context>(), MyRoomDb::class.java, DB_NAME)
-            // .addMigrations(MIGRATION_5_6)
-            .fallbackToDestructiveMigration(true)
-            .build()
-    }
 }

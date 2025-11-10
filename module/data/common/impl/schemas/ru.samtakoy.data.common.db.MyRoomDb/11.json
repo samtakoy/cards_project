@@ -1,12 +1,12 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 6,
-    "identityHash": "3fc134cc4ff2b6e14429e95146aaf29b",
+    "version": 11,
+    "identityHash": "6c10029c80cf6ccdd8e3ff6f23424989",
     "entities": [
       {
         "tableName": "cards",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `qpack_id` INTEGER NOT NULL, `question` TEXT NOT NULL, `answer` TEXT NOT NULL, `aimages` TEXT NOT NULL, `comment` TEXT NOT NULL, `views` INTEGER NOT NULL, `errors` INTEGER NOT NULL, `last_good_views` INTEGER NOT NULL, `last_errors` INTEGER NOT NULL, `last_view_date` INTEGER NOT NULL, `favorite` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`qpack_id`) REFERENCES `qpacks`(`_id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `qpack_id` INTEGER NOT NULL, `question` TEXT NOT NULL, `answer` TEXT NOT NULL, `aimages` TEXT NOT NULL, `comment` TEXT NOT NULL, `views` INTEGER NOT NULL, `errors` INTEGER NOT NULL, `favorite` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`qpack_id`) REFERENCES `qpacks`(`_id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
         "fields": [
           {
             "fieldPath": "id",
@@ -53,24 +53,6 @@
           {
             "fieldPath": "errors",
             "columnName": "errors",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "lastGoodViews",
-            "columnName": "last_good_views",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "lastErros",
-            "columnName": "last_errors",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "lastViewDate",
-            "columnName": "last_view_date",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -175,7 +157,7 @@
       },
       {
         "tableName": "learn_course",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `qpack_id` INTEGER NOT NULL, `course_type` INTEGER NOT NULL, `primary_course_id` INTEGER NOT NULL, `title` TEXT NOT NULL, `mode` INTEGER NOT NULL, `repeated_count` INTEGER NOT NULL, `card_ids` TEXT NOT NULL, `todo_card_ids` TEXT NOT NULL, `error_card_ids` TEXT NOT NULL, `rest_schedule` TEXT NOT NULL, `realized_schedule` TEXT NOT NULL, `repeat_date` INTEGER NOT NULL, FOREIGN KEY(`qpack_id`) REFERENCES `qpacks`(`_id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `qpack_id` INTEGER NOT NULL, `course_type` INTEGER NOT NULL, `primary_course_id` INTEGER NOT NULL, `title` TEXT NOT NULL, `mode` INTEGER NOT NULL, `repeated_count` INTEGER NOT NULL, `card_ids` TEXT NOT NULL, `rest_schedule` TEXT NOT NULL, `realized_schedule` TEXT NOT NULL, `repeat_date` INTEGER NOT NULL, FOREIGN KEY(`qpack_id`) REFERENCES `qpacks`(`_id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
         "fields": [
           {
             "fieldPath": "id",
@@ -222,18 +204,6 @@
           {
             "fieldPath": "cardIds",
             "columnName": "card_ids",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "todoCardIds",
-            "columnName": "todo_card_ids",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "errorCardIds",
-            "columnName": "error_card_ids",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -468,68 +438,8 @@
         ]
       },
       {
-        "tableName": "themes_tags",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`theme_id` INTEGER NOT NULL, `tag_id` INTEGER NOT NULL, PRIMARY KEY(`theme_id`, `tag_id`), FOREIGN KEY(`theme_id`) REFERENCES `themes`(`_id`) ON UPDATE NO ACTION ON DELETE RESTRICT , FOREIGN KEY(`tag_id`) REFERENCES `tags`(`_id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
-        "fields": [
-          {
-            "fieldPath": "themeId",
-            "columnName": "theme_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "tagId",
-            "columnName": "tag_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "theme_id",
-            "tag_id"
-          ]
-        },
-        "indices": [
-          {
-            "name": "index_themes_tags_tag_id",
-            "unique": false,
-            "columnNames": [
-              "tag_id"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_themes_tags_tag_id` ON `${TABLE_NAME}` (`tag_id`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "themes",
-            "onDelete": "RESTRICT",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "theme_id"
-            ],
-            "referencedColumns": [
-              "_id"
-            ]
-          },
-          {
-            "table": "tags",
-            "onDelete": "RESTRICT",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "tag_id"
-            ],
-            "referencedColumns": [
-              "_id"
-            ]
-          }
-        ]
-      },
-      {
         "tableName": "view_history",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `qpack_id` INTEGER NOT NULL, `viewed_card_ids` TEXT NOT NULL, `error_card_ids` TEXT NOT NULL, `new_favs_card_ids` TEXT NOT NULL, `rest_card_count` INTEGER NOT NULL, `last_view_date` INTEGER NOT NULL, FOREIGN KEY(`_id`) REFERENCES `qpacks`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `qpack_id` INTEGER NOT NULL, `viewed_card_ids` TEXT NOT NULL, `todo_card_ids` TEXT NOT NULL, `error_card_ids` TEXT NOT NULL, `new_favs_card_ids` TEXT NOT NULL, `rest_card_count` INTEGER NOT NULL, `last_view_date` INTEGER NOT NULL, FOREIGN KEY(`qpack_id`) REFERENCES `qpacks`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -546,6 +456,12 @@
           {
             "fieldPath": "viewedCardIds",
             "columnName": "viewed_card_ids",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "todoCardIds",
+            "columnName": "todo_card_ids",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -597,7 +513,66 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
+              "qpack_id"
+            ],
+            "referencedColumns": [
               "_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "course_view_relation",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`view_id` INTEGER NOT NULL, `course_id` INTEGER NOT NULL, PRIMARY KEY(`view_id`), FOREIGN KEY(`course_id`) REFERENCES `learn_course`(`_id`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED, FOREIGN KEY(`view_id`) REFERENCES `view_history`(`_id`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)",
+        "fields": [
+          {
+            "fieldPath": "viewId",
+            "columnName": "view_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "courseId",
+            "columnName": "course_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "view_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_course_view_relation_course_id",
+            "unique": false,
+            "columnNames": [
+              "course_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_course_view_relation_course_id` ON `${TABLE_NAME}` (`course_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "learn_course",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "course_id"
+            ],
+            "referencedColumns": [
+              "_id"
+            ]
+          },
+          {
+            "table": "view_history",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "view_id"
             ],
             "referencedColumns": [
               "_id"
@@ -608,7 +583,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3fc134cc4ff2b6e14429e95146aaf29b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6c10029c80cf6ccdd8e3ff6f23424989')"
     ]
   }
 }

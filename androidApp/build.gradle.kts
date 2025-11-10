@@ -56,8 +56,8 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
 
     // room
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.bundles.room)
+    // ksp(libs.androidx.room.compiler)
+    // implementation(libs.bundles.room)
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))

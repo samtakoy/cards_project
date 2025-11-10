@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.kotlinx.serialization) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.android.kotlin.multiplatform.library) apply false
+    alias(libs.plugins.room) apply false
 }
 
 tasks.register("clean", Delete::class) {

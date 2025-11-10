@@ -1,11 +1,15 @@
 plugins {
-    id("convention.android-lib.plugin")
+    id("convention.kmp-lib.plugin")
+}
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.filekit.core)
+        }
+    }
 }
 
 android {
     namespace = "ru.samtakoy.data.importcards.api"
-}
-
-dependencies {
-    implementation(libs.filekit.core)
 }

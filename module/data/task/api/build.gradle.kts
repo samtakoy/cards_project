@@ -1,11 +1,15 @@
 plugins {
-    id("convention.android-lib.plugin")
+    id("convention.kmp-lib.plugin")
+}
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(projects.module.domain.task.model)
+        }
+    }
 }
 
 android {
     namespace = "ru.samtakoy.data.task.api"
-}
-
-dependencies {
-    implementation(projects.module.domain.task.model)
 }
