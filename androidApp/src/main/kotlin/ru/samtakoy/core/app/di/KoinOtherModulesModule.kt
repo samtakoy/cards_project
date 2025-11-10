@@ -1,7 +1,7 @@
 package ru.samtakoy.core.app.di
 
 import org.koin.dsl.module
-import ru.samtakoy.common.di.commonUtilsModule
+import ru.samtakoy.common.utils.di.commonUtilsModule
 import ru.samtakoy.common.di.oldResourcesModule
 import ru.samtakoy.core.presentation.courses.di.coursesPresentationModule
 import ru.samtakoy.core.presentation.favorites.di.favoritesPresentationModule

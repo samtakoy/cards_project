@@ -1,7 +1,7 @@
 package ru.samtakoy.presentation.main.vm
 
 import kotlinx.collections.immutable.toImmutableList
-import ru.samtakoy.common.coroutines.ScopeProvider
+import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.main.mapper.MainScreenContentMapper
 import ru.samtakoy.presentation.main.mapper.MainScreenContentMapper.Companion.IdThemeListRoute

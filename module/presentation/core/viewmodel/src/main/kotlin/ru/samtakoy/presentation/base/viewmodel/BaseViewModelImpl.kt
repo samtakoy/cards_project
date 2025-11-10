@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
-import ru.samtakoy.common.coroutines.ScopeProvider
+import ru.samtakoy.common.utils.coroutines.ScopeProvider
 
 abstract class BaseViewModelImpl<State: Any, Action, Event>(
     private val scopeProvider: ScopeProvider,

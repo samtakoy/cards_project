@@ -1,8 +1,7 @@
 package ru.samtakoy.presentation.cards.screens.view.vm.mapper
 
 import org.jetbrains.compose.resources.getString
-import ru.samtakoy.common.coroutines.SuspendLazy
-import ru.samtakoy.presentation.cards.impl.R
+import ru.samtakoy.common.utils.coroutines.SuspendLazy
 import ru.samtakoy.presentation.cards.view.model.CardViewMode
 import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel

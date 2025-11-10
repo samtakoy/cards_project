@@ -24,7 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.KoinApplication
-import ru.samtakoy.common.di.commonUtilsModule
+import ru.samtakoy.common.utils.di.commonUtilsModule
 import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.domain.learncourse.schedule.Schedule
 import ru.samtakoy.domain.view.ViewHistoryItem

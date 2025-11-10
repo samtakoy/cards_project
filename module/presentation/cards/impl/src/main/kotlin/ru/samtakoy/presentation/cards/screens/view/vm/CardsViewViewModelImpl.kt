@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.parcelize.Parcelize
 import org.jetbrains.compose.resources.getString
-import ru.samtakoy.common.coroutines.ScopeProvider
+import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.domain.card.CardInteractor
 import ru.samtakoy.domain.card.domain.model.Card

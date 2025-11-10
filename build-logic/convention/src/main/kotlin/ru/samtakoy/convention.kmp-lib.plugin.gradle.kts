@@ -1,3 +1,4 @@
+import gradle.kotlin.dsl.accessors._dc12adddf845545d82d0996eeb7ee381.implementation
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import ru.samtakoy.ext.libs
 import ru.samtakoy.ext.projectJavaVersion
@@ -16,10 +17,23 @@ kotlin {
         }
     }
 
+    // Если эти строки закомментированы или отсутствуют, iOS таргета нет
+    // iosX64()
+    // iosArm64()
+    // iosSimulatorArm64()
+
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlin.stdlib)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.collections.immutable)
+
+            implementation(libs.napier)
         }
+
+        // androidMain автоматически наследует все зависимости из commonMain
+        // Здесь добавляются ТОЛЬКО Android-специфичные зависимости
     }
 }
 

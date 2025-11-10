@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.update
 import ru.samtakoy.R
-import ru.samtakoy.common.coroutines.ScopeProvider
+import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.domain.favorites.FavoritesInteractor
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl

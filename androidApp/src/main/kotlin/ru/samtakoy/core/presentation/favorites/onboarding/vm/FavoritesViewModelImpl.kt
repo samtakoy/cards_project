@@ -3,7 +3,7 @@ package ru.samtakoy.core.presentation.favorites.onboarding.vm
 import androidx.lifecycle.SavedStateHandle
 import kotlinx.collections.immutable.toImmutableList
 import ru.samtakoy.R
-import ru.samtakoy.common.coroutines.ScopeProvider
+import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.domain.favorites.FavoritesInteractor
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl

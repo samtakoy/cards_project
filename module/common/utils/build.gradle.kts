@@ -1,14 +1,19 @@
 plugins {
-    id("convention.android-lib.plugin")
+    id("convention.kmp-lib.plugin")
+}
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.koin.core)
+            api(libs.gson)
+        }
+        androidMain.dependencies {
+            //
+        }
+    }
 }
 
 android {
     namespace = "ru.samtakoy.common.utils"
-}
-
-dependencies {
-    // koin
-    implementation(libs.koin.core)
-
-    api(libs.gson)
 }

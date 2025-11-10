@@ -1,4 +1,4 @@
-package ru.samtakoy.common.coroutines
+package ru.samtakoy.common.utils.coroutines
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob

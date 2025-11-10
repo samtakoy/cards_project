@@ -37,10 +37,9 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.stringResource
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.KoinApplication
-import ru.samtakoy.common.di.commonUtilsModule
+import ru.samtakoy.common.utils.di.commonUtilsModule
 import ru.samtakoy.presentation.base.observeActionsWithLifecycle
 import ru.samtakoy.presentation.cards.di.cardsViewPresentationModule
-import ru.samtakoy.presentation.cards.impl.R
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.Action
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.CardState
