@@ -7,7 +7,7 @@ import android.content.Intent
 import androidx.navigation.NavDeepLinkBuilder
 import org.koin.android.ext.android.inject
 import ru.samtakoy.R
-import ru.samtakoy.common.utils.MyLog.add
+import ru.samtakoy.common.utils.log.MyLog.add
 import ru.samtakoy.core.presentation.courses.info.CourseInfoFragment.Companion.buildBundle
 import ru.samtakoy.core.presentation.courses.list.CoursesListFragment
 import ru.samtakoy.data.learncourse.utils.LearnCourseHelper

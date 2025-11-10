@@ -30,6 +30,7 @@ coroutines_guava_version = "1.10.2"
 kotlinTestVersion = "2.2.20"
 runnerVersion = "1.7.0"
 coreVersion = "1.7.0"
+napier_version = "2.7.1"
 
 [libraries]
 # provides the Kotlin Gradle plugin
@@ -98,12 +99,15 @@ apache-commons = "org.apache.commons:commons-lang3:3.9"
 # kotlinx
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlin_coroutines_version" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlin_coroutines_version" }
-kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.3.3"
+kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.7.1"
 kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref="kotlin_serialization_version" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref="kotlin_serialization_version" }
 # kotlin kmp
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin_version" }
+
+# kmp logging
+napier = { group = "io.github.aakira", name = "napier", version.ref = "napier_version" }
 
 # Stetho core
 facebook-stetho = "com.facebook.stetho:stetho:1.5.1"
@@ -112,9 +116,6 @@ facebook-stetho = "com.facebook.stetho:stetho:1.5.1"
 reactivex-rxjava = "io.reactivex.rxjava2:rxjava:2.2.17"
 reactivex-rxjava-rxandroid = "io.reactivex.rxjava2:rxandroid:2.1.1"
 reactivex-rxjava-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.10.2"
-
-# log
-jakewharton-timber = "com.jakewharton.timber:timber:5.0.1"
 
 # koin
 koin-core = { module = "io.insert-koin:koin-core", version.ref="koin" }

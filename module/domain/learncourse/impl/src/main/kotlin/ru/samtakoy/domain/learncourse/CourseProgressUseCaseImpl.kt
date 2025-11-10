@@ -4,7 +4,8 @@ import ru.samtakoy.data.common.transaction.TransactionRepository
 import ru.samtakoy.domain.qpack.QPackInteractor
 import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.domain.view.ViewHistoryItem
-import java.util.Date
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 internal class CourseProgressUseCaseImpl(
     private val transactionRepository: TransactionRepository,
@@ -13,6 +14,8 @@ internal class CourseProgressUseCaseImpl(
     private val qPackInteractor: QPackInteractor,
     private val coursesPlanner: CoursesPlanner
 ): CourseProgressUseCase {
+
+    @OptIn(ExperimentalTime::class)
     override suspend fun startLearning(learnCourse: LearnCourse): ViewHistoryItem {
         return transactionRepository.withTransaction<ViewHistoryItem> {
 
@@ -36,6 +39,7 @@ internal class CourseProgressUseCaseImpl(
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     override suspend fun startRepeating(learnCourse: LearnCourse): ViewHistoryItem {
         return transactionRepository.withTransaction<ViewHistoryItem> {
             // меняем курс
@@ -59,7 +63,8 @@ internal class CourseProgressUseCaseImpl(
         }
     }
 
-    override suspend fun finishCourseCardsViewing(courseId: Long, currentTime: Date) {
+    @OptIn(ExperimentalTime::class)
+    override suspend fun finishCourseCardsViewing(courseId: Long, currentTime: Instant) {
         coursesInteractor.getCourse(courseId = courseId)?.let { course ->
             if (course.qPackId > 0) {
                 qPackInteractor.updateQPackViewCount(course.qPackId, currentTime)
@@ -72,7 +77,8 @@ internal class CourseProgressUseCaseImpl(
         }
     }
 
-    override suspend fun finishCourseCardsViewingForViewId(viewId: Long, currentTime: Date) {
+    @OptIn(ExperimentalTime::class)
+    override suspend fun finishCourseCardsViewingForViewId(viewId: Long, currentTime: Instant) {
         val courseId = coursesInteractor.getCourseIdForViewId(viewId = viewId) ?: return
         finishCourseCardsViewing(
             courseId = courseId,

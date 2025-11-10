@@ -16,12 +16,12 @@ import ru.samtakoy.domain.importcards.model.ImportCardsOpts
 import ru.samtakoy.domain.qpack.QPack
 import ru.samtakoy.domain.qpack.QPackInteractor
 import ru.samtakoy.domain.theme.ThemeInteractor
-import timber.log.Timber
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.charset.Charset
-import java.util.Date
 
 internal class QPackBuilderInteractorImpl(
     private val themeInteractor: ThemeInteractor,
@@ -61,21 +61,21 @@ internal class QPackBuilderInteractorImpl(
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     @Throws(ImportCardsException::class)
     suspend fun saveQPackToDatabase(
         qPackBuilder: QPackBuilder,
         opts: ImportCardsOpts
     ): QPackBuilder {
-        val creationDate: Date = if (qPackBuilder.hasCreationDate()) {
+        val creationDate: Instant = if (qPackBuilder.hasCreationDate()) {
             try {
-                DateUtils.DATE_FORMAT.parse(qPackBuilder.creationDate)!!
+                DateUtils.parseToDate(qPackBuilder.creationDate)!!
             } catch (e: Throwable) {
                 DateUtils.currentTimeDate
             }
         } else {
             DateUtils.currentTimeDate
         }
-        Timber.tag("mytest").e("save QPack, themeId: ${qPackBuilder.themeId} (qPack ${qPackBuilder.parsedId})")
         val qPack = QPack(
             id = qPackBuilder.parsedId,
             themeId = qPackBuilder.themeId,

@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import timber.log.Timber
+import io.github.aakira.napier.Napier
 
 class FragmentViewModelLifecycleCallbacks : FragmentManager.FragmentLifecycleCallbacks() {
     override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
-        Timber.tag("mytest").e("onFragmentViewCreated: ${f.javaClass.name}")
+        Napier.e { "onFragmentViewCreated: ${f.javaClass.name}" }
         tryObserveFragmentViewModel(f)
     }
 

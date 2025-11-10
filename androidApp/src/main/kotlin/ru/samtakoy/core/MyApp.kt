@@ -6,16 +6,19 @@ import androidx.multidex.MultiDexApplication
 import androidx.work.Configuration
 import androidx.work.WorkManager
 import com.facebook.stetho.Stetho
+import io.github.aakira.napier.DebugAntilog
+import io.github.aakira.napier.Napier
 import org.koin.android.ext.android.getKoin
+import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.workmanager.factory.KoinWorkerFactory
 import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.GlobalContext.startKoin
 import ru.samtakoy.BuildConfig
-import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.common.utils.log.CustomLogger
+import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.core.app.di.koinAppModule
 import ru.samtakoy.core.app.di.koinOtherModulesModule
-import timber.log.Timber
 
 class MyApp : MultiDexApplication()/*, Configuration.Provider*/ {
     override fun onTerminate() {
@@ -29,10 +32,13 @@ class MyApp : MultiDexApplication()/*, Configuration.Provider*/ {
 
     override fun onCreate() {
         super.onCreate()
+
         if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
+            val logger: CustomLogger by inject()
+            Napier.base(logger)
         }
         MyLog.add("MyApp.onCreate(), " + Process.myPid())
+
         Stetho.initializeWithDefaults(this)
 
         try {

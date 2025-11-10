@@ -6,9 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import ru.samtakoy.data.common.db.converters.ListOfLongConverter
-import ru.samtakoy.data.common.db.converters.DateLongConverter
 import ru.samtakoy.data.qpack.QPackEntity
-import java.util.Date
 
 @Entity(
     tableName = ViewHistoryEntity.TABLE,
@@ -54,9 +52,8 @@ internal class ViewHistoryEntity(
     val restCardCount: Int,
 
     /** Дата поледнего просмотра */
-    @field:TypeConverters(DateLongConverter::class)
     @ColumnInfo(name = LAST_VIEW_DATE)
-    var lastViewDate: Date
+    var lastViewDate: Long
 ) {
 
     companion object {

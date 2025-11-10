@@ -6,16 +6,12 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import ru.samtakoy.common.utils.DateUtils
-import ru.samtakoy.data.common.db.converters.DateLongConverter
 import ru.samtakoy.data.common.db.converters.ListOfLongConverter
 import ru.samtakoy.data.learncourse.converters.CourseTypeConverter
 import ru.samtakoy.data.learncourse.converters.LearnCourseModeConverter
 import ru.samtakoy.data.learncourse.converters.ScheduleStringConverter
 import ru.samtakoy.data.learncourse.model.schedule.ScheduleEntity
 import ru.samtakoy.data.qpack.QPackEntity
-import java.io.Serializable
-import java.util.Date
 
 @Entity(
     tableName = LearnCourseEntity.table,
@@ -79,11 +75,10 @@ internal class LearnCourseEntity(
     // дата с которой стартовать очередную итерацию
     // для активного плана дата в прошлом,
     // для неактивированного плана список TODO == пустой строке
-    @field:TypeConverters(DateLongConverter::class)
     @ColumnInfo(name = _repeat_date)
-    val repeatDate: Date
+    val repeatDate: Long
 
-) : Serializable {
+) {
 
     companion object {
 
@@ -103,6 +98,7 @@ internal class LearnCourseEntity(
 
         //==
 
+        /*
         fun initNew(
             qPackId: Long,
             courseType: CourseTypeEntity,
@@ -110,7 +106,7 @@ internal class LearnCourseEntity(
             mode: LearnCourseModeEntity,
             cardIds: List<Long>?,
             restSchedule: ScheduleEntity?,
-            repeatDate: Date?
+            repeatDate: Instant?
         ): LearnCourseEntity {
 
             return LearnCourseEntity(
@@ -126,7 +122,7 @@ internal class LearnCourseEntity(
                 ScheduleEntity(emptyList()),
                 repeatDate ?: DateUtils.currentTimeDate
             )
-        }
+        }*/
         //==
     }
 }

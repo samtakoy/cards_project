@@ -20,12 +20,13 @@ import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModel.Naviga
 import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModel.State
 import ru.samtakoy.core.presentation.courses.model.CourseItemUiMapper
 import ru.samtakoy.core.presentation.courses.model.CourseItemUiModel
-import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.domain.learncourse.NCoursesInteractor
 import ru.samtakoy.domain.learncourse.CourseType
 import ru.samtakoy.domain.learncourse.LearnCourseMode
 import ru.samtakoy.domain.learncourse.schedule.Schedule
 import ru.samtakoy.domain.qpack.QPackInteractor
+import kotlin.time.ExperimentalTime
 
 internal class CoursesListViewModelImpl(
     private val coursesInteractor: NCoursesInteractor,
@@ -98,6 +99,7 @@ internal class CoursesListViewModelImpl(
         sendAction(Action.ShowBatchExportToEmailDialog)
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun addCourse(courseTitle: String) {
         val qPackId: Long = targetQPackId!!
         launchWithLoader(

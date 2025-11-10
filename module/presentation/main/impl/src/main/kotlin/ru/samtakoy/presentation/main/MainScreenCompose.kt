@@ -33,7 +33,6 @@ import ru.samtakoy.presentation.main.vm.MainScreenViewModel
 import ru.samtakoy.presentation.navigation.MainTabFeatureEntry
 import ru.samtakoy.presentation.navigation.RootFeatureEntry
 import ru.samtakoy.presentation.themes.list.ThemeListRoute
-import timber.log.Timber
 
 @Composable
 internal fun MainScreen(
@@ -136,7 +135,6 @@ private fun TabsView(
                     rootNavController = rootNavController,
                     tabsNavController = tabsNavController,
                     onMainNavigator = {
-                        Timber.tag("mytest").e("ex click")
                         coroutineScope.launch { drawerState.open() }
                     }
                 )

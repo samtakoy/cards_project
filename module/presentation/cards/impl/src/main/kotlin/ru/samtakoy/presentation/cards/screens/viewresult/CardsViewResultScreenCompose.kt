@@ -25,6 +25,7 @@ import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.KoinApplication
 import ru.samtakoy.common.di.commonUtilsModule
+import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.domain.learncourse.schedule.Schedule
 import ru.samtakoy.domain.view.ViewHistoryItem
 import ru.samtakoy.presentation.base.observeActionsWithLifecycle
@@ -41,7 +42,7 @@ import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButton
 import ru.samtakoy.presentation.core.design_system.scaffold.MySimpleScreenScaffold
 import ru.samtakoy.presentation.core.design_system.toolbar.ToolbarTitleView
-import java.util.Date
+import kotlin.time.ExperimentalTime
 
 @Composable
 internal fun CardsViewResultScreen(
@@ -179,6 +180,7 @@ private fun CardsViewResultScreenInternal_Preview() = MyTheme {
         viewState = State(
             isLoading = false,
             content = runBlocking {
+                @OptIn(ExperimentalTime::class)
                 stateMapper.map(
                     CardViewMode.REPEATING,
                     ViewHistoryItem(
@@ -188,7 +190,7 @@ private fun CardsViewResultScreenInternal_Preview() = MyTheme {
                         todoCardIds = listOf(),
                         errorCardIds = listOf(1, 2, 3),
                         addedToFavsCardIds = listOf(3, 4, 5),
-                        lastViewDate = Date()
+                        lastViewDate = DateUtils.currentTimeDate
                     ),
                     Schedule(emptyList())
                 )

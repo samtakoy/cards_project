@@ -2,11 +2,10 @@ package ru.samtakoy.common.coroutines
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
-import java.io.Closeable
 
 class ScopeProvider(
     contextProvider: ContextProvider
-) : Closeable {
+) : AutoCloseable {
     private var job = SupervisorJob()
     val isCancelled: Boolean
         get() = job.isCancelled

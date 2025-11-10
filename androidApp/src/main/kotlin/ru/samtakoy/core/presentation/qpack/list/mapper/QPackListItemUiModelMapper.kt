@@ -2,12 +2,13 @@ package ru.samtakoy.core.presentation.qpack.list.mapper
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import ru.samtakoy.common.utils.DateUtils.DATE_FORMAT
+import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 import ru.samtakoy.core.presentation.qpack.list.model.QPackListItemUiModel
 import ru.samtakoy.core.presentation.qpack.list.model.QPackSortType
 import ru.samtakoy.domain.qpack.QPack
 import ru.samtakoy.presentation.utils.asAnnotated
+import kotlin.time.ExperimentalTime
 
 internal interface QPackListItemUiModelMapper {
     fun map(item: QPack, sortType: QPackSortType): QPackListItemUiModel
@@ -40,10 +41,12 @@ internal class QPackListItemUiModelMapperImpl(): QPackListItemUiModelMapper {
     }
 
     private fun QPack.getCreationDateAsString(): String {
-        return DATE_FORMAT.format(creationDate)
+        @OptIn(ExperimentalTime::class)
+        return DateUtils.formatToString(creationDate)
     }
 
     private fun QPack.getLastViewDateAsString(): String {
-        return DATE_FORMAT.format(lastViewDate)
+        @OptIn(ExperimentalTime::class)
+        return DateUtils.formatToString(lastViewDate)
     }
 }

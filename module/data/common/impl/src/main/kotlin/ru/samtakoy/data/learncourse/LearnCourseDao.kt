@@ -6,12 +6,10 @@ import androidx.room.Query
 import androidx.room.TypeConverters
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-import ru.samtakoy.data.common.db.converters.DateLongConverter
 import ru.samtakoy.data.learncourse.converters.CourseTypeConverter
 import ru.samtakoy.data.learncourse.converters.LearnCourseModeConverter
 import ru.samtakoy.data.learncourse.model.LearnCourseEntity
 import ru.samtakoy.data.learncourse.model.LearnCourseModeEntity
-import java.util.Date
 
 @Dao
 internal interface LearnCourseDao {
@@ -59,11 +57,11 @@ internal interface LearnCourseDao {
     fun getCoursesForQPackAsFlow(qPackId: Long): Flow<List<LearnCourseEntity>>
 
     @Query("SELECT * FROM ${LearnCourseEntity.Companion.table} WHERE ${LearnCourseEntity.Companion._mode} = :mode AND ${LearnCourseEntity.Companion._repeat_date} <= :repeatDate ORDER BY ${LearnCourseEntity.Companion._repeat_date} ASC")
-    @TypeConverters(LearnCourseModeConverter::class, DateLongConverter::class)
-    fun getOrderedCoursesLessThan(mode: LearnCourseModeEntity, repeatDate: Date): List<LearnCourseEntity>
+    @TypeConverters(LearnCourseModeConverter::class)
+    fun getOrderedCoursesLessThan(mode: LearnCourseModeEntity, repeatDate: Long): List<LearnCourseEntity>
 
     @Query("SELECT * FROM ${LearnCourseEntity.Companion.table} WHERE ${LearnCourseEntity.Companion._mode} = :mode AND ${LearnCourseEntity.Companion._repeat_date} > :repeatDate ORDER BY ${LearnCourseEntity.Companion._repeat_date} ASC")
-    @TypeConverters(LearnCourseModeConverter::class, DateLongConverter::class)
-    fun getOrderedCoursesMoreThan(mode: LearnCourseModeEntity, repeatDate: Date): List<LearnCourseEntity>
+    @TypeConverters(LearnCourseModeConverter::class)
+    fun getOrderedCoursesMoreThan(mode: LearnCourseModeEntity, repeatDate: Long): List<LearnCourseEntity>
 
 }

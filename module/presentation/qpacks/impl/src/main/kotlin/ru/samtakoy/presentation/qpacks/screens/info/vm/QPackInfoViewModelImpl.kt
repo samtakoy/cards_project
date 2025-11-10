@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import org.jetbrains.compose.resources.getString
 import ru.samtakoy.common.coroutines.ScopeProvider
-import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.domain.card.CardInteractor
 import ru.samtakoy.domain.favorites.FavoritesInteractor
 import ru.samtakoy.domain.learncourse.NCoursesInteractor

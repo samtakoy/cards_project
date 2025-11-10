@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.core.content.FileProvider
 import com.google.gson.Gson
-import ru.samtakoy.common.utils.MyLog.add
+import ru.samtakoy.common.utils.log.MyLog.add
 import ru.samtakoy.data.learncourse.CoursesRepository
 import ru.samtakoy.domain.exportcards.CoursesExporter
 import ru.samtakoy.domain.learncourse.LearnCourse

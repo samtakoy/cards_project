@@ -1,7 +1,9 @@
 package ru.samtakoy.data.view.mapper
 
+import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.data.view.model.ViewHistoryEntity
 import ru.samtakoy.domain.view.ViewHistoryItem
+import kotlin.time.ExperimentalTime
 
 internal interface ViewHistoryEntityMapper {
     fun mapToEntity(item: ViewHistoryItem): ViewHistoryEntity
@@ -10,6 +12,7 @@ internal interface ViewHistoryEntityMapper {
 
 internal class ViewHistoryEntityMapperImpl(): ViewHistoryEntityMapper {
     override fun mapToEntity(item: ViewHistoryItem): ViewHistoryEntity {
+        @OptIn(ExperimentalTime::class)
         return ViewHistoryEntity(
             id = item.id,
             qPackId = item.qPackId,
@@ -18,11 +21,12 @@ internal class ViewHistoryEntityMapperImpl(): ViewHistoryEntityMapper {
             errorCardIds = item.errorCardIds,
             addedToFavsCardIds = item.addedToFavsCardIds,
             restCardCount = item.todoCardIds.size,
-            lastViewDate = item.lastViewDate
+            lastViewDate = DateUtils.dateToDbSerialized(item.lastViewDate)
         )
     }
 
     override fun mapToDomain(item: ViewHistoryEntity): ViewHistoryItem {
+        @OptIn(ExperimentalTime::class)
         return ViewHistoryItem(
             id = item.id,
             qPackId = item.qPackId,
@@ -30,7 +34,7 @@ internal class ViewHistoryEntityMapperImpl(): ViewHistoryEntityMapper {
             todoCardIds = item.todoCardIds,
             errorCardIds = item.errorCardIds,
             addedToFavsCardIds = item.addedToFavsCardIds,
-            lastViewDate = item.lastViewDate
+            lastViewDate = DateUtils.dateFromDbSerialized(item.lastViewDate)
         )
     }
 }

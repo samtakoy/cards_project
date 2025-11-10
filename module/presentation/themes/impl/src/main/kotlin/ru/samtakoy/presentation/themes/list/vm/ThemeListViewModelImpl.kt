@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.parcelize.Parcelize
 import org.jetbrains.compose.resources.getString
 import ru.samtakoy.common.coroutines.ScopeProvider
-import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.domain.exportcards.QPacksExporter
 import ru.samtakoy.domain.importcards.model.ImportCardsOpts
 import ru.samtakoy.domain.qpack.QPackInteractor

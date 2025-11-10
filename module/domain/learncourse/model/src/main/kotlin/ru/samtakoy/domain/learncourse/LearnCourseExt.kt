@@ -1,11 +1,14 @@
+@file:OptIn(ExperimentalTime::class)
+
 package ru.samtakoy.domain.learncourse
 
 import ru.samtakoy.common.utils.CollectionUtils
 import ru.samtakoy.common.utils.DateUtils
-import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.domain.learncourse.schedule.Schedule
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import java.util.ArrayDeque
-import java.util.Date
 import java.util.Deque
 
 
@@ -27,7 +30,7 @@ fun IntArray?.primitiveArrayToList(): List<LearnCourseMode>? {
 
 // TODO это временный класс, пока не появится domain моделька
 
-fun LearnCourse.finishLearnOrRepeat(currentTime: Date): LearnCourse {
+fun LearnCourse.finishLearnOrRepeat(currentTime: Instant): LearnCourse {
     return if (restSchedule.isEmpty) {
         this.copy(
             mode = LearnCourseMode.COMPLETED

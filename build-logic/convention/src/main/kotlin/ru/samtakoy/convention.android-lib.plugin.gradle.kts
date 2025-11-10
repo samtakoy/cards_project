@@ -25,5 +25,5 @@ android {
 dependencies {
     implementation(libs.bundles.kotlinx.pure)
 
-    implementation(libs.jakewharton.timber)
+    implementation(libs.napier)
 }

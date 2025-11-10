@@ -1,6 +1,7 @@
 package ru.samtakoy.domain.view
 
-import java.util.Date
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 /**
  * @param qPackId id пака, если это просомтр карточек пака
@@ -12,5 +13,6 @@ data class ViewHistoryItem(
     val todoCardIds: List<Long>,
     val errorCardIds: List<Long>,
     val addedToFavsCardIds: List<Long>,
-    var lastViewDate: Date
+    @OptIn(ExperimentalTime::class)
+    var lastViewDate: Instant
 )

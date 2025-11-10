@@ -2,7 +2,8 @@ package ru.samtakoy.domain.learncourse
 
 import kotlinx.coroutines.flow.Flow
 import ru.samtakoy.domain.learncourse.schedule.Schedule
-import java.util.Date
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 interface NCoursesInteractor {
     suspend fun getCourse(courseId: Long): LearnCourse?
@@ -29,6 +30,7 @@ interface NCoursesInteractor {
 
     suspend fun addNewCourse(newCourse: LearnCourse): LearnCourse
 
+    @OptIn(ExperimentalTime::class)
     suspend fun addNewCourse(
         qPackId: Long,
         courseType: CourseType,
@@ -36,7 +38,7 @@ interface NCoursesInteractor {
         mode: LearnCourseMode,
         cardIds: List<Long>?,
         restSchedule: Schedule?,
-        repeatDate: Date?
+        repeatDate: Instant?
     ): LearnCourse
 
     fun getAllCoursesAsFlow(): Flow<List<LearnCourse>>

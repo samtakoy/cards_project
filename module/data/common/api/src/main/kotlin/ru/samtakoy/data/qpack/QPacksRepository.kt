@@ -2,7 +2,8 @@ package ru.samtakoy.data.qpack
 
 import kotlinx.coroutines.flow.Flow
 import ru.samtakoy.domain.qpack.QPack
-import java.util.Date
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 interface QPacksRepository {
 
@@ -14,7 +15,8 @@ interface QPacksRepository {
 
     fun updateQPack(qPack: QPack)
     suspend fun updateQPackFavorite(qPackId: Long, favorite: Int)
-    suspend fun updateQPackViewCount(qPackId: Long, currentTime: Date)
+    @OptIn(ExperimentalTime::class)
+    suspend fun updateQPackViewCount(qPackId: Long, currentTime: Instant)
 
     fun isPackExists(qPackId: Long): Boolean
 

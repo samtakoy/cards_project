@@ -3,7 +3,8 @@ package ru.samtakoy.domain.qpack
 import kotlinx.coroutines.flow.Flow
 import ru.samtakoy.data.card.CardsRepository
 import ru.samtakoy.data.qpack.QPacksRepository
-import java.util.Date
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 internal class QPackInteractorImpl(
     private val qPackRepository: QPacksRepository,
@@ -34,7 +35,8 @@ internal class QPackInteractorImpl(
         qPackRepository.deletePack(qPackId)
     }
 
-    override suspend fun updateQPackViewCount(qPackId: Long, currentTime: Date) {
+    @OptIn(ExperimentalTime::class)
+    override suspend fun updateQPackViewCount(qPackId: Long, currentTime: Instant) {
         qPackRepository.updateQPackViewCount(qPackId, currentTime)
     }
 

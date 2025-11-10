@@ -10,8 +10,8 @@ import ru.samtakoy.domain.learncourse.CourseType
 import ru.samtakoy.domain.learncourse.LearnCourse
 import ru.samtakoy.domain.learncourse.LearnCourseMode
 import ru.samtakoy.domain.learncourse.schedule.Schedule
-import java.util.Arrays
-import java.util.Date
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 internal class CoursesRepositoryImpl(
     private val courseDao: LearnCourseDao,
@@ -39,11 +39,13 @@ internal class CoursesRepositoryImpl(
         courseDao.deleteQPackCourses(qPackId)
     }
 
+    @OptIn(ExperimentalTime::class)
     override fun addNewCourseSync(newCourse: LearnCourse): LearnCourse {
         val id = courseDao.addLearnCourse(courseMapper.mapToEntity(newCourse))
         return newCourse.copy(id = id)
     }
 
+    @OptIn(ExperimentalTime::class)
     override suspend fun addNewCourse(
         qPackId: Long,
         courseType: CourseType,
@@ -51,7 +53,7 @@ internal class CoursesRepositoryImpl(
         mode: LearnCourseMode,
         cardIds: List<Long>?,
         restSchedule: Schedule?,
-        repeatDate: Date?
+        repeatDate: Instant?
     ): LearnCourse {
         return addNewCourse(
             LearnCourse(
@@ -70,6 +72,7 @@ internal class CoursesRepositoryImpl(
         )
     }
 
+    @OptIn(ExperimentalTime::class)
     override suspend fun addNewCourse(newCourse: LearnCourse): LearnCourse {
         val id = courseDao.addLearnCourse(courseMapper.mapToEntity(newCourse))
         return newCourse.copy(id = id)
@@ -86,7 +89,7 @@ internal class CoursesRepositoryImpl(
     }
 
     override fun getCoursesByIdsAsFlow(targetCourseIds: Array<Long>): Flow<List<LearnCourse>> {
-        return courseDao.getCoursesByIdsAsFlow(Arrays.asList(*targetCourseIds)).map { list ->
+        return courseDao.getCoursesByIdsAsFlow(targetCourseIds.toList()).map { list ->
             list.map(courseMapper::mapToDomain)
         }
     }
@@ -109,7 +112,7 @@ internal class CoursesRepositoryImpl(
 
     override fun getCoursesByModesNow(vararg mode: LearnCourseMode): List<LearnCourse> {
         return courseDao.getLearnCourseByModesNow(
-            Arrays.asList(*mode).map(modeMapper::mapToEntity)
+            mode.toList().map(modeMapper::mapToEntity)
         ).map(courseMapper::mapToDomain)
     }
 
@@ -120,17 +123,19 @@ internal class CoursesRepositoryImpl(
     }
 
     // не в Rx стиле для сервиса, перенести в отдельный репозиторий?
-    override fun getOrderedCoursesLessThan(mode: LearnCourseMode, repeatDate: Date): List<LearnCourse> {
+    @OptIn(ExperimentalTime::class)
+    override fun getOrderedCoursesLessThan(mode: LearnCourseMode, repeatDate: Instant): List<LearnCourse> {
         return courseDao.getOrderedCoursesLessThan(
             mode = modeMapper.mapToEntity(mode),
-            repeatDate = repeatDate
+            repeatDate = DateUtils.dateToDbSerialized(repeatDate)
         ).map(courseMapper::mapToDomain)
     }
 
-    override fun getOrderedCoursesMoreThan(mode: LearnCourseMode, repeatDate: Date): List<LearnCourse> {
+    @OptIn(ExperimentalTime::class)
+    override fun getOrderedCoursesMoreThan(mode: LearnCourseMode, repeatDate: Instant): List<LearnCourse> {
         return courseDao.getOrderedCoursesMoreThan(
             mode = modeMapper.mapToEntity(mode),
-            repeatDate = repeatDate
+            repeatDate = DateUtils.dateToDbSerialized(repeatDate)
         ).map(courseMapper::mapToDomain)
     }
 }

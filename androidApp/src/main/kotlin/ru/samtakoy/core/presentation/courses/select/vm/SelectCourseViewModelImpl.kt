@@ -16,7 +16,7 @@ import ru.samtakoy.core.presentation.courses.model.CourseItemUiModel
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel.Action
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel.Event
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel.State
-import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.common.utils.log.MyLog
 
 class SelectCourseViewModelImpl(
     private val coursesInteractor: NCoursesInteractor,

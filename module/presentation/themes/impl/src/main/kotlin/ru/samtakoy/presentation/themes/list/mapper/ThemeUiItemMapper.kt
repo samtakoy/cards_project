@@ -2,7 +2,7 @@ package ru.samtakoy.presentation.themes.list.mapper
 
 import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.getString
-import ru.samtakoy.common.utils.DateUtils.DATE_FORMAT
+import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.domain.qpack.QPack
 import ru.samtakoy.domain.theme.Theme
 import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
@@ -17,6 +17,7 @@ import ru.samtakoy.resources.action_cancel
 import ru.samtakoy.resources.action_ok
 import ru.samtakoy.resources.theme_list_screen_notifications_alert_desc
 import ru.samtakoy.resources.theme_list_screen_notifications_alert_title
+import kotlin.time.ExperimentalTime
 
 internal interface ThemeUiItemMapper {
     fun mapThemes(themes: List<Theme>): List<ThemeUiItem.Theme>
@@ -73,6 +74,7 @@ internal class ThemeUiItemMapperImpl : ThemeUiItemMapper {
     }
 
     private fun QPack.getCreationDateAsString(): String {
-        return DATE_FORMAT.format(creationDate)
+        @OptIn(ExperimentalTime::class)
+        return DateUtils.formatToString(creationDate)
     }
 }

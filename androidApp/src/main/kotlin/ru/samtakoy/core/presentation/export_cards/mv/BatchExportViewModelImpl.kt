@@ -7,7 +7,7 @@ import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.export_cards.BatchExportType
 import ru.samtakoy.core.presentation.export_cards.mv.BatchExportViewModel.Action
-import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.domain.exportcards.CoursesExporter
 import ru.samtakoy.domain.exportcards.QPacksExporter
 

@@ -23,12 +23,13 @@ import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.Action
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.Event
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.NavigationAction
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.State
-import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.domain.learncourse.LearnCourse
 import ru.samtakoy.domain.learncourse.LearnCourseMode.*
 import ru.samtakoy.domain.learncourse.schedule.ScheduleTimeUnit
 import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.domain.view.ViewHistoryItem
+import kotlin.time.ExperimentalTime
 
 internal class CourseInfoViewModelImpl(
     private val coursesInteractor: NCoursesInteractor,
@@ -113,6 +114,7 @@ internal class CourseInfoViewModelImpl(
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun startRepeatingExtraordinaryOrNext() {
         val learnCourse = dataStateAsFlow.value?.learnCourse ?: return
         val timeDelta = DateUtils.dateToDbSerialized(learnCourse.repeatDate) - DateUtils.currentTimeLong

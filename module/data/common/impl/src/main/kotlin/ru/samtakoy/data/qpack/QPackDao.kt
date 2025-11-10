@@ -1,10 +1,12 @@
 package ru.samtakoy.data.qpack
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-import ru.samtakoy.data.common.db.converters.DateLongConverter
 import ru.samtakoy.data.card.model.CardEntity
-import java.util.Date
+import kotlin.time.ExperimentalTime
 
 @Dao
 internal interface QPackDao {
@@ -82,9 +84,9 @@ internal interface QPackDao {
     @Update
     fun updateQPack(qPack: QPackEntity)
 
+    @OptIn(ExperimentalTime::class)
     @Query("UPDATE ${QPackEntity.Companion.table} SET ${QPackEntity.Companion._view_counter}=${QPackEntity.Companion._view_counter}+1, ${QPackEntity.Companion._last_view_date}=:currentTime WHERE ${QPackEntity.Companion._id}=:qPackId")
-    @TypeConverters(DateLongConverter::class)
-    suspend fun updateQPackViewCount(qPackId: Long, currentTime: Date)
+    suspend fun updateQPackViewCount(qPackId: Long, currentTime: Long)
 
     @Query(
         "UPDATE ${QPackEntity.Companion.table} SET ${QPackEntity.Companion._favorite}=:favorite WHERE ${QPackEntity.Companion._id}=:qPackId"

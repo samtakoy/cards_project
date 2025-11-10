@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
-import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.data.common.transaction.TransactionRepository
 import ru.samtakoy.data.importcards.CardsSourceRepository
 import ru.samtakoy.data.importcards.model.QPackSource

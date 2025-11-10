@@ -5,7 +5,8 @@ import ru.samtakoy.domain.learncourse.CourseType
 import ru.samtakoy.domain.learncourse.LearnCourse
 import ru.samtakoy.domain.learncourse.LearnCourseMode
 import ru.samtakoy.domain.learncourse.schedule.Schedule
-import java.util.Date
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 interface CoursesRepository {
     suspend fun getCourse(learnCourseId: Long): LearnCourse?
@@ -21,6 +22,7 @@ interface CoursesRepository {
     // TODO TEMP
     fun addNewCourseSync(newCourse: LearnCourse): LearnCourse
 
+    @OptIn(ExperimentalTime::class)
     suspend fun addNewCourse(
         qPackId: Long,
         courseType: CourseType,
@@ -28,7 +30,7 @@ interface CoursesRepository {
         mode: LearnCourseMode,
         cardIds: List<Long>?,
         restSchedule: Schedule?,
-        repeatDate: Date?
+        repeatDate: Instant?
     ): LearnCourse
 
     suspend fun addNewCourse(newCourse: LearnCourse): LearnCourse
@@ -45,7 +47,9 @@ interface CoursesRepository {
 
     fun getCoursesForQPackAsFlow(qPackId: Long): Flow<List<LearnCourse>>
 
-    fun getOrderedCoursesLessThan(mode: LearnCourseMode, repeatDate: Date): List<LearnCourse>
+    @OptIn(ExperimentalTime::class)
+    fun getOrderedCoursesLessThan(mode: LearnCourseMode, repeatDate: Instant): List<LearnCourse>
 
-    fun getOrderedCoursesMoreThan(mode: LearnCourseMode, repeatDate: Date): List<LearnCourse>
+    @OptIn(ExperimentalTime::class)
+    fun getOrderedCoursesMoreThan(mode: LearnCourseMode, repeatDate: Instant): List<LearnCourse>
 }

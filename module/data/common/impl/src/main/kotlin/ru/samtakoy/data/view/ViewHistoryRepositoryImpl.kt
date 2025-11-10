@@ -2,13 +2,14 @@ package ru.samtakoy.data.view
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.data.view.mapper.ViewHistoryEntityMapper
 import ru.samtakoy.data.view.mapper.ViewHistoryEntityMapperEx
 import ru.samtakoy.data.view.model.ViewHistoryDao
 import ru.samtakoy.data.view.model.ViewHistoryEntity
 import ru.samtakoy.domain.view.ViewHistoryItem
 import ru.samtakoy.domain.view.ViewHistoryItemWithInfo
-import java.util.Date
+import kotlin.time.ExperimentalTime
 
 internal class ViewHistoryRepositoryImpl(
     private val dao: ViewHistoryDao,
@@ -22,6 +23,7 @@ internal class ViewHistoryRepositoryImpl(
     ): ViewHistoryItem {
         val result = createNewViewItem(qPackId, cardIds)
         val id = dao.add(result)
+        @OptIn(ExperimentalTime::class)
         return entityMapper.mapToDomain(result).copy(id = id)
     }
 
@@ -61,6 +63,7 @@ internal class ViewHistoryRepositoryImpl(
         qPackId: Long,
         cardIds: List<Long>
     ): ViewHistoryEntity {
+        @OptIn(ExperimentalTime::class)
         return ViewHistoryEntity(
             id = 0,
             qPackId = qPackId,
@@ -69,7 +72,7 @@ internal class ViewHistoryRepositoryImpl(
             errorCardIds = emptyList(),
             addedToFavsCardIds = emptyList(),
             restCardCount = cardIds.size,
-            lastViewDate = Date()
+            lastViewDate = DateUtils.dateToDbSerialized(DateUtils.currentTimeDate)
         )
     }
 }

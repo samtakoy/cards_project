@@ -1,7 +1,9 @@
 package ru.samtakoy.data.qpack.mapper
 
+import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.data.qpack.QPackEntity
 import ru.samtakoy.domain.qpack.QPack
+import kotlin.time.ExperimentalTime
 
 internal interface QPackEntityMapper {
     fun mapToEntity(data: QPack): QPackEntity
@@ -10,6 +12,7 @@ internal interface QPackEntityMapper {
 
 internal class QPackEntityMapperImpl() : QPackEntityMapper {
     override fun mapToEntity(data: QPack): QPackEntity {
+        @OptIn(ExperimentalTime::class)
         return QPackEntity(
             id = data.id,
             themeId = data.themeId,
@@ -17,14 +20,15 @@ internal class QPackEntityMapperImpl() : QPackEntityMapper {
             fileName = data.fileName,
             title = data.title,
             desc = data.desc,
-            creationDate = data.creationDate,
+            creationDate = DateUtils.dateToDbSerialized(data.creationDate),
             viewCount = data.viewCount,
-            lastViewDate = data.lastViewDate,
+            lastViewDate = DateUtils.dateToDbSerialized(data.lastViewDate),
             favorite = data.favorite
         )
     }
 
     override fun mapToDomain(data: QPackEntity): QPack {
+        @OptIn(ExperimentalTime::class)
         return QPack(
             id = data.id,
             themeId = data.themeId,
@@ -32,9 +36,9 @@ internal class QPackEntityMapperImpl() : QPackEntityMapper {
             fileName = data.fileName,
             title = data.title,
             desc = data.desc,
-            creationDate = data.creationDate,
+            creationDate = DateUtils.dateFromDbSerialized(data.creationDate),
             viewCount = data.viewCount,
-            lastViewDate = data.lastViewDate,
+            lastViewDate = DateUtils.dateFromDbSerialized(data.lastViewDate),
             favorite = data.favorite
         )
     }

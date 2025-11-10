@@ -1,7 +1,8 @@
 package ru.samtakoy.domain.learncourse
 
 import ru.samtakoy.domain.learncourse.schedule.Schedule
-import java.util.Date
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 data class LearnCourse(
     val id: Long,
@@ -14,5 +15,6 @@ data class LearnCourse(
     val cardIds: List<Long>,
     val restSchedule: Schedule,
     val realizedSchedule: Schedule,
-    val repeatDate: Date
+    @OptIn(ExperimentalTime::class)
+    val repeatDate: Instant
 )

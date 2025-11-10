@@ -29,12 +29,13 @@ import ru.samtakoy.domain.importcards.batch.utils.builder.CBuilderConst
 import ru.samtakoy.domain.importcards.batch.utils.builder.CardBuilder
 import ru.samtakoy.domain.importcards.batch.utils.builder.QPackBuilder
 import ru.samtakoy.features.import_export.utils.isPackFile
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.charset.Charset
-import java.util.Date
 
 class ImportApiImpl(
     val context: Context,
@@ -273,15 +274,16 @@ class ImportApiImpl(
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     @Throws(ImportCardsException::class)
     private fun serializePack(
         qPackBuilder: QPackBuilder,
         opts: ImportCardsOpts
     ): QPackBuilder {
 
-        val creationDate: Date = if (qPackBuilder.hasCreationDate()) {
+        val creationDate: Instant = if (qPackBuilder.hasCreationDate()) {
             try {
-                DateUtils.DATE_FORMAT.parse(qPackBuilder.creationDate)!!
+                DateUtils.parseToDate(qPackBuilder.creationDate)!!
             } catch (e: Throwable) {
                 DateUtils.currentTimeDate
             }

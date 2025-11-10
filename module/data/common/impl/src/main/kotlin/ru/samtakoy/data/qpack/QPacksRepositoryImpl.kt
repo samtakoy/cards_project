@@ -3,10 +3,13 @@ package ru.samtakoy.data.qpack
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.data.qpack.mapper.QPackEntityMapper
 import ru.samtakoy.domain.qpack.QPack
-import java.util.Date
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
+@OptIn(ExperimentalTime::class)
 internal class QPacksRepositoryImpl(
     private val qPackDao: QPackDao,
     private val qPackMapper: QPackEntityMapper
@@ -38,8 +41,11 @@ internal class QPacksRepositoryImpl(
         qPackDao.updateQPackFavorite(qPackId, favorite)
     }
 
-    override suspend fun updateQPackViewCount(qPackId: Long, currentTime: Date) {
-        qPackDao.updateQPackViewCount(qPackId, currentTime)
+    override suspend fun updateQPackViewCount(qPackId: Long, currentTime: Instant) {
+        qPackDao.updateQPackViewCount(
+            qPackId = qPackId,
+            currentTime = DateUtils.dateToDbSerialized(currentTime)
+        )
     }
 
     override fun isPackExists(qPackId: Long): Boolean {

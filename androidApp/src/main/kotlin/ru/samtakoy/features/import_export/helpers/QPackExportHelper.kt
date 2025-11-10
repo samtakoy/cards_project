@@ -1,10 +1,11 @@
 package ru.samtakoy.features.import_export.helpers
 
-import ru.samtakoy.common.utils.DateUtils.DATE_FORMAT
+import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.domain.card.domain.model.CardWithTags
 import ru.samtakoy.domain.importcards.batch.utils.builder.CBuilderConst
 import ru.samtakoy.domain.qpack.QPack
 import ru.samtakoy.domain.cardtag.Tag
+import kotlin.time.ExperimentalTime
 import java.io.IOException
 import java.io.Writer
 
@@ -91,6 +92,7 @@ object QPackExportHelper {
     }
 
     private fun QPack.getCreationDateAsString(): String {
-        return DATE_FORMAT.format(creationDate)
+        @OptIn(ExperimentalTime::class)
+        return DateUtils.formatToString(creationDate)
     }
 }

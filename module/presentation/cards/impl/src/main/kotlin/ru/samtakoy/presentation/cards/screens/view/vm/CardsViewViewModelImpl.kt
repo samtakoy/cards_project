@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.parcelize.Parcelize
 import org.jetbrains.compose.resources.getString
 import ru.samtakoy.common.coroutines.ScopeProvider
-import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.domain.card.CardInteractor
 import ru.samtakoy.domain.card.domain.model.Card
 import ru.samtakoy.domain.favorites.FavoritesInteractor
@@ -46,7 +46,6 @@ import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.resources.Res
 import ru.samtakoy.resources.common_err_message
 import ru.samtakoy.resources.db_request_err_message
-import timber.log.Timber
 
 internal class CardsViewViewModelImpl(
     private val cardInteractor: CardInteractor,
@@ -284,7 +283,6 @@ internal class CardsViewViewModelImpl(
             .onEach {
                 val prevCard = (viewState.type as? State.Type.Card)
                 val testCard = it.cardInfo?.state
-                Timber.tag("mytest").e("data index before: ${prevCard?.cardIndex}, id:${testCard?.cardId}, answ:${testCard?.type}")
                 viewState = viewState.copy(
                     type = viewStateMapper.mapStateType(
                         dataState = it,
@@ -292,7 +290,6 @@ internal class CardsViewViewModelImpl(
                         viewHistoryItemId = viewHistoryItemId
                     )
                 )
-                Timber.tag("mytest").e("data index after: ${(viewState.type as? State.Type.Card)?.cardIndex}")
             }
             .mapLatest { it.cardInfo }
             .distinctUntilChanged()

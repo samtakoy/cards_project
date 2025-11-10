@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import org.jetbrains.compose.resources.getString
 import ru.samtakoy.common.coroutines.ScopeProvider
-import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.domain.learncourse.CoursesPlanner
 import ru.samtakoy.domain.learncourse.schedule.Schedule
 import ru.samtakoy.domain.learncourse.schedule.serialize.ParcelableSchedule

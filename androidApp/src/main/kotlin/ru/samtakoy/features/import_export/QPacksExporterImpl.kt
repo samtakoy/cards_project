@@ -5,7 +5,7 @@ import android.net.Uri
 import androidx.annotation.WorkerThread
 import androidx.core.content.FileProvider
 import ru.samtakoy.common.utils.DateUtils
-import ru.samtakoy.common.utils.MyLog.add
+import ru.samtakoy.common.utils.log.MyLog.add
 import ru.samtakoy.core.app.utils.FileUtils
 import ru.samtakoy.data.card.CardsRepository
 import ru.samtakoy.data.qpack.QPacksRepository
@@ -16,6 +16,7 @@ import ru.samtakoy.domain.qpack.QPack
 import ru.samtakoy.features.import_export.helpers.QPackExportHelper
 import ru.samtakoy.features.import_export.helpers.SendEmailHelper
 import ru.samtakoy.features.import_export.helpers.ZipHelper
+import kotlin.time.ExperimentalTime
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -111,6 +112,7 @@ class QPacksExporterImpl(
         return true
     }
 
+    @OptIn(ExperimentalTime::class)
     private val currentTimeString: String
         get() {
             val fmtOut = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")

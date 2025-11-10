@@ -10,16 +10,15 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.samtakoy.R
-import ru.samtakoy.common.utils.MyLog.strings
+import ru.samtakoy.common.utils.log.CustomLogger
+import org.koin.android.ext.android.inject
 
 class LogFragment : Fragment() {
     private var mRecyclerView: RecyclerView? = null
-    private var mLog: MutableList<String>? = null
+    private val logger: CustomLogger by inject()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_log, container, false)
-
-        mLog = strings
 
         mRecyclerView = v.findViewById<RecyclerView>(R.id.recycler_view)
         mRecyclerView!!.setLayoutManager(LinearLayoutManager(getContext()))
@@ -53,11 +52,11 @@ class LogFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
-            holder.setText(mLog!!.get(position))
+            holder.setText(logger.getLogs().get(position))
         }
 
         override fun getItemCount(): Int {
-            return mLog?.size ?: 0
+            return logger.getLogs().size
         }
     }
 

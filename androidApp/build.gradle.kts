@@ -85,7 +85,7 @@ dependencies {
     implementation(libs.reactivex.rxjava.coroutines)
 
     // log
-    implementation(libs.jakewharton.timber)
+    implementation(libs.napier)
 
     // koin
     // implementation(platform(libs.koin.bom))

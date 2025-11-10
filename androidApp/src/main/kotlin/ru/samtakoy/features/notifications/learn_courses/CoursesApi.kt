@@ -10,7 +10,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.common.utils.DateUtils
-import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.data.learncourse.CoursesRepository
 import ru.samtakoy.data.learncourse.utils.LearnCourseHelper
 import ru.samtakoy.domain.learncourse.LearnCourse
@@ -20,6 +20,7 @@ import ru.samtakoy.domain.learncourse.getRepeatDateUTCMillis
 import ru.samtakoy.domain.learncourse.schedule.ScheduleTimeUnit
 import ru.samtakoy.features.notifications.NotificationsHelper
 import ru.samtakoy.features.notifications.NotificationsPlannerService
+import kotlin.time.ExperimentalTime
 
 // TODO тут все пересмотреть и переделать
 abstract class CoursesApi(
@@ -54,6 +55,7 @@ abstract class CoursesApi(
     val newLearnCourseIds: Array<Long>
         get() = LearnCourseHelper.getLearnCourseIds(this.newLearnCourses)
 
+    @OptIn(ExperimentalTime::class)
     val newLearnCourses: List<LearnCourse>
         get() = coursesRepository.getOrderedCoursesLessThan(
             this.learnCourseMode,
@@ -84,6 +86,7 @@ abstract class CoursesApi(
     }
 
     /** перепланировать заново нотификации и таймеры курсов  */
+    @OptIn(ExperimentalTime::class)
     protected fun rescheduleLearnCourses(
         lcMode: LearnCourseMode,
         notificationId: Int,

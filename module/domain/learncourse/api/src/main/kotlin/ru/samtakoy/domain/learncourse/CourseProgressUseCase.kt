@@ -1,14 +1,17 @@
 package ru.samtakoy.domain.learncourse
 
 import ru.samtakoy.domain.view.ViewHistoryItem
-import java.util.Date
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 interface CourseProgressUseCase {
     suspend fun startLearning(learnCourse: LearnCourse): ViewHistoryItem
 
     suspend fun startRepeating(learnCourse: LearnCourse): ViewHistoryItem
 
-    suspend fun finishCourseCardsViewing(courseId: Long, currentTime: Date)
+    @OptIn(ExperimentalTime::class)
+    suspend fun finishCourseCardsViewing(courseId: Long, currentTime: Instant)
 
-    suspend fun finishCourseCardsViewingForViewId(viewId: Long, currentTime: Date)
+    @OptIn(ExperimentalTime::class)
+    suspend fun finishCourseCardsViewingForViewId(viewId: Long, currentTime: Instant)
 }

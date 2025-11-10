@@ -67,7 +67,6 @@ import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.presentation.utils.getALoremIpsum
 import ru.samtakoy.resources.Res
 import ru.samtakoy.resources.cards_view_favorite_box
-import timber.log.Timber
 
 @Composable
 internal fun CardsViewScreen(
@@ -187,7 +186,6 @@ private fun CardState(
             )
             LaunchedEffect(state.cardIndex) {
                 if (state.cardIndex != pagerState.currentPage) {
-                    Timber.tag("mytest").e("goto: ${state.cardIndex}")
                     pagerState.animateScrollToPage(state.cardIndex)
                 }
             }
@@ -199,10 +197,6 @@ private fun CardState(
                 val cardState = cardItems.getOrNull(pageIndex)
                 if (cardState != null) {
                     val content = cardState?.content
-
-                    Timber.tag("mytest").e(
-                        "idx: ${state.cardIndex}, pagerState: ${pagerState.currentPage}, pageIndex: $pageIndex, card: ${cardState?.id}, q:${cardState?.isQuestion}"
-                    )
 
                     when {
                         content == null -> CardNotInitView()

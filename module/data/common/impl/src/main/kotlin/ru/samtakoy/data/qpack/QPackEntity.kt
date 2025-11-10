@@ -4,10 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import ru.samtakoy.data.common.db.converters.DateLongConverter
 import ru.samtakoy.data.theme.ThemeEntity
-import java.util.Date
 
 @Entity(tableName = QPackEntity.table,
         foreignKeys = [
@@ -31,14 +28,12 @@ internal class QPackEntity(
     val title: String,
     @ColumnInfo(name = _desc)
     val desc: String,
-    @field:TypeConverters(DateLongConverter::class)
     @ColumnInfo(name = _creation_date)
-    val creationDate: Date,
+    val creationDate: Long,
     @ColumnInfo(name = _view_counter)
     val viewCount: Int,
-    @field:TypeConverters(DateLongConverter::class)
     @ColumnInfo(name = _last_view_date)
-    val lastViewDate: Date,
+    val lastViewDate: Long,
     @ColumnInfo(name = _favorite, defaultValue = "0")
     val favorite: Int
 ) {

@@ -1,7 +1,8 @@
 package ru.samtakoy.domain.qpack
 
 import kotlinx.coroutines.flow.Flow
-import java.util.Date
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 interface QPackInteractor {
     suspend fun getQPack(qPackId: Long): QPack?
@@ -9,7 +10,8 @@ interface QPackInteractor {
     suspend fun addQPack(qPack: QPack): Long
     suspend fun updateQPack(qPack: QPack)
     suspend fun deleteQPack(qPackId: Long)
-    suspend fun updateQPackViewCount(qPackId: Long, currentTime: Date)
+    @OptIn(ExperimentalTime::class)
+    suspend fun updateQPackViewCount(qPackId: Long, currentTime: Instant)
     fun getChildQPacksAsFlow(themeId: Long): Flow<List<QPack>>
     fun getAllQPacksByLastViewDateAscAsFlow(
         searchString: String?,

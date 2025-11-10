@@ -1,7 +1,9 @@
 package ru.samtakoy.domain.qpack
 
-import java.util.Date
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
+@OptIn(ExperimentalTime::class)
 data class QPack(
     val id: Long,
     val themeId: Long,
@@ -9,8 +11,8 @@ data class QPack(
     val fileName: String,
     val title: String,
     val desc: String,
-    val creationDate: Date,
+    val creationDate: Instant,
     val viewCount: Int,
-    val lastViewDate: Date,
+    val lastViewDate: Instant,
     val favorite: Int
 )

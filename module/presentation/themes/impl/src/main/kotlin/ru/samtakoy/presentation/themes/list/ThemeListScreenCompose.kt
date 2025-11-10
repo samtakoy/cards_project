@@ -50,7 +50,6 @@ import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel
 import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.Event
 import ru.samtakoy.presentation.utils.asA
 import ru.samtakoy.presentation.utils.getALoremIpsum
-import timber.log.Timber
 
 @Composable
 internal fun ThemeListScreen(
@@ -193,7 +192,6 @@ private fun ThemesListScreenInternal(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            Timber.tag("mytest").e("inner click")
                             onMainNavigator()
                         }
                     ) {

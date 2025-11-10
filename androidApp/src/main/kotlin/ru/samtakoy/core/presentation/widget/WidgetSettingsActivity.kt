@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import ru.samtakoy.core.presentation.RouterHolder
 import ru.samtakoy.core.presentation.SingleFragmentActivity
-import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.common.utils.log.MyLog
 
 class WidgetSettingsActivity : SingleFragmentActivity(), RouterHolder {
 

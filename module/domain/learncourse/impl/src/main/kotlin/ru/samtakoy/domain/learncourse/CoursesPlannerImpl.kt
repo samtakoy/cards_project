@@ -1,7 +1,7 @@
 package ru.samtakoy.domain.learncourse
 
 import android.content.Context
-import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.data.learncourse.CoursesRepository
 import ru.samtakoy.domain.learncourse.schedule.Schedule
 

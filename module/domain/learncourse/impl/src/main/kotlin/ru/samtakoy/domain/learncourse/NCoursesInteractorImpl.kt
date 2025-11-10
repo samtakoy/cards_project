@@ -5,7 +5,8 @@ import ru.samtakoy.data.card.CardsRepository
 import ru.samtakoy.data.learncourse.CourseViewRepository
 import ru.samtakoy.data.learncourse.CoursesRepository
 import ru.samtakoy.domain.learncourse.schedule.Schedule
-import java.util.Date
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 internal class NCoursesInteractorImpl(
     private val mCardsRepository: CardsRepository,
@@ -43,6 +44,7 @@ internal class NCoursesInteractorImpl(
         )
     }
 
+    @OptIn(ExperimentalTime::class)
     private suspend fun addCardsToCourse(
         learnCourse: LearnCourse,
         newCardsToAdd: List<Long>
@@ -86,6 +88,7 @@ internal class NCoursesInteractorImpl(
         )
     }
 
+    @OptIn(ExperimentalTime::class)
     private suspend fun addCourseForQPack(courseTitle: String, qPackId: Long, cardIds: List<Long>): LearnCourse {
         return mCoursesRepository.addNewCourse(
             qPackId = qPackId,
@@ -138,6 +141,7 @@ internal class NCoursesInteractorImpl(
         return mCoursesRepository.addNewCourse(newCourse)
     }
 
+    @OptIn(ExperimentalTime::class)
     override suspend fun addNewCourse(
         qPackId: Long,
         courseType: CourseType,
@@ -145,7 +149,7 @@ internal class NCoursesInteractorImpl(
         mode: LearnCourseMode,
         cardIds: List<Long>?,
         restSchedule: Schedule?,
-        repeatDate: Date?
+        repeatDate: Instant?
     ): LearnCourse {
         return addNewCourse(
             qPackId = qPackId,

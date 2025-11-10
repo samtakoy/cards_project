@@ -16,8 +16,7 @@ import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import ru.samtakoy.R
 import ru.samtakoy.presentation.base.viewmodel.FragmentViewModelLifecycleCallbacks
-import ru.samtakoy.common.utils.MyLog.add
-import timber.log.Timber
+import ru.samtakoy.common.utils.log.MyLog.add
 
 class MainActivity : AppCompatActivity(), RouterHolder {
     private var mToolbar: Toolbar? = null
@@ -60,8 +59,6 @@ class MainActivity : AppCompatActivity(), RouterHolder {
 
         setupActionBarWithNavController(this, mNavController!!, mDrawerLayout)
         setupWithNavController(mNavigationView!!, mNavController!!)
-
-        Timber.tag("mytest").e("MainActivity created")
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

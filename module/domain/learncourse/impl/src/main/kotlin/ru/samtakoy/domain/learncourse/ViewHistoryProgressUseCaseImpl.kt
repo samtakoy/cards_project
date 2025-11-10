@@ -3,12 +3,14 @@ package ru.samtakoy.domain.learncourse
 import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.domain.view.ViewHistoryItem
+import kotlin.time.ExperimentalTime
 
 internal class ViewHistoryProgressUseCaseImpl(
     private val viewHistoryInteractor: ViewHistoryInteractor,
     private val courseProgressUseCase: CourseProgressUseCase,
 ) : ViewHistoryProgressUseCase {
 
+    @OptIn(ExperimentalTime::class)
     override suspend fun rollbackToPrevCard(viewItemId: Long): Long? {
         val item = viewHistoryInteractor.getViewItem(viewItemId)
         if (item == null || item.viewedCardIds.isEmpty()) {
@@ -25,6 +27,7 @@ internal class ViewHistoryProgressUseCaseImpl(
         return newCurrentCardId
     }
 
+    @OptIn(ExperimentalTime::class)
     override suspend fun makeViewedCurCard(
         viewItemId: Long,
         curCardId: Long,

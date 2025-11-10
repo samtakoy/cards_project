@@ -146,7 +146,7 @@ class UncompletedTaskApi(
         cancelAllAlarmsAndNotifications()
 
         mPreferences.setUncompletedNotificationMinUtc(
-            DateUtils.getDateAfterCurrentLong(mS.shiftMillis)
+            DateUtils.getDateAfterCurrentLong(mS.shiftMillis.toLong())
         )
 
         planCheckingAlarm(mS.shiftMillis)

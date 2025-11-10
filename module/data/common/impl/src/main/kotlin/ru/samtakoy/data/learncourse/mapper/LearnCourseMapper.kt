@@ -1,8 +1,10 @@
 package ru.samtakoy.data.learncourse.mapper
 
+import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.data.learncourse.mapper.schedule.ScheduleMapper
 import ru.samtakoy.data.learncourse.model.LearnCourseEntity
 import ru.samtakoy.domain.learncourse.LearnCourse
+import kotlin.time.ExperimentalTime
 
 internal interface LearnCourseMapper {
     fun mapToDomain(data: LearnCourseEntity): LearnCourse
@@ -16,6 +18,7 @@ internal class LearnCourseMapperImpl(
 ) : LearnCourseMapper {
 
     override fun mapToDomain(data: LearnCourseEntity): LearnCourse {
+        @OptIn(ExperimentalTime::class)
         return LearnCourse(
             id = data.id,
             qPackId = data.qPackId,
@@ -27,11 +30,12 @@ internal class LearnCourseMapperImpl(
             cardIds = data.cardIds,
             restSchedule = scheduleMapper.mapToDomain(data.restSchedule),
             realizedSchedule = scheduleMapper.mapToDomain(data.realizedSchedule),
-            repeatDate = data.repeatDate
+            repeatDate = DateUtils.dateFromDbSerialized(data.repeatDate)
         )
     }
 
     override fun mapToEntity(data: LearnCourse): LearnCourseEntity {
+        @OptIn(ExperimentalTime::class)
         return LearnCourseEntity(
             id = data.id,
             qPackId = data.qPackId,
@@ -43,7 +47,7 @@ internal class LearnCourseMapperImpl(
             cardIds = data.cardIds,
             restSchedule = scheduleMapper.mapToEntity(data.restSchedule),
             realizedSchedule = scheduleMapper.mapToEntity(data.realizedSchedule),
-            repeatDate = data.repeatDate
+            repeatDate = DateUtils.dateToDbSerialized(data.repeatDate)
         )
     }
 }

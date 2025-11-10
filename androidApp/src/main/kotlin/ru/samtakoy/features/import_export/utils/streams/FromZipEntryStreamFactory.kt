@@ -1,6 +1,6 @@
 package ru.samtakoy.features.import_export.utils.streams
 
-import ru.samtakoy.common.utils.MyLog.add
+import ru.samtakoy.common.utils.log.MyLog.add
 import ru.samtakoy.features.import_export.ExportConst
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream

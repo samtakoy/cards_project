@@ -22,7 +22,7 @@ import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.presentation.base.viewmodel.savedstate.toSavedState
-import ru.samtakoy.common.utils.MyLog
+import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.core.presentation.qpack.list.mapper.QPackListItemUiModelMapper
 import ru.samtakoy.core.presentation.qpack.list.model.QPackListItemUiModel
 import ru.samtakoy.core.presentation.qpack.list.model.QPackSortType
