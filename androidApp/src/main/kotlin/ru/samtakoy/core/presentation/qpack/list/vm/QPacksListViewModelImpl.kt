@@ -19,7 +19,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
-import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.presentation.base.viewmodel.savedstate.toSavedState
 import ru.samtakoy.common.utils.log.MyLog
@@ -32,6 +31,7 @@ import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.NavAction
 import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.State
 import ru.samtakoy.domain.qpack.QPack
 import ru.samtakoy.domain.qpack.QPackInteractor
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 
 internal class QPacksListViewModelImpl(
     private val qPackInteractor: QPackInteractor,

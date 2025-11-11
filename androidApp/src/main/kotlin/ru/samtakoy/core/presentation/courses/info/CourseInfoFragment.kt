@@ -23,7 +23,7 @@ import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.Event
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModelImpl
 import ru.samtakoy.core.presentation.log.LogActivity
-import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.core.oldutils.observe
 import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 

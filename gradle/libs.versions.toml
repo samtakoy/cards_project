@@ -12,7 +12,9 @@ kotlin_serialization_version="1.9.0"
 kotlin_coroutines_version="1.9.0"
 koin="4.1.1"
 # koin_annotations_version="2.2.0"
-nav_version="2.9.5"
+nav_version="2.9.6"
+kmp_nav_version="2.9.1"
+kmp_lifecycle_version="2.9.6"
 agp_version="8.9.2"
 room_version="2.8.3"
 androidx_sqlite_version="2.6.1"
@@ -72,7 +74,7 @@ androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.r
 # Optional SQLite Wrapper available in version 2.8.0 and higher
 # androidx-room-sqlite-wrapper = { module = "androidx.room:room-sqlite-wrapper", version.ref = "room_version" }
 
-# Compose
+# Compose (only Android)
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose_bom_version" }
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
@@ -87,7 +89,13 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 material-icons-extended = "androidx.compose.material:material-icons-extended:1.7.8"
 
 # не входит в BOM
-androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "nav_version" }
+# androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "nav_version" }
+# kmp
+androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "kmp_nav_version" }
+
+# Viewmodel
+androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "kmp_lifecycle_version" }
+androidx-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "kmp_lifecycle_version" }
 
 # Android misc
 android-support-multidex = "com.android.support:multidex:1.0.3"

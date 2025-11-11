@@ -4,6 +4,7 @@
 .kotlin
 build
 .idea/
+.kotlin/
 /local.properties
 /.idea/caches
 /.idea/libraries

@@ -17,7 +17,6 @@ import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.domain.learncourse.CourseProgressUseCase
 import ru.samtakoy.domain.learncourse.CoursesPlanner
 import ru.samtakoy.domain.learncourse.NCoursesInteractor
-import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.cards.view.model.CardViewMode
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.Action
 import ru.samtakoy.core.presentation.courses.info.vm.CourseInfoViewModel.Event
@@ -29,6 +28,7 @@ import ru.samtakoy.domain.learncourse.LearnCourseMode.*
 import ru.samtakoy.domain.learncourse.schedule.ScheduleTimeUnit
 import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.domain.view.ViewHistoryItem
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import kotlin.time.ExperimentalTime
 
 internal class CourseInfoViewModelImpl(

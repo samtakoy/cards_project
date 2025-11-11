@@ -30,6 +30,7 @@ abstract class BaseViewModelImpl<State: Any, Action, Event>(
             _viewStates.value = value
         }
 
+    @Deprecated("осталось от реализации на фрагментах")
     override fun onViewCreated() {
         if (isFirstTimeInit) {
             isFirstTimeInit = false

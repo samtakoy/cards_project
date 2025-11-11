@@ -4,12 +4,12 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
-import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.export_cards.BatchExportType
 import ru.samtakoy.core.presentation.export_cards.mv.BatchExportViewModel.Action
 import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.domain.exportcards.CoursesExporter
 import ru.samtakoy.domain.exportcards.QPacksExporter
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 
 internal class BatchExportViewModelImpl(
     coursesExporter: CoursesExporter,

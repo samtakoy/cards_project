@@ -15,7 +15,7 @@ import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import ru.samtakoy.R
-import ru.samtakoy.presentation.base.viewmodel.FragmentViewModelLifecycleCallbacks
+import ru.samtakoy.core.oldutils.FragmentViewModelLifecycleCallbacks
 import ru.samtakoy.common.utils.log.MyLog.add
 
 class MainActivity : AppCompatActivity(), RouterHolder {

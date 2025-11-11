@@ -14,7 +14,7 @@ import org.koin.core.parameter.parametersOf
 import ru.samtakoy.R
 import ru.samtakoy.core.presentation.export_cards.mv.BatchExportViewModel
 import ru.samtakoy.core.presentation.export_cards.mv.BatchExportViewModelImpl
-import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.core.oldutils.observe
 import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 

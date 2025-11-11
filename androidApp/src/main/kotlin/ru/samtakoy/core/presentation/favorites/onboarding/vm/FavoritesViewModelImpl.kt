@@ -6,11 +6,11 @@ import ru.samtakoy.R
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.domain.favorites.FavoritesInteractor
-import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
 import ru.samtakoy.core.presentation.favorites.onboarding.mapper.FavoritesButtonsMapper
 import ru.samtakoy.core.presentation.favorites.onboarding.vm.FavoritesViewModel.Action
 import ru.samtakoy.domain.view.ViewHistoryInteractor
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 
 /**
  * TODO откуда при первом открытии фрагмента пауза?

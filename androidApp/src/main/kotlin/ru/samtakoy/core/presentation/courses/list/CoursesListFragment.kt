@@ -22,7 +22,6 @@ import org.koin.core.parameter.parametersOf
 import ru.samtakoy.R
 import ru.samtakoy.core.presentation.RouterHolder
 import ru.samtakoy.core.presentation.courses.CourseEditDialogFragment
-import ru.samtakoy.core.presentation.courses.info.CourseInfoFragment.Companion.buildBundle
 import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModel
 import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModel.Action
 import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModel.Event
@@ -36,7 +35,7 @@ import ru.samtakoy.core.presentation.showDialogFragment
 import ru.samtakoy.domain.learncourse.LearnCourseMode
 import ru.samtakoy.domain.learncourse.listToPrimitiveArray
 import ru.samtakoy.domain.learncourse.primitiveArrayToList
-import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.core.oldutils.observe
 import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 

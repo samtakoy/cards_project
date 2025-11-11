@@ -8,7 +8,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialogFragment
@@ -23,7 +22,7 @@ import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel.Action
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel.State
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModelImpl
-import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.core.oldutils.observe
 import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 

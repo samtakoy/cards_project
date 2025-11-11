@@ -13,7 +13,7 @@ import ru.samtakoy.R
 import ru.samtakoy.core.presentation.RouterHolder
 import ru.samtakoy.features.views.presentation.history.vm.ViewsHistoryViewModel
 import ru.samtakoy.features.views.presentation.history.vm.ViewsHistoryViewModelImpl
-import ru.samtakoy.presentation.base.composeContent
+import ru.samtakoy.core.oldutils.composeContent
 import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme

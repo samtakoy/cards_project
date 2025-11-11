@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.onEach
 import ru.samtakoy.R
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
-import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.Action
 import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModel.Event
@@ -17,6 +16,7 @@ import ru.samtakoy.domain.learncourse.schedule.ScheduleTimeUnit
 import ru.samtakoy.domain.learncourse.schedule.serialize.ParcelableSchedule
 import ru.samtakoy.domain.learncourse.schedule.serialize.toDomain
 import ru.samtakoy.domain.learncourse.schedule.serialize.toParcelable
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.utils.toStringView
 import java.util.TreeSet
 

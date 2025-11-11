@@ -32,7 +32,7 @@ import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.Event
 import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.NavAction
 import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModel.State
 import ru.samtakoy.core.presentation.qpack.list.vm.QPacksListViewModelImpl
-import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.core.oldutils.observe
 import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 

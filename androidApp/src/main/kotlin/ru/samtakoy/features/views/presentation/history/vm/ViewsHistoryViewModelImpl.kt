@@ -8,13 +8,13 @@ import kotlinx.coroutines.flow.onEach
 import ru.samtakoy.R
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
-import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.features.views.presentation.history.components.OneViewHistoryItemModel
 import ru.samtakoy.features.views.presentation.history.mapper.ViewHistoryItemUiModelMapper
 import ru.samtakoy.features.views.presentation.history.vm.ViewsHistoryViewModel.Action
 import ru.samtakoy.features.views.presentation.history.vm.ViewsHistoryViewModel.Event
 import ru.samtakoy.features.views.presentation.history.vm.ViewsHistoryViewModel.State
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 
 internal class ViewsHistoryViewModelImpl(
     private val viewsHistoryInteractor: ViewHistoryInteractor,

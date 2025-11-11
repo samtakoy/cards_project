@@ -1,10 +1,10 @@
 package ru.samtakoy.core.presentation.progress_dialog.vm
 
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
-import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogPresenter.IProgressWorker
 import ru.samtakoy.core.presentation.progress_dialog.vm.ProgressDialogViewModel.Action
 import ru.samtakoy.core.presentation.progress_dialog.vm.ProgressDialogViewModel.State
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 
 internal class ProgressDialogViewModelImpl(
     scopeProvider: ScopeProvider,

@@ -12,7 +12,6 @@ import ru.samtakoy.R
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.common.utils.DateUtils
-import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModel.Action
 import ru.samtakoy.core.presentation.courses.list.vm.CoursesListViewModel.Event
@@ -26,6 +25,7 @@ import ru.samtakoy.domain.learncourse.CourseType
 import ru.samtakoy.domain.learncourse.LearnCourseMode
 import ru.samtakoy.domain.learncourse.schedule.Schedule
 import ru.samtakoy.domain.qpack.QPackInteractor
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import kotlin.time.ExperimentalTime
 
 internal class CoursesListViewModelImpl(

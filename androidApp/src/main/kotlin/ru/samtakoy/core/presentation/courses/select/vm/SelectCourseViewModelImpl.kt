@@ -10,13 +10,13 @@ import ru.samtakoy.R
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.domain.learncourse.NCoursesInteractor
-import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.core.presentation.courses.model.CourseItemUiMapper
 import ru.samtakoy.core.presentation.courses.model.CourseItemUiModel
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel.Action
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel.Event
 import ru.samtakoy.core.presentation.courses.select.vm.SelectCourseViewModel.State
 import ru.samtakoy.common.utils.log.MyLog
+import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 
 class SelectCourseViewModelImpl(
     private val coursesInteractor: NCoursesInteractor,

@@ -1,7 +1,6 @@
-package ru.samtakoy.presentation.base
+package ru.samtakoy.core.oldutils
 
 import android.view.View
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy

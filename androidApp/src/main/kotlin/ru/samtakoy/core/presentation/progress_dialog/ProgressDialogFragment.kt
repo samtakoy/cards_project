@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -16,7 +15,7 @@ import ru.samtakoy.R
 import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogPresenter.IProgressWorker
 import ru.samtakoy.core.presentation.progress_dialog.vm.ProgressDialogViewModel
 import ru.samtakoy.core.presentation.progress_dialog.vm.ProgressDialogViewModelImpl
-import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.core.oldutils.observe
 import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 

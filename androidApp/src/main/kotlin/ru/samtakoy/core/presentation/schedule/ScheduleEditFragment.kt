@@ -23,7 +23,7 @@ import ru.samtakoy.core.presentation.schedule.vm.ScheduleEditViewModelImpl
 import ru.samtakoy.domain.learncourse.schedule.ScheduleTimeUnit
 import ru.samtakoy.domain.learncourse.schedule.serialize.ParcelableSchedule
 import ru.samtakoy.domain.learncourse.schedule.serialize.toDomainOrEmpty
-import ru.samtakoy.presentation.base.observe
+import ru.samtakoy.core.oldutils.observe
 import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
 import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
 import ru.samtakoy.presentation.utils.toStringView

@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 interface AbstractViewModel {
+    @Deprecated("осталось от реализации на фрагментах")
     fun onViewCreated()
 }
 
