@@ -42,10 +42,6 @@ internal class CardsRepositoryImpl(
         }
     }
 
-    override fun updateCardSync(card: Card) {
-        cardDao.updateCardSync(cardMapper.mapToEntity(card))
-    }
-
     override suspend fun updateCard(card: Card) {
         cardDao.updateCard(cardMapper.mapToEntity(card))
     }
@@ -86,7 +82,7 @@ internal class CardsRepositoryImpl(
         return cardDao.getCardsIdsFromQPackAsFlow(qPackId)
     }
 
-    override fun getQPackCardCount(qPackId: Long): Int {
+    override suspend fun getQPackCardCount(qPackId: Long): Int {
         return cardDao.getCardCountInQPack(qPackId)
     }
 

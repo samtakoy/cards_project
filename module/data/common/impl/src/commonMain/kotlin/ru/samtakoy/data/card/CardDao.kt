@@ -3,7 +3,6 @@ package ru.samtakoy.data.card
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import ru.samtakoy.data.card.model.CardEntity
@@ -33,12 +32,9 @@ internal interface CardDao {
     @Query("SELECT ${CardEntity.Companion._id} FROM ${CardEntity.Companion.table} WHERE ${CardEntity.Companion._qpack_id}=:qPackId")
     fun getCardsIdsFromQPackAsFlow(qPackId: Long): Flow<List<Long>>
 
-    @Transaction
+    // @Transaction TODO в kmp не работает
     @Query("SELECT * FROM ${CardEntity.Companion.table} WHERE ${CardEntity.Companion._qpack_id}=:qPackId")
     suspend fun getCardsWithTagsFromQPack(qPackId: Long): List<CardWithTagsEntity>
-
-    @Update
-    fun updateCardSync(card: CardEntity)
 
     @Update
     suspend fun updateCard(card: CardEntity)
@@ -50,7 +46,7 @@ internal interface CardDao {
     suspend fun deleteQPackCards(qPackId: Long): Int
 
     @Query("SELECT COUNT(*) FROM ${CardEntity.Companion.table} WHERE ${CardEntity.Companion._qpack_id}=:qPackId")
-    fun getCardCountInQPack(qPackId: Long): Int
+    suspend fun getCardCountInQPack(qPackId: Long): Int
 
     // Favorites
     @Query("SELECT ${CardEntity.Companion._id} FROM ${CardEntity.Companion.table} WHERE ${CardEntity.Companion._favorite}>0")

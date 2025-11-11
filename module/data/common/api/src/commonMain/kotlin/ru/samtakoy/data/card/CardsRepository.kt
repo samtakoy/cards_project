@@ -7,7 +7,6 @@ import ru.samtakoy.domain.card.domain.model.CardWithTags
 interface CardsRepository {
 
     suspend fun clearDb()
-    fun updateCardSync(card: Card)
     suspend fun updateCard(card: Card)
     suspend fun deleteCard(cardId: Long)
     suspend fun deleteQPackCards(qPackId: Long)
@@ -29,5 +28,5 @@ interface CardsRepository {
     fun getQPackCardIdsAsFlow(qPackId: Long): Flow<List<Long>>
 
     suspend fun getQPackCardsWithTags(qPackId: Long): List<CardWithTags>
-    fun getQPackCardCount(qPackId: Long): Int
+    suspend fun getQPackCardCount(qPackId: Long): Int
 }

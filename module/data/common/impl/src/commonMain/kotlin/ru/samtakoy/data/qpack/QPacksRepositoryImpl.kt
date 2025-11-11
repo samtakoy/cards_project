@@ -15,7 +15,7 @@ internal class QPacksRepositoryImpl(
     private val qPackMapper: QPackEntityMapper
 ) : QPacksRepository {
 
-    override fun addQPack(qPack: QPack): Long {
+    override suspend fun addQPack(qPack: QPack): Long {
         return qPackDao.addQPack(qPackMapper.mapToEntity(qPack))
     }
 
@@ -33,7 +33,7 @@ internal class QPacksRepositoryImpl(
         qPackDao.deleteQPackById(qPackId)
     }
 
-    override fun updateQPack(qPack: QPack) {
+    override suspend fun updateQPack(qPack: QPack) {
         qPackDao.updateQPack(qPackMapper.mapToEntity(qPack))
     }
 
@@ -48,12 +48,8 @@ internal class QPacksRepositoryImpl(
         )
     }
 
-    override fun isPackExists(qPackId: Long): Boolean {
+    override suspend fun isPackExists(qPackId: Long): Boolean {
         return qPackDao.isPackExists(qPackId) > 0
-    }
-
-    override fun getQPacksFromTheme(themeId: Long): List<QPack> {
-        return qPackDao.getQPacksFromTheme(themeId).map(qPackMapper::mapToDomain)
     }
 
     override fun getQPacksFromThemeAsFlow(themeId: Long): Flow<List<QPack>> {

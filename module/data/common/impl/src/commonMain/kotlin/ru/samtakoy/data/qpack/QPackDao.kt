@@ -18,9 +18,6 @@ internal interface QPackDao {
     fun getQPackAsFlow(id: Long): Flow<QPackEntity?>
 
     @Query("SELECT * FROM ${QPackEntity.Companion.table} WHERE ${QPackEntity.Companion._theme_id}=:themeId")
-    fun getQPacksFromTheme(themeId: Long): List<QPackEntity>
-
-    @Query("SELECT * FROM ${QPackEntity.Companion.table} WHERE ${QPackEntity.Companion._theme_id}=:themeId")
     fun getQPacksFromThemeAsFlow(themeId: Long): Flow<List<QPackEntity>>
 
     @Query("SELECT * FROM ${QPackEntity.Companion.table}")
@@ -79,10 +76,10 @@ internal interface QPackDao {
     suspend fun getQPacksByIds(ids: List<Long>): List<QPackEntity>
 
     @Insert
-    fun addQPack(qPack: QPackEntity): Long
+    suspend fun addQPack(qPack: QPackEntity): Long
 
     @Update
-    fun updateQPack(qPack: QPackEntity)
+    suspend fun updateQPack(qPack: QPackEntity)
 
     @OptIn(ExperimentalTime::class)
     @Query("UPDATE ${QPackEntity.Companion.table} SET ${QPackEntity.Companion._view_counter}=${QPackEntity.Companion._view_counter}+1, ${QPackEntity.Companion._last_view_date}=:currentTime WHERE ${QPackEntity.Companion._id}=:qPackId")
@@ -97,10 +94,7 @@ internal interface QPackDao {
     suspend fun deleteQPackById(id: Long): Int
 
     @Query("SELECT COUNT(*) FROM ${QPackEntity.Companion.table} WHERE ${QPackEntity.Companion._id} = :id")
-    fun isPackExists(id: Long): Int
-
-    @Query("SELECT COUNT(*) FROM ${QPackEntity.Companion.table} ")
-    fun getAllQPackCount(): Int
+    suspend fun isPackExists(id: Long): Int
 
     @Query("SELECT COUNT(*) FROM ${QPackEntity.Companion.table} WHERE ${QPackEntity._theme_id} = :themeId")
     suspend fun getQPacksFromThemeCount(themeId: Long): Int

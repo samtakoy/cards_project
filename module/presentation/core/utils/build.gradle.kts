@@ -21,7 +21,6 @@ dependencies {
 
     implementation(projects.module.common.resources)
 
-    implementation(project(":module:platform:api"))
-    implementation(project(":module:common:utils"))
-    implementation(project(":module:domain:learncourse:model"))
+    implementation(projects.module.common.utils)
+    implementation(projects.module.domain.learncourse.model)
 }

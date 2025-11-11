@@ -26,6 +26,4 @@ internal interface ThemeDao {
 
     @Query("DELETE FROM ${ThemeEntity.Companion.table} WHERE ${ThemeEntity.Companion._id}=:id")
     suspend fun deleteThemeById(id: Long): Int
-
-
 }

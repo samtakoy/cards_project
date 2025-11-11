@@ -7,20 +7,19 @@ import kotlin.time.Instant
 
 interface QPacksRepository {
 
-    fun addQPack(qPack: QPack): Long
+    suspend fun addQPack(qPack: QPack): Long
 
     suspend fun getQPack(qPackId: Long): QPack?
     fun getQPackAsFlow(qPackId: Long): Flow<QPack?>
     suspend fun deletePack(qPackId: Long)
 
-    fun updateQPack(qPack: QPack)
+    suspend fun updateQPack(qPack: QPack)
     suspend fun updateQPackFavorite(qPackId: Long, favorite: Int)
     @OptIn(ExperimentalTime::class)
     suspend fun updateQPackViewCount(qPackId: Long, currentTime: Instant)
 
-    fun isPackExists(qPackId: Long): Boolean
+    suspend fun isPackExists(qPackId: Long): Boolean
 
-    fun getQPacksFromTheme(themeId: Long): List<QPack>
     fun getQPacksFromThemeAsFlow(themeId: Long): Flow<List<QPack>>
 
     suspend fun getAllQPacks(): List<QPack>

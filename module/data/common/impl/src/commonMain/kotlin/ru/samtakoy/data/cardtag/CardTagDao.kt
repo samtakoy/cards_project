@@ -11,9 +11,9 @@ import ru.samtakoy.data.cardtag.model.CardTagEntity.Companion.table
 internal interface CardTagDao {
 
     @Query("DELETE FROM $table WHERE $_card_id = :cardId")
-    fun deleteAllFromCard(cardId: Long)
+    suspend fun deleteAllFromCard(cardId: Long)
 
     @Insert
-    fun addTags(cardTags: List<CardTagEntity>)
+    suspend fun addTags(cardTags: List<CardTagEntity>)
 
 }

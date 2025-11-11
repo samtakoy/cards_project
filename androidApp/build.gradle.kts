@@ -14,6 +14,7 @@ ksp {
 android {
     namespace = "ru.samtakoy"
     buildFeatures {
+        // TODO remove
         viewBinding = true
         compose = true
     }
@@ -97,12 +98,9 @@ dependencies {
     // retrofit
     implementation(libs.bundles.squareup)
 
-    implementation(projects.module.platform.api)
-    implementation(projects.module.platform.impl)
-
-    implementation(projects.module.platform.import.implAndroid)
-    implementation(projects.module.platform.notification.implAndroid)
-    implementation(projects.module.platform.permissions.implAndroid)
+    implementation(projects.module.platform.import.impl)
+    implementation(projects.module.platform.notification.impl)
+    implementation(projects.module.platform.permissions.impl)
 
     implementation(projects.module.data.common.api)
     implementation(projects.module.data.common.impl)
@@ -141,7 +139,6 @@ dependencies {
 
     implementation(projects.module.presentation.navigation.api)
 
-    implementation(projects.module.presentation.main.api)
     implementation(projects.module.presentation.main.impl)
 
     implementation(projects.module.presentation.themes.api)

@@ -54,7 +54,7 @@ class ImportApiImpl(
         val streamFactory = FromUriStreamFactory(contentResolver, targetThemeId, selectedFileUri)
         return makeCardsBuilderFromFile(streamFactory, opts)
             .filter { qPackBuilder: QPackBuilder -> isAllowedByOpts(qPackBuilder, opts) }
-            .map { qPackBuilder: QPackBuilder -> serializePack(qPackBuilder, opts) }
+            .map { qPackBuilder: QPackBuilder -> runBlocking { serializePack(qPackBuilder, opts) } }
             .map { qPackBuilder: QPackBuilder -> qPackBuilder.build() }
             // TODO сохранение новых тегов
             .concatMap { qPackBuilder: QPackBuilder -> Observable.fromIterable(qPackBuilder.cardBuilders) }
@@ -194,7 +194,7 @@ class ImportApiImpl(
             }
             .filter { qPackBuilder: QPackBuilder -> isAllowedByOpts(qPackBuilder, opts) }
 
-            .map { qPackBuilder: QPackBuilder -> serializePack(qPackBuilder, opts) }
+            .map { qPackBuilder: QPackBuilder -> runBlocking { serializePack(qPackBuilder, opts) } }
             .map { qPackBuilder: QPackBuilder -> qPackBuilder.build() }
             // TODO сохранение новых тегов
             .concatMap { qPackBuilder: QPackBuilder -> Observable.fromIterable(qPackBuilder.cardBuilders) }
@@ -227,7 +227,7 @@ class ImportApiImpl(
 
             if (existingCardQPackId != null) {
                 // обновить
-                cardsRepository.updateCardSync(card)
+                cardsRepository.updateCard(card)
                 // будет обновлено ниже
                 tagInteractor.deleteAllTagsFromCard(cardBuilder.cardId)
             } else {
@@ -276,7 +276,7 @@ class ImportApiImpl(
 
     @OptIn(ExperimentalTime::class)
     @Throws(ImportCardsException::class)
-    private fun serializePack(
+    private suspend fun serializePack(
         qPackBuilder: QPackBuilder,
         opts: ImportCardsOpts
     ): QPackBuilder {
@@ -310,18 +310,18 @@ class ImportApiImpl(
         val resultPackId = if (qPackBuilder.hasIncomingId()) {
             if (qPacksRepository.isPackExists(qPackBuilder.parsedId)) {
                 // обновить
-                qPacksRepository.updateQPack(qPack);
+                runBlocking { qPacksRepository.updateQPack(qPack) }
                 qPack.id
             } else {
                 // создать новый, если разрешено
                 if (opts.isAllowWithIdCreation) {
-                    qPacksRepository.addQPack(qPack)
+                    runBlocking { qPacksRepository.addQPack(qPack) }
                 } else {
                     throw ImportCardsException(ImportCardsException.ERR_PACK_WITH_ID_CREATION_NOT_ALLOWED, "")
                 }
             }
         } else {
-            qPacksRepository.addQPack(qPack)
+            runBlocking { qPacksRepository.addQPack(qPack) }
         }
 
         qPackBuilder.setTargetQPack(resultPackId)

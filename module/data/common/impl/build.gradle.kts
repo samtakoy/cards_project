@@ -7,7 +7,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // room
-            // ksp(libs.androidx.room.compiler)
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
 
@@ -15,7 +14,6 @@ kotlin {
             implementation(libs.koin.core)
 
             implementation(projects.module.common.utils)
-            implementation(projects.module.platform.api)
             implementation(projects.module.data.common.api)
 
             implementation(projects.module.domain.card.model)

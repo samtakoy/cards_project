@@ -41,5 +41,5 @@ dependencies {
     implementation(projects.module.presentation.viewshistory.api)
     implementation(projects.module.presentation.favorites.api)
 
-    implementation(projects.module.platform.permissions.implAndroid)
+    implementation(projects.module.platform.permissions.impl)
 }

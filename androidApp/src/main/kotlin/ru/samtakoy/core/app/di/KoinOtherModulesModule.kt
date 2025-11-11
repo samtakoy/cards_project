@@ -16,10 +16,9 @@ import ru.samtakoy.domain.learncourse.di.learnCourseDomainModule
 import ru.samtakoy.domain.qpack.di.qPackDomainModule
 import ru.samtakoy.domain.theme.di.themeDomainModule
 import ru.samtakoy.domain.view.di.viewHistoryDomainModule
-import ru.samtakoy.platform.di.platformModule
 import ru.samtakoy.platform.importcards.di.importCardsFromZipPlatformModule
 import ru.samtakoy.platform.notification.di.notificationPlatformModule
-import ru.samtakoy.platform.permissions.di.permissionsPlatformAndroidModule
+import ru.samtakoy.platform.permissions.di.permissionsPlatformModule
 import ru.samtakoy.presentation.cards.di.cardsViewPresentationModule
 import ru.samtakoy.presentation.main.di.mainScreenPresentationModule
 import ru.samtakoy.presentation.qpacks.di.qPackPresentationModule
@@ -42,7 +41,6 @@ fun koinOtherModulesModule() = module {
         themeDomainModule(),
         viewHistoryDomainModule(),
         importCardsDomainModule(),
-        platformModule(),
 
         mainScreenPresentationModule(),
         qPackPresentationModule(),
@@ -56,6 +54,6 @@ fun koinOtherModulesModule() = module {
         // platform dependend:
         importCardsFromZipPlatformModule(),
         notificationPlatformModule(),
-        permissionsPlatformAndroidModule()
+        permissionsPlatformModule()
     )
 }

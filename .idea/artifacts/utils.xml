@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="utils">
-    <output-path>$PROJECT_DIR$/module/common/utils/build/libs</output-path>
-    <root id="archive" name="utils.jar">
-      <element id="module-output" name="cards.module.common.utils.androidMain" />
-    </root>
-  </artifact>
-</component>

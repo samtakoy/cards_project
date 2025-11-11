@@ -1,6 +1,9 @@
 package ru.samtakoy.data.common.db.transaction
 
-import androidx.room.withTransaction
+import androidx.room.deferredTransaction
+import androidx.room.immediateTransaction
+import androidx.room.useReaderConnection
+import androidx.room.useWriterConnection
 import ru.samtakoy.data.common.db.MyRoomDb
 import ru.samtakoy.data.common.transaction.TransactionRepository
 
@@ -9,18 +12,18 @@ internal class TransactionRepositoryImpl(
 ) : TransactionRepository {
 
     override suspend fun <T> withTransaction(block: suspend () -> T): T {
-        return if (database.inTransaction()) {
-            block.invoke()
-        } else {
-            database.withTransaction<T>(block)
+        return database.useWriterConnection { transactor ->
+            transactor.immediateTransaction {
+                block()
+            }
         }
     }
 
-    override fun <T> withTransactionSync(block: () -> T): T {
-        return if (database.inTransaction()) {
-            block.invoke()
-        } else {
-            database.runInTransaction<T>(block)
+    override suspend fun <T> withReadTransaction(block: suspend () -> T): T {
+        return database.useReaderConnection { transactor ->
+            transactor.deferredTransaction {
+                block()
+            }
         }
     }
 }

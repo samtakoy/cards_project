@@ -30,7 +30,9 @@ import ru.samtakoy.data.view.model.ViewHistoryEntity
         ThemeEntity::class,
         ViewHistoryEntity::class,
         LearnCourseViewEntity::class
-    ]/*,
+    ],
+    exportSchema = true
+    /*,
     autoMigrations = [
         AutoMigration(from = 5, to = 6),
         AutoMigration(from = 6, to = 7),
