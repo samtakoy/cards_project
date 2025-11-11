@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.activity.result.contract.ActivityResultContracts
@@ -47,7 +47,7 @@ class PermissionsControllerImplAndroid(
 
     private val delegates = mutableMapOf<MyPermission, PermissionDelegate>()
 
-    fun bind(activity: AppCompatActivity) {
+    fun bind(activity: ComponentActivity) {
         unbind()
 
         this.activityHolder.value = activity

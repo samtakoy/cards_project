@@ -1,25 +1,18 @@
 plugins {
-    // alias(libs.plugins.compose.compiler)
-    id("convention.android-lib.plugin")
+    id("convention.kmp-lib.plugin")
     alias(libs.plugins.kotlinx.serialization)
+}
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlinx.serialization.core)
+
+            implementation(projects.module.presentation.navigation.api)
+        }
+    }
 }
 
 android {
     namespace = "ru.samtakoy.presentation.settings.api"
-    /*
-    buildFeatures {
-        compose = true
-    }*/
-}
-
-dependencies {
-    implementation(libs.kotlinx.serialization.core)
-    /*
-    // Compose
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.bundles.compose)
-    implementation(libs.androidx.navigation.compose)
-     */
-
-    implementation(projects.module.presentation.navigation.api)
 }
