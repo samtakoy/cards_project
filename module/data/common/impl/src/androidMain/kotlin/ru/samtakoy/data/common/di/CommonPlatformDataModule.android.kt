@@ -1,23 +1,13 @@
 package ru.samtakoy.data.common.di
 
 import android.content.Context
-import androidx.room.Room
-import androidx.sqlite.driver.AndroidSQLiteDriver
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import kotlinx.coroutines.Dispatchers
 import org.koin.dsl.module
-import ru.samtakoy.data.common.db.DB_NAME
 import ru.samtakoy.data.common.db.MyRoomDb
+import ru.samtakoy.data.common.db.getDatabaseBuilder
+import ru.samtakoy.data.common.db.getRoomDatabase
 
 internal actual fun commonPlatformDataModule() = module {
     single<MyRoomDb> {
-        val context = get<Context>().applicationContext
-        val dbFile = context.getDatabasePath(DB_NAME)
-        Room.databaseBuilder<MyRoomDb>(context, dbFile.absolutePath)
-            .setDriver(BundledSQLiteDriver())
-            // .addMigrations(MIGRATION_5_6)
-            .setQueryCoroutineContext(Dispatchers.IO)
-            .fallbackToDestructiveMigration(true)
-        .build()
+        getRoomDatabase(getDatabaseBuilder(context = get<Context>()))
     }
 }
