@@ -121,7 +121,9 @@ internal class ImportCardsFromZipWorker(
             TaskStateData.Cancelled -> {
                 getString(Res.string.batch_zip_import_status_cancelled)
             }
-            is TaskStateData.Error -> taskState.message
+            is TaskStateData.Error -> {
+                taskState.message
+            }
             TaskStateData.Success -> {
                 getString(Res.string.batch_zip_import_status_success)
             }

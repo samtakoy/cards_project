@@ -29,8 +29,12 @@ kotlin {
 
             implementation(projects.module.platform.notification.impl)
 
-            implementation(projects.module.common.utils)
             implementation(projects.module.common.resources)
+            implementation(projects.module.common.utils)
+        }
+        desktopMain.dependencies {
+            implementation(projects.module.common.resources)
+            implementation(projects.module.common.utils)
         }
     }
 }

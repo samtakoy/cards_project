@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
@@ -52,8 +54,8 @@ internal class QPacksListViewModelImpl(
         initialValueGetter = { viewState.isFavoritesChecked },
         keyName = KEY_IS_FAVORITE,
         savedStateHandle = savedStateHandle,
-        serialize = { it },
-        deserialize = { it as Boolean },
+        serialize = { Json.encodeToString(it) },
+        deserialize = { Json.decodeFromString(it) },
         saveScope = ioScope
     )
 
@@ -61,8 +63,8 @@ internal class QPacksListViewModelImpl(
         initialValueGetter = { viewState.sortType },
         keyName = KEY_SORT_TYPE,
         savedStateHandle = savedStateHandle,
-        serialize = { it },
-        deserialize = { it as QPackSortType },
+        serialize = { Json.encodeToString(it) },
+        deserialize = { Json.decodeFromString(it) },
         saveScope = ioScope
     )
 

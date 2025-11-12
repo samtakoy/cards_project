@@ -23,7 +23,6 @@ fun themesPresentationModule() = module {
         ThemeListViewModelImpl(
             qPackInteractor = get(),
             themeInteractor = get(),
-            qPacksExporter = get(),
             permissionsController = get(),
             importCardsFromZipTask = get(),
             uiItemsMapper = get(),

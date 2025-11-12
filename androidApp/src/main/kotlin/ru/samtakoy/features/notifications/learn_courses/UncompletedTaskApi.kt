@@ -10,6 +10,7 @@ import androidx.annotation.StringRes
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import kotlinx.coroutines.runBlocking
 import ru.samtakoy.R
 import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.data.learncourse.CoursesRepository
@@ -127,10 +128,12 @@ class UncompletedTaskApi(
 
     val uncompletedCourses: List<LearnCourse>
         get() = // т.е. те, которые в процессе обучения, или повторения
-            mCoursesRepository.getCoursesByModesNow(
-                LearnCourseMode.LEARNING,
-                LearnCourseMode.REPEATING
-            )
+            runBlocking {
+                mCoursesRepository.getCoursesByModesNow(
+                    LearnCourseMode.LEARNING,
+                    LearnCourseMode.REPEATING
+                )
+            }
 
     private fun cancelAllAlarmsAndNotifications() {
         cancelNotification()

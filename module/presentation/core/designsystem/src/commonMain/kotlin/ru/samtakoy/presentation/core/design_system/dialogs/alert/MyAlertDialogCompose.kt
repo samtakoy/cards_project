@@ -12,22 +12,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import kotlinx.collections.immutable.toImmutableList
 import ru.samtakoy.presentation.core.design_system.base.MyOffsets
 import ru.samtakoy.presentation.core.design_system.base.UiOffsets
-import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
-import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButton
-import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
-import ru.samtakoy.presentation.utils.asA
 
 @Composable
 fun MyAlertDialogView(
@@ -76,33 +68,4 @@ fun MyAlertDialogView(
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun MyAlertDialogView_Preview() = MyTheme {
-    MyAlertDialogView(
-        dialogState = remember {
-            mutableStateOf(
-                MyAlertDialogUiModel(
-                    id = null,
-                    title = "title".asA(),
-                    description = "description".asA(),
-                    buttons = listOf<MyButtonUiModel>(
-                        MyButtonUiModel(
-                            id = LongUiId(1L),
-                            text = "ok".asA(),
-                            isEnabled = true
-                        ),
-                        MyButtonUiModel(
-                            id = LongUiId(2L),
-                            text = "cancel".asA(),
-                            isEnabled = true
-                        )
-                    ).toImmutableList()
-                )
-            )
-        },
-        onButtonClick = { a, b -> Unit }
-    )
 }

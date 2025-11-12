@@ -8,11 +8,11 @@ import android.content.Intent
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import kotlinx.coroutines.runBlocking
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.data.learncourse.CoursesRepository
-import ru.samtakoy.data.learncourse.utils.LearnCourseHelper
 import ru.samtakoy.domain.learncourse.LearnCourse
 import ru.samtakoy.domain.learncourse.LearnCourseMode
 import ru.samtakoy.domain.learncourse.getRepeatDateDebug
@@ -52,15 +52,19 @@ abstract class CoursesApi(
     protected val reSchedulingIntent: Intent
         get() = NotificationsPlannerService.getLearnCoursesReSchedulingIntent(this.appContext, this.learnCourseMode)
 
+    /*
     val newLearnCourseIds: Array<Long>
         get() = LearnCourseHelper.getLearnCourseIds(this.newLearnCourses)
+     */
 
     @OptIn(ExperimentalTime::class)
     val newLearnCourses: List<LearnCourse>
-        get() = coursesRepository.getOrderedCoursesLessThan(
-            this.learnCourseMode,
-            DateUtils.dateFromDbSerialized(this.currentDateLong)
-        )
+        get() = runBlocking {
+            coursesRepository.getOrderedCoursesLessThan(
+                this@CoursesApi.learnCourseMode,
+                DateUtils.dateFromDbSerialized(this@CoursesApi.currentDateLong)
+            )
+        }
 
     // TODO; транзакцию?
     // TODO сохранять тольк одно поле, а не весь курс
@@ -101,8 +105,9 @@ abstract class CoursesApi(
         // фиксируем дату для расчетов
         val currentDateLong = this.currentDateLong
         val currentDate = DateUtils.dateFromDbSerialized(currentDateLong)
-        val newRepeatCourses: List<LearnCourse> =
+        val newRepeatCourses: List<LearnCourse> = runBlocking {
             coursesRepository.getOrderedCoursesLessThan(lcMode, currentDate)
+        }
 
         if (newRepeatCourses.size > 0) {
             MyLog.add(
@@ -124,8 +129,9 @@ abstract class CoursesApi(
             hideNotificationForReadyCourses(notificationId)
         }
 
-        val futureRepeatCourses: List<LearnCourse?> =
+        val futureRepeatCourses: List<LearnCourse?> = runBlocking {
             coursesRepository.getOrderedCoursesMoreThan(lcMode, currentDate)
+        }
         if (futureRepeatCourses.size == 0) {
             MyLog.add("NONE to alarm")
             cancelLearnCoursesAlarm()

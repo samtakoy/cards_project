@@ -1,9 +1,8 @@
 package ru.samtakoy.presentation.cards.screens.view.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
-@Parcelize
+@Serializable
 internal data class BackupInfoHolder(
     val cardIdToBackupMap: Map<Long, BackupInfo>
-) : Parcelable
+)

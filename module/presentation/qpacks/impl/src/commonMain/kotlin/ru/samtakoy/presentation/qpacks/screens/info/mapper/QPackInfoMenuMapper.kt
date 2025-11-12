@@ -6,7 +6,6 @@ import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
 import ru.samtakoy.presentation.core.design_system.dropdown.DropDownMenuUiModel
 import ru.samtakoy.presentation.core.design_system.dropdown.DropDownMenuUiModel.ItemType
 import ru.samtakoy.presentation.core.design_system.dropdown.DropDownMenuUiModel.Menu
-import ru.samtakoy.presentation.qpacks.impl.R
 import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.resources.Res
 import ru.samtakoy.resources.qpack_menu_add_fake_card

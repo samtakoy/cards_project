@@ -19,9 +19,6 @@ interface CoursesRepository {
 
     suspend fun deleteQPackCourses(qPackId: Long)
 
-    // TODO TEMP
-    fun addNewCourseSync(newCourse: LearnCourse): LearnCourse
-
     @OptIn(ExperimentalTime::class)
     suspend fun addNewCourse(
         qPackId: Long,
@@ -43,13 +40,13 @@ interface CoursesRepository {
 
     fun getCoursesByModesAsFlow(targetModes: List<LearnCourseMode>): Flow<List<LearnCourse>>
 
-    fun getCoursesByModesNow(vararg mode: LearnCourseMode): List<LearnCourse>
+    suspend fun getCoursesByModesNow(vararg mode: LearnCourseMode): List<LearnCourse>
 
     fun getCoursesForQPackAsFlow(qPackId: Long): Flow<List<LearnCourse>>
 
     @OptIn(ExperimentalTime::class)
-    fun getOrderedCoursesLessThan(mode: LearnCourseMode, repeatDate: Instant): List<LearnCourse>
+    suspend fun getOrderedCoursesLessThan(mode: LearnCourseMode, repeatDate: Instant): List<LearnCourse>
 
     @OptIn(ExperimentalTime::class)
-    fun getOrderedCoursesMoreThan(mode: LearnCourseMode, repeatDate: Instant): List<LearnCourse>
+    suspend fun getOrderedCoursesMoreThan(mode: LearnCourseMode, repeatDate: Instant): List<LearnCourse>
 }

@@ -1,14 +1,16 @@
 plugins {
-    id("convention.kmp-lib.plugin")
-    alias(libs.plugins.jetbrains.compose)
-    alias(libs.plugins.compose.compiler)
+    id("convention.kmp-compose-lib.plugin")
 }
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(compose.runtime)
             implementation(compose.preview)
+            implementation(compose.components.uiToolingPreview)
+
+            // koin
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
 
             implementation(projects.module.common.resources)
 

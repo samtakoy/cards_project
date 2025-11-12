@@ -22,7 +22,7 @@ import ru.samtakoy.presentation.core.design_system.button.usual.MyButton
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.core.design_system.scaffold.MySimpleScreenScaffold
 import ru.samtakoy.presentation.core.design_system.selectable_item.MySelectableItem
-import ru.samtakoy.presentation.core.design_system.selectable_item.getPreviewSelectableItems
+import ru.samtakoy.presentation.core.design_system.previewutils.getPreviewSelectableItems
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModel
 import ru.samtakoy.core.presentation.favorites.qpacks_with_favs.vm.QPackSelectionViewModel.Event
 import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme

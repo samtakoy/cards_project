@@ -1,3 +1,7 @@
+import ru.samtakoy.ext.desktopJavaVersionInt
+import ru.samtakoy.ext.projectJavaVersion
+import ru.samtakoy.ext.projectJavaVersionInt
+
 plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.application)
@@ -9,6 +13,11 @@ plugins {
 
 ksp {
     arg("KOIN_CONFIG_CHECK", "true")
+}
+
+
+kotlin {
+    jvmToolchain(projectJavaVersionInt)
 }
 
 android {
@@ -98,40 +107,42 @@ dependencies {
     // retrofit
     implementation(libs.bundles.squareup)
 
-    implementation(projects.module.platform.import.impl)
-    implementation(projects.module.platform.notification.impl)
+    implementation(projects.module.common.maindi)
+
+    // implementation(projects.module.platform.import.impl)
+    // implementation(projects.module.platform.notification.impl)
     implementation(projects.module.platform.permissions.impl)
 
     implementation(projects.module.data.common.api)
-    implementation(projects.module.data.common.impl)
+    // implementation(projects.module.data.common.impl)
 
     implementation(projects.module.data.task.api)
-    implementation(projects.module.data.task.impl)
+    // implementation(projects.module.data.task.impl)
 
     implementation(projects.module.domain.card.api)
-    implementation(projects.module.domain.card.impl)
+    // implementation(projects.module.domain.card.impl)
 
     implementation(projects.module.domain.learncourse.api)
-    implementation(projects.module.domain.learncourse.impl)
+    // implementation(projects.module.domain.learncourse.impl)
 
     implementation(projects.module.domain.qpack.api)
-    implementation(projects.module.domain.qpack.impl)
+    // implementation(projects.module.domain.qpack.impl)
 
     implementation(projects.module.domain.theme.api)
-    implementation(projects.module.domain.theme.impl)
+    // implementation(projects.module.domain.theme.impl)
 
     implementation(projects.module.domain.view.api)
-    implementation(projects.module.domain.view.impl)
+    // implementation(projects.module.domain.view.impl)
 
     implementation(projects.module.domain.favorites.api)
-    implementation(projects.module.domain.favorites.impl)
+    // implementation(projects.module.domain.favorites.impl)
 
     implementation(projects.module.data.import.api)
-    implementation(projects.module.data.import.impl)
+    // implementation(projects.module.data.import.impl)
 
     implementation(projects.module.domain.export.api)
     implementation(projects.module.domain.import.api)
-    implementation(projects.module.domain.import.impl)
+    // implementation(projects.module.domain.import.impl)
 
     implementation(projects.module.presentation.core.utils)
     implementation(projects.module.presentation.core.viewmodel)
@@ -142,16 +153,16 @@ dependencies {
     implementation(projects.module.presentation.main.impl)
 
     implementation(projects.module.presentation.themes.api)
-    implementation(projects.module.presentation.themes.impl)
+    // implementation(projects.module.presentation.themes.impl)
 
     implementation(projects.module.presentation.qpacks.api)
     implementation(projects.module.presentation.qpacks.impl)
 
     implementation(projects.module.presentation.cards.api)
-    implementation(projects.module.presentation.cards.impl)
+    // implementation(projects.module.presentation.cards.impl)
 
     implementation(projects.module.presentation.settings.api)
-    implementation(projects.module.presentation.settings.impl)
+    // implementation(projects.module.presentation.settings.impl)
 
     implementation(projects.module.presentation.courses.api)
     implementation(projects.module.presentation.courses.impl)

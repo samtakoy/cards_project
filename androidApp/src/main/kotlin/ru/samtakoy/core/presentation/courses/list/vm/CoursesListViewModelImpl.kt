@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.json.Json
 import org.apache.commons.lang3.exception.ExceptionUtils
 import ru.samtakoy.R
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
@@ -51,8 +52,8 @@ internal class CoursesListViewModelImpl(
         initialValueGetter = { DataState(newCourseDefaultTitle = "", isSaved = false) },
         keyName = KEY_DATA_STATE,
         savedStateHandle = savedStateHandle,
-        serialize = { it },
-        deserialize = { it as DataState },
+        serialize = { Json.encodeToString(it) },
+        deserialize = { Json.decodeFromString(it) },
         saveScope = ioScope
     )
 

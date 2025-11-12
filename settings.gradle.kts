@@ -26,6 +26,7 @@ dependencyResolutionManagement {
 includeBuild("build-logic")
 
 include(":androidApp")
+include(":desktopApp")
 include(":module:data:common:api")
 include(":module:data:common:impl")
 include(":module:domain:card:api")
@@ -82,3 +83,4 @@ include(":module:presentation:cards:api")
 include(":module:presentation:cards:impl")
 include(":module:common:resources")
 include(":module:common:oldresources")
+include(":module:common:maindi")

@@ -1,6 +1,5 @@
 package ru.samtakoy.core.presentation.favorites.onboarding.mapper
 
-import kotlinx.parcelize.Parcelize
 import ru.samtakoy.R
 import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
@@ -11,7 +10,6 @@ interface FavoritesButtonsMapper {
     fun mapInitial(): List<MyButtonUiModel>
     fun map(favCount: Int): List<MyButtonUiModel>
 
-    @Parcelize
     enum class ButtonId : UiId {
         AllFavoriteCards,
         FavoriteCardsFromPacks

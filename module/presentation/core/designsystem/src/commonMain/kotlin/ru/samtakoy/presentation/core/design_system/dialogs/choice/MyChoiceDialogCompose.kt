@@ -18,22 +18,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import ru.samtakoy.presentation.core.design_system.base.MyColors
 import ru.samtakoy.presentation.core.design_system.base.MyOffsets
 import ru.samtakoy.presentation.core.design_system.base.UiOffsets
 import ru.samtakoy.presentation.core.design_system.base.UiRadiuses
-import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
-import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.base.utils.getRoundedShape
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButton
-import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.core.design_system.radio.MyRadioItemGropView
-import ru.samtakoy.presentation.core.design_system.radio.getMyRadioPreviewItems
-import ru.samtakoy.presentation.utils.asA
 
 @Composable
 fun MyChoiceDialogView(
@@ -107,28 +101,4 @@ fun MyChoiceDialogView(
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun MyChoiceDialogView_Preview() = MyTheme {
-    MyChoiceDialogView(
-        dialogState = remember {
-            mutableStateOf(
-                MyChoiceDialogUiModel(
-                    id = null,
-                    title = "title".asA(),
-                    description = "description".asA(),
-                    items = getMyRadioPreviewItems(),
-                    okButton = MyButtonUiModel(
-                        id = LongUiId(1L),
-                        text = "ok".asA(),
-                        isEnabled = true
-                    )
-                )
-            )
-        },
-        onButtonClick = { _, _ -> },
-        onCancelClick = {}
-    )
 }

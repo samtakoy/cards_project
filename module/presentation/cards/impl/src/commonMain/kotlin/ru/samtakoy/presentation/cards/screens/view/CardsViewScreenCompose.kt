@@ -26,33 +26,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.stringResource
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.KoinApplication
-import ru.samtakoy.common.utils.di.commonUtilsModule
 import ru.samtakoy.presentation.base.observeActionsWithLifecycle
-import ru.samtakoy.presentation.cards.di.cardsViewPresentationModule
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.Action
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.CardState
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.Event
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.NavigationAction
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.State
-import ru.samtakoy.presentation.cards.screens.view.vm.mapper.AnswerButtonsMapper
-import ru.samtakoy.presentation.cards.screens.view.vm.mapper.QuestionButtonsMapper
-import ru.samtakoy.presentation.cards.view.model.CardViewMode
 import ru.samtakoy.presentation.core.design_system.base.MyOffsets
 import ru.samtakoy.presentation.core.design_system.base.UiOffsets
 import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
-import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.button.round.MyFabButtonIcon
 import ru.samtakoy.presentation.core.design_system.button.round.MyFabButtonUiModel
 import ru.samtakoy.presentation.core.design_system.button.round.MyFabButtonView
@@ -61,9 +49,7 @@ import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.core.design_system.scaffold.MySimpleScreenScaffold
 import ru.samtakoy.presentation.core.design_system.selectable_item.MySelectableItem
 import ru.samtakoy.presentation.core.design_system.toolbar.ToolbarTitleView
-import ru.samtakoy.presentation.utils.asA
 import ru.samtakoy.presentation.utils.asAnnotated
-import ru.samtakoy.presentation.utils.getALoremIpsum
 import ru.samtakoy.resources.Res
 import ru.samtakoy.resources.cards_view_favorite_box
 
@@ -108,7 +94,7 @@ private fun HandleActions(
 }
 
 @Composable
-private fun CardsViewScreenInternal(
+internal fun CardsViewScreenInternal(
     viewState: State,
     onEvent: (Event) -> Unit,
     snackbarHostState: SnackbarHostState,
@@ -366,54 +352,4 @@ private fun ButtonsRow(
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun CardsViewScreenInternal_Preview() = MyTheme {
-    val koin = KoinApplication.init()
-        .androidContext(LocalContext.current)
-        .modules(
-            commonUtilsModule(),
-            cardsViewPresentationModule()
-        )
-    val questionMapper = koin.koin.get<QuestionButtonsMapper>()
-    val answerMapper = koin.koin.get<AnswerButtonsMapper>()
-
-    val cards = remember {
-        listOf<CardState>(
-            CardState(
-                id = 1,
-                isQuestion = true,
-                content = CardState.Content(
-                    isFavorite = true,
-                    text = getALoremIpsum(20),
-                    hasRevertButton = true
-                )
-            ),
-            CardState(
-                id = 1,
-                isQuestion = false,
-                content = CardState.Content(
-                    isFavorite = true,
-                    text = getALoremIpsum(20),
-                    hasRevertButton = true
-                )
-            )
-        ).toImmutableList()
-    }
-    CardsViewScreenInternal(
-        viewState = State(
-            type = State.Type.Card(
-                cardsCountTitle = "2/10".asA(),
-                cardIndex = 0,
-            ),
-            isLoading = false,
-            cardItems = cards,
-            questionButtons = runBlocking { questionMapper.map(CardViewMode.LEARNING).toImmutableList() },
-            answerButtons = runBlocking { answerMapper.map(CardViewMode.LEARNING).toImmutableList() },
-        ),
-        onEvent = {},
-        snackbarHostState = remember { SnackbarHostState() }
-    )
 }

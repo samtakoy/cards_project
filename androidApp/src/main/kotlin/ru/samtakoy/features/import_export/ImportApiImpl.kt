@@ -351,7 +351,9 @@ class ImportApiImpl(
             // получить из базы - дочернюю с тем же именем, как дирректория
             // если нет - создать и ее id транслировать ниже
             val childThemeId: Long
-            val childTheme: Theme? = themesRepository.getThemeWithTitle(parentThemeId, f.name)
+            val childTheme: Theme? = runBlocking {
+                themesRepository.getThemeWithTitle(parentThemeId, f.name)
+            }
             childThemeId = if (childTheme != null) {
                 childTheme.id
             } else {
@@ -381,7 +383,9 @@ class ImportApiImpl(
         var newTheme = false
 
         for (themeName in themesList) {
-            val theme: Theme? = if (newTheme) null else themesRepository.getThemeWithTitle(parentThemeId, themeName)
+            val theme: Theme? = runBlocking {
+                if (newTheme) null else themesRepository.getThemeWithTitle(parentThemeId, themeName)
+            }
             if (theme != null) {
                 parentThemeId = theme.id
             } else {

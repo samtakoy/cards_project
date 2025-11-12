@@ -139,6 +139,7 @@ class ScheduleEditFragment : DialogFragment(), ViewModelOwner {
     }
 
     private fun trySendResult(serializedSchedule: ParcelableSchedule) {
+        /*
         if (getTargetFragment() == null) {
             Log.e(TAG, "Target fragment is missing")
             return
@@ -147,6 +148,7 @@ class ScheduleEditFragment : DialogFragment(), ViewModelOwner {
         val result = Intent()
         result.putExtra(RESULT_SCHEDULE_STRING, serializedSchedule)
         getTargetFragment()!!.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, result)
+         */
     }
 
     companion object {

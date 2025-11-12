@@ -3,6 +3,7 @@ package ru.samtakoy.core.presentation.schedule.vm
 import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.serialization.json.Json
 import ru.samtakoy.R
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.common.resources.Resources
@@ -37,8 +38,8 @@ internal class ScheduleEditViewModelImpl(
         initialValueGetter = { initialSchedule },
         keyName = KEY_SCHEDULE,
         savedStateHandle = savedStateHandle,
-        serialize = { it.toParcelable() },
-        deserialize = { (it as ParcelableSchedule).toDomain() },
+        serialize = { Json.encodeToString(it.toParcelable()) },
+        deserialize = { (Json.decodeFromString(it) as ParcelableSchedule).toDomain() },
         saveScope = ioScope
     )
 
@@ -46,8 +47,8 @@ internal class ScheduleEditViewModelImpl(
         initialValueGetter = { ScheduleItem(1, ScheduleTimeUnit.MINUTE) },
         keyName = KEY_SCHEDULE_ITEM,
         savedStateHandle = savedStateHandle,
-        serialize = { it.toParcelable() },
-        deserialize = { (it as ParcelableSchedule.Item).toDomain() },
+        serialize = { Json.encodeToString(it.toParcelable()) },
+        deserialize = { (Json.decodeFromString(it) as ParcelableSchedule.Item).toDomain() },
         saveScope = ioScope
     )
 

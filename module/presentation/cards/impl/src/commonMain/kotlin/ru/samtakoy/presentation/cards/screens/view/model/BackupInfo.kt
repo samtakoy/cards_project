@@ -1,13 +1,12 @@
 package ru.samtakoy.presentation.cards.screens.view.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
-@Parcelize
+@Serializable
 internal data class BackupInfo(
     val question: String? = null,
     val answer: String? = null
-) : Parcelable
+)
 
 internal fun BackupInfo.hasBackup(onAnswer: Boolean): Boolean {
     if (onAnswer) {

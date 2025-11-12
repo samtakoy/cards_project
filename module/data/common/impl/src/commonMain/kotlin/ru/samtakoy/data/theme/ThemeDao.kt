@@ -13,7 +13,7 @@ internal interface ThemeDao {
     suspend fun getTheme(id: Long): ThemeEntity?
 
     @Query("SELECT * FROM ${ThemeEntity.Companion.table} WHERE ${_parent} = :parentThemeId AND ${ThemeEntity.Companion._title} = :title")
-    fun getThemeWithTitle(parentThemeId: Long, title: String): ThemeEntity?
+    suspend fun getThemeWithTitle(parentThemeId: Long, title: String): ThemeEntity?
 
     @Query("SELECT * FROM ${ThemeEntity.Companion.table} WHERE ${ThemeEntity.Companion._parent}=:parentId")
     suspend fun getChildThemes(parentId: Long): List<ThemeEntity>

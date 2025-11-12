@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
+import ru.samtakoy.presentation.cards.CardsViewResultParams
 import ru.samtakoy.presentation.cards.CardsViewResultRoute
 import ru.samtakoy.presentation.cards.screens.view.CardsViewScreen
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel
@@ -30,7 +31,11 @@ internal fun CardsViewEntry(
                 }
                 is CardsViewViewModel.NavigationAction.OpenResults -> {
                     rootNavController.popBackStack()
-                    rootNavController.navigate(CardsViewResultRoute(action.viewHistoryItemId, action.cardViewMode))
+                    rootNavController.navigate(
+                        CardsViewResultRoute(
+                            CardsViewResultParams(action.viewHistoryItemId, action.cardViewMode)
+                        )
+                    )
                 }
             }
         },

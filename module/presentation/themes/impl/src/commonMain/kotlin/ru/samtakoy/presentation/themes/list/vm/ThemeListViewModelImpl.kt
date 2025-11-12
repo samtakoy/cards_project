@@ -1,6 +1,5 @@
 package ru.samtakoy.presentation.themes.list.vm
 
-import android.os.Parcelable
 import androidx.lifecycle.SavedStateHandle
 import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.collections.immutable.toImmutableList
@@ -10,11 +9,11 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.common.utils.log.MyLog
-import ru.samtakoy.domain.exportcards.QPacksExporter
 import ru.samtakoy.domain.importcards.model.ImportCardsOpts
 import ru.samtakoy.domain.qpack.QPackInteractor
 import ru.samtakoy.domain.task.model.TaskStateData
@@ -58,7 +57,7 @@ import ru.samtakoy.resources.theme_list_screen_import_from_zip_title
 internal class ThemeListViewModelImpl(
     private val qPackInteractor: QPackInteractor,
     private val themeInteractor: ThemeInteractor,
-    private val qPacksExporter: QPacksExporter,
+    // private val qPacksExporter: QPacksExporter,
     private val permissionsController: PermissionsController,
     private val importCardsFromZipTask: ImportCardsFromZipTask,
     private val uiItemsMapper: ThemeUiItemMapper,
@@ -89,8 +88,8 @@ internal class ThemeListViewModelImpl(
         initialValueGetter = { DialogState(DialogState.Type.NONE, ImportCardsOpts.NONE) },
         keyName = KEY_DIALOG_STATE,
         savedStateHandle = savedStateHandle,
-        serialize = { it },
-        deserialize = { it as DialogState },
+        serialize = { Json.encodeToString(it) },
+        deserialize = { Json.decodeFromString(it) },
         saveScope = ioScope
     )
 
@@ -165,7 +164,8 @@ internal class ThemeListViewModelImpl(
                     )
                 }
             ) {
-                qPacksExporter.exportQPackToEmail(qPackId = qPackItem.id.value)
+                // TODO не вынесено в модули и не переделано
+                // qPacksExporter.exportQPackToEmail(qPackId = qPackItem.id.value)
             }
         }
     }
@@ -466,11 +466,11 @@ internal class ThemeListViewModelImpl(
         }
     }
 
-    @Parcelize
+    @Serializable
     private data class DialogState(
         val dialogType: Type,
         val importCardOpts: ImportCardsOpts
-    ) : Parcelable {
+    ) {
         enum class Type {
             NONE,
             SELECT_DIR_TO_BATCH_IMPORT,

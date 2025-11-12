@@ -1,6 +1,5 @@
 package ru.samtakoy.presentation.cards.screens.view.vm
 
-import android.os.Parcelable
 import androidx.lifecycle.SavedStateHandle
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,7 +15,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.common.utils.log.MyLog
@@ -74,8 +74,8 @@ internal class CardsViewViewModelImpl(
         initialValueGetter = { BackupInfoHolder(emptyMap()) },
         keyName = KEY_BACKUP_INFO,
         savedStateHandle = savedStateHandle,
-        serialize = { it },
-        deserialize = { it as BackupInfoHolder },
+        serialize = { Json.encodeToString(it) },
+        deserialize = { Json.decodeFromString(it) },
         saveScope = ioScope
     )
 
@@ -86,8 +86,8 @@ internal class CardsViewViewModelImpl(
         },
         keyName = KEY_CUR_CARD_STATE,
         savedStateHandle = savedStateHandle,
-        serialize = { it },
-        deserialize = { it as CurCardState },
+        serialize = { Json.encodeToString(it) },
+        deserialize = { Json.decodeFromString(it) },
         saveScope = ioScope
     )
 
@@ -462,7 +462,7 @@ internal class CardsViewViewModelImpl(
     )
 
     /** Сохраняемое состояние, с которым работаем */
-    @Parcelize
+    @Serializable
     internal data class CurCardState(
         /** идентификатор состояния  */
         val type: Type,
@@ -470,7 +470,7 @@ internal class CardsViewViewModelImpl(
         val cardId: Long?,
         /** Состояние сохранено */
         val isStateSaved: Boolean
-    ) : Parcelable {
+    ) {
         enum class Type {
             NOT_INITIALIZED,
             QUESTION,

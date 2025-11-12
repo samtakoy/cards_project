@@ -6,7 +6,7 @@ import ru.samtakoy.domain.theme.Theme
 interface ThemesRepository {
 
     suspend fun getTheme(themeId: Long): Theme?
-    fun getThemeWithTitle(parentThemeId: Long, title: String): Theme?
+    suspend fun getThemeWithTitle(parentThemeId: Long, title: String): Theme?
 
     suspend fun addNewTheme(parentThemeId: Long, title: String): Theme?
     suspend fun deleteTheme(themeId: Long): Boolean

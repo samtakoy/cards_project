@@ -1,11 +1,7 @@
-package ru.samtakoy.core.app.di
+package com.example.maindi
 
 import org.koin.dsl.module
 import ru.samtakoy.common.utils.di.commonUtilsModule
-import ru.samtakoy.common.di.oldResourcesModule
-import ru.samtakoy.core.presentation.courses.di.coursesPresentationModule
-import ru.samtakoy.core.presentation.favorites.di.favoritesPresentationModule
-import ru.samtakoy.core.presentation.schedule.di.schedulePresentationModule
 import ru.samtakoy.data.di.dataModule
 import ru.samtakoy.data.importcards.di.importDataModule
 import ru.samtakoy.data.task.di.taskStateDataModule
@@ -25,10 +21,9 @@ import ru.samtakoy.presentation.qpacks.di.qPackPresentationModule
 import ru.samtakoy.presentation.settings.di.settingsPresentationModule
 import ru.samtakoy.presentation.themes.di.themesPresentationModule
 
-fun koinOtherModulesModule() = module {
+fun koinModulesModule() = module {
     includes(
         commonUtilsModule(),
-        oldResourcesModule(),
 
         dataModule(),
         taskStateDataModule(),
@@ -43,13 +38,10 @@ fun koinOtherModulesModule() = module {
         importCardsDomainModule(),
 
         mainScreenPresentationModule(),
+        cardsViewPresentationModule(),
         qPackPresentationModule(),
         themesPresentationModule(),
-        coursesPresentationModule(),
-        favoritesPresentationModule(),
-        schedulePresentationModule(),
         settingsPresentationModule(),
-        cardsViewPresentationModule(),
 
         // platform dependend:
         importCardsFromZipPlatformModule(),

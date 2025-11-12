@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.common.utils.log.MyLog
@@ -45,8 +46,8 @@ internal class CardsViewResultViewModelImpl(
         initialValueGetter = { Schedule(emptyList()) },
         keyName = KEY_SCHEDULE,
         savedStateHandle = savedStateHandle,
-        serialize = { it.toParcelable() },
-        deserialize = { (it as ParcelableSchedule).toDomain() },
+        serialize = { Json.encodeToString(it.toParcelable()) },
+        deserialize = { Json.decodeFromString<ParcelableSchedule>(it).toDomain() },
         saveScope = ioScope
     )
 

@@ -8,12 +8,13 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+// TODO fun + inline + reified?
 class SavedStateValue<T>(
     private val initialValueGetter: () -> T,
     private val keyName: String,
     private val savedStateHandle: SavedStateHandle,
-    private val serialize: (T) -> Any,
-    private val deserialize: (Any) -> T,
+    private val serialize: (T) -> String,
+    private val deserialize: (String) -> T,
     saveScope: CoroutineScope
 ) {
     /** Текущее состояние */
@@ -39,7 +40,7 @@ class SavedStateValue<T>(
     }
 
     private fun readValue(): T {
-        return deserialize(savedStateHandle.get<Any>(keyName) ?: serialize(initialValueGetter()))
+        return deserialize(savedStateHandle.get<String>(keyName) ?: serialize(initialValueGetter()))
     }
 
     private fun saveValue(value: T) {

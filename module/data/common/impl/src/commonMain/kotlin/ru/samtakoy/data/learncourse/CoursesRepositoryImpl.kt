@@ -40,12 +40,6 @@ internal class CoursesRepositoryImpl(
     }
 
     @OptIn(ExperimentalTime::class)
-    override fun addNewCourseSync(newCourse: LearnCourse): LearnCourse {
-        val id = courseDao.addLearnCourse(courseMapper.mapToEntity(newCourse))
-        return newCourse.copy(id = id)
-    }
-
-    @OptIn(ExperimentalTime::class)
     override suspend fun addNewCourse(
         qPackId: Long,
         courseType: CourseType,
@@ -110,7 +104,7 @@ internal class CoursesRepositoryImpl(
         }
     }
 
-    override fun getCoursesByModesNow(vararg mode: LearnCourseMode): List<LearnCourse> {
+    override suspend fun getCoursesByModesNow(vararg mode: LearnCourseMode): List<LearnCourse> {
         return courseDao.getLearnCourseByModesNow(
             mode.toList().map(modeMapper::mapToEntity)
         ).map(courseMapper::mapToDomain)
@@ -124,7 +118,7 @@ internal class CoursesRepositoryImpl(
 
     // не в Rx стиле для сервиса, перенести в отдельный репозиторий?
     @OptIn(ExperimentalTime::class)
-    override fun getOrderedCoursesLessThan(mode: LearnCourseMode, repeatDate: Instant): List<LearnCourse> {
+    override suspend fun getOrderedCoursesLessThan(mode: LearnCourseMode, repeatDate: Instant): List<LearnCourse> {
         return courseDao.getOrderedCoursesLessThan(
             mode = modeMapper.mapToEntity(mode),
             repeatDate = DateUtils.dateToDbSerialized(repeatDate)
@@ -132,7 +126,7 @@ internal class CoursesRepositoryImpl(
     }
 
     @OptIn(ExperimentalTime::class)
-    override fun getOrderedCoursesMoreThan(mode: LearnCourseMode, repeatDate: Instant): List<LearnCourse> {
+    override suspend fun getOrderedCoursesMoreThan(mode: LearnCourseMode, repeatDate: Instant): List<LearnCourse> {
         return courseDao.getOrderedCoursesMoreThan(
             mode = modeMapper.mapToEntity(mode),
             repeatDate = DateUtils.dateToDbSerialized(repeatDate)

@@ -15,16 +15,13 @@ import ru.samtakoy.data.learncourse.model.LearnCourseModeEntity
 internal interface LearnCourseDao {
 
     @Query("SELECT * FROM ${LearnCourseEntity.Companion.table} WHERE ${LearnCourseEntity.Companion._id}=:id")
-    fun getLearnCourseSync(id: Long): LearnCourseEntity?
-
-    @Query("SELECT * FROM ${LearnCourseEntity.Companion.table} WHERE ${LearnCourseEntity.Companion._id}=:id")
     suspend fun getLearnCourse(id: Long): LearnCourseEntity?
 
     @Query("SELECT * FROM ${LearnCourseEntity.Companion.table} WHERE ${LearnCourseEntity.Companion._id}=:id")
     fun getLearnCourseAsFlow(id: Long): Flow<LearnCourseEntity?>
 
     @Insert
-    fun addLearnCourse(course: LearnCourseEntity): Long
+    suspend fun addLearnCourse(course: LearnCourseEntity): Long
 
     @Update
     suspend fun updateCourse(course: LearnCourseEntity): Int
@@ -45,7 +42,7 @@ internal interface LearnCourseDao {
 
     @Query("SELECT * FROM ${LearnCourseEntity.Companion.table} WHERE ${LearnCourseEntity.Companion._mode} IN (:modes) ")
     @TypeConverters(LearnCourseModeConverter::class)
-    fun getLearnCourseByModesNow(modes: List<LearnCourseModeEntity>): List<LearnCourseEntity>
+    suspend fun getLearnCourseByModesNow(modes: List<LearnCourseModeEntity>): List<LearnCourseEntity>
 
     @Query("SELECT * FROM ${LearnCourseEntity.Companion.table} WHERE ${LearnCourseEntity.Companion._id} IN (:coursesIds) ")
     fun getCoursesByIdsAsFlow(coursesIds: List<Long>): Flow<List<LearnCourseEntity>>
@@ -58,10 +55,10 @@ internal interface LearnCourseDao {
 
     @Query("SELECT * FROM ${LearnCourseEntity.Companion.table} WHERE ${LearnCourseEntity.Companion._mode} = :mode AND ${LearnCourseEntity.Companion._repeat_date} <= :repeatDate ORDER BY ${LearnCourseEntity.Companion._repeat_date} ASC")
     @TypeConverters(LearnCourseModeConverter::class)
-    fun getOrderedCoursesLessThan(mode: LearnCourseModeEntity, repeatDate: Long): List<LearnCourseEntity>
+    suspend fun getOrderedCoursesLessThan(mode: LearnCourseModeEntity, repeatDate: Long): List<LearnCourseEntity>
 
     @Query("SELECT * FROM ${LearnCourseEntity.Companion.table} WHERE ${LearnCourseEntity.Companion._mode} = :mode AND ${LearnCourseEntity.Companion._repeat_date} > :repeatDate ORDER BY ${LearnCourseEntity.Companion._repeat_date} ASC")
     @TypeConverters(LearnCourseModeConverter::class)
-    fun getOrderedCoursesMoreThan(mode: LearnCourseModeEntity, repeatDate: Long): List<LearnCourseEntity>
+    suspend fun getOrderedCoursesMoreThan(mode: LearnCourseModeEntity, repeatDate: Long): List<LearnCourseEntity>
 
 }

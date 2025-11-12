@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import ru.samtakoy.presentation.core.design_system.base.MyColors
 import ru.samtakoy.presentation.core.design_system.base.UiOffsets
 import ru.samtakoy.presentation.core.design_system.base.UiRadiuses
@@ -90,13 +90,4 @@ fun ProgressOverlayView(
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun ProgressOverlayView_Preview() = MyTheme {
-    ProgressOverlayView(
-        title = "title".asA(),
-        subtitle = "subtitle".asA()
-    )
 }

@@ -19,17 +19,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import ru.samtakoy.presentation.core.design_system.base.MyOffsets
 import ru.samtakoy.presentation.core.design_system.base.UiOffsets
-import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
-import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButton
-import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
-import ru.samtakoy.presentation.utils.asA
 
 @Composable
 fun MyInputTextDialogView(
@@ -86,28 +81,4 @@ fun MyInputTextDialogView(
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun MyInputTextDialogView_Preview() = MyTheme {
-    MyInputTextDialogView(
-        dialogState = remember {
-            mutableStateOf(
-                MyInputTextDialogUiModel(
-                    id = null,
-                    title = "title".asA(),
-                    description = "description".asA(),
-                    inputHint = "inputHint".asA(),
-                    initialText = "а...",
-                    okButton = MyButtonUiModel(
-                        id = LongUiId(1L),
-                        text = "ok".asA(),
-                        isEnabled = true
-                    )
-                )
-            )
-        },
-        onButtonClick = { a, b -> Unit }
-    )
 }

@@ -1,7 +1,8 @@
-import gradle.kotlin.dsl.accessors._dc12adddf845545d82d0996eeb7ee381.implementation
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import ru.samtakoy.ext.desktopJavaVersion
 import ru.samtakoy.ext.libs
 import ru.samtakoy.ext.projectJavaVersion
+import ru.samtakoy.ext.projectJavaVersionInt
 
 plugins {
     kotlin("multiplatform")
@@ -14,6 +15,13 @@ kotlin {
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.fromTarget(projectJavaVersion.toString()))
+        }
+    }
+
+    // Добавьте JVM Desktop таргет
+    jvm("desktop") {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.fromTarget(desktopJavaVersion.toString()))
         }
     }
 
@@ -31,10 +39,14 @@ kotlin {
 
             implementation(libs.napier)
         }
-
-        // androidMain автоматически наследует все зависимости из commonMain
-        // Здесь добавляются ТОЛЬКО Android-специфичные зависимости
+        val desktopMain by getting {
+            dependencies {
+                implementation(libs.kotlinx.coroutines.swing)
+            }
+        }
     }
+
+    jvmToolchain(projectJavaVersionInt)
 }
 
 android {

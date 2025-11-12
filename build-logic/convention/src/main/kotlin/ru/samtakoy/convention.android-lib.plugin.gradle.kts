@@ -1,11 +1,17 @@
+import ru.samtakoy.ext.desktopJavaVersionInt
 import ru.samtakoy.ext.libs
+import ru.samtakoy.ext.projectJavaVersion
+import ru.samtakoy.ext.projectJavaVersionInt
 
 plugins {
     id("com.google.devtools.ksp")
     id("com.android.library")
     id("kotlin-android")
-    // id("kotlin-parcelize")
     id("convention.base.plugin")
+}
+
+kotlin {
+    jvmToolchain(projectJavaVersionInt)
 }
 
 android {

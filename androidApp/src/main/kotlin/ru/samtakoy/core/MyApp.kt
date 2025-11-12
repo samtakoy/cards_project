@@ -3,22 +3,16 @@ package ru.samtakoy.core
 import android.content.Context
 import android.os.Process
 import androidx.multidex.MultiDexApplication
-import androidx.work.Configuration
-import androidx.work.WorkManager
 import com.facebook.stetho.Stetho
-import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
-import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.workmanager.factory.KoinWorkerFactory
-import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.GlobalContext.startKoin
 import ru.samtakoy.BuildConfig
 import ru.samtakoy.common.utils.log.CustomLogger
 import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.core.app.di.koinAppModule
-import ru.samtakoy.core.app.di.koinOtherModulesModule
+import com.example.maindi.koinModulesModule
 
 class MyApp : MultiDexApplication()/*, Configuration.Provider*/ {
     override fun onTerminate() {
@@ -62,7 +56,7 @@ class MyApp : MultiDexApplication()/*, Configuration.Provider*/ {
             // workManagerFactory()
             modules(
                 koinAppModule(),
-                koinOtherModulesModule()
+                koinModulesModule()
             )
         }
     }

@@ -3,10 +3,12 @@ plugins {
     `kotlin-dsl`
 }
 
-//  плагины, которые будем использовать в наших будущих Convention Plugins.
+//  плагины, которые будем использовать в наших будущих Convention Plugins. (ыв)
 dependencies {
     implementation(libs.gradleplugin.kotlin)
     implementation(libs.gradleplugin.android)
+    implementation(libs.gradleplugin.compose)
+    implementation(libs.gradleplugin.compose.compiler)
     implementation(libs.gradleplugin.ksp)
     // Workaround for version catalog working inside precompiled scripts
     // Issue - https://github.com/gradle/gradle/issues/15383

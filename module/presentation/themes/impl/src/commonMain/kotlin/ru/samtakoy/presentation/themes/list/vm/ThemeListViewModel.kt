@@ -1,6 +1,5 @@
 package ru.samtakoy.presentation.themes.list.vm
 
-import android.net.Uri
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.AnnotatedString
 import io.github.vinceglb.filekit.PlatformFile
@@ -11,7 +10,6 @@ import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.Action
 import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.Event
 import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.State
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
-import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
 import ru.samtakoy.presentation.core.design_system.dialogs.alert.MyAlertDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.inputtext.MyInputTextDialogUiModel
@@ -46,7 +44,7 @@ internal interface ThemeListViewModel : BaseViewModel<State, Action, Event> {
         object NavigateToOnlineImport : NavigationAction
         object NavigateToSettings : NavigationAction
         class NavigateToImportPackDialog(
-            val selectedFileUri: Uri,
+            // val selectedFileUri: Uri, TODO убрал из-за недоступности Uri
             val parentThemeId: Long,
             val opts: ImportCardsOpts
         ) : NavigationAction

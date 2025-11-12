@@ -23,33 +23,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
-import kotlinx.collections.immutable.toImmutableList
 import ru.samtakoy.presentation.base.observeActionsWithLifecycle
 import ru.samtakoy.presentation.core.appelements.qpacklistitem.QPackListItemView
 import ru.samtakoy.presentation.core.appelements.themelistitem.ThemeListItemView
 import ru.samtakoy.presentation.core.design_system.base.UiOffsets
-import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
-import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.dialogs.alert.MyAlertDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.alert.MyAlertDialogView
 import ru.samtakoy.presentation.core.design_system.dialogs.inputtext.MyInputTextDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.inputtext.MyInputTextDialogView
 import ru.samtakoy.presentation.core.design_system.dropdown.DropDownMenuUiModel
 import ru.samtakoy.presentation.core.design_system.dropdown.MyDropDownMenuBox
-import ru.samtakoy.presentation.core.design_system.dropdown.getEmptyMenu
-import ru.samtakoy.presentation.core.design_system.progress.ProgressOverlayUiModel
 import ru.samtakoy.presentation.core.design_system.progress.ProgressOverlayView
 import ru.samtakoy.presentation.core.design_system.scaffold.MySimpleScreenScaffold
 import ru.samtakoy.presentation.core.design_system.toolbar.ToolbarTitleView
 import ru.samtakoy.presentation.themes.list.model.ThemeUiItem
 import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel
 import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.Event
-import ru.samtakoy.presentation.utils.asA
-import ru.samtakoy.presentation.utils.getALoremIpsum
 
 @Composable
 internal fun ThemeListScreen(
@@ -165,7 +157,7 @@ private fun HandleActions(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ThemesListScreenInternal(
+internal fun ThemesListScreenInternal(
     viewState: ThemeListViewModel.State,
     onMainNavigator: () -> Unit,
     onEvent: (event: Event) -> Unit,
@@ -305,35 +297,4 @@ private fun ThemeListItemInternalView(
             onLongClick = { longClickCallback() }
         )
     }
-}
-
-@Preview
-@Composable
-private fun ThemesListScreenInternal_Preview() = MyTheme {
-    ThemesListScreenInternal(
-        viewState = ThemeListViewModel.State(
-            isLoading = false,
-            progressPanel = ProgressOverlayUiModel(
-                "Panel title".asA(),
-                "Progress".asA()
-            ),
-            toolbarTitle = "title".asA(),
-            toolbarSubtitle = "subtitle".asA(),
-            toolbarMenu = getEmptyMenu(),
-            themeContextMenu = getEmptyMenu(),
-            qPackContextMenu = getEmptyMenu(),
-            isExportAllMenuItemVisible = true,
-            isToBlankDbMenuItemVisible = true,
-            items = listOf<ThemeUiItem>(
-                ThemeUiItem.Theme("1", LongUiId(1L), "theme 1".asA()),
-                ThemeUiItem.Theme("2", LongUiId(2L), getALoremIpsum()),
-                ThemeUiItem.Theme("3", LongUiId(3L), "theme 3".asA()),
-                ThemeUiItem.QPack("4", LongUiId(4L), "qpack 4".asA(), "12-20-2024".asA()),
-                ThemeUiItem.QPack("5", LongUiId(5L), getALoremIpsum(), "12-20-2024".asA()),
-            ).toImmutableList()
-        ),
-        onMainNavigator = {},
-        onEvent = {},
-        snackbarHostState = remember { SnackbarHostState() }
-    )
 }

@@ -1,13 +1,12 @@
 package ru.samtakoy.domain.learncourse
 
-import android.content.Context
 import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.data.learncourse.CoursesRepository
 import ru.samtakoy.domain.learncourse.schedule.Schedule
 
 // TODO rename to PlanCourseUseCase
 internal class CoursesPlannerImpl(
-    private val mCtx: Context,
+    // private val mCtx: Context,
     private val mCoursesRepository: CoursesRepository
 ) : CoursesPlanner {
     override fun planUncompletedTasksChecking() {

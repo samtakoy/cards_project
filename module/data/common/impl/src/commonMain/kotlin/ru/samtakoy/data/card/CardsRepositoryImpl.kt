@@ -17,9 +17,11 @@ internal class CardsRepositoryImpl(
     private val cardWithTagsMapper: CardWithTagsEntityMapper
 ) : CardsRepository {
     override suspend fun clearDb() {
+        /* TODO
         transactionRepository.withTransaction {
             db.clearAllTables()
         }
+        */
     }
 
     override suspend fun addCard(card: Card): Long {

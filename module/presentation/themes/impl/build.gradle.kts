@@ -1,8 +1,5 @@
 plugins {
-    id("convention.kmp-lib.plugin")
-    id("kotlin-parcelize")
-    alias(libs.plugins.jetbrains.compose)
-    alias(libs.plugins.compose.compiler)
+    id("convention.kmp-compose-lib.plugin")
     alias(libs.plugins.kotlinx.serialization)
 }
 
@@ -10,12 +7,15 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // Compose
-            implementation(libs.androidx.navigation.compose)
-            implementation(compose.runtime)
+            // implementation(compose.runtime) in convention plugin
             implementation(compose.ui)
             implementation(compose.material3)
             implementation(compose.preview)
+            implementation(compose.components.uiToolingPreview)
             implementation(compose.materialIconsExtended)
+            implementation(libs.androidx.navigation.compose)
+            // Lifecycle
+            implementation(libs.lifecycle.runtime.compose)
 
             // koin
             implementation(libs.koin.core)

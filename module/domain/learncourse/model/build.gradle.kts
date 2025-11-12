@@ -1,12 +1,14 @@
 plugins {
     id("convention.kmp-lib.plugin")
-    id("kotlin-parcelize")
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":module:common:utils"))
+            implementation(libs.kotlinx.serialization.core)
+
+            implementation(projects.module.common.utils)
         }
     }
 }

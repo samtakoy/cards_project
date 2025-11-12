@@ -19,7 +19,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import ru.samtakoy.presentation.core.design_system.base.MyColors
 import ru.samtakoy.presentation.core.design_system.base.MyOffsets
 import ru.samtakoy.presentation.core.design_system.base.UiOffsets
@@ -59,23 +59,5 @@ fun MyRadioItemView(
             overflow = TextOverflow.Ellipsis,
             maxLines = maxLines,
         )
-    }
-}
-
-@Preview
-@Composable
-private fun MyRadioItemView_Preview() = MyTheme {
-    Column(
-        modifier = Modifier.Companion
-            .background(MyColors.getScreenBackground())
-            .padding(UiOffsets.listItemOffset),
-        verticalArrangement = Arrangement.spacedBy(MyOffsets.small)
-    ) {
-        getMyRadioPreviewItems().forEach {
-            MyRadioItemView(
-                model = it,
-                onClick = {}
-            )
-        }
     }
 }

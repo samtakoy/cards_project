@@ -6,6 +6,5 @@ import ru.samtakoy.presentation.navigation.RootRoute
 
 @Serializable
 data class CardsViewRoute(
-    val viewHistoryId: Long,
-    val viewMode: CardViewMode
+    val params: CardsViewParams
 ) : RootRoute

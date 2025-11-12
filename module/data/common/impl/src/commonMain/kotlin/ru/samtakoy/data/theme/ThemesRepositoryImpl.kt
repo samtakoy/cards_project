@@ -14,7 +14,7 @@ internal class ThemesRepositoryImpl(
         return themeDao.getTheme(themeId)?.let(themeMapper::mapToDomain)
     }
 
-    override fun getThemeWithTitle(parentThemeId: Long, title: String): Theme? {
+    override suspend fun getThemeWithTitle(parentThemeId: Long, title: String): Theme? {
         return themeDao.getThemeWithTitle(parentThemeId, title)?.let(themeMapper::mapToDomain)
     }
 

@@ -1,5 +1,7 @@
 package ru.samtakoy.presentation.cards.view.model
 
+import kotlinx.serialization.Serializable
+
 enum class CardViewMode {
     // в каком виде инициирован просмотр
     // обучение - просмотр вопроса, затем ответа

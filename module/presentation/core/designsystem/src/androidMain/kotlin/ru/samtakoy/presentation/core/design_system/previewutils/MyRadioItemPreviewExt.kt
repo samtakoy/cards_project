@@ -1,9 +1,10 @@
-package ru.samtakoy.presentation.core.design_system.radio
+package ru.samtakoy.presentation.core.design_system.previewutils
 
 import androidx.compose.runtime.Stable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
+import ru.samtakoy.presentation.core.design_system.radio.MyRadioItemUiModel
 import ru.samtakoy.presentation.utils.asA
 import ru.samtakoy.presentation.utils.getALoremIpsum
 

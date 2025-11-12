@@ -8,9 +8,6 @@ import androidx.navigation.NavDeepLinkBuilder
 import org.koin.android.ext.android.inject
 import ru.samtakoy.R
 import ru.samtakoy.common.utils.log.MyLog.add
-import ru.samtakoy.core.presentation.courses.info.CourseInfoFragment.Companion.buildBundle
-import ru.samtakoy.core.presentation.courses.list.CoursesListFragment
-import ru.samtakoy.data.learncourse.utils.LearnCourseHelper
 import ru.samtakoy.domain.learncourse.LearnCourse
 import ru.samtakoy.domain.learncourse.LearnCourseMode
 import ru.samtakoy.features.notifications.learn_courses.LearnsApi
@@ -126,6 +123,7 @@ class NotificationsPlannerService : IntentService {
     }
 
     private fun showNewCourses(courses: List<LearnCourse>) {
+        /*
         val courseIds = LearnCourseHelper.getLearnCourseIds(courses)
 
 
@@ -138,6 +136,7 @@ class NotificationsPlannerService : IntentService {
         } else {
             showCoursesByIds(courseIds)
         }
+        */
     }
 
     private fun startCourseInfoActivity(courseId: Long) {

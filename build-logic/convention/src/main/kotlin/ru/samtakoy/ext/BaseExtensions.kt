@@ -14,4 +14,13 @@ fun Project.withVersionCatalog(block: (libs: LibrariesForLibs) -> Unit) {
 }
 
 val Project.projectJavaVersion: JavaVersion
-    get() = JavaVersion.toVersion(libs.versions.javaVersion.get().toInt())
+    get() = JavaVersion.toVersion(projectJavaVersionInt)
+
+val Project.projectJavaVersionInt: Int
+    get() = libs.versions.javaVersion.get().toInt()
+
+val Project.desktopJavaVersion: JavaVersion
+    get() = JavaVersion.toVersion(desktopJavaVersionInt)
+
+val Project.desktopJavaVersionInt: Int
+    get() = libs.versions.desktopJavaVersion.get().toInt()

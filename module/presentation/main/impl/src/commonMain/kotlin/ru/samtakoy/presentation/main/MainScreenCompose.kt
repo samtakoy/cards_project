@@ -55,13 +55,12 @@ private fun MainScreenInternal(
     modifier: Modifier = Modifier
 ) {
     val rootNavController = rememberNavController()
-    val tabsNavController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
     val koin = currentKoinScope()
     val rootFeatureEntries: ImmutableList<RootFeatureEntry> = remember {
-        koin.getAll< RootFeatureEntry>().toImmutableList()
+        koin.getAll<RootFeatureEntry>().toImmutableList()
     }
 
     NavHost(
@@ -74,7 +73,6 @@ private fun MainScreenInternal(
                 viewState = viewState,
                 onEvent = onEvent,
                 rootNavController = rootNavController,
-                tabsNavController = tabsNavController,
                 drawerState = drawerState,
                 coroutineScope = coroutineScope
             )
@@ -93,7 +91,6 @@ private fun TabsView(
     viewState: MainScreenViewModel.State,
     onEvent: (MainScreenViewModel.Event) -> Unit,
     rootNavController: NavHostController,
-    tabsNavController: NavHostController,
     drawerState: DrawerState,
     coroutineScope: CoroutineScope
 ) {
@@ -124,6 +121,7 @@ private fun TabsView(
         },
         drawerState = drawerState,
     ) {
+        val tabsNavController = rememberNavController()
         NavHost(
             navController = tabsNavController,
             startDestination = remember { mainTabFeatureEntries.find { it.route is ThemeListRoute }!!.route },

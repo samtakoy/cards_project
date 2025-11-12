@@ -1,13 +1,10 @@
 plugins {
-    id("convention.kmp-lib.plugin")
-    alias(libs.plugins.jetbrains.compose)
-    alias(libs.plugins.compose.compiler)
+    id("convention.kmp-compose-lib.plugin")
 }
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(compose.runtime)
             // для AnnotatedString
             api(compose.foundation)
             api(compose.components.resources)

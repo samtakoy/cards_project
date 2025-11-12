@@ -1,12 +1,8 @@
 package ru.samtakoy.presentation.core.design_system.selectable_item
 
-import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,13 +18,7 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
-import ru.samtakoy.presentation.core.design_system.base.MyColors
 import ru.samtakoy.presentation.core.design_system.base.MyOffsets
-import ru.samtakoy.presentation.core.design_system.base.UiOffsets
-import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
-import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
-import ru.samtakoy.presentation.utils.getALoremIpsum
 
 @Composable
 fun MySelectableItem(
@@ -88,29 +78,6 @@ fun MySelectableItem(
             style = MaterialTheme.typography.bodyLarge,
             overflow = TextOverflow.Ellipsis,
             maxLines = maxLines,
-        )
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun MySelectableItem_Preview() = MyTheme {
-    Column(
-        modifier = Modifier.Companion
-            .background(MyColors.getScreenBackground())
-            .padding(MyOffsets.small),
-        verticalArrangement = Arrangement.spacedBy(UiOffsets.listItemOffset)
-    ) {
-        getPreviewSelectableItems().forEach {
-            MySelectableItem(
-                model = it,
-                onClick = null
-            )
-        }
-        MySelectableItem(
-            model = MySelectableItemModel(AnyUiId(), getALoremIpsum(12), true, true),
-            onClick = null,
-            maxLines = 1
         )
     }
 }

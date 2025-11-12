@@ -1,18 +1,17 @@
 package ru.samtakoy.domain.learncourse.schedule.serialize
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
-@Parcelize
+@Serializable
 class ParcelableSchedule(
     val items: List<Item>
-) : Parcelable {
+) {
 
-    @Parcelize
+    @Serializable
     class Item(
         val dimension: Int,
         val timeUnit: TimeUnit
-    ) : Parcelable
+    )
 
     enum class TimeUnit {
         MINUTE,
