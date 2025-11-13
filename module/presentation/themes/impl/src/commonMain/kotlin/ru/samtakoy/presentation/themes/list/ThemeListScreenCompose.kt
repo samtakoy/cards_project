@@ -2,10 +2,12 @@ package ru.samtakoy.presentation.themes.list
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
@@ -38,6 +40,7 @@ import ru.samtakoy.presentation.core.design_system.dropdown.DropDownMenuUiModel
 import ru.samtakoy.presentation.core.design_system.dropdown.MyDropDownMenuBox
 import ru.samtakoy.presentation.core.design_system.progress.ProgressOverlayView
 import ru.samtakoy.presentation.core.design_system.scaffold.MySimpleScreenScaffold
+import ru.samtakoy.presentation.core.design_system.scrollbar.vertical.PlatformVerticalScrollbar
 import ru.samtakoy.presentation.core.design_system.toolbar.ToolbarTitleView
 import ru.samtakoy.presentation.themes.list.model.ThemeUiItem
 import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel
@@ -119,7 +122,7 @@ private fun HandleActions(
         type = FileKitType.File(
             // не дает выбраать zip
             // extensions = listOf("zip")
-        )
+           )
     ) { file ->
         onEvent(Event.ImportFileSelected(file))
     }
@@ -169,6 +172,7 @@ internal fun ThemesListScreenInternal(
         snackbarHostState = snackbarHostState,
         modifier = modifier
     ) {
+        val scrollState = rememberLazyListState()
         Column(
             modifier = Modifier
                 .fillMaxSize(),
@@ -215,7 +219,8 @@ internal fun ThemesListScreenInternal(
                         horizontal = UiOffsets.screenContentHPadding,
                         vertical = UiOffsets.screenContentVPadding
                     ),
-                verticalArrangement = Arrangement.spacedBy(UiOffsets.listItemOffset)
+                verticalArrangement = Arrangement.spacedBy(UiOffsets.listItemOffset),
+                state = scrollState
             ) {
                 items(
                     items = viewState.items,
@@ -235,6 +240,16 @@ internal fun ThemesListScreenInternal(
                     }
                 }
             }
+        }
+
+        // TODO Временно для десктопа, пока не подумаю
+        if (scrollState.canScrollForward || scrollState.canScrollBackward) {
+            PlatformVerticalScrollbar(
+                scrollState = scrollState,
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .fillMaxHeight()
+            )
         }
     }
     viewState.progressPanel?.let {
@@ -265,6 +280,7 @@ private fun QPackListItemInternalView(
             title = updatedItem.title,
             creationDate = updatedItem.creationDate,
             modifier = Modifier,
+            viewCount = updatedItem.viewCount,
             onClick = { onEvent(Event.ListItemClick(updatedItem)) },
             onLongClick = { longClickCallback() }
         )

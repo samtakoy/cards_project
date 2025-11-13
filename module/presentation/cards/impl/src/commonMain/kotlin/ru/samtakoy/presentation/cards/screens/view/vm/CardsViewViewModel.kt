@@ -5,6 +5,7 @@ import androidx.compose.ui.text.AnnotatedString
 import kotlinx.collections.immutable.ImmutableList
 import ru.samtakoy.domain.learncourse.schedule.Schedule
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
+import ru.samtakoy.presentation.cards.screens.view.model.ContentPart
 import ru.samtakoy.presentation.cards.view.model.CardViewMode
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
@@ -44,7 +45,7 @@ internal interface CardsViewViewModel :
     ) {
         data class Content(
             val isFavorite: Boolean,
-            val text: AnnotatedString,
+            val parts: ImmutableList<ContentPart>,
             val hasRevertButton: Boolean
         )
     }

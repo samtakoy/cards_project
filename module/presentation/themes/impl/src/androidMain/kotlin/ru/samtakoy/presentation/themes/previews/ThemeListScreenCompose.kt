@@ -36,8 +36,8 @@ private fun ThemesListScreenInternal_Preview() = MyTheme {
                 ThemeUiItem.Theme("1", LongUiId(1L), "theme 1".asA()),
                 ThemeUiItem.Theme("2", LongUiId(2L), getALoremIpsum()),
                 ThemeUiItem.Theme("3", LongUiId(3L), "theme 3".asA()),
-                ThemeUiItem.QPack("4", LongUiId(4L), "qpack 4".asA(), "12-20-2024".asA()),
-                ThemeUiItem.QPack("5", LongUiId(5L), getALoremIpsum(), "12-20-2024".asA()),
+                ThemeUiItem.QPack("4", LongUiId(4L), "qpack 4".asA(), "12-20-2024".asA(), null),
+                ThemeUiItem.QPack("5", LongUiId(5L), getALoremIpsum(), "12-20-2024".asA(), "2".asA()),
             ).toImmutableList()
         ),
         onMainNavigator = {},

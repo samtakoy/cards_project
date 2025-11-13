@@ -8,5 +8,6 @@ import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 data class QPackListItemUiModel(
     val id: LongUiId,
     val title: AnnotatedString,
-    val creationDate: AnnotatedString
+    val creationDate: AnnotatedString,
+    val viewCount: AnnotatedString? = null
 )

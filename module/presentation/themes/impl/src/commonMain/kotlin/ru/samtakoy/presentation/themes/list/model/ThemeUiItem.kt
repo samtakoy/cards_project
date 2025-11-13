@@ -20,6 +20,7 @@ internal sealed interface ThemeUiItem {
         override val composeKey: String,
         val id: LongUiId,
         val title: AnnotatedString,
-        val creationDate: AnnotatedString
+        val creationDate: AnnotatedString,
+        val viewCount: AnnotatedString?
     ) : ThemeUiItem
 }

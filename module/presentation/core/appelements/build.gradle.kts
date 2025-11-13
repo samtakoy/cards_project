@@ -10,6 +10,7 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.preview)
             implementation(compose.components.uiToolingPreview)
+            implementation(compose.materialIconsExtended)
             implementation(libs.androidx.navigation.compose)
 
             implementation(projects.module.presentation.core.utils)

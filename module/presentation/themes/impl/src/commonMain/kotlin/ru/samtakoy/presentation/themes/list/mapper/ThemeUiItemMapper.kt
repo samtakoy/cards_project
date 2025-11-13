@@ -47,8 +47,9 @@ internal class ThemeUiItemMapperImpl : ThemeUiItemMapper {
             ThemeUiItem.QPack(
                 composeKey = "q${it.id}",
                 id = LongUiId(it.id),
-                title = it.title.asAnnotated(),
-                creationDate = it.getCreationDateAsString().asAnnotated()
+                title = it.title.trim { it.isWhitespace() }.asAnnotated(),
+                creationDate = it.getCreationDateAsString().asAnnotated(),
+                viewCount = it.viewCount.toString().asA()
             )
         }
     }

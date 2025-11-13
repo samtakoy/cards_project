@@ -1,6 +1,7 @@
 package ru.samtakoy.presentation.core.appelements.themelistitem
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -48,6 +49,9 @@ fun ThemeListItemView(
                 color = MyColors.getListItemBgColor(),
                 shape = getRoundedShape(UiRadiuses.listItemBg)
             )
+            .clickable {
+                onClick?.invoke(id)
+            }
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(),

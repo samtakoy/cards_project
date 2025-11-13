@@ -1,11 +1,13 @@
 package ru.samtakoy.presentation.cards.screens.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,14 +26,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.snipme.highlights.Highlights
+import dev.snipme.highlights.model.SyntaxLanguage
+import generateAnnotatedString
 import kotlinx.collections.immutable.ImmutableList
 import org.jetbrains.compose.resources.stringResource
 import ru.samtakoy.presentation.base.observeActionsWithLifecycle
+import ru.samtakoy.presentation.cards.screens.view.model.ContentPart
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.Action
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.CardState
@@ -49,6 +57,7 @@ import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.core.design_system.scaffold.MySimpleScreenScaffold
 import ru.samtakoy.presentation.core.design_system.selectable_item.MySelectableItem
 import ru.samtakoy.presentation.core.design_system.toolbar.ToolbarTitleView
+import ru.samtakoy.presentation.core.design_system.scrollbar.vertical.PlatformVerticalScrollbar
 import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.resources.Res
 import ru.samtakoy.resources.cards_view_favorite_box
@@ -230,7 +239,7 @@ private fun CardQuestionView(
             modifier = Modifier.align(Alignment.End)
         )
         TextContainer(
-            text = cardContent.text,
+            parts = cardContent.parts,
             hasRevertButton = cardContent.hasRevertButton,
             onEvent = onEvent,
             modifier = Modifier
@@ -262,12 +271,13 @@ private fun CardAnswerView(
             modifier = Modifier.align(Alignment.End)
         )
         TextContainer(
-            text = cardContent.text,
+            parts = cardContent.parts,
             hasRevertButton = cardContent.hasRevertButton,
             onEvent = onEvent,
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .weight(1f),
+            textAlign = TextAlign.Left
         )
         ButtonsRow(
             buttons = buttons,
@@ -297,37 +307,127 @@ private fun ColumnScope.FavoriteCheckBox(
 
 @Composable
 private fun ColumnScope.TextContainer(
-    text: AnnotatedString,
+    parts: ImmutableList<ContentPart>,
     hasRevertButton: Boolean,
     onEvent: (Event) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Center
 ) {
-    Box(
+    Row(
         modifier = modifier
     ) {
         val scrollState = rememberScrollState()
-        Text(
-            text = text,
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center)
-                .verticalScroll(scrollState),
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.bodyLarge
-        )
-        if (hasRevertButton) {
-            MyFabButtonView(
-                model = remember {
-                    MyFabButtonUiModel(id = AnyUiId(), icon = MyFabButtonIcon.Revert)
-                },
-                onClick = { onEvent(Event.RevertClick) },
+                .fillMaxHeight()
+                .weight(1f)
+        ) {
+            TextContent(
+                parts,
+                textAlign,
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(MyOffsets.large)
+                    .fillMaxSize()
+                    .align(Alignment.Center)
+                    .verticalScroll(scrollState)
+            )
+            if (hasRevertButton) {
+                MyFabButtonView(
+                    model = remember {
+                        MyFabButtonUiModel(id = AnyUiId(), icon = MyFabButtonIcon.Revert)
+                    },
+                    onClick = { onEvent(Event.RevertClick) },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(MyOffsets.large)
+                )
+            }
+        }
+
+        // TODO Временно для десктопа, пока не подумаю
+        if (scrollState.canScrollForward || scrollState.canScrollBackward) {
+            PlatformVerticalScrollbar(
+                scrollState = scrollState,
+                modifier = Modifier
+                    .fillMaxHeight(),
+
             )
         }
     }
+}
+
+@Composable
+private fun BoxScope.TextContent(
+    parts: ImmutableList<ContentPart>,
+    textAlign: TextAlign,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(
+            space = UiOffsets.itemsStandartVOffset,
+            alignment = Alignment.CenterVertically
+        )
+    ) {
+        for (part in parts) {
+            when (part) {
+                is ContentPart.Text -> {
+                    Text(
+                        text = part.value,
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        textAlign = textAlign,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+                is ContentPart.Code -> {
+                    CodeBlockTextView(
+                        code = part.value,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CodeBlockTextView(
+    code: String,
+    modifier: Modifier
+) {
+    val highlights by remember {
+        mutableStateOf(
+            Highlights
+                .Builder(code = code)
+                .language(SyntaxLanguage.KOTLIN)
+                .build()
+        )
+    }
+
+    var textState by remember {
+        mutableStateOf(AnnotatedString(highlights.getCode()))
+    }
+
+    LaunchedEffect(highlights) {
+        textState = highlights
+            .getHighlights()
+            .generateAnnotatedString(highlights.getCode())
+    }
+
+    Text(
+        modifier = modifier,
+        text = textState
+    )
+}
+
+@Composable
+private fun MyCodeTextView(
+    modifier: Modifier = Modifier.background(Color.Transparent),
+    highlights: Highlights
+) {
+
 }
 
 @Composable

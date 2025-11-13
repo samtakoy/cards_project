@@ -1,11 +1,13 @@
 package ru.samtakoy.domain.learncourse
 
 import ru.samtakoy.common.utils.DateUtils
+import ru.samtakoy.domain.qpack.QPackInteractor
 import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.domain.view.ViewHistoryItem
 import kotlin.time.ExperimentalTime
 
 internal class ViewHistoryProgressUseCaseImpl(
+    private val qPackInteractor: QPackInteractor,
     private val viewHistoryInteractor: ViewHistoryInteractor,
     private val courseProgressUseCase: CourseProgressUseCase,
 ) : ViewHistoryProgressUseCase {
@@ -57,6 +59,9 @@ internal class ViewHistoryProgressUseCaseImpl(
         viewHistoryInteractor.updateViewItem(item = resultItem)
 
         if (isLastCard) {
+            if (item.qPackId > 0) {
+                qPackInteractor.updateQPackViewCount(item.qPackId, DateUtils.currentTimeDate)
+            }
             courseProgressUseCase.finishCourseCardsViewingForViewId(
                 viewId = viewItemId,
                 currentTime = DateUtils.currentTimeDate

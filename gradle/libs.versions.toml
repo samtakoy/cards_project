@@ -33,6 +33,7 @@ kotlinTestVersion = "2.2.20"
 runnerVersion = "1.7.0"
 coreVersion = "1.7.0"
 napier_version = "2.7.1"
+kodeview_version="0.9.0"
 
 [libraries]
 # provides the Kotlin Gradle plugin
@@ -115,6 +116,8 @@ kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-
 
 # kmp logging
 napier = { group = "io.github.aakira", name = "napier", version.ref = "napier_version" }
+
+kodeview = { group = "dev.snipme", name = "kodeview", version.ref = "kodeview_version" }
 
 # Stetho core
 facebook-stetho = "com.facebook.stetho:stetho:1.5.1"

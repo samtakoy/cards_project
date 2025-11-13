@@ -1,7 +1,6 @@
 package ru.samtakoy.domain.learncourse
 
 import ru.samtakoy.data.common.transaction.TransactionRepository
-import ru.samtakoy.domain.qpack.QPackInteractor
 import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.domain.view.ViewHistoryItem
 import kotlin.time.ExperimentalTime
@@ -11,7 +10,6 @@ internal class CourseProgressUseCaseImpl(
     private val transactionRepository: TransactionRepository,
     private val coursesInteractor: NCoursesInteractor,
     private val viewHistoryInteractor: ViewHistoryInteractor,
-    private val qPackInteractor: QPackInteractor,
     private val coursesPlanner: CoursesPlanner
 ): CourseProgressUseCase {
 
@@ -66,9 +64,6 @@ internal class CourseProgressUseCaseImpl(
     @OptIn(ExperimentalTime::class)
     override suspend fun finishCourseCardsViewing(courseId: Long, currentTime: Instant) {
         coursesInteractor.getCourse(courseId = courseId)?.let { course ->
-            if (course.qPackId > 0) {
-                qPackInteractor.updateQPackViewCount(course.qPackId, currentTime)
-            }
             coursesInteractor.saveCourse(
                 course.finishLearnOrRepeat(currentTime)
             )

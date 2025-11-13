@@ -37,12 +37,12 @@ import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.Event
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.NavigationAction
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.State
 import ru.samtakoy.presentation.cards.screens.view.vm.mapper.AnswerButtonsMapper
+import ru.samtakoy.presentation.cards.screens.view.vm.mapper.CardContentMapper
 import ru.samtakoy.presentation.cards.screens.view.vm.mapper.CardsViewViewStateMapper
 import ru.samtakoy.presentation.cards.screens.view.vm.mapper.QuestionButtonsMapper
 import ru.samtakoy.presentation.cards.view.model.CardViewMode
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
-import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.resources.Res
 import ru.samtakoy.resources.common_err_message
 import ru.samtakoy.resources.db_request_err_message
@@ -55,6 +55,7 @@ internal class CardsViewViewModelImpl(
     private val viewStateMapper: CardsViewViewStateMapper,
     questionButtonsMapper: QuestionButtonsMapper,
     answerButtonsMapper: AnswerButtonsMapper,
+    private val cardContentMapper: CardContentMapper,
     private val savedStateHandle: SavedStateHandle,
     scopeProvider: ScopeProvider,
     private val viewHistoryItemId: Long,
@@ -105,6 +106,7 @@ internal class CardsViewViewModelImpl(
             )
             dataState.update { DataState(allCardIds =  allCardsIds, cardInfo = null) }
             if (viewHistoryItem.todoCardIds.isEmpty()) {
+                updateViewCount()
                 gotoResults()
             } else {
                 curCardState.value = curCardState.value.copy(
@@ -350,6 +352,7 @@ internal class CardsViewViewModelImpl(
                 withError = withError
             )!!
             if (resultViewItem.todoCardIds.isEmpty()) {
+                updateViewCount()
                 gotoResults()
             } else {
                 curCardState.value = curCardState.value.copy(
@@ -362,6 +365,12 @@ internal class CardsViewViewModelImpl(
 
     private fun gotoResults() {
         sendAction(NavigationAction.OpenResults(viewHistoryItemId = viewHistoryItemId, cardViewMode = viewMode))
+    }
+
+    private fun updateViewCount() {
+        /* launchWithLoader {
+            q
+        }*/
     }
 
     private fun getCurCardState(): CardsViewViewModel.CardState? {
@@ -419,19 +428,7 @@ internal class CardsViewViewModelImpl(
             cardItems = viewState.cardItems.map { cardState ->
                 if (card.id == cardState.id) {
                     cardState.copy(
-                        content = if (cardState.isQuestion) {
-                            CardsViewViewModel.CardState.Content(
-                                isFavorite = card.favorite > 0,
-                                text = card.question.asAnnotated(),
-                                hasRevertButton = info.backup.hasBackup(cardState.isQuestion)
-                            )
-                        } else {
-                            CardsViewViewModel.CardState.Content(
-                                isFavorite = card.favorite > 0,
-                                text = card.answer.asAnnotated(),
-                                hasRevertButton = info.backup.hasBackup(cardState.isQuestion)
-                            )
-                        }
+                        content = cardContentMapper.map(card, cardState.isQuestion, info.backup)
                     )
                 } else {
                     cardState

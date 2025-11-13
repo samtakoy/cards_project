@@ -59,7 +59,11 @@ class CardBuilder {
 
             // check question emptiness
             val checkStrings =
-                mQuestion.split(CBuilderConst.LINE_BREAK).dropLastWhile { it.isEmpty() }.toTypedArray()
+                mQuestion
+                    .split(CBuilderConst.LINE_BREAK)
+                    .map { it.trim{ it.isWhitespace() } }
+                    .dropLastWhile { it.isEmpty() }
+                    .toTypedArray()
             for (str in checkStrings) {
                 if (str.trim { it.isWhitespace() }.isNotEmpty()) {
                     return true

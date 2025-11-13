@@ -23,7 +23,6 @@ fun main() = application {
     ) {
         KoinApplication(
             application = {
-                // TODO мои модули
                 modules(koinModulesModule())
             }
         ) {

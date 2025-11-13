@@ -22,6 +22,8 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
 
+            implementation(libs.kodeview)
+
             implementation(projects.module.common.utils)
             implementation(projects.module.common.resources)
 

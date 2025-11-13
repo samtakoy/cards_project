@@ -12,6 +12,7 @@ import org.koin.core.KoinApplication
 import ru.samtakoy.common.utils.di.commonUtilsModule
 import ru.samtakoy.presentation.cards.di.cardsViewPresentationModule
 import ru.samtakoy.presentation.cards.screens.view.CardsViewScreenInternal
+import ru.samtakoy.presentation.cards.screens.view.model.ContentPart
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.CardState
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.State
 import ru.samtakoy.presentation.cards.screens.view.vm.mapper.AnswerButtonsMapper
@@ -40,7 +41,7 @@ private fun CardsViewScreenInternal_Preview() = MyTheme {
                 isQuestion = true,
                 content = CardState.Content(
                     isFavorite = true,
-                    text = getALoremIpsum(20),
+                    parts = listOf(ContentPart.Text(getALoremIpsum())).toImmutableList(),
                     hasRevertButton = true
                 )
             ),
@@ -49,7 +50,7 @@ private fun CardsViewScreenInternal_Preview() = MyTheme {
                 isQuestion = false,
                 content = CardState.Content(
                     isFavorite = true,
-                    text = getALoremIpsum(20),
+                    parts = listOf(ContentPart.Text(getALoremIpsum())).toImmutableList(),
                     hasRevertButton = true
                 )
             )
