@@ -249,6 +249,9 @@ internal class ThemeListViewModelImpl(
         sendAction(Action.ShowImportPackFileSelection(isZip = false))
     }
 
+    /** TODO для импорта в существующую бд надо выводить алерт подтверждения про возможное дублирование
+     * + сделать эксепшен при попытке импорта пака с таким же именем?
+     * */
     private fun onUiImportFromZipRequest(opts: ImportCardsOpts) {
         launchWithLoader {
             lastDialogState.value = lastDialogState.value.copy(

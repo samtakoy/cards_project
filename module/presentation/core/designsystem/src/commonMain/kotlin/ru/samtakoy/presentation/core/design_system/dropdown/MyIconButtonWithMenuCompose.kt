@@ -68,13 +68,11 @@ private fun ColumnScope.MyDropDownMenuItems(
     onSubMenuOpen: (menuId: UiId) -> Unit
 ) {
     var lastNonNullMenu by remember { mutableStateOf<DropDownMenuUiModel.Menu?>(null) }
-    val lastMenu by remember {
-        derivedStateOf {
-            if (menu != null) {
-                lastNonNullMenu = menu
-            }
-            lastNonNullMenu
+    val lastMenu = remember(menu) {
+        if (menu != null) {
+            lastNonNullMenu = menu
         }
+        lastNonNullMenu
     }
     lastMenu?.items?.forEach { menuItem ->
         key(menuItem.id) {

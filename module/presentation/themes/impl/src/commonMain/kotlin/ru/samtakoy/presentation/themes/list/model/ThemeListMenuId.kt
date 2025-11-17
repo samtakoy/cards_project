@@ -15,8 +15,10 @@ internal object ThemeListMenuId {
         val FromFolderUpdateExists: LongUiId = LongUiId(++idGenerator)
         val FromFolderImportAsNew: LongUiId = LongUiId(++idGenerator)
 
+    /** Импорт из zip в чистую базу */
     val ImportFromZipAll: LongUiId = LongUiId(++idGenerator)
     val FromZipSubMenu: LongUiId = LongUiId(++idGenerator)
+        /** Импорт из zip в существующую базу дополнительных наборов */
         val FromZipImportNew: LongUiId = LongUiId(++idGenerator)
         val FromZipUpdateExists: LongUiId = LongUiId(++idGenerator)
         val FromZipImportAsNew: LongUiId = LongUiId(++idGenerator)
