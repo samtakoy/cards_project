@@ -1,6 +1,5 @@
 package ru.samtakoy.presentation.cards.screens.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -29,9 +28,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.snipme.highlights.Highlights
 import dev.snipme.highlights.model.SyntaxLanguage
@@ -55,9 +54,9 @@ import ru.samtakoy.presentation.core.design_system.button.round.MyFabButtonView
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButton
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.core.design_system.scaffold.MySimpleScreenScaffold
+import ru.samtakoy.presentation.core.design_system.scrollbar.vertical.PlatformVerticalScrollbar
 import ru.samtakoy.presentation.core.design_system.selectable_item.MySelectableItem
 import ru.samtakoy.presentation.core.design_system.toolbar.ToolbarTitleView
-import ru.samtakoy.presentation.core.design_system.scrollbar.vertical.PlatformVerticalScrollbar
 import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.resources.Res
 import ru.samtakoy.resources.cards_view_favorite_box
@@ -355,6 +354,7 @@ private fun ColumnScope.TextContainer(
     }
 }
 
+/** Блоки кода и текста */
 @Composable
 private fun BoxScope.TextContent(
     parts: ImmutableList<ContentPart>,
@@ -377,7 +377,9 @@ private fun BoxScope.TextContent(
                             .fillMaxWidth(),
                         textAlign = textAlign,
                         color = MaterialTheme.colorScheme.onBackground,
-                        style = MaterialTheme.typography.bodyLarge
+                        style = MaterialTheme.typography.bodyLarge,
+                        // todo завести/подкорректировать стиль в теме?
+                        fontSize = 20.sp
                     )
                 }
                 is ContentPart.Code -> {
@@ -418,16 +420,12 @@ private fun CodeBlockTextView(
 
     Text(
         modifier = modifier,
-        text = textState
+        text = textState,
+        color = MaterialTheme.colorScheme.onBackground,
+        style = MaterialTheme.typography.bodyLarge,
+        // todo завести/подкорректировать стиль в теме?
+        fontSize = 20.sp
     )
-}
-
-@Composable
-private fun MyCodeTextView(
-    modifier: Modifier = Modifier.background(Color.Transparent),
-    highlights: Highlights
-) {
-
 }
 
 @Composable

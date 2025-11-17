@@ -11,7 +11,7 @@ import ru.samtakoy.presentation.themes.entry.FavoritesEntry
 // internal
 class FavoritesEntryImpl : MainTabFeatureEntry {
 
-    override val route: MainTabRoute
+    override val defaultRoute: MainTabRoute
         get() = FavoritesRoute
 
     override fun registerGraph(

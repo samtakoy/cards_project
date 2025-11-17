@@ -27,10 +27,11 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.koin.compose.currentKoinScope
+import org.koin.core.context.GlobalContext
 import ru.samtakoy.presentation.main.navigation.MainFlowRoute
 import ru.samtakoy.presentation.main.vm.MainScreenViewModel
 import ru.samtakoy.presentation.navigation.MainTabFeatureEntry
+import ru.samtakoy.presentation.navigation.MainTabRoute
 import ru.samtakoy.presentation.navigation.RootFeatureEntry
 import ru.samtakoy.presentation.themes.list.ThemeListRoute
 
@@ -58,9 +59,11 @@ private fun MainScreenInternal(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
-    val koin = currentKoinScope()
     val rootFeatureEntries: ImmutableList<RootFeatureEntry> = remember {
-        koin.getAll<RootFeatureEntry>().toImmutableList()
+        val koin = GlobalContext.get()
+        koin.getAll<RootFeatureEntry>()
+            .sortedBy { it::class.simpleName }
+            .toImmutableList()
     }
 
     NavHost(
@@ -86,6 +89,7 @@ private fun MainScreenInternal(
     }
 }
 
+/** Отображение табов */
 @Composable
 private fun TabsView(
     viewState: MainScreenViewModel.State,
@@ -94,10 +98,11 @@ private fun TabsView(
     drawerState: DrawerState,
     coroutineScope: CoroutineScope
 ) {
-    val koin = currentKoinScope()
     val mainTabFeatureEntries: ImmutableList<MainTabFeatureEntry> = remember {
+        val koin = GlobalContext.get()
         koin.getAll<MainTabFeatureEntry>().toImmutableList()
     }
+    val tabsNavController = rememberNavController()
 
     ModalNavigationDrawer(
         modifier = Modifier.systemBarsPadding(),
@@ -121,10 +126,9 @@ private fun TabsView(
         },
         drawerState = drawerState,
     ) {
-        val tabsNavController = rememberNavController()
         NavHost(
             navController = tabsNavController,
-            startDestination = remember { mainTabFeatureEntries.find { it.route is ThemeListRoute }!!.route },
+            startDestination = resolveStartDestination(mainTabFeatureEntries),
             modifier = Modifier.fillMaxSize()
         ) {
             mainTabFeatureEntries.forEach { featureEntry ->
@@ -141,11 +145,18 @@ private fun TabsView(
     }
 }
 
-fun NavController.isTabsVisible(): Boolean {
+private fun NavController.isTabsVisible(): Boolean {
     return try {
         getBackStackEntry(MainFlowRoute.Tabs)
         true
     } catch (_: Throwable) {
         false
+    }
+}
+
+@Composable
+private fun resolveStartDestination(mainTabFeatureEntries: ImmutableList<MainTabFeatureEntry>): MainTabRoute {
+    return remember {
+        mainTabFeatureEntries.find { it.defaultRoute is ThemeListRoute }!!.defaultRoute
     }
 }

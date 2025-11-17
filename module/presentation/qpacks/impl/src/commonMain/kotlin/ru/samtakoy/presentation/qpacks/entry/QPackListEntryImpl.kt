@@ -9,7 +9,7 @@ import ru.samtakoy.presentation.qpacks.QPackListRoute
 
 internal class QPackListEntryImpl : MainTabFeatureEntry {
 
-    override val route: MainTabRoute
+    override val defaultRoute: MainTabRoute
         get() = QPackListRoute
 
     override fun registerGraph(

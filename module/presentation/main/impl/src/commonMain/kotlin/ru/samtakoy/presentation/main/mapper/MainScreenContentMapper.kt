@@ -1,14 +1,7 @@
 package ru.samtakoy.presentation.main.mapper
 
 import org.jetbrains.compose.resources.getString
-import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
-import ru.samtakoy.presentation.main.mapper.MainScreenContentMapper.Companion.IdCourseListRoute
-import ru.samtakoy.presentation.main.mapper.MainScreenContentMapper.Companion.IdFavoritesRoute
-import ru.samtakoy.presentation.main.mapper.MainScreenContentMapper.Companion.IdQPackListRoute
-import ru.samtakoy.presentation.main.mapper.MainScreenContentMapper.Companion.IdQPackSelectionRoute
-import ru.samtakoy.presentation.main.mapper.MainScreenContentMapper.Companion.IdSettingsRoute
-import ru.samtakoy.presentation.main.mapper.MainScreenContentMapper.Companion.IdThemeListRoute
-import ru.samtakoy.presentation.main.mapper.MainScreenContentMapper.Companion.IdViewsHistoryRoute
+import ru.samtakoy.presentation.main.model.TabRouteId
 import ru.samtakoy.presentation.main.vm.MainScreenViewModel
 import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.resources.Res
@@ -22,47 +15,37 @@ import ru.samtakoy.resources.main_views_history_title
 
 internal interface MainScreenContentMapper {
     suspend fun mapMenuItems(): List<MainScreenViewModel.MenuItem>
-
-    companion object {
-        val IdThemeListRoute = AnyUiId()
-        val IdQPackListRoute = AnyUiId()
-        val IdFavoritesRoute = AnyUiId()
-        val IdViewsHistoryRoute = AnyUiId()
-        val IdQPackSelectionRoute = AnyUiId()
-        val IdCourseListRoute = AnyUiId()
-        val IdSettingsRoute = AnyUiId()
-    }
 }
 
 internal class MainScreenContentMapperImpl: MainScreenContentMapper {
     override suspend fun mapMenuItems(): List<MainScreenViewModel.MenuItem> {
         return listOf(
             MainScreenViewModel.MenuItem(
-                id = IdThemeListRoute,
+                id = TabRouteId.IdThemeListRoute,
                 title = getString(Res.string.main_themes_list_title).asAnnotated()
             ),
             MainScreenViewModel.MenuItem(
-                id = IdQPackListRoute,
+                id = TabRouteId.IdQPackListRoute,
                 title = getString(Res.string.main_qpack_title).asAnnotated()
             ),
             MainScreenViewModel.MenuItem(
-                id = IdFavoritesRoute,
+                id = TabRouteId.IdFavoritesRoute,
                 title = getString(Res.string.main_favorites_title).asAnnotated()
             ),
             MainScreenViewModel.MenuItem(
-                id = IdViewsHistoryRoute,
+                id = TabRouteId.IdViewsHistoryRoute,
                 title = getString(Res.string.main_views_history_title).asAnnotated()
             ),
             MainScreenViewModel.MenuItem(
-                id = IdQPackSelectionRoute,
+                id = TabRouteId.IdQPackSelectionRoute,
                 title = getString(Res.string.main_qpack_selection_title).asAnnotated()
             ),
             MainScreenViewModel.MenuItem(
-                id = IdCourseListRoute,
+                id = TabRouteId.IdCourseListRoute,
                 title = getString(Res.string.main_courses_title).asAnnotated()
             ),
             MainScreenViewModel.MenuItem(
-                id = IdSettingsRoute,
+                id = TabRouteId.IdSettingsRoute,
                 title = getString(Res.string.main_settings_title).asAnnotated()
             ),
         )

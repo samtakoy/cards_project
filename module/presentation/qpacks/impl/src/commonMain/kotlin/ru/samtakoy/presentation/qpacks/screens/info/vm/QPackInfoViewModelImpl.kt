@@ -224,6 +224,7 @@ internal class QPackInfoViewModelImpl(
             viewHistoryInteractor.getLastViewHistoryItemForAsFlow(qPackId)
                 .distinctUntilChanged()
         ) { qPack, cardIds, lastView ->
+            lastUncompletedView = lastView
             mQPack = qPack ?: return@combine
             isPackEmpty = cardIds.isEmpty()
             val cardsCountInUncompleted = lastView?.let { it.todoCardIds.size + it.viewedCardIds.size } ?: 0

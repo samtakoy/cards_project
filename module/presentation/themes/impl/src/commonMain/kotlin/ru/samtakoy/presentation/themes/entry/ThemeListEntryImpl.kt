@@ -10,7 +10,7 @@ import ru.samtakoy.presentation.themes.list.ThemeListRoute
 
 internal class ThemeListEntryImpl : MainTabFeatureEntry {
 
-    override val route: MainTabRoute
+    override val defaultRoute: MainTabRoute
         get() = ThemeListRoute(themeId = 0L, themeTitle = null)
 
     override fun registerGraph(

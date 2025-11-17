@@ -1,6 +1,5 @@
 package ru.samtakoy.presentation.cards.di
 
-import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.qualifier.named
@@ -23,9 +22,8 @@ import ru.samtakoy.presentation.cards.screens.viewresult.vm.mapper.CardsViewResu
 import ru.samtakoy.presentation.navigation.RootFeatureEntry
 
 fun cardsViewPresentationModule() = module {
-    factoryOf(::CardsViewEntryImpl) {
-        named<CardsViewRoute>()
-        bind<RootFeatureEntry>()
+    factory<RootFeatureEntry>(qualifier = named<CardsViewRoute>()) {
+        CardsViewEntryImpl()
     }
 
     factoryOf(::CardsViewViewStateMapperImpl) bind CardsViewViewStateMapper::class

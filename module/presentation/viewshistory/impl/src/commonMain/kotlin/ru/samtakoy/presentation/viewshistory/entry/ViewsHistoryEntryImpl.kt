@@ -10,7 +10,7 @@ import ru.samtakoy.presentation.viewshistory.ViewsHistoryRoute
 // internal
 class ViewsHistoryEntryImpl : MainTabFeatureEntry {
 
-    override val route: MainTabRoute
+    override val defaultRoute: MainTabRoute
         get() = ViewsHistoryRoute
 
     override fun registerGraph(

@@ -10,7 +10,7 @@ import ru.samtakoy.presentation.navigation.MainTabRoute
 // internal
 class CourseListEntryImpl : MainTabFeatureEntry {
 
-    override val route: MainTabRoute
+    override val defaultRoute: MainTabRoute
         get() = CourseListRoute
 
     override fun registerGraph(

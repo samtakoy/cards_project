@@ -30,10 +30,10 @@ fun qPackPresentationModule() = module {
     factoryOf(::QPackInfoButtonsMapperImpl) bind QPackInfoButtonsMapper::class
     factoryOf(::QPackInfoMenuMapperImpl) bind QPackInfoMenuMapper::class
     viewModelOf(::QPackInfoViewModelImpl)
-    factoryOf(::QPackInfoEntryImpl) {
-        named<QPackInfoRoute>()
-        bind<RootFeatureEntry>()
+    factory<RootFeatureEntry>(qualifier = named<QPackInfoRoute>()) {
+        QPackInfoEntryImpl()
     }
+
 
     // БШ-список
     factoryOf(::FastCardUiModelMapperImpl) bind FastCardUiModelMapper::class

@@ -1,30 +1,30 @@
 package ru.samtakoy.presentation.cards.entry
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import kotlinx.collections.immutable.toImmutableMap
 import ru.samtakoy.presentation.cards.CardsViewParams
 import ru.samtakoy.presentation.cards.CardsViewResultParams
 import ru.samtakoy.presentation.cards.CardsViewResultRoute
 import ru.samtakoy.presentation.cards.CardsViewRoute
-import ru.samtakoy.presentation.cards.view.model.CardViewMode
 import ru.samtakoy.presentation.navigation.RootFeatureEntry
 import ru.samtakoy.presentation.navigation.base.navType
-import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
-class CardsViewEntryImpl : RootFeatureEntry {
-
+@Immutable
+internal class CardsViewEntryImpl : RootFeatureEntry {
+    @Stable
     override fun registerGraph(
         navGraphBuilder: NavGraphBuilder,
         rootNavController: NavHostController
     ) {
+
         navGraphBuilder.composable<CardsViewRoute>(
-            typeMap = mapOf(
-                typeOf<CardsViewParams>() to navType<CardsViewParams>(false)
-            )
+            typeMap = cardsViewParamsTypeMap
         ) { backStackEntry ->
             val params = backStackEntry.toRoute<CardsViewRoute>().params
             CardsViewEntry(
@@ -34,9 +34,7 @@ class CardsViewEntryImpl : RootFeatureEntry {
             )
         }
         navGraphBuilder.composable<CardsViewResultRoute>(
-            typeMap = mapOf(
-                typeOf<CardsViewResultParams>() to navType<CardsViewResultParams>(false)
-            )
+            typeMap = cardsViewResultParamsTypeMap
         ) { backStackEntry ->
             val params = backStackEntry.toRoute<CardsViewResultRoute>().params
             CardsViewResultEntry(
@@ -45,5 +43,15 @@ class CardsViewEntryImpl : RootFeatureEntry {
                 viewMode = params.viewMode
             )
         }
+    }
+
+    companion object {
+        private val cardsViewParamsTypeMap = mapOf(
+            typeOf<CardsViewParams>() to navType<CardsViewParams>(false)
+        ).toImmutableMap()
+
+        private val cardsViewResultParamsTypeMap = mapOf(
+            typeOf<CardsViewResultParams>() to navType<CardsViewResultParams>(false)
+        ).toImmutableMap()
     }
 }

@@ -9,7 +9,7 @@ import ru.samtakoy.presentation.settings.SettingsRoute
 
 internal class SettingsEntryImpl : MainTabFeatureEntry {
 
-    override val route: MainTabRoute
+    override val defaultRoute: MainTabRoute
         get() = SettingsRoute
 
     override fun registerGraph(
