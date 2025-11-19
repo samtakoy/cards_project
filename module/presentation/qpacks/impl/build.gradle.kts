@@ -40,6 +40,8 @@ kotlin {
             implementation(projects.module.presentation.cards.api)
 
             implementation(projects.module.presentation.qpacks.api)
+
+            implementation(projects.module.platform.speech.api)
         }
     }
 }

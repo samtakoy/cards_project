@@ -9,6 +9,8 @@ import ru.samtakoy.resources.Res
 import ru.samtakoy.resources.getFormatted
 import ru.samtakoy.resources.qpack_btn_add_to_course
 import ru.samtakoy.resources.qpack_btn_add_to_new_course
+import ru.samtakoy.resources.qpack_btn_listen_all
+import ru.samtakoy.resources.qpack_btn_listen_questions
 import ru.samtakoy.resources.qpack_btn_view_cards
 import ru.samtakoy.resources.qpack_btn_view_courses
 import ru.samtakoy.resources.qpack_btn_view_uncompleted
@@ -24,6 +26,8 @@ internal interface QPackInfoButtonsMapper {
     companion object {
         val IdBtnViewCards = AnyUiId()
         val IdBtnViewUncompleted = AnyUiId()
+        val IdBtnPlayQuestions = AnyUiId()
+        val IdBtnPlayAll = AnyUiId()
         val IdBtnAddToNewCourse = AnyUiId()
         val IdBtnAddToCourse = AnyUiId()
         val IdBtnViewCourses = AnyUiId()
@@ -43,6 +47,20 @@ internal class QPackInfoButtonsMapperImpl : QPackInfoButtonsMapper {
         MyButtonUiModel(
             id = QPackInfoButtonsMapper.IdBtnViewUncompleted,
             text = "".asA()
+        )
+    }
+
+    private val playQuestionsBtn = SuspendLazy {
+        MyButtonUiModel(
+            id = QPackInfoButtonsMapper.IdBtnPlayQuestions,
+            text = getString(Res.string.qpack_btn_listen_questions).asA()
+        )
+    }
+
+    private val playallBtn = SuspendLazy {
+        MyButtonUiModel(
+            id = QPackInfoButtonsMapper.IdBtnPlayAll,
+            text = getString(Res.string.qpack_btn_listen_all).asA()
         )
     }
 
@@ -70,6 +88,8 @@ internal class QPackInfoButtonsMapperImpl : QPackInfoButtonsMapper {
     override suspend fun map(uncompleted: QPackInfoButtonsMapper.Uncompleted?): List<MyButtonUiModel> {
         return buildList {
             add(viewCardsBtn.getValue())
+            add(playQuestionsBtn.getValue())
+            add(playallBtn.getValue())
             if (uncompleted != null) {
                 add(
                     viewUncompletedBtn.getValue().copy(

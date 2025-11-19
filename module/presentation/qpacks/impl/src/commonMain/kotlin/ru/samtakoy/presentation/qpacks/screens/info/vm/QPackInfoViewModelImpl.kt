@@ -14,6 +14,7 @@ import ru.samtakoy.domain.qpack.QPack
 import ru.samtakoy.domain.qpack.QPackInteractor
 import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.domain.view.ViewHistoryItem
+import ru.samtakoy.platform.speech.PlayCardsTask
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
@@ -40,6 +41,7 @@ internal class QPackInfoViewModelImpl(
     private val favoritesInteractor: FavoritesInteractor,
     private val coursesInteractor: NCoursesInteractor,
     private val viewHistoryInteractor: ViewHistoryInteractor,
+    private val playCardsTask: PlayCardsTask,
     private val cardsMapper: FastCardUiModelMapper,
     private val buttonsMapper: QPackInfoButtonsMapper,
     private val choiceDialogMapper: QPackInfoDialogMapper,
@@ -116,6 +118,26 @@ internal class QPackInfoViewModelImpl(
             QPackInfoButtonsMapper.IdBtnAddToNewCourse -> onUiAddToNewCourse()
             QPackInfoButtonsMapper.IdBtnAddToCourse -> onUiAddToExistsCourse()
             QPackInfoButtonsMapper.IdBtnViewCourses -> onUiShowPackCourses()
+            QPackInfoButtonsMapper.IdBtnPlayQuestions -> onUiPlayQuestions()
+            QPackInfoButtonsMapper.IdBtnPlayAll -> onUiPlayAll()
+        }
+    }
+
+    private fun onUiPlayQuestions() {
+        launchWithLoader {
+            playCardsTask.start(
+                cardIds = cardInteractor.getQPackCardIds(qPackId),
+                onlyQuestions = true
+            )
+        }
+    }
+
+    private fun onUiPlayAll() {
+        launchWithLoader {
+            playCardsTask.start(
+                cardIds = cardInteractor.getQPackCardIds(qPackId),
+                onlyQuestions = false
+            )
         }
     }
 

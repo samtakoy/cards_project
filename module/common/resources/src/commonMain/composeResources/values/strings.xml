@@ -24,9 +24,10 @@
     <!-- Android notification module -->
 
     <string name="notification_work_channel_name">Обработка данных</string>
+    <string name="notification_speech_channel_name">Озвучка карточек</string>
 
-    <string name="notification_import_zip_title">Импорт из zip файла: %s</string>
-    <string name="notification_import_zip_status">Статус: %s</string>
+    <string name="notification_import_zip_title">Импорт из zip файла: %1$s</string>
+    <string name="notification_import_zip_status">Статус: %1$s</string>
 
     <!-- ******************************************************************************* -->
     <!-- Import module -->
@@ -35,7 +36,7 @@
     <string name="batch_zip_import_status_theme_actualization">Проверка и создание тем</string>
     <string name="batch_zip_import_status_qpacks_preparing">Подготовка qpack`ов</string>
     <string name="batch_zip_import_status_qpacks_saving">Сохранение qpack`ов</string>
-    <string name="batch_zip_import_status_tags_saving">Сохранение новых тегов: %s шт.</string>
+    <string name="batch_zip_import_status_tags_saving">Сохранение новых тегов: %1$s шт.</string>
     <string name="batch_zip_import_status_cards_saving">Сохранение карточек: %1$s/%2$s</string>
 
     <!-- ******************************************************************************* -->
@@ -62,7 +63,7 @@
     <string name="feature_qpack_title">списком</string>
     <string name="feature_qpack_selection_title">выбор из наборов</string>
     <!-- info screen -->
-    <string name="qpack_cards_count">Карточек: %s</string>
+    <string name="qpack_cards_count">Карточек: %1$s</string>
     <string name="qpack_viewing_types_title">Тип просмотра</string>
     <string name="qpack_viewing_type_ordered">Карточки по порядку</string>
     <string name="qpack_viewing_type_randomly">Карточки произвольно</string>
@@ -73,6 +74,8 @@
 
     <string name="qpack_btn_view_cards">view cards</string>
     <string name="qpack_btn_view_uncompleted">view uncompleted: %1$s</string>
+    <string name="qpack_btn_listen_questions">прослушать вопросы</string>
+    <string name="qpack_btn_listen_all">прослушать все</string>
     <string name="qpack_btn_add_to_new_course">a new course</string>
     <string name="qpack_btn_add_to_course">add to course</string>
     <string name="qpack_btn_view_courses">view courses</string>
@@ -139,8 +142,24 @@
 
     <!-- results screen -->
     <string name="cards_view_res_title">Result:</string>
-    <string name="cards_view_res_viewed_cards">viewed: %s</string>
-    <string name="cards_view_res_err_cards">errors: %s</string>
+    <string name="cards_view_res_viewed_cards">viewed: %1$s</string>
+    <string name="cards_view_res_err_cards">errors: %1$s</string>
     <string name="cards_view_res_schedule_text">repeat error cards after:</string>
     <string name="cards_view_res_schedule_none">(=none)</string>
+
+    <!-- ******************************************************************************* -->
+    <!-- Нотификация плейера -->
+
+    <string name="player_init_title">Инициализация проигрывателя</string>
+    <string name="player_init_desc">...</string>
+
+    <!-- Плейер -->
+    <string name="player_question_text_title">вопрос №%1$s из %2$s</string>
+    <string name="player_question_audio_title">№%1$s</string>
+    <string name="player_question_audio_last_title">№%1$s, последний вопрос</string>
+    <string name="player_audio_ending_title">конец воспроизведения</string>
+
+    <string name="player_answer_text_title">ответ №%1$s из %2$s</string>
+    <string name="player_answer_audio_title">ответ %1$s</string>
+
 </resources>

@@ -40,5 +40,5 @@ kotlin {
 }
 
 android {
-    namespace = "ru.samtakoy.platform.importcards.implandroid"
+    namespace = "ru.samtakoy.platform.importcards.impl"
 }

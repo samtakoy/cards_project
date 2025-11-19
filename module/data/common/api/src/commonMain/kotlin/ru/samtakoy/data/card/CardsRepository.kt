@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.samtakoy.domain.card.domain.model.Card
 import ru.samtakoy.domain.card.domain.model.CardWithTags
 
+// TODO интерфейсы репозиториев перенести в domain в repository-api модули?
 interface CardsRepository {
 
     suspend fun clearDb()
@@ -23,6 +24,7 @@ interface CardsRepository {
     suspend fun getAllFavoriteCardsIdsFromQPacks(qPackIds: List<Long>): List<Long>
 
     suspend fun getQPackCards(qPackId: Long): List<Card>
+    suspend fun getCards(cardIds: List<Long>): List<Card>
 
     suspend fun getCardsIdsFromQPack(qPackId: Long): List<Long>
     fun getQPackCardIdsAsFlow(qPackId: Long): Flow<List<Long>>

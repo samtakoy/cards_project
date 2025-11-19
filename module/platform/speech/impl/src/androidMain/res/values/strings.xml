@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_button_prev">Назад</string>
+    <string name="player_button_pause">Пауза</string>
+    <string name="player_button_play">Играть</string>
+    <string name="player_button_next">Далее</string>
+    <string name="player_button_stop">Стоп</string>
+</resources>

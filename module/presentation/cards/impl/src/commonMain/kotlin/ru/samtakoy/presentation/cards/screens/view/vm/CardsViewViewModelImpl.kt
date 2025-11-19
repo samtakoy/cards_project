@@ -283,8 +283,6 @@ internal class CardsViewViewModelImpl(
 
         dataState
             .onEach {
-                val prevCard = (viewState.type as? State.Type.Card)
-                val testCard = it.cardInfo?.state
                 viewState = viewState.copy(
                     type = viewStateMapper.mapStateType(
                         dataState = it,

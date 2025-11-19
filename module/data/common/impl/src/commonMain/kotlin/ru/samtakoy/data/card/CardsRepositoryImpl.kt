@@ -76,6 +76,10 @@ internal class CardsRepositoryImpl(
         return cardDao.getCardsFromQPack(qPackId).map(cardMapper::mapToDomain)
     }
 
+    override suspend fun getCards(cardIds: List<Long>): List<Card> {
+        return cardDao.getCards(cardIds).map(cardMapper::mapToDomain)
+    }
+
     override suspend fun getCardsIdsFromQPack(qPackId: Long): List<Long> {
         return cardDao.getCardsIdsFromQPack(qPackId)
     }

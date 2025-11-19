@@ -26,6 +26,9 @@ internal interface CardDao {
     @Query("SELECT * FROM ${CardEntity.Companion.table} WHERE ${CardEntity.Companion._qpack_id}=:qPackId")
     suspend fun getCardsFromQPack(qPackId: Long): List<CardEntity>
 
+    @Query("SELECT * FROM ${CardEntity.Companion.table} WHERE ${CardEntity.Companion._id} in (:cardIds)")
+    suspend fun getCards(cardIds: List<Long>): List<CardEntity>
+
     @Query("SELECT ${CardEntity.Companion._id} FROM ${CardEntity.Companion.table} WHERE ${CardEntity.Companion._qpack_id}=:qPackId")
     suspend fun getCardsIdsFromQPack(qPackId: Long): List<Long>
 
