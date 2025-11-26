@@ -57,7 +57,6 @@ import ru.samtakoy.resources.theme_list_screen_import_from_zip_title
 internal class ThemeListViewModelImpl(
     private val qPackInteractor: QPackInteractor,
     private val themeInteractor: ThemeInteractor,
-    // private val qPacksExporter: QPacksExporter,
     private val permissionsController: PermissionsController,
     private val importCardsFromZipTask: ImportCardsFromZipTask,
     private val uiItemsMapper: ThemeUiItemMapper,
@@ -350,37 +349,47 @@ internal class ThemeListViewModelImpl(
     private fun bindTheme(themeId: Long, themeTitle: String?) {
         launchWithLoader(
             onError = {
-                viewState = viewState.copy(
-                    toolbarTitle = "?".asAnnotated(),
-                    toolbarSubtitle = "?".asAnnotated()
-                )
+                updateState { state ->
+                    state.copy(
+                        toolbarTitle = "?".asAnnotated(),
+                        toolbarSubtitle = "?".asAnnotated()
+                    )
+                }
                 onGetError(it)
             }
         ) {
             // Начальная инициализация меню и заголовка
-            viewState = viewState.copy(
-                toolbarTitle = (themeTitle ?: getString(Res.string.feature_themes_list_title)).asAnnotated(),
-                toolbarMenu = menuItemMapper.mapShort(),
-                themeContextMenu = menuItemMapper.mapThemeContextMenu(),
-                qPackContextMenu = menuItemMapper.mapQPackContextMenu(),
-            )
+            updateState { state ->
+                state.copy(
+                    toolbarTitle = (themeTitle ?: getString(Res.string.feature_themes_list_title)).asAnnotated(),
+                    toolbarMenu = menuItemMapper.mapShort(),
+                    themeContextMenu = menuItemMapper.mapThemeContextMenu(),
+                    qPackContextMenu = menuItemMapper.mapQPackContextMenu(),
+                )
+            }
 
             if (themeId > 0) {
                 parentTheme = themeInteractor.getTheme(themeId)
                 if (parentTheme != null) {
-                    viewState = viewState.copy(
-                        toolbarSubtitle = parentTheme?.title.orEmpty().asAnnotated()
-                    )
+                    updateState { state ->
+                        state.copy(
+                            toolbarSubtitle = parentTheme?.title.orEmpty().asAnnotated()
+                        )
+                    }
                     updateMenuState()
                     val parentOfParent = themeInteractor.getTheme(parentTheme!!.parentId)
                     if (parentOfParent != null) {
-                        viewState = viewState.copy(
-                            toolbarTitle = ("../" + parentOfParent.title).asAnnotated()
-                        )
+                        updateState { state ->
+                            state.copy(
+                                toolbarTitle = ("../" + parentOfParent.title).asAnnotated()
+                            )
+                        }
                     } else {
-                        viewState = viewState.copy(
-                            toolbarTitle = getString(Res.string.feature_themes_list_title).asAnnotated()
-                        )
+                        updateState { state ->
+                            state.copy(
+                                toolbarTitle = getString(Res.string.feature_themes_list_title).asAnnotated()
+                            )
+                        }
                     }
                 }
             }
@@ -396,10 +405,12 @@ internal class ThemeListViewModelImpl(
                 .debounce(DEBOUNCE_MILLI)
                 .distinctUntilChanged()
         ) {  childThemes, childQPacks ->
-            viewState = viewState.copy(
-                items = (uiItemsMapper.mapThemes(childThemes) + uiItemsMapper.mapQPacks(childQPacks))
-                    .toImmutableList()
-            )
+            updateState { state ->
+                state.copy(
+                    items = (uiItemsMapper.mapThemes(childThemes) + uiItemsMapper.mapQPacks(childQPacks))
+                        .toImmutableList()
+                )
+            }
             updateMenuState()
         }.launchIn(mainScope)
     }
@@ -408,14 +419,16 @@ internal class ThemeListViewModelImpl(
         launchCatching {
             val isExportAllMenuItemVisible = parentTheme == null
             val isToBlankDbMenuItemVisible = parentTheme == null && viewState.items.isEmpty()
-            viewState = viewState.copy(
-                isExportAllMenuItemVisible = isExportAllMenuItemVisible,
-                isToBlankDbMenuItemVisible = isToBlankDbMenuItemVisible,
-                toolbarMenu = menuItemMapper.map(
+            updateState { state ->
+                state.copy(
                     isExportAllMenuItemVisible = isExportAllMenuItemVisible,
-                    isToBlankDbMenuItemVisible = isToBlankDbMenuItemVisible
+                    isToBlankDbMenuItemVisible = isToBlankDbMenuItemVisible,
+                    toolbarMenu = menuItemMapper.map(
+                        isExportAllMenuItemVisible = isExportAllMenuItemVisible,
+                        isToBlankDbMenuItemVisible = isToBlankDbMenuItemVisible
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -450,7 +463,7 @@ internal class ThemeListViewModelImpl(
                         }
                         else -> null
                     }
-                    viewState = viewState.copy(progressPanel = panelState)
+                    updateState { state -> state.copy(progressPanel = panelState) }
                 }
                 .launchIn(mainScope)
         }
@@ -460,10 +473,10 @@ internal class ThemeListViewModelImpl(
         onError: (suspend (Throwable) -> Unit)? = ::onGetError,
         block: suspend () -> Unit
     ) {
-        viewState = viewState.copy(isLoading = true)
+        updateStateSync { state -> state.copy(isLoading = true) }
         launchCatching(
             onError = onError,
-            onFinally = { viewState = viewState.copy(isLoading = false) }
+            onFinally = { updateState { state -> state.copy(isLoading = false) } }
         ) {
             block()
         }

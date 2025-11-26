@@ -23,7 +23,7 @@ private fun MyChoiceDialogView_Preview() = MyTheme {
                     title = "title".asA(),
                     description = "description".asA(),
                     items = getMyRadioPreviewItems(),
-                    okButton = MyButtonUiModel(
+                    firstButton = MyButtonUiModel(
                         id = LongUiId(1L),
                         text = "ok".asA(),
                         isEnabled = true
@@ -31,7 +31,6 @@ private fun MyChoiceDialogView_Preview() = MyTheme {
                 )
             )
         },
-        onButtonClick = { _, _ -> },
-        onCancelClick = {}
+        onButtonClick = null
     )
 }

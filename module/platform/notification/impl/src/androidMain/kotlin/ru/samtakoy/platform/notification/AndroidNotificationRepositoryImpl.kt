@@ -52,23 +52,24 @@ class AndroidNotificationRepositoryImpl(
     fun getSpeechNotificationId(): Int = NotificationConst.SPEECH_NOTIFICATION_ID
 
     suspend fun buildSpeechNotification(
-        remoteViews: RemoteViews?,
+        remoteViewsBig: RemoteViews?,
+        remoteViewsShort: RemoteViews?,
         clickIntent: PendingIntent?
     ): Notification {
         val channelId = prepareWorkChannel(
-            NotificationConst.SPEECH_CHANNEL_ID,
-            NotificationConst.SPEECH_CHANNEL_NAME_STRING_ID
+            channelId = NotificationConst.SPEECH_CHANNEL_ID,
+            channelNameStringRes = NotificationConst.SPEECH_CHANNEL_NAME_STRING_ID
         )
 
         return NotificationCompat.Builder(context, channelId)
             .setSmallIcon(android.R.drawable.presence_audio_online)
             .setOngoing(true)
+            .setSilent(true)
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+            .setCustomBigContentView(remoteViewsBig)
+            .setCustomContentView(remoteViewsShort)
             .also { builder ->
                 clickIntent?.let { builder.setContentIntent(clickIntent) }
-                remoteViews?.let {
-                    builder.setCustomContentView(remoteViews)
-                }
             }
             .setAutoCancel(false)
             .build()

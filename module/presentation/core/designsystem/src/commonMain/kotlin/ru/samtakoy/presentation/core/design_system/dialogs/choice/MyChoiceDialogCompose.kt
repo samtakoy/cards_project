@@ -32,8 +32,7 @@ import ru.samtakoy.presentation.core.design_system.radio.MyRadioItemGropView
 @Composable
 fun MyChoiceDialogView(
     dialogState: MutableState<MyChoiceDialogUiModel?>,
-    onButtonClick: (dialogId: UiId?, selectedItem: UiId?) -> Unit,
-    onCancelClick: ((dialogId: UiId?) -> Unit)? = null,
+    onButtonClick: ((dialogId: UiId?, buttonId: UiId, selectedItem: UiId?) -> Unit)? = null,
     onDismiss: (() -> Unit)? = null
 ) {
     val dialogModel = dialogState.value
@@ -78,20 +77,25 @@ fun MyChoiceDialogView(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
                         MyButton(
-                            model = dialogModel.okButton,
+                            model = dialogModel.firstButton,
                             onClick = {
-                                onButtonClick(
+                                onButtonClick?.invoke(
                                     dialogModel.id,
+                                    dialogModel.firstButton.id,
                                     choiceUpdatedState.value.find { it.isSelected }?.id
                                 )
                                 dialogState.value = null
                             }
                         )
-                        dialogModel.cancelButton?.let { cancelModel ->
+                        dialogModel.secondButton?.let { cancelModel ->
                             MyButton(
                                 model = cancelModel,
                                 onClick = {
-                                    onCancelClick?.invoke(dialogModel.id)
+                                    onButtonClick?.invoke(
+                                        dialogModel.id,
+                                        dialogModel.secondButton.id,
+                                        choiceUpdatedState.value.find { it.isSelected }?.id
+                                    )
                                     dialogState.value = null
                                 }
                             )

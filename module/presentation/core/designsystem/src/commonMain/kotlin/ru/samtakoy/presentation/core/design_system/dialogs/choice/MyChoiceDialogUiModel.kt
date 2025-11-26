@@ -13,6 +13,6 @@ data class MyChoiceDialogUiModel(
     val title: AnnotatedString,
     val description: AnnotatedString?,
     val items: ImmutableList<MyRadioItemUiModel>,
-    val okButton: MyButtonUiModel,
-    val cancelButton: MyButtonUiModel? = null,
+    val firstButton: MyButtonUiModel,
+    val secondButton: MyButtonUiModel? = null,
 )

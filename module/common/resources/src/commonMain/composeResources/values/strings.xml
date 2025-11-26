@@ -69,13 +69,17 @@
     <string name="qpack_viewing_type_randomly">Карточки произвольно</string>
     <string name="qpack_viewing_type_inlist">Список</string>
 
+    <string name="qpack_viewing_play_button">Прослушать</string>
+    <string name="qpack_viewing_play_types_title">Что проигрывать:</string>
+    <string name="qpack_btn_listen_cards">вопросы и ответы</string>
+    <string name="qpack_btn_listen_questions">только вопросы</string>
+    <string name="qpack_btn_listen_cards_with_code">все + код</string>
+
     <string name="qpack_menu_delete">удалить</string>
     <string name="qpack_menu_add_fake_card">добавить fake-card</string>
 
     <string name="qpack_btn_view_cards">view cards</string>
     <string name="qpack_btn_view_uncompleted">view uncompleted: %1$s</string>
-    <string name="qpack_btn_listen_questions">прослушать вопросы</string>
-    <string name="qpack_btn_listen_all">прослушать все</string>
     <string name="qpack_btn_add_to_new_course">a new course</string>
     <string name="qpack_btn_add_to_course">add to course</string>
     <string name="qpack_btn_view_courses">view courses</string>
@@ -156,6 +160,7 @@
     <!-- Плейер -->
     <string name="player_question_text_title">вопрос №%1$s из %2$s</string>
     <string name="player_question_audio_title">№%1$s</string>
+    <string name="player_question_audio_title_with_total">№%1$s из %2$s</string>
     <string name="player_question_audio_last_title">№%1$s, последний вопрос</string>
     <string name="player_audio_ending_title">конец воспроизведения</string>
 

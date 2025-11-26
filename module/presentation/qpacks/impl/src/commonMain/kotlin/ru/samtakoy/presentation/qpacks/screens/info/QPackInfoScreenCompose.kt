@@ -81,9 +81,15 @@ private fun ScreenDialogs(
 ) {
     MyChoiceDialogView(
         dialogState = choiceDialogState,
-        onButtonClick = { dialogId, selectedItemId ->
+        onButtonClick = { dialogId, buttonId, selectedItemId ->
             selectedItemId?.let {
-                onEvent(Event.ViewTypeCommit(selectedItemId))
+                onEvent(
+                    Event.ChoiceDialoButtonClick(
+                        dialogId = dialogId,
+                        buttonId = buttonId,
+                        itemId = selectedItemId
+                    )
+                )
             }
         }
     )
@@ -105,7 +111,7 @@ private fun HandleActions(
             is QPackInfoViewModel.Action.ShowErrorMessage -> {
                 snackbarHostState.showSnackbar(action.message)
             }
-            is QPackInfoViewModel.Action.ShowLearnCourseCardsViewingType -> {
+            is QPackInfoViewModel.Action.ShowChoiceDialog -> {
                 choiceDialogState.value = action.dialogModel
             }
             is NavigationAction -> onNavigationAction(action)

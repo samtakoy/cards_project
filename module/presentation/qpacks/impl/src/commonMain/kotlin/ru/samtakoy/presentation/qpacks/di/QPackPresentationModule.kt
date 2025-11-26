@@ -1,6 +1,5 @@
 package ru.samtakoy.presentation.qpacks.di
 
-import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.qualifier.named
@@ -21,11 +20,14 @@ import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoDialogMapper
 import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoDialogMapperImpl
 import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoMenuMapper
 import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoMenuMapperImpl
+import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoPlayDialogMapper
+import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoPlayDialogMapperImpl
 import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModelImpl
 import ru.samtakoy.presentation.themes.entry.QPackListEntryImpl
 
 fun qPackPresentationModule() = module {
     // info
+    factoryOf(::QPackInfoPlayDialogMapperImpl) bind QPackInfoPlayDialogMapper::class
     factoryOf(::QPackInfoDialogMapperImpl) bind QPackInfoDialogMapper::class
     factoryOf(::QPackInfoButtonsMapperImpl) bind QPackInfoButtonsMapper::class
     factoryOf(::QPackInfoMenuMapperImpl) bind QPackInfoMenuMapper::class

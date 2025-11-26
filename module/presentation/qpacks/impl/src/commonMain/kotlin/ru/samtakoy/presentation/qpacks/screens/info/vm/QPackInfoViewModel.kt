@@ -37,7 +37,7 @@ internal interface QPackInfoViewModel : BaseViewModel<State, Action, Event> {
         class ShowErrorMessage(val message: String) : Action
         class RequestNewCourseCreation(val title: String) : Action
         class RequestsSelectCourseToAdd(val qPackId: Long) : Action
-        class ShowLearnCourseCardsViewingType(val dialogModel: MyChoiceDialogUiModel) : Action
+        class ShowChoiceDialog(val dialogModel: MyChoiceDialogUiModel) : Action
         object OpenCardsInBottomList : Action
     }
 
@@ -53,7 +53,7 @@ internal interface QPackInfoViewModel : BaseViewModel<State, Action, Event> {
         class NewCourseCommit(val courseTitle: String) : Event
         class ButtonClick(val btnId: UiId) : Event
         class AddCardsToCourseCommit(val courseId: Long) : Event
-        class ViewTypeCommit(val itemId: UiId) : Event
+        class ChoiceDialoButtonClick(val dialogId: UiId?, val buttonId: UiId, val itemId: UiId) : Event
         object CardsFastView : Event
         class ToolbarMenuItemClick(val menuItemId: UiId) : Event
         class FavoriteChange(val wasChecked: Boolean) : Event

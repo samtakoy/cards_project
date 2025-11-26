@@ -24,6 +24,7 @@ import ru.samtakoy.resources.player_answer_text_title
 import ru.samtakoy.resources.player_audio_ending_title
 import ru.samtakoy.resources.player_question_audio_last_title
 import ru.samtakoy.resources.player_question_audio_title
+import ru.samtakoy.resources.player_question_audio_title_with_total
 import ru.samtakoy.resources.player_question_text_title
 
 internal class PlayCardsAudioUseCaseImpl(
@@ -110,6 +111,8 @@ internal class PlayCardsAudioUseCaseImpl(
         val audio = buildList<String> {
             if (cardNum == cardsTotal) {
                 add(getString(Res.string.player_question_audio_last_title, cardNum))
+            } else if (cardNum % 10 == 0) {
+                add(getString(Res.string.player_question_audio_title_with_total, cardNum, cardsTotal))
             } else {
                 add(getString(Res.string.player_question_audio_title, cardNum))
             }

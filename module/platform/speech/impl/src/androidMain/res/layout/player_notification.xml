@@ -15,16 +15,6 @@
         android:textStyle="bold"
         tools:text="Заголовок" />
 
-    <ProgressBar
-        android:id="@+id/progress"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#BDBDBD"
-        android:progressTint="#2196F3"
-        tools:max="10"
-        tools:progress="4" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -92,6 +82,16 @@
 
     </LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#BDBDBD"
+        android:progressTint="#2196F3"
+        tools:max="10"
+        tools:progress="4" />
+    
     <TextView
         android:id="@+id/text"
         android:layout_width="match_parent"

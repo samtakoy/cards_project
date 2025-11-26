@@ -23,6 +23,9 @@ import ru.samtakoy.presentation.qpacks.screens.fastlist.mapper.FastCardUiModelMa
 import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoButtonsMapper
 import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoDialogMapper
 import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoMenuMapper
+import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoPlayDialogMapper
+import ru.samtakoy.presentation.qpacks.screens.info.model.ChoiceButtonId
+import ru.samtakoy.presentation.qpacks.screens.info.model.DialogId
 import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.Action
 import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.Event
 import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.NavigationAction
@@ -45,6 +48,7 @@ internal class QPackInfoViewModelImpl(
     private val cardsMapper: FastCardUiModelMapper,
     private val buttonsMapper: QPackInfoButtonsMapper,
     private val choiceDialogMapper: QPackInfoDialogMapper,
+    private val playChoiceDialogMapper: QPackInfoPlayDialogMapper,
     private val toolbarMenuMapper: QPackInfoMenuMapper,
     scopeProvider: ScopeProvider,
     private val qPackId: Long
@@ -78,7 +82,7 @@ internal class QPackInfoViewModelImpl(
             is Event.AddCardsToCourseCommit -> onUiAddCardsToCourseCommit(event.courseId)
             Event.CardsFastView -> onUiCardsFastView()
             is Event.NewCourseCommit -> onUiNewCourseCommit(event.courseTitle)
-            is Event.ViewTypeCommit -> onUiViewTypeCommit(event.itemId)
+            is Event.ChoiceDialoButtonClick -> onUiChoiceDialogButtonClick(event.dialogId, event.buttonId, event.itemId)
             is Event.FavoriteChange -> onUiFavoriteChange(event.wasChecked)
             is Event.ButtonClick -> onUiButtonClick(event.btnId)
             is Event.ToolbarMenuItemClick -> onUiToolbarMenuItemClick(event.menuItemId)
@@ -89,6 +93,27 @@ internal class QPackInfoViewModelImpl(
         when (itemId) {
             QPackInfoMenuMapper.IdItemDeletePack -> onUiDeletePack()
             QPackInfoMenuMapper.IdItemAddFakeCard -> onUiAddFakeCard()
+        }
+    }
+
+    private fun onUiChoiceDialogButtonClick(dialogId: UiId?, buttonId: UiId, selectedId: UiId) {
+        if (buttonId != ChoiceButtonId.Ok) {
+            return
+        }
+        when (dialogId as? DialogId) {
+            DialogId.ViewChoice -> onUiViewTypeCommit(selectedId)
+            DialogId.PlayChoice -> onUiPlayCommit(selectedId)
+            null -> Unit
+        }
+    }
+
+    private fun onUiPlayCommit(selectedId: UiId) {
+        when (selectedId) {
+            QPackInfoPlayDialogMapper.IdItemCards -> onUiPlayAll()
+            QPackInfoPlayDialogMapper.IdItemQuestions -> onUiPlayQuestions()
+            QPackInfoPlayDialogMapper.IdItemCardsWithCode -> {
+                sendAction(Action.ShowErrorMessage("TODO: не реализовано"))
+            }
         }
     }
 
@@ -118,8 +143,17 @@ internal class QPackInfoViewModelImpl(
             QPackInfoButtonsMapper.IdBtnAddToNewCourse -> onUiAddToNewCourse()
             QPackInfoButtonsMapper.IdBtnAddToCourse -> onUiAddToExistsCourse()
             QPackInfoButtonsMapper.IdBtnViewCourses -> onUiShowPackCourses()
-            QPackInfoButtonsMapper.IdBtnPlayQuestions -> onUiPlayQuestions()
-            QPackInfoButtonsMapper.IdBtnPlayAll -> onUiPlayAll()
+            QPackInfoButtonsMapper.IdBtnPlay -> onUiPlayButtonClick()
+        }
+    }
+
+    private fun onUiPlayButtonClick() {
+        launchCatching(onError = ::onGetError) {
+            sendAction(
+                Action.ShowChoiceDialog(
+                    dialogModel = playChoiceDialogMapper.mapDialog()
+                )
+            )
         }
     }
 
@@ -195,7 +229,7 @@ internal class QPackInfoViewModelImpl(
     private fun onUiViewPackCards() {
         launchCatching(onError = ::onGetError) {
             sendAction(
-                Action.ShowLearnCourseCardsViewingType(
+                Action.ShowChoiceDialog(
                     dialogModel = choiceDialogMapper.mapViewTypeDialog()
                 )
             )

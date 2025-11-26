@@ -31,6 +31,9 @@ import ru.samtakoy.resources.Res
 import ru.samtakoy.resources.player_init_desc
 import ru.samtakoy.resources.player_init_title
 
+/**
+ * TODO DataStore для текущего стейта плейера + восстановление состояния (номер карточки и статус проигрывателя)
+ * */
 internal class PlayCardsWorker(
     appContext: Context,
     params: WorkerParameters
@@ -43,8 +46,11 @@ internal class PlayCardsWorker(
     private val notificationRepository: AndroidNotificationRepositoryImpl by inject()
     private val scopeProvider: ScopeProvider by inject()
     private var currentState: SpeechPlaybackState? = null
-    private val remoteViews: RemoteViews by lazy {
-        createRemoteViews()
+    private val remoteViewsBig: RemoteViews by lazy {
+        createRemoteViews(shortView = false)
+    }
+    private val remoteViewsShort: RemoteViews by lazy {
+        createRemoteViews(shortView = true)
     }
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
@@ -77,21 +83,23 @@ internal class PlayCardsWorker(
     private suspend fun buildNotificationFromState(state: SpeechPlaybackState?): Notification {
         return if (state == null) {
             notificationRepository.buildSpeechNotification(
-                remoteViews = getInitRemoteViews()
-                    .applySettings(
-                        title = getString(Res.string.player_init_title),
-                        text = getString(Res.string.player_init_desc),
-                        curProgress = 0,
-                        maxProgress = 1
-                    ),
+                remoteViewsBig = remoteViewsBig.initStart(),
+                remoteViewsShort = remoteViewsShort.initStart(),
                 clickIntent = null
             )
         } else {
             notificationRepository.buildSpeechNotification(
-                remoteViews = getRemoteViewsWhen(isPlaying = state.isPaused.not())
+                remoteViewsBig = remoteViewsBig.initWhen(isPlaying = state.isPaused.not())
                     .applySettings(
                         title = state.title,
                         text = state.description,
+                        curProgress = state.currentCardNum,
+                        maxProgress = state.totalCards
+                    ),
+                remoteViewsShort = remoteViewsShort.initWhen(isPlaying = state.isPaused.not())
+                    .applySettings(
+                        title = "${state.currentCardNum}/${state.totalCards}",
+                        text = "",
                         curProgress = state.currentCardNum,
                         maxProgress = state.totalCards
                     ),
@@ -127,10 +135,10 @@ internal class PlayCardsWorker(
         )
     }
     
-    private fun createRemoteViews(): RemoteViews {
+    private fun createRemoteViews(shortView: Boolean): RemoteViews {
         val remoteViews = RemoteViews(
             applicationContext.packageName,
-            R.layout.player_notification
+            if (shortView) R.layout.player_notification_short else R.layout.player_notification
         )
         remoteViews.setOnClickPendingIntent(R.id.prevBtn, createActionIntent(ACTION_PREVIOUS))
         remoteViews.setOnClickPendingIntent(R.id.resumeBtn, createActionIntent(ACTION_RESUME))
@@ -140,23 +148,29 @@ internal class PlayCardsWorker(
         return remoteViews
     }
 
-    private fun getRemoteViewsWhen(isPlaying: Boolean) : RemoteViews {
-        return remoteViews.also { resultViews ->
-            resultViews.setViewVisibility(R.id.buttons, View.VISIBLE)
-            if (isPlaying) {
-                resultViews.setViewVisibility(R.id.resumeBtn, View.GONE)
-                resultViews.setViewVisibility(R.id.pauseBtn, View.VISIBLE)
-            } else {
-                resultViews.setViewVisibility(R.id.resumeBtn, View.VISIBLE)
-                resultViews.setViewVisibility(R.id.pauseBtn, View.GONE)
-            }
+    private fun RemoteViews.initWhen(isPlaying: Boolean) : RemoteViews {
+        setViewVisibility(R.id.buttons, View.VISIBLE)
+        setViewVisibility(R.id.progress, View.VISIBLE)
+        if (isPlaying) {
+            setViewVisibility(R.id.resumeBtn, View.GONE)
+            setViewVisibility(R.id.pauseBtn, View.VISIBLE)
+        } else {
+            setViewVisibility(R.id.resumeBtn, View.VISIBLE)
+            setViewVisibility(R.id.pauseBtn, View.GONE)
         }
+        return this
     }
 
-    private fun getInitRemoteViews() : RemoteViews {
-        return remoteViews.also { resultViews ->
-            resultViews.setViewVisibility(R.id.buttons, View.GONE)
-        }
+    private suspend fun RemoteViews.initStart() : RemoteViews {
+        setViewVisibility(R.id.buttons, View.GONE)
+        setViewVisibility(R.id.progress, View.GONE)
+        applySettings(
+            title = getString(Res.string.player_init_title),
+            text = getString(Res.string.player_init_desc),
+            curProgress = 0,
+            maxProgress = 1
+        )
+        return this
     }
 
     private fun RemoteViews.applySettings(
