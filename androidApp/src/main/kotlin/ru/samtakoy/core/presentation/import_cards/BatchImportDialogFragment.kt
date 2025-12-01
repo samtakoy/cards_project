@@ -8,7 +8,7 @@ import ru.samtakoy.common.resources.Resources
 import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogFragment
 import ru.samtakoy.core.presentation.progress_dialog.ProgressDialogPresenter.IProgressWorker
 import ru.samtakoy.features.import_export.ImportApi
-import ru.samtakoy.domain.importcards.model.ImportCardsOpts
+import ru.samtakoy.importcards.domain.model.ImportCardsOpts
 
 class BatchImportDialogFragment : ProgressDialogFragment() {
 

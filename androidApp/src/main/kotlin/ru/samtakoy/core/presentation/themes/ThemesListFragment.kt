@@ -1,33 +1,7 @@
 package ru.samtakoy.core.presentation.themes
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.DocumentsContract
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.Fragment
-import com.misc.RealPathUtil
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
-import ru.samtakoy.R
-import ru.samtakoy.core.Const
-import ru.samtakoy.core.presentation.export_cards.BatchExportDialogFragment
-import ru.samtakoy.core.presentation.export_cards.BatchExportType
-import ru.samtakoy.core.presentation.import_cards.BatchImportDialogFragment
-import ru.samtakoy.core.presentation.import_cards.ImportPackDialogFragment
-import ru.samtakoy.core.presentation.import_cards.ImportZipDialogFragment
-import ru.samtakoy.core.presentation.log.LogActivity
-import ru.samtakoy.domain.importcards.model.ImportCardsOpts
-import ru.samtakoy.presentation.base.viewmodel.AbstractViewModel
-import ru.samtakoy.presentation.base.viewmodel.ViewModelOwner
-import java.io.File
 
 // TODO -> Compose, оставлено временно
 class ThemesListFragment : Fragment() {

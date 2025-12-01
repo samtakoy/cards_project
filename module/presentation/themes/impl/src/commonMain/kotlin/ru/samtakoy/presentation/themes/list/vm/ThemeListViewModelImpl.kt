@@ -14,12 +14,12 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.common.utils.log.MyLog
-import ru.samtakoy.domain.importcards.model.ImportCardsOpts
+import ru.samtakoy.importcards.domain.model.ImportCardsOpts
 import ru.samtakoy.domain.qpack.QPackInteractor
 import ru.samtakoy.domain.task.model.TaskStateData
 import ru.samtakoy.domain.theme.Theme
 import ru.samtakoy.domain.theme.ThemeInteractor
-import ru.samtakoy.platform.importcards.ImportCardsFromZipTask
+import ru.samtakoy.importcards.domain.batch.ImportCardsFromZipTask
 import ru.samtakoy.platform.permissions.PermissionState
 import ru.samtakoy.platform.permissions.PermissionsController
 import ru.samtakoy.platform.permissions.model.MyPermission

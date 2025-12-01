@@ -22,12 +22,12 @@ import ru.samtakoy.domain.theme.Theme
 import ru.samtakoy.features.import_export.helpers.ZipHelper
 import ru.samtakoy.features.import_export.utils.streams.FromUriStreamFactory
 import ru.samtakoy.features.import_export.utils.streams.FromZipEntryStreamFactory
-import ru.samtakoy.domain.importcards.batch.utils.ImportCardsException
-import ru.samtakoy.domain.importcards.model.ImportCardsOpts
+import ru.samtakoy.importcards.domain.batch.utils.ImportCardsException
+import ru.samtakoy.importcards.domain.model.ImportCardsOpts
 import ru.samtakoy.features.import_export.utils.streams.StreamFactory
-import ru.samtakoy.domain.importcards.batch.utils.builder.CBuilderConst
-import ru.samtakoy.domain.importcards.batch.utils.builder.CardBuilder
-import ru.samtakoy.domain.importcards.batch.utils.builder.QPackBuilder
+import ru.samtakoy.importcards.domain.batch.utils.builder.CBuilderConst
+import ru.samtakoy.importcards.domain.batch.utils.builder.CardBuilder
+import ru.samtakoy.importcards.domain.batch.utils.builder.QPackBuilder
 import ru.samtakoy.features.import_export.utils.isPackFile
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant

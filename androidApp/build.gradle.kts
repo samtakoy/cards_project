@@ -127,10 +127,8 @@ dependencies {
 
     implementation(projects.module.domain.favorites.api)
 
-    implementation(projects.module.features.import.domain.repoApi)
-
     implementation(projects.module.domain.export.api)
-    implementation(projects.module.features.import.domain.api)
+    implementation(projects.module.features.import.api)
 
     implementation(projects.module.presentation.core.utils)
     implementation(projects.module.presentation.core.viewmodel)

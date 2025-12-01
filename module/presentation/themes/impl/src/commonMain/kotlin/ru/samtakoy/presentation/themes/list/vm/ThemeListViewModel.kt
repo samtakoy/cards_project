@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.AnnotatedString
 import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.collections.immutable.ImmutableList
-import ru.samtakoy.domain.importcards.model.ImportCardsOpts
+import ru.samtakoy.importcards.domain.model.ImportCardsOpts
 import ru.samtakoy.presentation.themes.list.model.ThemeUiItem
 import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.Action
 import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.Event

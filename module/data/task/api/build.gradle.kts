@@ -5,7 +5,7 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.module.domain.task.model)
+            api(projects.module.domain.task.model)
         }
     }
 }

@@ -2,7 +2,7 @@ package ru.samtakoy.features.import_export.helpers
 
 import ru.samtakoy.common.utils.DateUtils
 import ru.samtakoy.domain.card.domain.model.CardWithTags
-import ru.samtakoy.domain.importcards.batch.utils.builder.CBuilderConst
+import ru.samtakoy.importcards.domain.batch.utils.builder.CBuilderConst
 import ru.samtakoy.domain.qpack.QPack
 import ru.samtakoy.domain.cardtag.Tag
 import kotlin.time.ExperimentalTime
