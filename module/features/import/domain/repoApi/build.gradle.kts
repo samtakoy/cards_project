@@ -11,5 +11,5 @@ kotlin {
 }
 
 android {
-    namespace = "ru.samtakoy.data.importcards.api"
+    namespace = "ru.samtakoy.features.importcards.domain.repoApi"
 }

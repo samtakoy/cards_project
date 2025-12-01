@@ -28,13 +28,13 @@ kotlin {
             implementation(projects.module.common.utils)
             implementation(projects.module.common.resources)
 
-            implementation(projects.module.platform.import.api)
+            implementation(projects.module.features.import.domain.taskApi)
             implementation(projects.module.platform.permissions.api)
 
             implementation(projects.module.domain.task.model)
 
             implementation(projects.module.domain.export.api)
-            implementation(projects.module.domain.import.api)
+            implementation(projects.module.features.import.domain.api)
             implementation(projects.module.domain.theme.api)
             implementation(projects.module.domain.qpack.api)
 

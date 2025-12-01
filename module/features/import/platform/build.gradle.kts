@@ -11,12 +11,12 @@ kotlin {
             // filekit
             implementation(libs.filekit.dialogs.compose)
 
-            implementation(projects.module.platform.import.api)
+            implementation(projects.module.features.import.domain.taskApi)
 
             implementation(projects.module.data.task.api)
             implementation(projects.module.domain.task.model)
 
-            implementation(projects.module.domain.import.api)
+            implementation(projects.module.features.import.domain.api)
         }
         androidMain.dependencies {
             implementation(libs.koin.androidx.workmanager)
@@ -40,5 +40,5 @@ kotlin {
 }
 
 android {
-    namespace = "ru.samtakoy.platform.importcards.impl"
+    namespace = "ru.samtakoy.features.importcards.platform"
 }

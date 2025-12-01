@@ -9,12 +9,12 @@ kotlin {
             implementation(libs.filekit.dialogs.compose)
 
             implementation(projects.module.domain.task.model)
-            implementation(projects.module.domain.import.model)
+            implementation(projects.module.features.import.domain.model)
         }
     }
 }
 
 android {
-    namespace = "ru.samtakoy.platform.importcards.api"
+    namespace = "ru.samtakoy.features.importcards.domain.taskApi"
 }
 

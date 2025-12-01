@@ -11,11 +11,11 @@ kotlin {
             implementation(libs.kmpio)
             implementation(libs.filekit.core)
 
-            implementation(projects.module.data.import.api)
+            implementation(projects.module.features.import.domain.repoApi)
         }
     }
 }
 
 android {
-    namespace = "ru.samtakoy.data.importcards.impl"
+    namespace = "ru.samtakoy.features.importcards.data"
 }

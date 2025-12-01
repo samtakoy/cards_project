@@ -19,7 +19,7 @@ import ru.samtakoy.domain.importcards.batch.ImportCardsZipUseCase
 import ru.samtakoy.domain.importcards.model.ImportCardsOpts
 import ru.samtakoy.domain.task.model.TaskStateData
 import ru.samtakoy.domain.task.model.TaskStateId
-import ru.samtakoy.platform.notification.AndroidNotificationRepositoryImpl
+import ru.samtakoy.platform.notification.AndroidNotificationRepository
 import ru.samtakoy.resources.Res
 import ru.samtakoy.resources.batch_zip_import_status_cancelled
 import ru.samtakoy.resources.batch_zip_import_status_init
@@ -36,7 +36,7 @@ internal class ImportCardsFromZipWorker(
 
     private val importCardsUseCase: ImportCardsZipUseCase by inject()
     private val stateRepository: TaskStateRepository by inject()
-    private val notificationRepository: AndroidNotificationRepositoryImpl by inject()
+    private val notificationRepository: AndroidNotificationRepository by inject()
 
     private var taskId: TaskStateId? = null
     private var targetFileName: String = ""

@@ -16,8 +16,8 @@ kotlin {
 
             implementation(projects.module.data.common.api)
 
-            implementation(projects.module.data.import.api)
-            implementation(projects.module.domain.import.api)
+            implementation(projects.module.features.import.domain.repoApi)
+            implementation(projects.module.features.import.domain.api)
 
             implementation(projects.module.domain.task.model)
 
@@ -29,5 +29,5 @@ kotlin {
 }
 
 android {
-    namespace = "ru.samtakoy.domain.importcards.impl"
+    namespace = "ru.samtakoy.features.importcards.domain.impl"
 }

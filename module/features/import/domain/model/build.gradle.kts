@@ -12,5 +12,5 @@ kotlin {
 }
 
 android {
-    namespace = "ru.samtakoy.domain.importcards.model"
+    namespace = "ru.samtakoy.features.importcards.domain.model"
 }

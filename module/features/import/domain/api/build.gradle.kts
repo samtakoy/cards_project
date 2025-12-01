@@ -12,11 +12,11 @@ kotlin {
             api(projects.module.domain.qpack.model)
             api(projects.module.domain.theme.model)
             api(projects.module.domain.task.model)
-            api(projects.module.domain.import.model)
+            api(projects.module.features.import.domain.model)
         }
     }
 }
 
 android {
-    namespace = "ru.samtakoy.domain.importcards.api"
+    namespace = "ru.samtakoy.features.importcards.domain.api"
 }

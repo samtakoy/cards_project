@@ -15,12 +15,12 @@ import ru.samtakoy.resources.Res
 import ru.samtakoy.resources.notification_import_zip_title
 
 @SuppressLint("ObsoleteSdkInt")
-class AndroidNotificationRepositoryImpl(
+internal class AndroidNotificationRepositoryImpl(
     private val context: Context
-) {
-    fun getImportZipNotificationId(): Int = NotificationConst.IMPORT_ZIP_NOTIFICATION_ID
+) : AndroidNotificationRepository {
+    override fun getImportZipNotificationId(): Int = NotificationConst.IMPORT_ZIP_NOTIFICATION_ID
 
-    suspend fun buildImportZipNotification(
+    override suspend fun buildImportZipNotification(
         zipName: String,
         status: String,
         curProgress: Int,
@@ -49,9 +49,9 @@ class AndroidNotificationRepositoryImpl(
             .build()
     }
 
-    fun getSpeechNotificationId(): Int = NotificationConst.SPEECH_NOTIFICATION_ID
+    override fun getSpeechNotificationId(): Int = NotificationConst.SPEECH_NOTIFICATION_ID
 
-    suspend fun buildSpeechNotification(
+    override suspend fun buildSpeechNotification(
         remoteViewsBig: RemoteViews?,
         remoteViewsShort: RemoteViews?,
         clickIntent: PendingIntent?

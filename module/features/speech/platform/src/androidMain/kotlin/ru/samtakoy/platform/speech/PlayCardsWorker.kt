@@ -24,7 +24,7 @@ import ru.samtakoy.common.utils.scope.useScope
 import ru.samtakoy.domain.speech.PlayCardsAudioUseCase
 import ru.samtakoy.domain.speech.model.SpeechPlaybackState
 import ru.samtakoy.domain.speech.scope.PlayerScopeQualifier
-import ru.samtakoy.platform.notification.AndroidNotificationRepositoryImpl
+import ru.samtakoy.platform.notification.AndroidNotificationRepository
 import ru.samtakoy.platform.speech.PlayCardsAudioBroadcastReceiver.Companion.ACTION_NEXT
 import ru.samtakoy.platform.speech.PlayCardsAudioBroadcastReceiver.Companion.ACTION_PAUSE
 import ru.samtakoy.platform.speech.PlayCardsAudioBroadcastReceiver.Companion.ACTION_PREVIOUS
@@ -46,7 +46,7 @@ internal class PlayCardsWorker(
     params
 ), KoinComponent {
 
-    private val notificationRepository: AndroidNotificationRepositoryImpl by inject()
+    private val notificationRepository: AndroidNotificationRepository by inject()
     private val scopeProvider: ScopeProvider by inject()
     private var currentState: SpeechPlaybackState? = null
     private val remoteViewsBig: RemoteViews by lazy {
