@@ -12,7 +12,7 @@ kotlin {
             implementation(projects.module.data.common.impl)
             implementation(projects.module.data.task.impl)
             implementation(projects.module.data.import.impl)
-            implementation(projects.module.data.speech.impl)
+            implementation(projects.module.features.speech.data)
 
             implementation(projects.module.domain.card.impl)
             implementation(projects.module.domain.favorites.impl)
@@ -21,7 +21,7 @@ kotlin {
             implementation(projects.module.domain.theme.impl)
             implementation(projects.module.domain.view.impl)
             implementation(projects.module.domain.import.impl)
-            implementation(projects.module.domain.speech.impl)
+            implementation(projects.module.features.speech.domain.impl)
 
             implementation(projects.module.presentation.main.impl)
             implementation(projects.module.presentation.cards.impl)
@@ -35,7 +35,7 @@ kotlin {
             implementation(projects.module.platform.import.impl)
             implementation(projects.module.platform.notification.impl)
             implementation(projects.module.platform.permissions.impl)
-            implementation(projects.module.platform.speech.impl)
+            implementation(projects.module.features.speech.platform)
         }
     }
 }
