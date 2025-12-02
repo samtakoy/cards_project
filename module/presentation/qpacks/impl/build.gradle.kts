@@ -41,7 +41,7 @@ kotlin {
 
             implementation(projects.module.presentation.qpacks.api)
 
-            implementation(projects.module.features.speech.domain.taskApi)
+            implementation(projects.module.features.speech.api)
         }
     }
 }
