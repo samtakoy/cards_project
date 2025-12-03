@@ -19,7 +19,7 @@ import ru.samtakoy.domain.qpack.QPackInteractor
 import ru.samtakoy.domain.task.model.TaskStateData
 import ru.samtakoy.domain.theme.Theme
 import ru.samtakoy.domain.theme.ThemeInteractor
-import ru.samtakoy.importcards.domain.batch.ImportCardsFromZipTask
+import ru.samtakoy.importcards.domain.batch.RunImportCardsFromZipTaskUseCase
 import ru.samtakoy.platform.permissions.PermissionState
 import ru.samtakoy.platform.permissions.PermissionsController
 import ru.samtakoy.platform.permissions.model.MyPermission
@@ -58,7 +58,7 @@ internal class ThemeListViewModelImpl(
     private val qPackInteractor: QPackInteractor,
     private val themeInteractor: ThemeInteractor,
     private val permissionsController: PermissionsController,
-    private val importCardsFromZipTask: ImportCardsFromZipTask,
+    private val importCardsFromZipTask: RunImportCardsFromZipTaskUseCase,
     private val uiItemsMapper: ThemeUiItemMapper,
     private val menuItemMapper: ThemeListMenuItemsMapper,
     savedStateHandle: SavedStateHandle,

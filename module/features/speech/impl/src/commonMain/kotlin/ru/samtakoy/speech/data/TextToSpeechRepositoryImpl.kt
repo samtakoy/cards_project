@@ -11,7 +11,7 @@ import nl.marc_apps.tts.experimental.ExperimentalVoiceApi
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.speech.domain.TextToSpeechRepository
 import ru.samtakoy.speech.domain.model.TextToSpeechPlayer
-
+import ru.samtakoy.speech.data.TextToSpeechPlayerImpl
 
 internal class TextToSpeechRepositoryImpl(
     @OptIn(ExperimentalDesktopTarget::class)

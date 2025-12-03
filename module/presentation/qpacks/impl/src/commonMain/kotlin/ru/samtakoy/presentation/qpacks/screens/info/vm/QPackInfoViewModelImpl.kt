@@ -14,7 +14,7 @@ import ru.samtakoy.domain.qpack.QPack
 import ru.samtakoy.domain.qpack.QPackInteractor
 import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.domain.view.ViewHistoryItem
-import ru.samtakoy.speech.domain.PlayCardsTask
+import ru.samtakoy.speech.domain.RunPlayCardsTaskUseCase
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
@@ -44,7 +44,7 @@ internal class QPackInfoViewModelImpl(
     private val favoritesInteractor: FavoritesInteractor,
     private val coursesInteractor: NCoursesInteractor,
     private val viewHistoryInteractor: ViewHistoryInteractor,
-    private val playCardsTask: PlayCardsTask,
+    private val playCardsTask: RunPlayCardsTaskUseCase,
     private val cardsMapper: FastCardUiModelMapper,
     private val buttonsMapper: QPackInfoButtonsMapper,
     private val choiceDialogMapper: QPackInfoDialogMapper,

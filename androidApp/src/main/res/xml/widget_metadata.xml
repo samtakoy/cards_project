@@ -4,6 +4,6 @@
     android:minHeight="250dp"
     android:minWidth="250dp"
     android:updatePeriodMillis="2400000"
-    android:configure="ru.samtakoy.core.presentation.widget.WidgetSettingsActivity">
+    android:configure="ru.samtakoy.oldlegacy.core.presentation.widget.WidgetSettingsActivity">
 
 </appwidget-provider>
