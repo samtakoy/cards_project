@@ -25,7 +25,7 @@ import ru.samtakoy.speech.domain.PlayCardsAudioUseCase
 import ru.samtakoy.speech.domain.model.SpeechPlaybackState
 import ru.samtakoy.speech.domain.scope.PlayerScopeQualifier
 import ru.samtakoy.platform.notification.AndroidNotificationRepository
-import ru.samtakoy.features.speech.domain.impl.R
+import ru.samtakoy.features.speech.impl.R
 import ru.samtakoy.resources.Res
 import ru.samtakoy.resources.player_init_desc
 import ru.samtakoy.resources.player_init_title

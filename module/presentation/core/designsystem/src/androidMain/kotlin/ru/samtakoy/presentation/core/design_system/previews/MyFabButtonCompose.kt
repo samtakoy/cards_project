@@ -12,18 +12,66 @@ import ru.samtakoy.presentation.core.design_system.base.MyColors
 import ru.samtakoy.presentation.core.design_system.base.MyOffsets
 import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
 import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
-import ru.samtakoy.presentation.core.design_system.button.round.MyFabButtonIcon
-import ru.samtakoy.presentation.core.design_system.button.round.MyFabButtonUiModel
-import ru.samtakoy.presentation.core.design_system.button.round.MyFabButtonView
+import ru.samtakoy.presentation.core.design_system.button.round.MyRoundButtonIcon
+import ru.samtakoy.presentation.core.design_system.button.round.MyRoundButtonSize
+import ru.samtakoy.presentation.core.design_system.button.round.MyRoundButtonUiModel
+import ru.samtakoy.presentation.core.design_system.button.round.MyRoundButtonView
 
 @Preview
 @Composable
-private fun MyFabButtonView_Preview() = MyTheme {
+private fun MyRoundButtonView_Preview() = MyTheme {
     val models = listOf(
-        MyFabButtonUiModel(
+        MyRoundButtonUiModel(
             id = AnyUiId(),
-            icon = MyFabButtonIcon.Revert
+            icon = MyRoundButtonIcon.Revert,
+            size = MyRoundButtonSize.Large
+        ),
+        MyRoundButtonUiModel(
+            id = AnyUiId(),
+            icon = MyRoundButtonIcon.MediaPlay,
+            size = MyRoundButtonSize.Medium
+        ),
+        MyRoundButtonUiModel(
+            id = AnyUiId(),
+            icon = MyRoundButtonIcon.MediaPause,
+            size = MyRoundButtonSize.Medium
+        ),
+        MyRoundButtonUiModel(
+            id = AnyUiId(),
+            icon = MyRoundButtonIcon.MediaPlay,
+            size = MyRoundButtonSize.Small
+        ),
+        MyRoundButtonUiModel(
+            id = AnyUiId(),
+            icon = MyRoundButtonIcon.MediaPause,
+            size = MyRoundButtonSize.Small
+        ),
+        MyRoundButtonUiModel(
+            id = AnyUiId(),
+            icon = MyRoundButtonIcon.MediaPlay,
+            size = MyRoundButtonSize.ExtraSmall
+        ),
+        MyRoundButtonUiModel(
+            id = AnyUiId(),
+            icon = MyRoundButtonIcon.MediaPause,
+            size = MyRoundButtonSize.ExtraSmall
+        ),
+        MyRoundButtonUiModel(
+            id = AnyUiId(),
+            icon = MyRoundButtonIcon.MediaStop,
+            size = MyRoundButtonSize.ExtraSmall
+        ),
+        MyRoundButtonUiModel(
+            id = AnyUiId(),
+            icon = MyRoundButtonIcon.MediaPrev,
+            size = MyRoundButtonSize.ExtraSmall
+        ),
+        MyRoundButtonUiModel(
+            id = AnyUiId(),
+            icon = MyRoundButtonIcon.MediaNext,
+            size = MyRoundButtonSize.ExtraSmall
         )
+
     ).toImmutableList()
     Column(
         modifier = Modifier
@@ -32,7 +80,7 @@ private fun MyFabButtonView_Preview() = MyTheme {
         verticalArrangement = Arrangement.spacedBy(MyOffsets.small)
     ) {
         models.forEach {
-            MyFabButtonView(model = it, onClick = {})
+            MyRoundButtonView(model = it, onClick = {})
         }
     }
 }

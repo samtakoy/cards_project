@@ -8,12 +8,14 @@ kotlin {
             // Compose
             implementation(compose.ui)
             implementation(compose.material3)
-            implementation(compose.preview)
-            implementation(compose.components.uiToolingPreview)
             implementation(compose.materialIconsExtended)
             implementation(libs.androidx.navigation.compose)
 
             implementation(projects.module.presentation.core.utils)
+        }
+        androidMain.dependencies {
+            implementation(libs.androidx.compose.ui.tooling)
+            implementation(libs.androidx.compose.ui.tooling.preview)
         }
     }
 }
@@ -24,3 +26,8 @@ android {
         compose = true
     }
 }
+
+dependencies {
+    debugImplementation(compose.preview)
+    debugImplementation(compose.components.uiToolingPreview)
+ }

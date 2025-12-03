@@ -11,5 +11,5 @@ kotlin {
 }
 
 android {
-    namespace = "ru.samtakoy.features.speech.domain.api"
+    namespace = "ru.samtakoy.features.speech.api"
 }

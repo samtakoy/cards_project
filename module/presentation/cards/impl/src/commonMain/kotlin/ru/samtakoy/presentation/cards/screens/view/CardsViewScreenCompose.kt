@@ -48,9 +48,10 @@ import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.State
 import ru.samtakoy.presentation.core.design_system.base.MyOffsets
 import ru.samtakoy.presentation.core.design_system.base.UiOffsets
 import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
-import ru.samtakoy.presentation.core.design_system.button.round.MyFabButtonIcon
-import ru.samtakoy.presentation.core.design_system.button.round.MyFabButtonUiModel
-import ru.samtakoy.presentation.core.design_system.button.round.MyFabButtonView
+import ru.samtakoy.presentation.core.design_system.button.round.MyRoundButtonIcon
+import ru.samtakoy.presentation.core.design_system.button.round.MyRoundButtonSize
+import ru.samtakoy.presentation.core.design_system.button.round.MyRoundButtonUiModel
+import ru.samtakoy.presentation.core.design_system.button.round.MyRoundButtonView
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButton
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.core.design_system.scaffold.MySimpleScreenScaffold
@@ -330,9 +331,9 @@ private fun ColumnScope.TextContainer(
                     .verticalScroll(scrollState)
             )
             if (hasRevertButton) {
-                MyFabButtonView(
+                MyRoundButtonView(
                     model = remember {
-                        MyFabButtonUiModel(id = AnyUiId(), icon = MyFabButtonIcon.Revert)
+                        MyRoundButtonUiModel(id = AnyUiId(), icon = MyRoundButtonIcon.Revert, size = MyRoundButtonSize.Large)
                     },
                     onClick = { onEvent(Event.RevertClick) },
                     modifier = Modifier

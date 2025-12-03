@@ -36,5 +36,5 @@ kotlin {
 }
 
 android {
-    namespace = "ru.samtakoy.features.speech.domain.impl"
+    namespace = "ru.samtakoy.features.speech.impl"
 }

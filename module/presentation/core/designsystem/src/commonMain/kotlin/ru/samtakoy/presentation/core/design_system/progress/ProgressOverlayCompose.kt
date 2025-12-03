@@ -40,7 +40,6 @@ fun ProgressOverlayView(
     )
 }
 
-
 @Composable
 fun ProgressOverlayView(
     title: AnnotatedString,
