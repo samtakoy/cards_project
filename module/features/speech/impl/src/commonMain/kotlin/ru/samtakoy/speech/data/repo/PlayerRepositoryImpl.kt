@@ -1,4 +1,4 @@
-package ru.samtakoy.speech.data
+package ru.samtakoy.speech.data.repo
 
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
@@ -9,15 +9,15 @@ import nl.marc_apps.tts.TextToSpeechInstance
 import nl.marc_apps.tts.experimental.ExperimentalDesktopTarget
 import nl.marc_apps.tts.experimental.ExperimentalVoiceApi
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
-import ru.samtakoy.speech.domain.TextToSpeechRepository
-import ru.samtakoy.speech.domain.model.TextToSpeechPlayer
 import ru.samtakoy.speech.data.TextToSpeechPlayerImpl
+import ru.samtakoy.speech.domain.model.TextToSpeechPlayer
+import ru.samtakoy.speech.domain.repo.PlayerRepository
 
-internal class TextToSpeechRepositoryImpl(
+internal class PlayerRepositoryImpl(
     @OptIn(ExperimentalDesktopTarget::class)
     private val factory: TextToSpeechFactory,
     private val scopeProvider: ScopeProvider
-) : TextToSpeechRepository, AutoCloseable {
+) : PlayerRepository, AutoCloseable {
 
     private var currentPlayer: TextToSpeechPlayerImpl? = null
     private val mutex = Mutex()
@@ -25,7 +25,7 @@ internal class TextToSpeechRepositoryImpl(
     override fun close() {
         scopeProvider.ioScope.launch {
             closeCurrentPlayer()
-            scopeProvider.cancel()
+            scopeProvider.close()
         }
     }
 
@@ -44,6 +44,7 @@ internal class TextToSpeechRepositoryImpl(
     private suspend fun closeCurrentPlayer() = mutex.withLock {
         try {
             currentPlayer?.let {
+                currentPlayer = null
                 if (!it.isClosed()) {
                     it.close()
                 }

@@ -39,6 +39,8 @@ kotlin {
             implementation(projects.module.presentation.viewshistory.api)
             implementation(projects.module.presentation.favorites.api)
 
+            implementation(projects.module.features.speech.presentation)
+
             implementation(projects.module.platform.permissions.impl)
         }
     }

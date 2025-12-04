@@ -21,6 +21,7 @@ kotlin {
             implementation(projects.module.features.import.impl)
             implementation(projects.module.features.speech.impl)
 
+            implementation(projects.module.features.speech.presentation)
             implementation(projects.module.presentation.main.impl)
             implementation(projects.module.presentation.cards.impl)
             implementation(projects.module.presentation.qpacks.impl)

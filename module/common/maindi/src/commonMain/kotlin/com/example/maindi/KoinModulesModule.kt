@@ -23,6 +23,7 @@ import ru.samtakoy.presentation.qpacks.di.qPackPresentationModule
 import ru.samtakoy.presentation.settings.di.settingsPresentationModule
 import ru.samtakoy.presentation.themes.di.themesPresentationModule
 import ru.samtakoy.speech.platform.di.speechPlatformModule
+import ru.samtakoy.speech.presentation.di.speechPresentationModule
 
 fun koinModulesModule() = module {
     includes(
@@ -43,6 +44,7 @@ fun koinModulesModule() = module {
         speechDomainModule(),
 
         mainScreenPresentationModule(),
+        speechPresentationModule(),
         cardsViewPresentationModule(),
         qPackPresentationModule(),
         themesPresentationModule(),

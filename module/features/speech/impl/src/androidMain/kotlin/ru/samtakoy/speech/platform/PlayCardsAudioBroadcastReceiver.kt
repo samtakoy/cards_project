@@ -3,7 +3,6 @@ package ru.samtakoy.speech.platform
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import io.github.aakira.napier.Napier
 import org.koin.java.KoinJavaComponent.getKoin
 import ru.samtakoy.common.utils.Dispatcher
 import ru.samtakoy.common.utils.scope.releaseScope
@@ -16,7 +15,6 @@ class PlayCardsAudioBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent == null) return
         val action = intent.action ?: return
-        Napier.e(tag = "mytest") { action }
 
         val playerStateScope = getKoin().useScope(PlayerStateScopeQualifier)
         try {

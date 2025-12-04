@@ -1,7 +1,7 @@
 package ru.samtakoy.speech.domain
 
 import kotlinx.coroutines.flow.StateFlow
-import ru.samtakoy.speech.domain.model.SpeechPlaybackState
+import ru.samtakoy.speech.domain.model.SpeechPlayerState
 
 interface PlayCardsAudioUseCase {
     /** Проигрывает карточки на плейере */
@@ -9,6 +9,4 @@ interface PlayCardsAudioUseCase {
         cardIds: List<Long>,
         onlyQuestions: Boolean
     )
-    // TODO это будет читаться из репозитория
-    fun observePlaybackState(): StateFlow<SpeechPlaybackState?>
 }

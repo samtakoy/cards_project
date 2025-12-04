@@ -12,6 +12,8 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import io.github.aakira.napier.Napier
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.jetbrains.compose.resources.getString
@@ -21,17 +23,20 @@ import org.koin.core.scope.Scope
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.common.utils.scope.releaseScope
 import ru.samtakoy.common.utils.scope.useScope
-import ru.samtakoy.speech.domain.PlayCardsAudioUseCase
-import ru.samtakoy.speech.domain.model.SpeechPlaybackState
-import ru.samtakoy.speech.domain.scope.PlayerScopeQualifier
-import ru.samtakoy.platform.notification.AndroidNotificationRepository
 import ru.samtakoy.features.speech.impl.R
+import ru.samtakoy.platform.notification.AndroidNotificationRepository
 import ru.samtakoy.resources.Res
 import ru.samtakoy.resources.player_init_desc
 import ru.samtakoy.resources.player_init_title
+import ru.samtakoy.speech.domain.PlayCardsAudioUseCase
+import ru.samtakoy.speech.domain.ReadSpeechPlayerStateUseCase
+import ru.samtakoy.speech.domain.model.SpeechPlayerState
+import ru.samtakoy.speech.domain.scope.PlayerScopeQualifier
+import ru.samtakoy.speech.platform.mapper.PlayerNotificationTextMapper
 
 /**
- * TODO DataStore для текущего стейта плейера + восстановление состояния (номер карточки и статус проигрывателя)
+ * TODO DataStore для текущего стейта плейера
+ *  + восстановление состояния (номер карточки и статус проигрывателя)
  * */
 internal class PlayCardsWorker(
     appContext: Context,
@@ -43,7 +48,8 @@ internal class PlayCardsWorker(
 
     private val notificationRepository: AndroidNotificationRepository by inject()
     private val scopeProvider: ScopeProvider by inject()
-    private var currentState: SpeechPlaybackState? = null
+    private val textMapper: PlayerNotificationTextMapper by inject()
+    private var currentState: SpeechPlayerState? = null
     private val remoteViewsBig: RemoteViews by lazy {
         createRemoteViews(shortView = false)
     }
@@ -59,13 +65,19 @@ internal class PlayCardsWorker(
     override suspend fun doWork(): Result {
         setForeground(getForegroundInfo())
         val playerScope: Scope = getKoin().useScope(PlayerScopeQualifier)
+        var subscriberJob: Job? = null
         return try {
             val playCardsAudioUseCase: PlayCardsAudioUseCase by playerScope.inject()
+            val readPlayerStateUseCase: ReadSpeechPlayerStateUseCase by playerScope.inject()
 
-            playCardsAudioUseCase.observePlaybackState()
-                .onEach {
-                    currentState = it
-                    setForeground(getForegroundInfo())
+            subscriberJob = readPlayerStateUseCase.observePlaybackState()
+                .onEach { playerState ->
+                    if (playerState is SpeechPlayerState.Active) {
+                        currentState = playerState
+                        setForeground(getForegroundInfo())
+                    } else {
+                        currentState = null
+                    }
                 }
                 .launchIn(
                     scopeProvider.mainScope
@@ -75,36 +87,41 @@ internal class PlayCardsWorker(
                 onlyQuestions = inputData.getBoolean(PARAM_ONLY_QUESTIONS, true)
             )
             Result.success()
+        } catch (_: CancellationException) {
+            // проигрывание отменено
+            Result.success()
         } catch (e: Exception) {
             Napier.e(e) { "PlayCardsWorker error" }
             Result.failure()
         } finally {
             playerScope.releaseScope()
+            subscriberJob?.cancel()
         }
     }
 
-    private suspend fun buildNotificationFromState(state: SpeechPlaybackState?): Notification {
-        return if (state == null) {
+    private suspend fun buildNotificationFromState(state: SpeechPlayerState?): Notification {
+        return if (state == null || state !is SpeechPlayerState.Active) {
             notificationRepository.buildSpeechNotification(
                 remoteViewsBig = remoteViewsBig.initStart(),
                 remoteViewsShort = remoteViewsShort.initStart(),
                 clickIntent = null
             )
         } else {
+            val record = state.curRecord
             notificationRepository.buildSpeechNotification(
                 remoteViewsBig = remoteViewsBig.initWhen(isPlaying = state.isPaused.not())
                     .applySettings(
-                        title = state.title,
-                        text = state.description,
-                        curProgress = state.currentCardNum,
-                        maxProgress = state.totalCards
+                        title = textMapper.mapBigNotificationTitle(state),
+                        text = textMapper.mapBigNotificationDescription(state),
+                        curProgress = record.cardNum,
+                        maxProgress = state.cardIds.size
                     ),
                 remoteViewsShort = remoteViewsShort.initWhen(isPlaying = state.isPaused.not())
                     .applySettings(
-                        title = "${state.currentCardNum}/${state.totalCards}",
-                        text = "",
-                        curProgress = state.currentCardNum,
-                        maxProgress = state.totalCards
+                        title = textMapper.mapSmallNotificationTitle(state),
+                        text = textMapper.mapSmallNotificationDescription(state),
+                        curProgress = record.cardNum,
+                        maxProgress = state.cardIds.size
                     ),
                 clickIntent = null
             )
@@ -143,11 +160,11 @@ internal class PlayCardsWorker(
             applicationContext.packageName,
             if (shortView) R.layout.player_notification_short else R.layout.player_notification
         )
-        remoteViews.setOnClickPendingIntent(R.id.prevBtn, createActionIntent(PlayCardsAudioBroadcastReceiver.Companion.ACTION_PREVIOUS))
-        remoteViews.setOnClickPendingIntent(R.id.resumeBtn, createActionIntent(PlayCardsAudioBroadcastReceiver.Companion.ACTION_RESUME))
-        remoteViews.setOnClickPendingIntent(R.id.pauseBtn, createActionIntent(PlayCardsAudioBroadcastReceiver.Companion.ACTION_PAUSE))
-        remoteViews.setOnClickPendingIntent(R.id.nextBtn, createActionIntent(PlayCardsAudioBroadcastReceiver.Companion.ACTION_NEXT))
-        remoteViews.setOnClickPendingIntent(R.id.stopBtn, createActionIntent(PlayCardsAudioBroadcastReceiver.Companion.ACTION_STOP))
+        remoteViews.setOnClickPendingIntent(R.id.prevBtn, createActionIntent(PlayCardsAudioBroadcastReceiver.ACTION_PREVIOUS))
+        remoteViews.setOnClickPendingIntent(R.id.resumeBtn, createActionIntent(PlayCardsAudioBroadcastReceiver.ACTION_RESUME))
+        remoteViews.setOnClickPendingIntent(R.id.pauseBtn, createActionIntent(PlayCardsAudioBroadcastReceiver.ACTION_PAUSE))
+        remoteViews.setOnClickPendingIntent(R.id.nextBtn, createActionIntent(PlayCardsAudioBroadcastReceiver.ACTION_NEXT))
+        remoteViews.setOnClickPendingIntent(R.id.stopBtn, createActionIntent(PlayCardsAudioBroadcastReceiver.ACTION_STOP))
         return remoteViews
     }
 

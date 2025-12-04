@@ -51,7 +51,8 @@ internal class QPackInfoViewModelImpl(
     private val playChoiceDialogMapper: QPackInfoPlayDialogMapper,
     private val toolbarMenuMapper: QPackInfoMenuMapper,
     scopeProvider: ScopeProvider,
-    private val qPackId: Long
+    private val qPackId: Long,
+    private val clearCallback: () -> Unit
 ) : BaseViewModelImpl<State, Action, Event>(
     scopeProvider = scopeProvider,
     initialState = State(
@@ -71,10 +72,15 @@ internal class QPackInfoViewModelImpl(
     init {
         subscribeData()
         launchCatching {
-            viewState = viewState.copy(
-                toolbarMenu = toolbarMenuMapper.map()
-            )
+            updateState {
+                it.copy(toolbarMenu = toolbarMenuMapper.map())
+            }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        clearCallback()
     }
 
     override fun onEvent(event: Event) {

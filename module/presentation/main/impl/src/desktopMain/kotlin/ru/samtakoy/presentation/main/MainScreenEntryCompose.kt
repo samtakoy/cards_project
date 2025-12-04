@@ -23,7 +23,7 @@ fun MainScreenEntry() {
                     savedStateHandle = SavedStateHandle()
                 )
             },
-            modifier = Modifier.Companion.fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         )
     }
 }

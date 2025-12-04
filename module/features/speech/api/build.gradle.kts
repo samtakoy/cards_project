@@ -5,7 +5,12 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
+            // koin
+            implementation(libs.koin.core)
+
             api(projects.module.domain.card.model)
+
+            implementation(projects.module.common.utils)
         }
     }
 }

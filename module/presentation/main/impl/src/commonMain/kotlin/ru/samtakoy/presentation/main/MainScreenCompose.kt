@@ -1,5 +1,6 @@
 package ru.samtakoy.presentation.main
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -34,6 +35,7 @@ import ru.samtakoy.presentation.navigation.MainTabFeatureEntry
 import ru.samtakoy.presentation.navigation.MainTabRoute
 import ru.samtakoy.presentation.navigation.RootFeatureEntry
 import ru.samtakoy.presentation.themes.list.ThemeListRoute
+import ru.samtakoy.speech.presentation.TopPlayerView
 
 @Composable
 internal fun MainScreen(
@@ -41,11 +43,19 @@ internal fun MainScreen(
     modifier: Modifier = Modifier
 ) {
     val viewState by viewModel.getViewStateAsFlow().collectAsStateWithLifecycle()
-    MainScreenInternal(
-        viewState = viewState,
-        onEvent = viewModel::onEvent,
+    Box(
         modifier = modifier
-    )
+            .fillMaxSize()
+    ) {
+        MainScreenInternal(
+            viewState = viewState,
+            onEvent = viewModel::onEvent
+        )
+        TopPlayerView(
+            modifier = Modifier
+                .systemBarsPadding()
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

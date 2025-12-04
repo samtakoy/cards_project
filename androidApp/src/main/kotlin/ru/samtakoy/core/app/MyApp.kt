@@ -37,7 +37,8 @@ class MyApp : MultiDexApplication() {
         GlobalContext.startKoin {
             androidContext(androidContext)
             modules(
-                koinAppModule(),
+                // Больше не используется - старый код, 5-летней выдержки
+                // koinAppModule(),
                 koinModulesModule()
             )
         }

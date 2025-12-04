@@ -1,7 +1,7 @@
-package ru.samtakoy.speech.domain
+package ru.samtakoy.speech.domain.repo
 
 import ru.samtakoy.speech.domain.model.TextToSpeechPlayer
 
-interface TextToSpeechRepository {
+interface PlayerRepository {
     suspend fun getPlayer(): TextToSpeechPlayer?
 }

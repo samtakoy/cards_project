@@ -1,10 +1,12 @@
 package ru.samtakoy.presentation.qpacks.di
 
 import org.koin.core.module.dsl.factoryOf
-import org.koin.core.module.dsl.viewModelOf
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import ru.samtakoy.common.utils.scope.releaseScope
+import ru.samtakoy.common.utils.scope.useScope
 import ru.samtakoy.presentation.navigation.MainTabFeatureEntry
 import ru.samtakoy.presentation.navigation.RootFeatureEntry
 import ru.samtakoy.presentation.qpacks.QPackInfoRoute
@@ -24,6 +26,7 @@ import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoPlayDialogMa
 import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoPlayDialogMapperImpl
 import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModelImpl
 import ru.samtakoy.presentation.themes.entry.QPackListEntryImpl
+import ru.samtakoy.speech.domain.scope.PlayerScopeQualifier
 
 fun qPackPresentationModule() = module {
     // info
@@ -31,7 +34,26 @@ fun qPackPresentationModule() = module {
     factoryOf(::QPackInfoDialogMapperImpl) bind QPackInfoDialogMapper::class
     factoryOf(::QPackInfoButtonsMapperImpl) bind QPackInfoButtonsMapper::class
     factoryOf(::QPackInfoMenuMapperImpl) bind QPackInfoMenuMapper::class
-    viewModelOf(::QPackInfoViewModelImpl)
+    viewModel {
+        val playerScope = getKoin().useScope(PlayerScopeQualifier)
+        QPackInfoViewModelImpl(
+            cardInteractor = get(),
+            qPackInteractor = get(),
+            favoritesInteractor = get(),
+            coursesInteractor = get(),
+            viewHistoryInteractor = get(),
+            playCardsTask = playerScope.get(),
+            cardsMapper = get(),
+            buttonsMapper = get(),
+            choiceDialogMapper = get(),
+            playChoiceDialogMapper = get(),
+            toolbarMenuMapper = get(),
+            scopeProvider = get(),
+            qPackId = get()
+        ) {
+            playerScope.releaseScope()
+        }
+    }
     factory<RootFeatureEntry>(qualifier = named<QPackInfoRoute>()) {
         QPackInfoEntryImpl()
     }
