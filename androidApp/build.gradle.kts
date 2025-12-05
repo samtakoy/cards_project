@@ -114,7 +114,7 @@ dependencies {
 
     implementation(projects.module.platform.permissions.impl)
 
-    implementation(projects.module.data.common.api)
+    implementation(projects.module.domain.commonRepoApi)
 
     implementation(projects.module.data.task.api)
 

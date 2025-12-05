@@ -8,8 +8,8 @@ kotlin {
             // koin
             implementation(libs.koin.core)
 
-            implementation(project(":module:domain:qpack:api"))
-            implementation(project(":module:data:common:api"))
+            implementation(projects.module.domain.qpack.api)
+            implementation(projects.module.domain.commonRepoApi)
         }
     }
 }

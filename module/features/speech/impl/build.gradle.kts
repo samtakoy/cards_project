@@ -13,7 +13,7 @@ kotlin {
             implementation(projects.module.common.utils)
             implementation(projects.module.common.resources)
 
-            implementation(projects.module.data.common.api)
+            implementation(projects.module.domain.commonRepoApi)
 
             implementation(projects.module.features.speech.api)
         }

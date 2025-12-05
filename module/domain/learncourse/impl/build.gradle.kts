@@ -8,7 +8,7 @@ kotlin {
             // koin
             implementation(libs.koin.core)
 
-            implementation(projects.module.data.common.api)
+            implementation(projects.module.domain.commonRepoApi)
             implementation(projects.module.domain.learncourse.api)
             implementation(projects.module.domain.qpack.api)
             implementation(projects.module.domain.view.api)

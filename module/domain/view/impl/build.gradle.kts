@@ -8,12 +8,12 @@ kotlin {
             // koin
             implementation(libs.koin.core)
 
-            implementation(project(":module:data:common:api"))
+            implementation(projects.module.domain.commonRepoApi)
 
-            implementation(project(":module:domain:view:api"))
-            implementation(project(":module:domain:card:api"))
+            implementation(projects.module.domain.view.api)
+            implementation(projects.module.domain.card.api)
 
-            implementation(project(":module:common:utils"))
+            implementation(projects.module.common.utils)
         }
     }
 }

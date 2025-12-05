@@ -14,7 +14,7 @@ kotlin {
             implementation(libs.koin.core)
 
             implementation(projects.module.common.utils)
-            implementation(projects.module.data.common.api)
+            implementation(projects.module.domain.commonRepoApi)
 
             implementation(projects.module.domain.card.model)
             implementation(projects.module.domain.learncourse.model)
