@@ -9,6 +9,9 @@ kotlin {
             implementation(libs.kotlinx.serialization.core)
             api(libs.kotlinx.serialization.json)
             implementation(libs.androidx.navigation.compose)
+
+            // нужен только UiId
+            implementation(projects.module.presentation.core.designsystem)
         }
     }
 }

@@ -9,7 +9,7 @@ import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.presentation.main.mapper.MainScreenContentMapper
-import ru.samtakoy.presentation.main.model.TabRouteId
+import ru.samtakoy.presentation.navigation.TabRouteId
 
 internal class MainScreenViewModelImpl(
     private val contentMapper: MainScreenContentMapper,
@@ -23,31 +23,40 @@ internal class MainScreenViewModelImpl(
     )
 ), MainScreenViewModel {
 
-    val selectedItemId = SavedStateValue<TabRouteId>(
-        initialValueGetter = { TabRouteId.IdThemeListRoute },
+    val selectedItemId: SavedStateValue<TabRouteId> = SavedStateValue(
+        initialValueGetter = { TabRouteId.ThemeList },
         keyName = KEY_SELECTED_ITEM,
         savedStateHandle = savedStateHandle,
         serialize = { it.name },
-        deserialize = { TabRouteId.valueOf(it) },
+        deserialize = {
+            TabRouteId.valueOf(it)
+        },
         saveScope = ioScope
     )
 
     init {
         launchCatching {
-            viewState = viewState.copy(
-                menuItems = contentMapper.mapMenuItems().toImmutableList(),
-            )
+            updateState { state ->
+                state.copy(
+                    menuItems = contentMapper.mapMenuItems().toImmutableList(),
+                )
+            }
         }
         subscribeData()
     }
 
     override fun onEvent(event: MainScreenViewModel.Event) {
         when (event) {
-            is MainScreenViewModel.Event.MenuItemClick -> onMenuItemClick(event.item)
+            is MainScreenViewModel.Event.MenuItemClick -> onUIMenuItemClick(event.item)
+            is MainScreenViewModel.Event.NavigationChangedExternally -> onUiNavigationChange(event.tabRouteId)
         }
     }
 
-    private fun onMenuItemClick(item: MainScreenViewModel.MenuItem) {
+    private fun onUiNavigationChange(tabRouteId: TabRouteId) {
+        selectedItemId.value = tabRouteId
+    }
+
+    private fun onUIMenuItemClick(item: MainScreenViewModel.MenuItem) {
         val clickedId = item.id as? TabRouteId ?: return
         selectedItemId.value = clickedId
     }
@@ -56,7 +65,7 @@ internal class MainScreenViewModelImpl(
         selectedItemId.asFlow()
             .distinctUntilChanged()
             .onEach {
-                viewState = viewState.copy(selectedItemId = it)
+                updateState { state -> state.copy(selectedItemId = it) }
             }
             .launchIn(mainScope)
     }

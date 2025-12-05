@@ -9,13 +9,14 @@ import ru.samtakoy.presentation.core.design_system.base.model.UiId
 import ru.samtakoy.presentation.main.vm.MainScreenViewModel.Action
 import ru.samtakoy.presentation.main.vm.MainScreenViewModel.Event
 import ru.samtakoy.presentation.main.vm.MainScreenViewModel.State
+import ru.samtakoy.presentation.navigation.TabRouteId
 
 @Immutable
 internal interface MainScreenViewModel : BaseViewModel<State, Action, Event> {
     @Immutable
     data class State(
         val menuItems: ImmutableList<MenuItem>,
-        val selectedItemId: UiId?
+        val selectedItemId: TabRouteId?
     )
 
     sealed interface Action {
@@ -25,6 +26,7 @@ internal interface MainScreenViewModel : BaseViewModel<State, Action, Event> {
 
     sealed interface Event {
         class MenuItemClick(val item: MenuItem) : Event
+        class NavigationChangedExternally(val tabRouteId: TabRouteId) : Event
     }
 
     @Immutable
