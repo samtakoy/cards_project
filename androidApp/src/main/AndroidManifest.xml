@@ -31,21 +31,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".oldlegacy.core.presentation.log.LogActivity" />
-
-        <activity android:name=".oldlegacy.core.presentation.widget.WidgetSettingsActivity" />
-
-        <receiver android:name=".oldlegacy.features.notifications.StartupReceiver" android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name=".oldlegacy.features.notifications.NotificationsPlannerService"
-            android:exported="false" />
-
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="ru.samtakoy.fileprovider"
@@ -56,29 +41,6 @@
                 android:resource="@xml/provider_paths"
                 />
         </provider>
-
-        <receiver android:name=".oldlegacy.core.presentation.widget.WidgetProvider"
-            android:label="Мой тестовый Widget"
-            android:exported="true">
-            <intent-filter>
-                <action
-                    android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_metadata" />
-        </receiver>
-
-        <!--provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="${applicationId}.androidx-startup"
-            android:exported="false"
-            tools:node="merge">
-            <meta-dataQPackBuilderInteractorImpl
-                android:name="androidx.work.WorkManagerInitializer"
-                android:value="androidx.startup"
-                tools:node="remove" />
-        </provider-->
 
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"
