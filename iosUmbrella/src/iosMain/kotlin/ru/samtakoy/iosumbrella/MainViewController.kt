@@ -1,6 +1,9 @@
 package ru.samtakoy.iosumbrella
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.window.ComposeUIViewController
 import com.example.maindi.koinModulesModule
 import io.github.aakira.napier.Napier
@@ -24,8 +27,16 @@ private fun AppEntryPoint() {
     }
 }
 
+/** TODO подумать */
 @Composable
 private fun initLibs() {
     val logger: CustomLogger = koinInject()
-    Napier.base(logger)
+    val initialized = remember { mutableStateOf(false) }
+    DisposableEffect(Unit) {
+        if (!initialized.value) {
+            Napier.base(logger)
+            initialized.value = true
+        }
+        onDispose {}
+    }
 }
