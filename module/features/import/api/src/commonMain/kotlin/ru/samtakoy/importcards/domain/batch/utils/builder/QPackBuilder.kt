@@ -2,7 +2,6 @@ package ru.samtakoy.importcards.domain.batch.utils.builder
 
 import ru.samtakoy.domain.cardtag.ConcurrentTagMap
 import ru.samtakoy.importcards.domain.batch.utils.ImportCardsException
-import java.util.Locale
 
 /**
  * @param tagMap общая мапа с сущесствующими и новыми тегами
@@ -23,7 +22,7 @@ class QPackBuilder(
     var builderNum: Int = 1
 
     suspend fun addLine(line: String) {
-        val lowerLine = line.lowercase(Locale.getDefault())
+        val lowerLine = line.lowercase()
 
         if (!mBlockParsers.isFinished) {
             mBlockParsers.processLine(line, lowerLine)

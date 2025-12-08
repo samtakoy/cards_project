@@ -6,8 +6,8 @@ import kotlinx.coroutines.Dispatchers
 import java.io.File
 
 internal fun getDatabaseBuilder(): RoomDatabase.Builder<MyRoomDb> {
-    // Вариант 3: Сохранение в app data директории
-    val appDataDir = File(System.getProperty("user.home"), ".cards")
+    // Сохранение в app data директории
+    val appDataDir = File(System.getProperty("user.home"), ".cards/db")
     appDataDir.mkdirs() // Создаём директорию если её нет
     val dbFile = File(appDataDir, DB_NAME)
 

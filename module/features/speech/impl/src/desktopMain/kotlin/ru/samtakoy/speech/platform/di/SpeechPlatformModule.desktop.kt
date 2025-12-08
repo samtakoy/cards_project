@@ -4,7 +4,6 @@ import nl.marc_apps.tts.TextToSpeechFactory
 import nl.marc_apps.tts.experimental.ExperimentalDesktopTarget
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.scopedOf
-import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import ru.samtakoy.speech.domain.RunPlayCardsTaskUseCase

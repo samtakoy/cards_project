@@ -1,7 +1,5 @@
 package ru.samtakoy.common.utils.di
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import org.koin.core.module.dsl.factoryOf
 
 import org.koin.dsl.module
@@ -16,5 +14,4 @@ fun commonUtilsModule() = module {
     single<CustomLogger> { CustomLoggerImpl(MyLog.tag) }
     factory<ContextProvider> { createContextProvider() }
     factoryOf(::ScopeProvider)
-    single<Gson> { GsonBuilder().create() }
 }

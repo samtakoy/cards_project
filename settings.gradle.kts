@@ -27,6 +27,7 @@ includeBuild("build-logic")
 
 include(":androidApp")
 include(":desktopApp")
+include(":iosUmbrella")
 include(":module:data:common:impl")
 include(":module:domain:common_repo_api")
 include(":module:domain:card:api")

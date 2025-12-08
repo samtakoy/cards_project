@@ -1,8 +1,6 @@
 package ru.samtakoy.importcards.domain.batch.utils.builder
 
 import ru.samtakoy.domain.cardtag.ConcurrentTagMap
-import java.util.Locale
-import java.util.regex.Pattern
 
 /**
  * @param nullifyId сбросить идентификаторы карточек
@@ -39,16 +37,14 @@ class CardsParser(
             tryBuildCard()
             mCurCardParser.openQuestion()
 
-            val regexPattern = "^q:\\[(\\d+)\\](.*)$"
-            val pattern = Pattern.compile(regexPattern, Pattern.CASE_INSENSITIVE)
-            val matcher = pattern.matcher(line)
-
-            if (matcher.find() && matcher.groupCount() == 2) {
+            val regexPattern = "^q:\\[(\\d+)\\](.*)$".toRegex(RegexOption.IGNORE_CASE)
+            val matchResult = regexPattern.find(line)
+            if (matchResult != null && matchResult.groups.size == 3) {
                 // найдена карточка с идентификатором
-                val cardId = matcher.group(1).toLong()
-                line = matcher.group(2)
+                val cardId = matchResult.groupValues[1].toLong()
+                line = matchResult.groupValues[2]
 
-                val trimmedLowerLine = line.lowercase(Locale.getDefault()).trim { it.isWhitespace() }
+                val trimmedLowerLine = line.lowercase().trim { it.isWhitespace() }
                 if (trimmedLowerLine == CBuilderConst.CARD_REMOVE_TAG || trimmedLowerLine == CBuilderConst.CARD_REMOVE_TAG2) {
                     // remove card
                     mCurCardParser.markCardToRemove(cardId)

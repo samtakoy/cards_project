@@ -10,10 +10,8 @@ import io.github.vinceglb.filekit.delete
 import io.github.vinceglb.filekit.exists
 import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.write
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import ru.samtakoy.importcards.data.model.ExportImportConst
 import ru.samtakoy.importcards.data.model.QPackSource
 import ru.samtakoy.importcards.domain.CardsSourceRepository
@@ -44,7 +42,7 @@ internal class CardsSourceRepositoryImpl : CardsSourceRepository {
                     }
                 }
             }
-        }.flowOn(Dispatchers.IO)
+        }
     }
 
     private fun getParentThemeNames(qPathPath: String): List<String> {

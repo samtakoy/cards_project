@@ -16,7 +16,6 @@ import ru.samtakoy.resources.cards_view_res_schedule_none
 import ru.samtakoy.resources.cards_view_res_schedule_text
 import ru.samtakoy.resources.cards_view_res_title
 import ru.samtakoy.resources.cards_view_res_viewed_cards
-import ru.samtakoy.resources.getFormatted
 
 internal interface CardsViewResultMapper {
 
@@ -42,14 +41,14 @@ internal class CardsViewResultMapperImpl : CardsViewResultMapper {
         view ?: return null
         return State.Content(
             title = getString(Res.string.cards_view_res_title).asA(),
-            viewedTitle = getFormatted(
+            viewedTitle = getString(
                 Res.string.cards_view_res_viewed_cards,
                 view.viewedCardIds.size
             ).asA(),
             errorsTitle = if (cardViewMode == CardViewMode.LEARNING) {
                 null
             } else {
-                getFormatted(
+                getString(
                     Res.string.cards_view_res_err_cards,
                     view.errorCardIds.size
                 ).asA()

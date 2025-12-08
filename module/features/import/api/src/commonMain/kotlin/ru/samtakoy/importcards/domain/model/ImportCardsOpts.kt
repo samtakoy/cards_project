@@ -1,7 +1,5 @@
 package ru.samtakoy.importcards.domain.model
 
-import java.io.Serializable
-
 enum class ImportCardsOpts(
     /** разрешен импорт новых  */
     val isAllowNewImporting: Boolean,
@@ -11,7 +9,7 @@ enum class ImportCardsOpts(
     val isAllowWithIdCreation: Boolean,
     /** игнорировать все id в файлах  */
     val nullifyId: Boolean
-) : Serializable {
+) {
     NONE(false, false, false, false),
 
     /** импорт в чистую базу  */

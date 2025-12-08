@@ -14,7 +14,6 @@ internal class ScheduleItemEntity(
     }
 
     companion object {
-        @JvmStatic
         fun parseString(srcString: String): ScheduleItemEntity {
             val part: Array<String> =
                 srcString.split("(?<=\\d)(?=\\D)".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()

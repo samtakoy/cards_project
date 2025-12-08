@@ -1,7 +1,9 @@
 package ru.samtakoy.data.common.db
 
+import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.RoomDatabaseConstructor
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import ru.samtakoy.data.card.CardDao
 import ru.samtakoy.data.card.model.CardEntity
@@ -40,6 +42,7 @@ import ru.samtakoy.data.view.model.ViewHistoryEntity
         AutoMigration(from = 7, to = 8)
     ]*/
 )
+@ConstructedBy(MyDbConstructor::class)
 internal abstract class MyRoomDb() : RoomDatabase() {
     abstract fun cardDao(): CardDao
     abstract fun themeDao(): ThemeDao
@@ -49,6 +52,11 @@ internal abstract class MyRoomDb() : RoomDatabase() {
     abstract fun cardTagDao(): CardTagDao
     abstract fun viewHistoryDao(): ViewHistoryDao
     abstract fun courseViewDao(): LearnCourseViewDao
+}
+
+@Suppress("KotlinNoActualForExpect", "EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+expect internal object MyDbConstructor: RoomDatabaseConstructor<MyRoomDb> {
+    override fun initialize(): MyRoomDb
 }
 
 /** Общие настройки для всех платформ */

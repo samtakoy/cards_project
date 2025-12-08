@@ -9,9 +9,6 @@ kotlin {
             // Compose
             implementation(compose.ui)
             implementation(compose.material3)
-            implementation(compose.preview)
-            implementation(compose.components.uiToolingPreview)
-            implementation(compose.components.uiToolingPreview)
             implementation(compose.materialIconsExtended)
             implementation(libs.androidx.navigation.compose)
             // Lifecycle

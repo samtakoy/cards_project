@@ -18,17 +18,15 @@ kotlin {
         }
     }
 
-    // Добавьте JVM Desktop таргет
     jvm("desktop") {
         compilerOptions {
             jvmTarget.set(JvmTarget.fromTarget(desktopJavaVersion.toString()))
         }
     }
 
-    // Если эти строки закомментированы или отсутствуют, iOS таргета нет
-    // iosX64()
-    // iosArm64()
-    // iosSimulatorArm64()
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
 
     sourceSets {
         commonMain.dependencies {
@@ -36,6 +34,7 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.collections.immutable)
+            // implementation(libs.kotlinx.io.core) ?
 
             implementation(libs.napier)
         }
@@ -44,6 +43,10 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.swing)
             }
         }
+        /*
+        iosMain.dependencies {
+            // iOS специфичные libs (если нужны)
+        }*/
     }
 
     jvmToolchain(projectJavaVersionInt)

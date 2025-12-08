@@ -34,7 +34,6 @@ import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.resources.Res
 import ru.samtakoy.resources.action_ok
 import ru.samtakoy.resources.db_request_err_message
-import ru.samtakoy.resources.getFormatted
 import ru.samtakoy.resources.msg_there_is_no_cards_in_pack
 import ru.samtakoy.resources.qpack_cards_count
 
@@ -292,7 +291,7 @@ internal class QPackInfoViewModelImpl(
             val cardsCountInUncompleted = lastView?.let { it.todoCardIds.size + it.viewedCardIds.size } ?: 0
             viewState = viewState.copy(
                 title = qPack.title.asAnnotated(),
-                cardsCountText = getFormatted(Res.string.qpack_cards_count, cardIds.size).asAnnotated(),
+                cardsCountText = getString(Res.string.qpack_cards_count, cardIds.size).asAnnotated(),
                 isFavoriteChecked = qPack.favorite > 0,
                 buttons = if (lastView != null && lastView.todoCardIds.isNotEmpty()) {
                     buttonsMapper.map(

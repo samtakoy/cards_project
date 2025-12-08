@@ -1,9 +1,8 @@
 package ru.samtakoy.importcards.domain
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.asFlow
 import ru.samtakoy.common.utils.DateUtils
-import ru.samtakoy.importcards.data.model.ExportImportConst
 import ru.samtakoy.importcards.data.model.QPackSource
 import ru.samtakoy.domain.card.CardInteractor
 import ru.samtakoy.domain.card.domain.model.Card
@@ -18,10 +17,6 @@ import ru.samtakoy.domain.qpack.QPackInteractor
 import ru.samtakoy.domain.theme.ThemeInteractor
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.nio.charset.Charset
 
 internal class QPackBuilderInteractorImpl(
     private val themeInteractor: ThemeInteractor,
@@ -62,7 +57,6 @@ internal class QPackBuilderInteractorImpl(
     }
 
     @OptIn(ExperimentalTime::class)
-    @Throws(ImportCardsException::class)
     suspend fun saveQPackToDatabase(
         qPackBuilder: QPackBuilder,
         opts: ImportCardsOpts
@@ -113,7 +107,6 @@ internal class QPackBuilderInteractorImpl(
         return qPackBuilder
     }
 
-    @Throws(ImportCardsException::class)
     suspend fun saveCardToDatabase(cardBuilder: CardBuilder, tagMap: ConcurrentTagMap): Card {
         val card = cardBuilder.build()
 
@@ -162,26 +155,7 @@ internal class QPackBuilderInteractorImpl(
         )
     }
 
-    private fun linesFromSource(
-        source: QPackSource
-    ): Flow<String> {
-        return flow {
-            var iStream: InputStream? = null
-            try {
-                iStream = source.content.inputStream()
-                val isr = InputStreamReader(iStream, Charset.forName(ExportImportConst.FILES_CHARSET))
-                val br = BufferedReader(isr)
-                var line = br.readLine()
-                while (line != null) {
-                    emit(line)
-                    line = br.readLine()
-                }
-            } finally {
-                try {
-                    iStream?.close()
-                } catch (ignored: Exception) {
-                }
-            }
-        }
+    private fun linesFromSource(source: QPackSource): Flow<String> {
+        return source.content.decodeToString().lineSequence().asFlow()
     }
 }

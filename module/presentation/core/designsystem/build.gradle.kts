@@ -13,10 +13,6 @@ kotlin {
 
             implementation(projects.module.presentation.core.utils)
         }
-        androidMain.dependencies {
-            implementation(libs.androidx.compose.ui.tooling)
-            implementation(libs.androidx.compose.ui.tooling.preview)
-        }
     }
 }
 
@@ -26,8 +22,3 @@ android {
         compose = true
     }
 }
-
-dependencies {
-    debugImplementation(compose.preview)
-    debugImplementation(compose.components.uiToolingPreview)
- }

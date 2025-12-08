@@ -8,8 +8,6 @@ import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.domain.learncourse.schedule.Schedule
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
-import java.util.ArrayDeque
-import java.util.Deque
 
 
 fun List<LearnCourseMode>?.listToPrimitiveArray(): IntArray? {
@@ -70,15 +68,7 @@ fun makeInitialTodosStatic(cardIds: List<Long>, shuffleCards: Boolean): List<Lon
     } else {
         cardIds
     }
-    val todoCardIds = createNewEmptyTodoIds()
-    for (id in shuffledIds) {
-        todoCardIds.addLast(id)
-    }
-    return todoCardIds.toList()
-}
-
-private fun createNewEmptyTodoIds(): Deque<Long> {
-    return ArrayDeque()
+    return shuffledIds
 }
 
 fun LearnCourse.hasNotInCards(cardIds: List<Long>): Boolean {

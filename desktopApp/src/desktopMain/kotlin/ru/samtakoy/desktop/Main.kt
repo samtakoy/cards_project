@@ -2,7 +2,6 @@ package ru.samtakoy.desktop
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
@@ -33,7 +32,7 @@ fun main() = application {
 }
 
 @Composable
-private fun ApplicationScope.initLibs() {
+private fun initLibs() {
     val logger: CustomLogger = koinInject()
     Napier.base(logger)
    // Инициализация FileKit с вашим ID приложения (appId) - TODO взять из gradle?

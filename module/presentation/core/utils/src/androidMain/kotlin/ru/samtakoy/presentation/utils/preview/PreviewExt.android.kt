@@ -9,7 +9,7 @@ import org.koin.core.KoinApplication
 import org.koin.core.module.Module
 
 @Composable
-actual fun getKoinWithModules(vararg modules: Module): Koin {
+fun getKoinWithModules(vararg modules: Module): Koin {
     val context = LocalContext.current
     return remember {
         val koin = KoinApplication.init()

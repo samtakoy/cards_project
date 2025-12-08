@@ -6,7 +6,6 @@ import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.utils.asA
 import ru.samtakoy.resources.Res
-import ru.samtakoy.resources.getFormatted
 import ru.samtakoy.resources.qpack_btn_add_to_course
 import ru.samtakoy.resources.qpack_btn_add_to_new_course
 import ru.samtakoy.resources.qpack_btn_view_cards
@@ -82,7 +81,7 @@ internal class QPackInfoButtonsMapperImpl : QPackInfoButtonsMapper {
             if (uncompleted != null) {
                 add(
                     viewUncompletedBtn.getValue().copy(
-                        text = getFormatted(
+                        text = getString(
                             Res.string.qpack_btn_view_uncompleted,
                             "${uncompleted.viewed}/${uncompleted.total}"
                         ).asA()

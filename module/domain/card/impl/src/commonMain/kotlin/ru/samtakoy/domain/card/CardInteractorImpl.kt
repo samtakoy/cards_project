@@ -5,7 +5,7 @@ import ru.samtakoy.data.card.CardsRepository
 import ru.samtakoy.data.common.transaction.TransactionRepository
 import ru.samtakoy.domain.card.domain.model.Card
 import ru.samtakoy.domain.cardtag.TagInteractor
-import java.util.Random
+import kotlin.random.Random
 
 internal class CardInteractorImpl(
     private val tagInteractor: TagInteractor,
@@ -70,7 +70,7 @@ internal class CardInteractorImpl(
     }
 
     override suspend fun addFakeCard(qPackId: Long) {
-        val num = Random().nextInt(10000)
+        val num = Random.nextInt(10000)
         val card = Card(
             id = 0L,
             qPackId = qPackId,

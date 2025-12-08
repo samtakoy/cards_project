@@ -32,7 +32,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.koin.core.context.GlobalContext
+import org.koin.compose.getKoin
 import ru.samtakoy.presentation.main.navigation.MainFlowRoute
 import ru.samtakoy.presentation.main.navigation.changeTab
 import ru.samtakoy.presentation.main.vm.MainScreenViewModel
@@ -77,8 +77,9 @@ private fun MainScreenInternal(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
+
+    val koin = getKoin() // TODO через вью модель?
     val rootFeatureEntries: ImmutableList<RootFeatureEntry> = remember {
-        val koin = GlobalContext.get()
         koin.getAll<RootFeatureEntry>()
             .sortedBy { it::class.simpleName }
             .toImmutableList()
@@ -116,8 +117,8 @@ private fun TabsView(
     drawerState: DrawerState,
     coroutineScope: CoroutineScope
 ) {
+    val koin = getKoin() // TODO через вью модель?
     val mainTabFeatureEntries: ImmutableList<MainTabFeatureEntry> = remember {
-        val koin = GlobalContext.get()
         koin.getAll<MainTabFeatureEntry>().toImmutableList()
     }
     val mainTabFeatureEntriesById: ImmutableMap<TabRouteId, MainTabFeatureEntry> = remember(mainTabFeatureEntries) {

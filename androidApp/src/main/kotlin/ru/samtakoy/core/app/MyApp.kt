@@ -12,7 +12,6 @@ import org.koin.core.context.GlobalContext
 import ru.samtakoy.BuildConfig
 import ru.samtakoy.common.utils.log.CustomLogger
 import ru.samtakoy.common.utils.log.MyLog
-import ru.samtakoy.oldlegacy.di.koinAppModule
 
 class MyApp : MultiDexApplication() {
 

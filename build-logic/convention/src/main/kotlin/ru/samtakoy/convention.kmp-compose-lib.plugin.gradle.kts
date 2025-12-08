@@ -19,3 +19,11 @@ kotlin {
         }
     }
 }
+
+dependencies {
+    // Android preview:
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(compose.preview)
+    debugImplementation(compose.components.uiToolingPreview)
+}

@@ -1,6 +1,6 @@
 package ru.samtakoy.common.utils
 
-class Dispatcher<T>() {
+class Dispatcher<T: Any>() {
 
     private val listeners = mutableSetOf<WeakReference<T>>()
 

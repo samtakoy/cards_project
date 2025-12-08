@@ -11,14 +11,14 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import ru.samtakoy.common.utils.log.MyLog
 import ru.samtakoy.data.common.transaction.TransactionRepository
-import ru.samtakoy.importcards.data.model.QPackSource
 import ru.samtakoy.domain.cardtag.ConcurrentTagMap
 import ru.samtakoy.domain.cardtag.TagInteractor
+import ru.samtakoy.domain.task.model.TaskStateData
+import ru.samtakoy.importcards.data.model.QPackSource
 import ru.samtakoy.importcards.domain.batch.ImportCardsZipUseCase
 import ru.samtakoy.importcards.domain.batch.utils.ImportCardsException
 import ru.samtakoy.importcards.domain.batch.utils.builder.QPackBuilder
 import ru.samtakoy.importcards.domain.model.ImportCardsOpts
-import ru.samtakoy.domain.task.model.TaskStateData
 import ru.samtakoy.resources.Res
 import ru.samtakoy.resources.batch_zip_import_status_cards_saving
 import ru.samtakoy.resources.batch_zip_import_status_qpacks_preparing
@@ -27,7 +27,6 @@ import ru.samtakoy.resources.batch_zip_import_status_reading_from_zip
 import ru.samtakoy.resources.batch_zip_import_status_tags_saving
 import ru.samtakoy.resources.batch_zip_import_status_theme_actualization
 import ru.samtakoy.resources.common_err_message
-import ru.samtakoy.resources.getFormatted
 import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
@@ -172,11 +171,11 @@ internal class ImportCardsZipUseCaseImpl(
     private suspend fun StateReportCallback.status(
         progress: Float,
         stringId: StringResource,
-        vararg formatArgs: Any?
+        vararg formatArgs: Any
     ) {
         invoke(
             TaskStateData.ActiveStatus(
-                message = getFormatted(stringId, *formatArgs),
+                message = getString(stringId, *formatArgs),
                 progress = progress
             )
         )
