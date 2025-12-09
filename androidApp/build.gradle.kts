@@ -69,10 +69,6 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.fragment.ktx)
 
-    // room
-    // ksp(libs.androidx.room.compiler)
-    // implementation(libs.bundles.room)
-
     // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
@@ -90,8 +86,6 @@ dependencies {
 
     // Stetho core
     implementation(libs.facebook.stetho)
-    //If you want to add a network helper
-    // implementation("com.facebook.stetho:stetho-okhttp:1.5.1")
 
     // rxjava
     implementation(libs.reactivex.rxjava)

@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import ru.samtakoy.presentation.core.design_system.base.MyColors
@@ -58,10 +59,10 @@ fun QPackListItemView(
 ) {
     Column(
         modifier = modifier
+            .clip(getRoundedShape(UiRadiuses.listItemBg))
             .background(
                 color = MyColors.getListItemBgLightColor()
             )
-            .clip(getRoundedShape(UiRadiuses.listItemBg))
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(),
@@ -76,9 +77,11 @@ fun QPackListItemView(
             text = title,
             modifier = Modifier
                 .fillMaxWidth()
+                .background(color = CardTopBackgroundColor)
+                .padding(horizontal = UiOffsets.listItemContentHPadding)
                 .align(Alignment.Start),
             color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.headlineSmall,
         )
         Row(
             modifier = Modifier
@@ -114,3 +117,5 @@ fun QPackListItemView(
         }
     }
 }
+
+private val CardTopBackgroundColor = Color.Blue.copy(alpha = 0.055f)

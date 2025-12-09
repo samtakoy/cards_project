@@ -24,6 +24,7 @@ fun themesPresentationModule() = module {
             qPackInteractor = get(),
             themeInteractor = get(),
             permissionsController = get(),
+            downloadFileUseCase = get(),
             importCardsFromZipTask = get(),
             uiItemsMapper = get(),
             menuItemMapper = get(),

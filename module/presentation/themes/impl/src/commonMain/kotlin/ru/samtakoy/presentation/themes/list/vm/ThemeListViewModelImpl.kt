@@ -2,7 +2,6 @@ package ru.samtakoy.presentation.themes.list.vm
 
 import androidx.lifecycle.SavedStateHandle
 import io.github.vinceglb.filekit.PlatformFile
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
@@ -14,21 +13,19 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.common.utils.log.MyLog
-import ru.samtakoy.importcards.domain.model.ImportCardsOpts
 import ru.samtakoy.domain.qpack.QPackInteractor
 import ru.samtakoy.domain.task.model.TaskStateData
 import ru.samtakoy.domain.theme.Theme
 import ru.samtakoy.domain.theme.ThemeInteractor
+import ru.samtakoy.download.domain.DownloadFileUseCase
 import ru.samtakoy.importcards.domain.batch.RunImportCardsFromZipTaskUseCase
+import ru.samtakoy.importcards.domain.model.ImportCardsOpts
 import ru.samtakoy.platform.permissions.PermissionState
 import ru.samtakoy.platform.permissions.PermissionsController
 import ru.samtakoy.platform.permissions.model.MyPermission
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.base.viewmodel.savedstate.SavedStateValue
-import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
-import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
-import ru.samtakoy.presentation.core.design_system.dialogs.inputtext.MyInputTextDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dropdown.DropDownMenuUiModel
 import ru.samtakoy.presentation.core.design_system.dropdown.getEmptyMenu
 import ru.samtakoy.presentation.core.design_system.progress.ProgressOverlayUiModel
@@ -44,10 +41,8 @@ import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.State
 import ru.samtakoy.presentation.utils.asA
 import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.resources.Res
-import ru.samtakoy.resources.action_ok
 import ru.samtakoy.resources.db_request_err_message
 import ru.samtakoy.resources.feature_themes_list_title
-import ru.samtakoy.resources.fragment_dialog_theme_add_title
 import ru.samtakoy.resources.fragment_themes_list_cant_delete_theme_msg
 import ru.samtakoy.resources.fragment_themes_list_cant_send_file_msg
 import ru.samtakoy.resources.theme_list_screen_import_from_zip_init
@@ -58,6 +53,7 @@ internal class ThemeListViewModelImpl(
     private val qPackInteractor: QPackInteractor,
     private val themeInteractor: ThemeInteractor,
     private val permissionsController: PermissionsController,
+    private val downloadFileUseCase: DownloadFileUseCase,
     private val importCardsFromZipTask: RunImportCardsFromZipTaskUseCase,
     private val uiItemsMapper: ThemeUiItemMapper,
     private val menuItemMapper: ThemeListMenuItemsMapper,
@@ -77,7 +73,7 @@ internal class ThemeListViewModelImpl(
         qPackContextMenu = getEmptyMenu(),
         isExportAllMenuItemVisible = false,
         isToBlankDbMenuItemVisible = false,
-        items = emptyList<ThemeUiItem>().toImmutableList()
+        content = State.Content.Init
     )
 ), ThemeListViewModel {
 
@@ -107,8 +103,21 @@ internal class ThemeListViewModelImpl(
             is Event.ToolbarMenuItemClick -> onUiToolbarMenuItemClick(event.id)
             is Event.QPackContextMenuItemClick -> onUiQPackContextMenuItemClick(event.item, event.menuItem)
             is Event.ThemeContextMenuItemClick -> onUiThemeContextMenuItemClick(event.item, event.menuItem)
-            is Event.InputDialogResult -> onUiNewThemeTitleEntered(event.title)
+            is Event.InputDialogResult -> onUiInputDialogResult(event.dialogId, event.inputText)
             is Event.AlertDialogResult -> onUiAlertDialogButtonClick(event.dialogId, event.clickedButton)
+            is Event.ButtonClick -> onUiButtonClick(event.buttonId)
+        }
+    }
+
+    private fun onUiButtonClick(buttonId: UiId) {
+        when (buttonId) {
+            ThemeUiItemMapper.ImportExampleBtnId -> {
+                launchCatching {
+                    sendAction(
+                        Action.ShowInputDialog(uiItemsMapper.mapExampleUrlInputDialog())
+                    )
+                }
+            }
         }
     }
 
@@ -199,9 +208,7 @@ internal class ThemeListViewModelImpl(
                 )
             }
             is ThemeUiItem.QPack -> {
-                sendAction(
-                    NavigationAction.NavigateToQPack(qPackId = item.id.value)
-                )
+                sendAction(NavigationAction.NavigateToQPack(qPackId = item.id.value))
             }
         }
     }
@@ -209,20 +216,7 @@ internal class ThemeListViewModelImpl(
     private fun onUiAddNewThemeRequest() {
         launchCatching {
             sendAction(
-                Action.ShowInputThemeTitleDialog(
-                    MyInputTextDialogUiModel(
-                        id = null,
-                        title = getString(Res.string.fragment_dialog_theme_add_title).asAnnotated(),
-                        description = null,
-                        inputHint = null,
-                        initialText = "",
-                        okButton = MyButtonUiModel(
-                            id = LongUiId(0L),
-                            text = getString(Res.string.action_ok).asAnnotated(),
-                            isEnabled = true
-                        )
-                    )
-                )
+                Action.ShowInputDialog(uiItemsMapper.mapNewThemeNameInputDialog())
             )
         }
     }
@@ -231,12 +225,26 @@ internal class ThemeListViewModelImpl(
         sendAction(NavigationAction.NavigateToSettings)
     }
 
-    private fun onUiNewThemeTitleEntered(title: String) {
-        if (title.isBlank()) return
-        launchWithLoader(
-            onError = ::onGetError
-        ) {
-            themeInteractor.addNewTheme(getParentThemeId(), title)
+    private fun onUiInputDialogResult(dialogId: UiId?, inputText: String) {
+        if (inputText.isBlank()) return
+        when (dialogId) {
+            ThemeUiItemMapper.NewThemeNameInputDialogId -> {
+                launchWithLoader(
+                    onError = ::onGetError
+                ) {
+                    themeInteractor.addNewTheme(getParentThemeId(), inputText)
+                }
+            }
+            ThemeUiItemMapper.ExampleUrlInputDialogId -> {
+                launchWithLoader(
+                    onError = ::onGetError
+                ) {
+                    runImportCardsFromZipTask(
+                        file = downloadFileUseCase.downloadToTempFile(inputText),
+                        opts = ImportCardsOpts.TO_BLANK_DB_IMPORT
+                    )
+                }
+            }
         }
     }
 
@@ -284,17 +292,14 @@ internal class ThemeListViewModelImpl(
                     )
                      */
                 }
-                DialogState.Type.SELECT_ZIP_TO_IMPORT -> runImportCardsFromZipTask(file)
+                DialogState.Type.SELECT_ZIP_TO_IMPORT -> runImportCardsFromZipTask(file, lastDialogState.value.importCardOpts)
                 else -> Unit
             }
         }
     }
 
-    private suspend fun runImportCardsFromZipTask(file: PlatformFile) {
-        val result = importCardsFromZipTask.import(
-            zipFile = file,
-            opts = lastDialogState.value.importCardOpts
-        )
+    private suspend fun runImportCardsFromZipTask(file: PlatformFile, opts: ImportCardsOpts) {
+        val result = importCardsFromZipTask.import(zipFile = file, opts = opts)
         if (result is TaskStateData.Error) {
             sendAction(Action.ShowErrorMessage(result.message))
         }
@@ -407,8 +412,7 @@ internal class ThemeListViewModelImpl(
         ) {  childThemes, childQPacks ->
             updateState { state ->
                 state.copy(
-                    items = (uiItemsMapper.mapThemes(childThemes) + uiItemsMapper.mapQPacks(childQPacks))
-                        .toImmutableList()
+                    content = uiItemsMapper.mapContent(parentTheme, childThemes, childQPacks)
                 )
             }
             updateMenuState()
@@ -418,7 +422,7 @@ internal class ThemeListViewModelImpl(
     private fun updateMenuState() {
         launchCatching {
             val isExportAllMenuItemVisible = parentTheme == null
-            val isToBlankDbMenuItemVisible = parentTheme == null && viewState.items.isEmpty()
+            val isToBlankDbMenuItemVisible = parentTheme == null && viewState.content is State.Content.Empty
             updateState { state ->
                 state.copy(
                     isExportAllMenuItemVisible = isExportAllMenuItemVisible,

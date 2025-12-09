@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -15,7 +16,9 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -25,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
@@ -32,6 +36,7 @@ import ru.samtakoy.presentation.base.observeActionsWithLifecycle
 import ru.samtakoy.presentation.core.appelements.qpacklistitem.QPackListItemView
 import ru.samtakoy.presentation.core.appelements.themelistitem.ThemeListItemView
 import ru.samtakoy.presentation.core.design_system.base.UiOffsets
+import ru.samtakoy.presentation.core.design_system.button.usual.MyButton
 import ru.samtakoy.presentation.core.design_system.dialogs.alert.MyAlertDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.alert.MyAlertDialogView
 import ru.samtakoy.presentation.core.design_system.dialogs.inputtext.MyInputTextDialogUiModel
@@ -45,6 +50,7 @@ import ru.samtakoy.presentation.core.design_system.toolbar.ToolbarTitleView
 import ru.samtakoy.presentation.themes.list.model.ThemeUiItem
 import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel
 import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.Event
+import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.State
 
 @Composable
 internal fun ThemeListScreen(
@@ -120,7 +126,7 @@ private fun HandleActions(
     // TODO унести в репозиторий
     val pickZipFileLauncher = rememberFilePickerLauncher(
         type = FileKitType.File(
-            // не дает выбраать zip
+            // не дает выбрать zip
             // extensions = listOf("zip")
            )
     ) { file ->
@@ -148,7 +154,7 @@ private fun HandleActions(
                     pickAnyFileLauncher.launch()
                 }
             }
-            is ThemeListViewModel.Action.ShowInputThemeTitleDialog -> {
+            is ThemeListViewModel.Action.ShowInputDialog -> {
                 inputDialogState.value = action.dialogModel
             }
             is ThemeListViewModel.Action.ShowAlertDialog -> {
@@ -168,7 +174,7 @@ internal fun ThemesListScreenInternal(
     modifier: Modifier = Modifier
 ) {
     MySimpleScreenScaffold(
-        isLoaderVisible = viewState.isLoading,
+        isLoaderVisible = viewState.isLoading || viewState.content is State.Content.Init,
         snackbarHostState = snackbarHostState,
         modifier = modifier
     ) {
@@ -212,37 +218,19 @@ internal fun ThemesListScreenInternal(
                     }
                 }
             )
-            LazyColumn(
+            ContentView(
+                viewState = viewState,
+                scrollState = scrollState,
+                onEvent = onEvent,
                 modifier = Modifier
                     .weight(1f)
                     .padding(
                         horizontal = UiOffsets.screenContentHPadding,
                         vertical = UiOffsets.screenContentVPadding
-                    ),
-                verticalArrangement = Arrangement.spacedBy(UiOffsets.listItemOffset),
-                state = scrollState
-            ) {
-                items(
-                    items = viewState.items,
-                    key = { it.composeKey }
-                ) { item ->
-                    when (item) {
-                        is ThemeUiItem.QPack -> QPackListItemInternalView(
-                            menu = viewState.qPackContextMenu,
-                            onEvent = onEvent,
-                            item = item
-                        )
-                        is ThemeUiItem.Theme -> ThemeListItemInternalView(
-                            menu = viewState.themeContextMenu,
-                            onEvent = onEvent,
-                            item = item
-                        )
-                    }
-                }
-            }
+                    )
+            )
         }
 
-        // TODO Временно для десктопа, пока не подумаю
         if (scrollState.canScrollForward || scrollState.canScrollBackward) {
             PlatformVerticalScrollbar(
                 scrollState = scrollState,
@@ -254,6 +242,94 @@ internal fun ThemesListScreenInternal(
     }
     viewState.progressPanel?.let {
         ProgressOverlayView(model = viewState.progressPanel)
+    }
+}
+
+@Composable
+private fun ContentView(
+    viewState: ThemeListViewModel.State,
+    scrollState: LazyListState,
+    onEvent: (Event) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val content = viewState.content
+    when (content) {
+        is ThemeListViewModel.State.Content.Empty -> {
+            EmptyView(
+                content = content,
+                onEvent = onEvent,
+                modifier = modifier
+            )
+        }
+        ThemeListViewModel.State.Content.Init -> Unit
+        is ThemeListViewModel.State.Content.Items -> {
+            ItemsView(
+                scrollState = scrollState,
+                content = content,
+                qPackContextMenu = viewState.qPackContextMenu,
+                themeContextMenu = viewState.themeContextMenu,
+                onEvent = onEvent,
+                modifier = modifier
+            )
+        }
+    }
+}
+
+@Composable
+private fun EmptyView(
+    content: ThemeListViewModel.State.Content.Empty,
+    onEvent: (Event) -> Unit,
+    modifier: Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(UiOffsets.itemsStandartVOffset, Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = content.description,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.bodyMedium
+        )
+        MyButton(
+            model = content.actionButton,
+            onClick = remember { { onEvent(Event.ButtonClick(it)) } }
+        )
+    }
+}
+
+@Composable
+private fun ItemsView(
+    scrollState: LazyListState,
+    content: ThemeListViewModel.State.Content.Items,
+    qPackContextMenu: DropDownMenuUiModel,
+    themeContextMenu: DropDownMenuUiModel,
+    onEvent: (Event) -> Unit,
+    modifier: Modifier,
+) {
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(UiOffsets.listItemOffset),
+        state = scrollState
+    ) {
+        items(
+            items = content.items,
+            key = { it.composeKey }
+        ) { item ->
+            when (item) {
+                is ThemeUiItem.QPack -> QPackListItemInternalView(
+                    menu = qPackContextMenu,
+                    onEvent = onEvent,
+                    item = item
+                )
+                is ThemeUiItem.Theme -> ThemeListItemInternalView(
+                    menu = themeContextMenu,
+                    onEvent = onEvent,
+                    item = item
+                )
+            }
+        }
     }
 }
 

@@ -92,18 +92,21 @@
 
     <string name="feature_themes_list_title">по темам</string>
 
+    <string name="feature_themes_list_import_url_button">Импорт</string>
+    <string name="feature_themes_list_import_url_desc">Карточек нет.\nВы можете импортировать карточки из примера.</string>
+    <string name="feature_themes_list_import_dialog_title">Импорт zip из url:</string>
+
     <string name="fragment_themes_list_cant_read_file_size_msg">File size read error</string>
     <string name="fragment_themes_list_cant_open_file_msg">File open error</string>
     <string name="fragment_themes_list_cant_save_file_msg">File save error</string>
     <string name="fragment_themes_list_cant_send_file_msg">File sending error</string>
     <string name="fragment_themes_list_cant_delete_theme_msg">Theme deleting error</string>
-    <!--string name="fragment_themes_list_cant_save_file_msg2">File save error 2</string-->
     <string name="fragment_themes_list_cards_export_ok">File export is successful</string>
     <string name="fragment_themes_list_cards_cards_loading_error">Cards loading error</string>
     <string name="fragment_themes_list_not_dir_msg">Not directory was selected</string>
 
     <string name="fragment_themes_menu_item_add">add</string>
-    <string name="fragment_themes_menu_item_import_cards">import</string>
+    <string name="fragment_themes_menu_item_import_cards">import one pack</string>
     <!-- импорт в чистую базу -->
     <string name="menu_item_import_from_folder_all">import from folder</string>
     <string name="menu_item_from_folder">from folder...</string>

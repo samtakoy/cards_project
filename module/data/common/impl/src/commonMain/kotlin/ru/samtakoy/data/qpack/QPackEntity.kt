@@ -6,13 +6,19 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import ru.samtakoy.data.theme.ThemeEntity
 
+/**
+ * TODO сейчас из-за наличия внешнего ключа невозможно создавать наборы карточек, не привязанные к темам.
+ *  Для связи нужна отдельная таблица.
+ *
+ * */
 @Entity(tableName = QPackEntity.table,
         foreignKeys = [
             ForeignKey(
                 entity = ThemeEntity::class,
                 parentColumns = [QPackEntity._id],
                 childColumns = [QPackEntity._theme_id],
-                onDelete = ForeignKey.RESTRICT)
+                onDelete = ForeignKey.RESTRICT
+            )
         ])
 internal class QPackEntity(
     @PrimaryKey(autoGenerate = true)

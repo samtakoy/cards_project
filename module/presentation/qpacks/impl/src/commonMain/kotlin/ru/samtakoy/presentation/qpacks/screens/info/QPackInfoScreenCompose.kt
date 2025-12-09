@@ -173,11 +173,11 @@ internal fun QPackInfoScreenInternal(
                     ),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    viewState.buttons.forEach {
-                        key(it.id) {
+                    viewState.buttons.forEach { buttonModel ->
+                        key(buttonModel.id) {
                             MyButton(
-                                model = it,
-                                onClick = { onEvent(Event.ButtonClick(it.id)) }
+                                model = buttonModel,
+                                onClick = remember { { onEvent(Event.ButtonClick(it)) } }
                             )
                         }
                     }

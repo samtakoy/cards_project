@@ -11,6 +11,7 @@ import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.Event
 import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.State
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
+import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.alert.MyAlertDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.inputtext.MyInputTextDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dropdown.DropDownMenuUiModel
@@ -29,11 +30,21 @@ internal interface ThemeListViewModel : BaseViewModel<State, Action, Event> {
         val qPackContextMenu: DropDownMenuUiModel,
         val isExportAllMenuItemVisible: Boolean,
         val isToBlankDbMenuItemVisible: Boolean,
-        val items: ImmutableList<ThemeUiItem>
-    )
+        val content: Content
+    ) {
+        @Immutable
+        sealed interface Content {
+            object Init : Content
+            data class Items(val items: ImmutableList<ThemeUiItem>) : Content
+            data class Empty(
+                val actionButton: MyButtonUiModel,
+                val description: AnnotatedString
+            ) : Content
+        }
+    }
 
     sealed interface Action {
-        class ShowInputThemeTitleDialog(val dialogModel: MyInputTextDialogUiModel) : Action
+        class ShowInputDialog(val dialogModel: MyInputTextDialogUiModel) : Action
         class ShowAlertDialog(val dialogModel: MyAlertDialogUiModel) : Action
         class ShowImportPackFileSelection(val isZip: Boolean) : Action
         object ShowFolderSelectionDialog : Action
@@ -64,7 +75,7 @@ internal interface ThemeListViewModel : BaseViewModel<State, Action, Event> {
 
     sealed interface Event {
         object AddNewThemeRequest : Event
-        class InputDialogResult(val dialogId: UiId?, val title: String) : Event
+        class InputDialogResult(val dialogId: UiId?, val inputText: String) : Event
         class AlertDialogResult(val dialogId: UiId?, val clickedButton: UiId) : Event
         class ImportFileSelected(val file: PlatformFile?) : Event
         class PathSelected(val selectedPath: String) : Event
@@ -78,5 +89,6 @@ internal interface ThemeListViewModel : BaseViewModel<State, Action, Event> {
             val menuItem: DropDownMenuUiModel.ItemType.Item
         ) : Event
         class ToolbarMenuItemClick(val id: UiId) : Event
+        class ButtonClick(val buttonId: UiId) : Event
     }
 }
