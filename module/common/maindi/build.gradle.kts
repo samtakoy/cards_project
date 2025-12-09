@@ -10,6 +10,7 @@ kotlin {
             implementation(projects.module.common.utils)
 
             implementation(projects.module.data.common.impl)
+            implementation(projects.module.data.remote)
             implementation(projects.module.data.task.impl)
 
             implementation(projects.module.domain.card.impl)
@@ -18,10 +19,13 @@ kotlin {
             implementation(projects.module.domain.qpack.impl)
             implementation(projects.module.domain.theme.impl)
             implementation(projects.module.domain.view.impl)
+
+            // features
             implementation(projects.module.features.import.impl)
             implementation(projects.module.features.speech.impl)
-
             implementation(projects.module.features.speech.presentation)
+            implementation(projects.module.features.download.impl)
+
             implementation(projects.module.presentation.main.impl)
             implementation(projects.module.presentation.cards.impl)
             implementation(projects.module.presentation.qpacks.impl)

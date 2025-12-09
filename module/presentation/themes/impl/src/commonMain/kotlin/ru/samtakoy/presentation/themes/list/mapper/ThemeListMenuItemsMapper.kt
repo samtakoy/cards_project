@@ -92,13 +92,15 @@ internal class ThemeListMenuItemsMapperImpl : ThemeListMenuItemsMapper {
     ): List<ItemType> {
         return buildList {
 
+            /* Импорт одного набора карточек из файла - тут и ниже временно закоменнтировал.
             add(
                 ItemType.Item(
                     id = ThemeListMenuId.ImportCards,
                     title = getString(Res.string.fragment_themes_menu_item_import_cards).asAnnotated()
                 )
-            )
+            )*/
 
+            /* Импорт наборов карточек из папки
             if (isToBlankDbMenuItemVisible) {
                 add(
                     ItemType.Item(
@@ -113,7 +115,7 @@ internal class ThemeListMenuItemsMapperImpl : ThemeListMenuItemsMapper {
                         title = getString(Res.string.menu_item_from_folder).asAnnotated()
                     )
                 )
-            }
+            }*/
 
             if (isToBlankDbMenuItemVisible) {
                 add(
@@ -131,14 +133,16 @@ internal class ThemeListMenuItemsMapperImpl : ThemeListMenuItemsMapper {
                 )
             }
 
+            /* Импорт карточек по url (zip?)
             add(
                 ItemType.Item(
                     id = ThemeListMenuId.OnlineImportCards,
                     title = getString(Res.string.fragment_themes_menu_item_remote_import_cards)
                         .asAnnotated()
                 )
-            )
+            )*/
 
+            /* Экспорт карточек
             if (isExportAllMenuItemVisible) {
                 add(
                     ItemType.Item(
@@ -155,15 +159,17 @@ internal class ThemeListMenuItemsMapperImpl : ThemeListMenuItemsMapper {
                             .asAnnotated()
                     )
                 )
-            }
+            }*/
 
+            /* Экран с логами
             add(
                 ItemType.Item(
                     id = ThemeListMenuId.Log,
                     title = getString(Res.string.menu_item_log).asAnnotated()
                 )
-            )
+            )*/
 
+            /* Экран настроек приложения
             add(ItemType.Separator(ThemeListMenuId.DownSeparator))
 
             add(
@@ -173,7 +179,7 @@ internal class ThemeListMenuItemsMapperImpl : ThemeListMenuItemsMapper {
                         Res.string.menu_item_settings
                     ).asAnnotated()
                 )
-            )
+            )*/
 
         }
     }
@@ -209,14 +215,18 @@ internal class ThemeListMenuItemsMapperImpl : ThemeListMenuItemsMapper {
         return DropDownMenuUiModel.Menu(
             id = ThemeListMenuId.FromZipSubMenu,
             items = listOf<ItemType>(
+                /* Импорт только новых наборов
                 ItemType.Item(
                     id = ThemeListMenuId.FromZipImportNew,
                     title = getString(Res.string.menu_item_import_new).asAnnotated()
-                ),
+                ), */
+
+                /* Обновление существующих
                 ItemType.Item(
                     id = ThemeListMenuId.FromZipUpdateExists,
                     title = getString(Res.string.menu_item_update_exists).asAnnotated()
-                ),
+                ),*/
+
                 ItemType.Item(
                     id = ThemeListMenuId.FromZipImportAsNew,
                     title = getString(Res.string.menu_item_import_as_new).asAnnotated()

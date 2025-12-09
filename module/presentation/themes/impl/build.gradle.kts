@@ -32,6 +32,7 @@ kotlin {
 
             implementation(projects.module.domain.export.api)
             implementation(projects.module.features.import.api)
+            implementation(projects.module.features.download.api)
             implementation(projects.module.domain.theme.api)
             implementation(projects.module.domain.qpack.api)
 

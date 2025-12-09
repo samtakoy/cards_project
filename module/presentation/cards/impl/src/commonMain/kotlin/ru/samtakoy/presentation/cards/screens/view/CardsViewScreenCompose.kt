@@ -440,12 +440,12 @@ private fun ButtonsRow(
         horizontalArrangement = Arrangement.spacedBy(MyOffsets.medium, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        buttons.forEach {
-            key(it.id) {
+        buttons.forEach { buttonModel ->
+            key(buttonModel.id) {
                 MyButton(
-                    model = it,
+                    model = buttonModel,
                     onClick = {
-                        onEvent(Event.ButtonClick(it.id))
+                        onEvent(Event.ButtonClick(it))
                     }
                 )
             }
