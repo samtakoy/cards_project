@@ -12,7 +12,7 @@ import org.koin.mp.KoinPlatform
 fun MainViewController() = ComposeUIViewController { AppEntryPoint() }
 
 object IOSInitializer {
-    fun init() {
+    fun inititialize() {
         if (KoinPlatform.getKoinOrNull() == null) {
             val koinApp = startKoin {
                 modules(koinModulesModule())
