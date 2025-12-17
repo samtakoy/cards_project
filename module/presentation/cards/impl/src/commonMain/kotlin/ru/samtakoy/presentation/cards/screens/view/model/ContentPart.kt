@@ -6,5 +6,9 @@ import androidx.compose.ui.text.AnnotatedString
 @Immutable
 internal sealed interface ContentPart {
     data class Text(val value: AnnotatedString) : ContentPart
-    data class Code(val value: String) : ContentPart
+    data class Code(
+        val value: String,
+        val type: CodeType,
+        val typeLabel: String,
+    ) : ContentPart
 }

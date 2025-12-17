@@ -20,3 +20,13 @@ fun getLeftRoundedShape(radius: Dp): Shape {
         bottomEnd = 0.dp
     )
 }
+
+@Stable
+fun getTopRoundedShape(radius: Dp): Shape {
+    return RoundedCornerShape(
+        topStart = radius,
+        bottomStart = 0.dp,
+        topEnd =radius,
+        bottomEnd = 0.dp
+    )
+}

@@ -4,14 +4,17 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.runBlocking
+import org.jetbrains.compose.resources.PreviewContextConfigurationEffect
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.KoinApplication
 import ru.samtakoy.common.utils.di.commonUtilsModule
 import ru.samtakoy.presentation.cards.di.cardsViewPresentationModule
 import ru.samtakoy.presentation.cards.screens.view.CardsViewScreenInternal
+import ru.samtakoy.presentation.cards.screens.view.model.CodeType
 import ru.samtakoy.presentation.cards.screens.view.model.ContentPart
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.CardState
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.State
@@ -25,6 +28,8 @@ import ru.samtakoy.presentation.utils.getALoremIpsum
 @Preview
 @Composable
 private fun CardsViewScreenInternal_Preview() = MyTheme {
+    // для текстовых ресурсов
+    PreviewContextConfigurationEffect()
     val koin = KoinApplication.init()
         .androidContext(LocalContext.current)
         .modules(
@@ -33,6 +38,15 @@ private fun CardsViewScreenInternal_Preview() = MyTheme {
         )
     val questionMapper = koin.koin.get<QuestionButtonsMapper>()
     val answerMapper = koin.koin.get<AnswerButtonsMapper>()
+    val parts: ImmutableList<ContentPart> = listOf(
+        ContentPart.Text(getALoremIpsum()),
+        ContentPart.Code("val s: String = \"Kotlin\"", CodeType.Kotlin, "kotlin"),
+        ContentPart.Code("val s: String = \"Kotlin\"", CodeType.AutoParsedKotlin, "some"),
+        ContentPart.Code("some text\n and some text", CodeType.Text, "text"),
+        ContentPart.Code("val s: String = \"Unknown\"", CodeType.Kotlin, ""),
+        ContentPart.Code("val s: String = \"Swift\"", CodeType.Swift, "swift"),
+        ContentPart.Text(getALoremIpsum()),
+    ).toImmutableList()
 
     val cards = remember {
         listOf<CardState>(
@@ -41,7 +55,7 @@ private fun CardsViewScreenInternal_Preview() = MyTheme {
                 isQuestion = true,
                 content = CardState.Content(
                     isFavorite = true,
-                    parts = listOf(ContentPart.Text(getALoremIpsum())).toImmutableList(),
+                    parts = parts,
                     hasRevertButton = true
                 )
             ),
@@ -50,7 +64,7 @@ private fun CardsViewScreenInternal_Preview() = MyTheme {
                 isQuestion = false,
                 content = CardState.Content(
                     isFavorite = true,
-                    parts = listOf(ContentPart.Text(getALoremIpsum())).toImmutableList(),
+                    parts = parts,
                     hasRevertButton = true
                 )
             )
