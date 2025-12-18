@@ -10,10 +10,10 @@ kotlin {
 
             implementation(libs.text.to.speech)
 
-            implementation(projects.module.common.utils)
-            implementation(projects.module.common.resources)
+            implementation(projects.module.common.utils.common)
+            implementation(projects.module.core.resources)
 
-            implementation(projects.module.domain.commonRepoApi)
+            implementation(projects.module.core.db.repoApi)
 
             implementation(projects.module.features.speech.api)
         }
@@ -26,7 +26,7 @@ kotlin {
             //
             implementation(libs.kotlinx.serialization.json)
 
-            implementation(projects.module.platform.notification.impl)
+            implementation(projects.module.utilFeatures.notification.impl)
 
 
         }

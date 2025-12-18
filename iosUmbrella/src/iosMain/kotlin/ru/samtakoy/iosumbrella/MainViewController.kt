@@ -5,11 +5,11 @@ import androidx.compose.ui.window.ComposeUIViewController
 import com.example.maindi.koinModulesModule
 import io.github.aakira.napier.Napier
 import org.koin.core.context.startKoin
-import ru.samtakoy.common.utils.log.CustomLogger
+import ru.samtakoy.core.log.CustomLogger
 import ru.samtakoy.presentation.main.MainScreenEntry
 import org.koin.mp.KoinPlatform
 
-fun MainViewController() = ComposeUIViewController { AppEntryPoint() }
+fun MainViewController() = ComposeUIViewController { MainScreenEntry() }
 
 object IOSInitializer {
     fun inititialize() {
@@ -20,9 +20,4 @@ object IOSInitializer {
             Napier.base(KoinPlatform.getKoin().get<CustomLogger>())
         }
     }
-}
-
-@Composable
-private fun AppEntryPoint() {
-    MainScreenEntry()
 }

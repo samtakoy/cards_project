@@ -37,6 +37,7 @@ napier_version = "2.7.1"
 kodeview_version = "0.9.0"
 text_to_speech_version = "3.0.0"
 ktorfit_version = "2.6.5"
+androidxJunit = "1.3.0"
 
 [libraries]
 # provides the Kotlin Gradle plugin
@@ -177,6 +178,7 @@ kmpio = { module = "io.github.skolson:kmp-io", version.ref = "kmpio_version" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlinTestVersion" }
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runnerVersion" }
 androidx-core = { group = "androidx.test", name = "core", version.ref = "coreVersion" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
 # kmpio-zip = { module = "io.skosi.kmpio:zip", version.ref = "kmpio_zip_version" }
 
 [plugins]

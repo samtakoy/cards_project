@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import ru.samtakoy.common.utils.Dispatcher
 import ru.samtakoy.common.utils.coroutines.ScopeProvider
-import ru.samtakoy.data.card.CardsRepository
+import ru.samtakoy.domain.card.CardsRepository
 import ru.samtakoy.domain.card.domain.model.Card
 import ru.samtakoy.speech.domain.mapper.PlayerAudioMapper
 import ru.samtakoy.speech.domain.model.PlayerRecordState

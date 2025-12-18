@@ -10,7 +10,7 @@ import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext
 import ru.samtakoy.BuildConfig
-import ru.samtakoy.common.utils.log.CustomLogger
+import ru.samtakoy.core.log.CustomLogger
 import ru.samtakoy.common.utils.log.MyLog
 
 class MyApp : MultiDexApplication() {

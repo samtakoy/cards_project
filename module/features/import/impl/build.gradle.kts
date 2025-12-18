@@ -13,37 +13,26 @@ kotlin {
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
 
-            implementation(projects.module.common.utils)
-            implementation(projects.module.common.resources)
-
-            implementation(projects.module.domain.commonRepoApi)
-            implementation(projects.module.data.task.api)
+            implementation(projects.module.common.utils.common)
+            implementation(projects.module.core.resources)
+            implementation(projects.module.core.db.repoApi)
+            implementation(projects.module.utilFeatures.task.api)
 
             implementation(projects.module.features.import.api)
-
-            implementation(projects.module.domain.task.model)
-
-            implementation(projects.module.domain.card.api)
-            implementation(projects.module.domain.qpack.api)
-            implementation(projects.module.domain.theme.api)
+            implementation(projects.module.features.card.api)
+            implementation(projects.module.features.qpack.api)
+            implementation(projects.module.features.theme.api)
         }
         androidMain.dependencies {
             implementation(libs.koin.androidx.workmanager)
             // worker
             implementation(libs.work.runtime.ktx)
             implementation(libs.kotlinx.coroutines.guava)
-
-            //
             implementation(libs.kotlinx.serialization.json)
 
-            implementation(projects.module.platform.notification.impl)
-
-            implementation(projects.module.common.resources)
-            implementation(projects.module.common.utils)
+            implementation(projects.module.utilFeatures.notification.impl)
         }
         desktopMain.dependencies {
-            implementation(projects.module.common.resources)
-            implementation(projects.module.common.utils)
         }
     }
 }

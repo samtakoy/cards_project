@@ -8,7 +8,7 @@ import com.example.maindi.koinModulesModule
 import io.github.aakira.napier.Napier
 import io.github.vinceglb.filekit.FileKit
 import org.koin.core.context.startKoin
-import ru.samtakoy.common.utils.log.CustomLogger
+import ru.samtakoy.core.log.CustomLogger
 import ru.samtakoy.presentation.main.MainScreenEntry
 
 fun main() {

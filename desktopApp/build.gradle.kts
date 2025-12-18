@@ -31,11 +31,13 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.ui)
 
-            implementation(projects.module.common.maindi)
+            implementation(projects.module.core.log)
 
-            implementation(projects.module.presentation.main.impl)
+            implementation(projects.module.main.di)
 
-            implementation(projects.module.common.utils)
+            implementation(projects.module.main.screen)
+
+            implementation(projects.module.common.utils.common)
         }
 
         val desktopMain by getting {

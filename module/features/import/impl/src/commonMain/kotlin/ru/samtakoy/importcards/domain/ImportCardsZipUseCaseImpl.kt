@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.toList
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import ru.samtakoy.common.utils.log.MyLog
-import ru.samtakoy.data.common.transaction.TransactionRepository
+import ru.samtakoy.domain.common.transaction.TransactionRepository
 import ru.samtakoy.domain.cardtag.ConcurrentTagMap
 import ru.samtakoy.domain.cardtag.TagInteractor
 import ru.samtakoy.domain.task.model.TaskStateData

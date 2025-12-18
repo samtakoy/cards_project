@@ -16,12 +16,12 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
 
-            implementation(projects.module.common.utils)
-            implementation(projects.module.common.resources)
+            implementation(projects.module.common.utils.common)
+            implementation(projects.module.core.resources)
 
-            implementation(projects.module.presentation.core.viewmodel)
-            implementation(projects.module.presentation.core.designsystem)
-            implementation(projects.module.presentation.core.utils)
+            implementation(projects.module.common.viewmodel)
+            implementation(projects.module.uikit.designsystem)
+            implementation(projects.module.common.utils.presentation)
 
             implementation(projects.module.features.speech.api)
         }

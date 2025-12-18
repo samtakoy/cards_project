@@ -6,6 +6,6 @@ import org.koin.dsl.module
 import ru.samtakoy.importcards.domain.CardsSourceRepository
 import ru.samtakoy.importcards.data.CardsSourceRepositoryImpl
 
-fun importDataModule() = module {
+fun importCardsDataModule() = module {
     factoryOf(::CardsSourceRepositoryImpl) bind CardsSourceRepository::class
 }

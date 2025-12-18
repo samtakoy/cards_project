@@ -8,10 +8,10 @@ kotlin {
             // filekit
             implementation(libs.filekit.dialogs.compose)
 
-            api(projects.module.domain.card.model)
-            api(projects.module.domain.qpack.model)
-            api(projects.module.domain.theme.model)
-            api(projects.module.domain.task.model)
+            api(projects.module.core.db.model.card)
+            api(projects.module.core.db.model.qpack)
+            api(projects.module.core.db.model.theme)
+            api(projects.module.utilFeatures.task.model)
         }
     }
 }

@@ -8,9 +8,9 @@ kotlin {
             // koin
             implementation(libs.koin.core)
 
-            api(projects.module.domain.card.model)
+            api(projects.module.core.db.model.card)
 
-            implementation(projects.module.common.utils)
+            implementation(projects.module.common.utils.common)
         }
     }
 }

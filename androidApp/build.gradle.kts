@@ -105,55 +105,57 @@ dependencies {
     // retrofit
     implementation(libs.bundles.squareup)
 
-    implementation(projects.module.common.maindi)
+    implementation(projects.module.core.log)
 
-    implementation(projects.module.platform.permissions.impl)
+    implementation(projects.module.main.di)
 
-    implementation(projects.module.domain.commonRepoApi)
+    implementation(projects.module.utilFeatures.permissions.impl)
 
-    implementation(projects.module.data.task.api)
+    implementation(projects.module.core.db.repoApi)
 
-    implementation(projects.module.domain.card.api)
+    implementation(projects.module.utilFeatures.task.api)
 
-    implementation(projects.module.domain.learncourse.api)
+    implementation(projects.module.features.card.api)
 
-    implementation(projects.module.domain.qpack.api)
+    implementation(projects.module.features.learncourse.api)
 
-    implementation(projects.module.domain.theme.api)
+    implementation(projects.module.features.qpack.api)
 
-    implementation(projects.module.domain.view.api)
+    implementation(projects.module.features.theme.api)
 
-    implementation(projects.module.domain.favorites.api)
+    implementation(projects.module.features.view.api)
 
-    implementation(projects.module.domain.export.api)
+    implementation(projects.module.features.favorites.api)
+
+    implementation(projects.module.features.export.api)
     implementation(projects.module.features.import.api)
 
-    implementation(projects.module.presentation.core.utils)
-    implementation(projects.module.presentation.core.viewmodel)
-    implementation(projects.module.presentation.core.designsystem)
+    implementation(projects.module.common.utils.presentation)
+    implementation(projects.module.common.viewmodel)
+    implementation(projects.module.uikit.designsystem)
 
-    implementation(projects.module.presentation.navigation.api)
+    implementation(projects.module.core.navigation.api)
 
-    implementation(projects.module.presentation.main.impl)
+    implementation(projects.module.main.screen)
 
-    implementation(projects.module.presentation.themes.api)
+    implementation(projects.module.features.theme.presentationApi)
 
-    implementation(projects.module.presentation.qpacks.api)
-    implementation(projects.module.presentation.qpacks.impl)
+    implementation(projects.module.features.qpack.presentationApi)
+    implementation(projects.module.features.qpack.presentationImpl)
 
-    implementation(projects.module.presentation.cards.api)
+    implementation(projects.module.features.card.presentationApi)
 
-    implementation(projects.module.presentation.settings.api)
+    implementation(projects.module.features.settings.presentationApi)
 
-    implementation(projects.module.presentation.courses.api)
-    implementation(projects.module.presentation.courses.impl)
+    implementation(projects.module.features.learncourse.presentationApi)
+    implementation(projects.module.features.learncourse.presentationImpl)
 
-    implementation(projects.module.presentation.viewshistory.api)
-    implementation(projects.module.presentation.viewshistory.impl)
+    implementation(projects.module.features.view.presentationApi)
+    implementation(projects.module.features.view.presentationImpl)
 
-    implementation(projects.module.presentation.favorites.api)
-    implementation(projects.module.presentation.favorites.impl)
+    implementation(projects.module.features.favorites.presentationApi)
+    implementation(projects.module.features.favorites.presentationImpl)
 
-    implementation(projects.module.common.utils)
-    implementation(projects.module.common.oldresources)
+    implementation(projects.module.common.utils.common)
+    implementation(projects.module.core.oldresources)
 }
