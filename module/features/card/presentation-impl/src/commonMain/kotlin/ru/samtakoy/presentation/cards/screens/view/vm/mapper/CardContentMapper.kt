@@ -83,8 +83,13 @@ internal class CardContentMapperImpl : CardContentMapper {
             OLD_PARSER_CODE_NAME -> CodeType.AutoParsedKotlin
             LANG_KOTLIN -> CodeType.Kotlin
             LANG_SWIFT -> CodeType.Swift
-            LANG_TEXT -> CodeType.Text
-            else -> CodeType.Kotlin
+            LANG_OBJC, LANG_OBJECTIVEC -> CodeType.ObjectiveC
+            LANG_C -> CodeType.C
+            LANG_CPP -> CodeType.CPP
+            LANG_XML, LANG_TEXT -> CodeType.Text
+            LANG_JAVA -> CodeType.Java
+            LANG_JAVASCRIPT -> CodeType.JavaScript
+            else -> CodeType.AllKeywords
         }
     }
 
@@ -102,6 +107,13 @@ internal class CardContentMapperImpl : CardContentMapper {
         private const val LANG_KOTLIN = "kotlin"
         private const val LANG_SWIFT = "swift"
         private const val LANG_TEXT = "text"
+        private const val LANG_JAVA = "java"
+        private const val LANG_JAVASCRIPT = "javascript"
+        private const val LANG_XML = "xml"
+        private const val LANG_OBJC = "objc"
+        private const val LANG_C = "c"
+        private const val LANG_CPP = "cpp"
+        private const val LANG_OBJECTIVEC = "objectivec"
         private const val LINE_BREAK = "\n"
     }
 }

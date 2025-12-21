@@ -523,8 +523,18 @@ private fun Bounded(
 @Stable
 private fun resolveSyntax(codeType: CodeType): SyntaxLanguage {
     return when (codeType) {
+        // подсвечиваются ключевые слова всех языков
+        CodeType.AllKeywords,
+        CodeType.Text,
+        CodeType.AutoParsedKotlin -> SyntaxLanguage.DEFAULT
+
         CodeType.Swift -> SyntaxLanguage.SWIFT
-        CodeType.Kotlin, CodeType.Text, CodeType.AutoParsedKotlin -> SyntaxLanguage.KOTLIN
+        CodeType.Kotlin -> SyntaxLanguage.KOTLIN
+        CodeType.Java -> SyntaxLanguage.JAVA
+        CodeType.JavaScript -> SyntaxLanguage.JAVASCRIPT
+        CodeType.ObjectiveC -> SyntaxLanguage.C
+        CodeType.C -> SyntaxLanguage.C
+        CodeType.CPP -> SyntaxLanguage.CPP
     }
 }
 

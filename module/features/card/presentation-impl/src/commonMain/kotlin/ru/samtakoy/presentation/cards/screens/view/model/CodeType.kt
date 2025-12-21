@@ -7,8 +7,14 @@ enum class CodeType {
      *  поэтому данный код в UI будет пропущен через разметку кода Kotlin,
      *  но сам блок кода не будет выделятся из остального текста.
      *  */
+    AllKeywords,
     AutoParsedKotlin,
     Kotlin,
     Swift,
-    Text
+    Text,
+    Java,
+    JavaScript,
+    ObjectiveC,
+    C,
+    CPP,
 }
