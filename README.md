@@ -43,7 +43,12 @@
 
 ## Сборка и запуск
 
-Кратко:
+В настройках Android Studio в разделе Settings -> Build,... -> Build Tools -> Gradle выбрать Gradle JDK 21 версии.
+21 версия нужна для возможности сборки Desktop-таргета.
+
+Для iosApp TODO: описать настройку JAVA_HOME через файл android.env (см. скрипты ios-проекта).
+
+Запуск кратко:
 
 - **Android**: открыть проект в Android Studio, выбрать `androidApp` и запустить на эмуляторе/устройстве.
 - **Desktop (JVM)**: запустить из Gradle/IDE задачу `run` для модуля `desktopApp`.
