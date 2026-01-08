@@ -11,9 +11,8 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import ru.samtakoy.presentation.core.design_system.base.MyOffsets
-import ru.samtakoy.presentation.core.design_system.base.UiOffsets
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 
 @Composable
 fun MyRadioItemGropView(
@@ -25,8 +24,8 @@ fun MyRadioItemGropView(
 
     Column(
         modifier = modifier
-            .padding(UiOffsets.listItemOffset),
-        verticalArrangement = Arrangement.spacedBy(MyOffsets.small)
+            .padding(MyTheme.offsets.listItemOffset),
+        verticalArrangement = Arrangement.spacedBy(MyTheme.offsets.itemsSmallVOffset)
     ) {
         items.value.forEach {
             key(it.id) {

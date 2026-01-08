@@ -32,11 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -56,13 +52,10 @@ import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.CardSta
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.Event
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.NavigationAction
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.State
-import ru.samtakoy.presentation.core.design_system.base.MyOffsets
-import ru.samtakoy.presentation.core.design_system.base.MyRadiuses
-import ru.samtakoy.presentation.core.design_system.base.UiOffsets
 import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.base.utils.getRoundedShape
 import ru.samtakoy.presentation.core.design_system.base.utils.getTopRoundedShape
-import ru.samtakoy.presentation.core.design_system.base.utils.toPx
 import ru.samtakoy.presentation.core.design_system.button.round.MyRoundButtonIcon
 import ru.samtakoy.presentation.core.design_system.button.round.MyRoundButtonSize
 import ru.samtakoy.presentation.core.design_system.button.round.MyRoundButtonUiModel
@@ -215,14 +208,14 @@ private fun CardState(
                             buttons = answerButtons,
                             cardContent = content,
                             onEvent = onEvent,
-                            modifier = Modifier.padding(horizontal = UiOffsets.screenContentHPadding)
+                            modifier = Modifier.padding(horizontal = MyTheme.offsets.screenContentHPadding)
                         )
                         cardState.isQuestion -> CardQuestionView(
                             cardState = cardState,
                             buttons = questionButtons,
                             cardContent = content,
                             onEvent = onEvent,
-                            modifier = Modifier.padding(horizontal = UiOffsets.screenContentHPadding)
+                            modifier = Modifier.padding(horizontal = MyTheme.offsets.screenContentHPadding)
                         )
                     }
                 }
@@ -354,7 +347,7 @@ private fun ColumnScope.TextContainer(
                     onClick = { onEvent(Event.RevertClick) },
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
-                        .padding(MyOffsets.large)
+                        .padding(MyTheme.offsets.large)
                 )
             }
         }
@@ -380,7 +373,7 @@ private fun BoxScope.TextContent(
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(
-            space = MyOffsets.xxsmall,
+            space = MyTheme.offsets.xxsmall,
             alignment = Alignment.CenterVertically
         )
     ) {
@@ -460,15 +453,15 @@ private fun Bounded(
                 text = codeLabel,
                 modifier = Modifier
                     .wrapContentSize()
-                    .padding(start = MyRadiuses.r8)
+                    .padding(start = MyTheme.radiuses.small)
                     .background(
                         color = LangLabelBgColor,
-                        shape = getTopRoundedShape(MyRadiuses.r8)
+                        shape = getTopRoundedShape(MyTheme.radiuses.small)
                     )
                     /*
                     .drawBehind {
                         val stroke = CodeBorderWidth.toPx()
-                        val radius = MyRadiuses.r8.toPx()
+                        val radius = MyTheme.radiuses.small.toPx()
                         val color = CodeBorderColor
 
                         // Рисуем путь: от левого низа -> вверх -> дуга -> вправо -> дуга -> вниз
@@ -497,7 +490,7 @@ private fun Bounded(
                             style = Stroke(width = stroke)
                         )
                     }*/
-                    .padding(start = MyOffsets.small, end = MyOffsets.small, top = MyOffsets.xxsmall),
+                    .padding(start = MyTheme.offsets.small, end = MyTheme.offsets.small, top = MyTheme.offsets.xxsmall),
                 textAlign = TextAlign.Center,
                 color = LangLabelColor,
                 maxLines = 1,
@@ -511,9 +504,9 @@ private fun Bounded(
                 .border(
                     width = CodeBorderWidth,
                     color = CodeBorderColor,
-                    shape = getRoundedShape(MyRadiuses.r8)
+                    shape = getRoundedShape(MyTheme.radiuses.small)
                 )
-                .padding(horizontal = MyOffsets.small, vertical = MyOffsets.medium),
+                .padding(horizontal = MyTheme.offsets.small, vertical = MyTheme.offsets.medium),
         ) {
             content()
         }
@@ -585,7 +578,7 @@ private fun ButtonsRow(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(MyOffsets.medium, Alignment.CenterHorizontally),
+        horizontalArrangement = Arrangement.spacedBy(MyTheme.offsets.medium, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically
     ) {
         buttons.forEach { buttonModel ->

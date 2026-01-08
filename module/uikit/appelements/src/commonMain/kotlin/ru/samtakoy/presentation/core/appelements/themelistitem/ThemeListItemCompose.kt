@@ -15,10 +15,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
-import ru.samtakoy.presentation.core.design_system.base.MyColors
-import ru.samtakoy.presentation.core.design_system.base.UiOffsets
-import ru.samtakoy.presentation.core.design_system.base.UiRadiuses
 import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.base.utils.getRoundedShape
 
 @Composable
@@ -46,8 +44,8 @@ fun ThemeListItemView(
     Box(
         modifier = modifier
             .background(
-                color = MyColors.getListItemBgColor(),
-                shape = getRoundedShape(UiRadiuses.listItemBg)
+                color = MyTheme.colors.listItemBgColor,
+                shape = getRoundedShape(MyTheme.radiuses.listItemBg)
             )
             .clickable {
                 onClick?.invoke(id)
@@ -66,7 +64,10 @@ fun ThemeListItemView(
             text = title,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = UiOffsets.listItemContentHPadding, vertical = UiOffsets.listItemContentVPadding)
+                .padding(
+                    horizontal = MyTheme.offsets.listItemContentHPadding,
+                    vertical = MyTheme.offsets.listItemContentVPadding
+                )
                 .align(Alignment.TopStart),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             style = MaterialTheme.typography.headlineSmall,

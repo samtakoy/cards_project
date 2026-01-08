@@ -35,7 +35,7 @@ import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import ru.samtakoy.presentation.base.observeActionsWithLifecycle
 import ru.samtakoy.presentation.core.appelements.qpacklistitem.QPackListItemView
 import ru.samtakoy.presentation.core.appelements.themelistitem.ThemeListItemView
-import ru.samtakoy.presentation.core.design_system.base.UiOffsets
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButton
 import ru.samtakoy.presentation.core.design_system.dialogs.alert.MyAlertDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.alert.MyAlertDialogView
@@ -225,8 +225,8 @@ internal fun ThemesListScreenInternal(
                 modifier = Modifier
                     .weight(1f)
                     .padding(
-                        horizontal = UiOffsets.screenContentHPadding,
-                        vertical = UiOffsets.screenContentVPadding
+                        horizontal = MyTheme.offsets.screenContentHPadding,
+                        vertical = MyTheme.offsets.screenContentVPadding
                     )
             )
         }
@@ -283,7 +283,7 @@ private fun EmptyView(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(UiOffsets.itemsStandartVOffset, Alignment.CenterVertically),
+        verticalArrangement = Arrangement.spacedBy(MyTheme.offsets.itemsStandartVOffset, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -310,7 +310,7 @@ private fun ItemsView(
 ) {
     LazyColumn(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(UiOffsets.listItemOffset),
+        verticalArrangement = Arrangement.spacedBy(MyTheme.offsets.listItemOffset),
         state = scrollState
     ) {
         items(

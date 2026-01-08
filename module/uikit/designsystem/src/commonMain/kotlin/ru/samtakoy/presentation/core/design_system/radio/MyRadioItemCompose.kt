@@ -16,7 +16,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
-import ru.samtakoy.presentation.core.design_system.base.MyOffsets
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 
 @Composable
 fun MyRadioItemView(
@@ -36,7 +36,7 @@ fun MyRadioItemView(
                 contentDescription = model.contentDescription.orEmpty()
                 role = Role.RadioButton
             },
-        horizontalArrangement = Arrangement.spacedBy(MyOffsets.small, Alignment.Start),
+        horizontalArrangement = Arrangement.spacedBy(MyTheme.offsets.itemsSmallHOffset, Alignment.Start),
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(

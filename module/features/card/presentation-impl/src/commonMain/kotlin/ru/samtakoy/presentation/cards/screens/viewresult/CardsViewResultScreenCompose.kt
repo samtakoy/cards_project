@@ -24,8 +24,7 @@ import ru.samtakoy.presentation.cards.screens.viewresult.vm.CardsViewResultViewM
 import ru.samtakoy.presentation.cards.screens.viewresult.vm.CardsViewResultViewModel.Event
 import ru.samtakoy.presentation.cards.screens.viewresult.vm.CardsViewResultViewModel.NavigationAction
 import ru.samtakoy.presentation.cards.screens.viewresult.vm.CardsViewResultViewModel.State
-import ru.samtakoy.presentation.core.design_system.base.MyColors
-import ru.samtakoy.presentation.core.design_system.base.UiOffsets
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButton
 import ru.samtakoy.presentation.core.design_system.scaffold.MySimpleScreenScaffold
 import ru.samtakoy.presentation.core.design_system.toolbar.ToolbarTitleView
@@ -98,12 +97,12 @@ internal fun CardsViewResultScreenInternal(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            horizontal = UiOffsets.screenContentHPadding,
-                            vertical = UiOffsets.screenContentVPadding
+                            horizontal = MyTheme.offsets.screenContentHPadding,
+                            vertical = MyTheme.offsets.screenContentVPadding
                         )
                         .weight(1f),
                     verticalArrangement = Arrangement.spacedBy(
-                        UiOffsets.itemsStandartVOffset,
+                        MyTheme.offsets.itemsStandartVOffset,
                         Alignment.CenterVertically
                     ),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -117,16 +116,16 @@ internal fun CardsViewResultScreenInternal(
                         Text(
                             text = content.errorsTitle,
                             modifier = Modifier.align(Alignment.CenterHorizontally),
-                            color = MyColors.getErrorTextColor(),
+                            color = MyTheme.colors.errorTextColor,
                             style = MaterialTheme.typography.titleMedium
                         )
                     }
                     content.scheduleTitle?.let {
-                        Spacer(modifier = Modifier.size(UiOffsets.itemsStandartVOffset))
+                        Spacer(modifier = Modifier.size(MyTheme.offsets.itemsStandartVOffset))
                         Text(
                             text = content.scheduleTitle,
                             modifier = Modifier.align(Alignment.CenterHorizontally),
-                            color = MyColors.getSecondTextColor(),
+                            color = MyTheme.colors.secondTextColor,
                             style = MaterialTheme.typography.titleSmall
                         )
                     }
@@ -138,7 +137,7 @@ internal fun CardsViewResultScreenInternal(
                             }
                         )
                     }
-                    Spacer(modifier = Modifier.size(UiOffsets.itemsStandartVOffset))
+                    Spacer(modifier = Modifier.size(MyTheme.offsets.itemsStandartVOffset))
                     MyButton(
                         model = content.okButton,
                         onClick = {

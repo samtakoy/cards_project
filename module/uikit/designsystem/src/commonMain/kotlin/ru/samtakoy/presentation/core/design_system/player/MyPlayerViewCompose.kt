@@ -50,9 +50,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
-import ru.samtakoy.presentation.core.design_system.base.MyOffsets
-import ru.samtakoy.presentation.core.design_system.base.MyRadiuses
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.base.utils.getLeftRoundedShape
 import ru.samtakoy.presentation.core.design_system.base.utils.toPx
 import ru.samtakoy.presentation.core.design_system.button.round.MyRoundButtonUiModel
@@ -130,7 +129,7 @@ private fun PlayerPanelView(
     val tabMinHeightPx = TabMinHeight.toPx()
     val panelMinHeightPx = PanelMinHeight.toPx()
     val panelMinWidthPx = PanelMinWidth.toPx()
-    val panelRadiusPx = PanelRadius.toPx()
+    val panelRadiusPx = MyTheme.radiuses.medium.toPx()
     val panelOpenXPx = 0f
     val panelCollapsedXPx = remember { mutableFloatStateOf(panelMinWidthPx) }
     // Актуальная высота кнопки
@@ -253,13 +252,15 @@ internal fun TabViewContent(
     currentCounter: AnnotatedString,
     modifier: Modifier = Modifier
 ) {
+    val tabContentPadding = MyTheme.offsets.small
+
     Column(
         modifier = modifier
             .heightIn(min = TabMinHeight)
             .width(TabWidth)
             .background(
                 color = getPanelColor(),
-                shape = getLeftRoundedShape(TabRadius)
+                shape = getLeftRoundedShape(MyTheme.radiuses.medium)
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -267,7 +268,7 @@ internal fun TabViewContent(
         Icon(
             imageVector = Icons.Default.Mic,
             contentDescription = "Хваталка",
-            modifier = Modifier.padding(top = TabContentPadding),
+            modifier = Modifier.padding(top = tabContentPadding),
             tint = if (isPlaying) {
                 Color.Green
             } else {
@@ -278,7 +279,7 @@ internal fun TabViewContent(
             text = currentCounter,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = TabContentPadding),
+                .padding(bottom = tabContentPadding),
             color = MaterialTheme.colorScheme.onSecondary,
             textAlign = TextAlign.Center,
             maxLines = 1,
@@ -298,16 +299,16 @@ private fun PanelContentView(
         modifier = modifier
             .background(
                 color = getPanelColor(),
-                shape = getLeftRoundedShape(PanelRadius)
+                shape = getLeftRoundedShape(MyTheme.radiuses.medium)
             )
     ) {
         Column(
             modifier = Modifier.padding(
-                horizontal = ContentHContentPadding,
-                vertical = ContentVContentPadding,
+                horizontal = MyTheme.offsets.small,
+                vertical = MyTheme.offsets.medium,
             ),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(ControlsOffset, Alignment.CenterVertically)
+            verticalArrangement = Arrangement.spacedBy(MyTheme.offsets.large, Alignment.CenterVertically)
         ) {
             controls.forEach { button ->
                 key(button.id) {
@@ -338,9 +339,3 @@ private val TabWidth = 48.dp
 private val TabMinHeight = 48.dp
 private val PanelMinWidth = 24.dp
 private val PanelMinHeight = 96.dp
-private val TabRadius = MyRadiuses.r16
-private val PanelRadius = MyRadiuses.r16
-private val TabContentPadding = MyOffsets.small
-private val ContentHContentPadding = MyOffsets.small
-private val ContentVContentPadding = MyOffsets.medium
-private val ControlsOffset = MyOffsets.large

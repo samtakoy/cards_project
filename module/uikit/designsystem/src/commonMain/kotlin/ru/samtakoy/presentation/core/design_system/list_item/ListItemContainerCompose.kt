@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import ru.samtakoy.presentation.core.design_system.base.MyColors
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 
 @Composable
 fun ListItemContainer(
@@ -27,8 +27,8 @@ fun ListItemContainer(
 @Composable
 fun resolveColor(index: Int): Color {
     return if (index % 2 == 0) {
-        MyColors.getListItemOddBgColor()
+        MyTheme.colors.listItemOddBgColor
     } else {
-        MyColors.getListItemEvenBgColor()
+        MyTheme.colors.listItemEvenBgColor
     }
 }

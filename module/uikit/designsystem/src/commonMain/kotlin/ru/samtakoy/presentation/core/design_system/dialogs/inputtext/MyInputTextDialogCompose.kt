@@ -21,9 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import ru.samtakoy.presentation.core.design_system.base.MyOffsets
-import ru.samtakoy.presentation.core.design_system.base.UiOffsets
+import ru.samtakoy.presentation.core.design_system.base.theme.offsets.MyOffsets
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButton
 
 @Composable
@@ -44,10 +44,10 @@ fun MyInputTextDialogView(
         ) {
             Surface(
                 shape = MaterialTheme.shapes.medium,
-                tonalElevation = UiOffsets.dialogSurfaceElevation,
-                modifier = Modifier.padding(UiOffsets.dialogSurfacePaddings)
+                tonalElevation = MyTheme.offsets.dialogSurfaceElevation,
+                modifier = Modifier.padding(MyTheme.offsets.dialogSurfacePaddings)
             ) {
-                Column(modifier = Modifier.padding(UiOffsets.dialogContentPaddings)) {
+                Column(modifier = Modifier.padding(MyTheme.offsets.dialogContentPaddings)) {
                     Text(
                         text = dialogModel.title,
                         style = MaterialTheme.typography.headlineSmall
@@ -66,7 +66,7 @@ fun MyInputTextDialogView(
                     )
                     Spacer(Modifier.height(24.dp))
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(MyOffsets.small, Alignment.End),
+                        horizontalArrangement = Arrangement.spacedBy(MyTheme.offsets.itemsSmallHOffset, Alignment.End),
                         modifier = Modifier.fillMaxWidth(),
                     ) {
                         MyButton(

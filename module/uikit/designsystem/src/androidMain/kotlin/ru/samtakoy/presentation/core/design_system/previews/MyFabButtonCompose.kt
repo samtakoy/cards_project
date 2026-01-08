@@ -8,8 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import ru.samtakoy.presentation.core.design_system.base.MyColors
-import ru.samtakoy.presentation.core.design_system.base.MyOffsets
 import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
 import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.button.round.MyRoundButtonIcon
@@ -75,9 +73,12 @@ private fun MyRoundButtonView_Preview() = MyTheme {
     ).toImmutableList()
     Column(
         modifier = Modifier
-            .background(MyColors.getScreenBackground())
-            .padding(MyOffsets.small),
-        verticalArrangement = Arrangement.spacedBy(MyOffsets.small)
+            .background(MyTheme.colors.screenBackground)
+            .padding(
+                horizontal = MyTheme.offsets.screenContentHPadding,
+                vertical = MyTheme.offsets.screenContentVPadding
+            ),
+        verticalArrangement = Arrangement.spacedBy(MyTheme.offsets.itemsSmallVOffset)
     ) {
         models.forEach {
             MyRoundButtonView(model = it, onClick = {})

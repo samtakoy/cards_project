@@ -23,12 +23,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
-import ru.samtakoy.presentation.core.design_system.base.MyColors
-import ru.samtakoy.presentation.core.design_system.base.MyOffsets
-import ru.samtakoy.presentation.core.design_system.base.MySizes
-import ru.samtakoy.presentation.core.design_system.base.UiOffsets
-import ru.samtakoy.presentation.core.design_system.base.UiRadiuses
 import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.base.utils.getRoundedShape
 
 @Composable
@@ -59,9 +55,9 @@ fun QPackListItemView(
 ) {
     Column(
         modifier = modifier
-            .clip(getRoundedShape(UiRadiuses.listItemBg))
+            .clip(getRoundedShape(MyTheme.radiuses.listItemBg))
             .background(
-                color = MyColors.getListItemBgLightColor()
+                color = MyTheme.colors.listItemBgLightColor
             )
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -78,7 +74,7 @@ fun QPackListItemView(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(color = CardTopBackgroundColor)
-                .padding(horizontal = UiOffsets.listItemContentHPadding)
+                .padding(horizontal = MyTheme.offsets.listItemContentHPadding)
                 .align(Alignment.Start),
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.headlineSmall,
@@ -87,8 +83,8 @@ fun QPackListItemView(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(color = MaterialTheme.colorScheme.secondary)
-                .padding(horizontal = UiOffsets.listItemContentHPadding),
-            horizontalArrangement = Arrangement.spacedBy(MyOffsets.small),
+                .padding(horizontal = MyTheme.offsets.listItemContentHPadding),
+            horizontalArrangement = Arrangement.spacedBy(MyTheme.offsets.itemsSmallHOffset),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -103,7 +99,7 @@ fun QPackListItemView(
                 Icon(
                     imageVector = Icons.Outlined.Face,
                     contentDescription = null,
-                    modifier = Modifier.size(MySizes.smallIcon),
+                    modifier = Modifier.size(MyTheme.sizes.smallIcon),
                     tint = MaterialTheme.colorScheme.onSecondary
                 )
                 Text(

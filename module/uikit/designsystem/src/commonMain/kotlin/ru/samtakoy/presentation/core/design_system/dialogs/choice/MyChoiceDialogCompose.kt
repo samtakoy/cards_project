@@ -20,11 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import ru.samtakoy.presentation.core.design_system.base.MyColors
-import ru.samtakoy.presentation.core.design_system.base.MyOffsets
-import ru.samtakoy.presentation.core.design_system.base.UiOffsets
-import ru.samtakoy.presentation.core.design_system.base.UiRadiuses
 import ru.samtakoy.presentation.core.design_system.base.model.UiId
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.base.utils.getRoundedShape
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButton
 import ru.samtakoy.presentation.core.design_system.radio.MyRadioItemGropView
@@ -48,10 +45,10 @@ fun MyChoiceDialogView(
         ) {
             Surface(
                 shape = MaterialTheme.shapes.medium,
-                tonalElevation = UiOffsets.dialogSurfaceElevation,
-                modifier = Modifier.padding(UiOffsets.dialogSurfacePaddings)
+                tonalElevation = MyTheme.offsets.dialogSurfaceElevation,
+                modifier = Modifier.padding(MyTheme.offsets.dialogSurfacePaddings)
             ) {
-                Column(modifier = Modifier.padding(UiOffsets.dialogContentPaddings)) {
+                Column(modifier = Modifier.padding(MyTheme.offsets.dialogContentPaddings)) {
                     Text(
                         text = dialogModel.title,
                         style = MaterialTheme.typography.headlineSmall
@@ -67,13 +64,13 @@ fun MyChoiceDialogView(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                color = MyColors.getScreenBackground(),
-                                shape = getRoundedShape(UiRadiuses.innerPanelBg)
+                                color = MyTheme.colors.screenBackground,
+                                shape = getRoundedShape(MyTheme.radiuses.innerPanelBg)
                             )
                     )
                     Spacer(Modifier.height(24.dp))
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(MyOffsets.small, Alignment.End),
+                        horizontalArrangement = Arrangement.spacedBy(MyTheme.offsets.itemsSmallHOffset, Alignment.End),
                         modifier = Modifier.fillMaxWidth(),
                     ) {
                         MyButton(

@@ -7,7 +7,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import ru.samtakoy.presentation.core.design_system.base.MyColors
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.loader.MyLoaderContainer
 
 @Composable
@@ -19,7 +19,7 @@ fun MySimpleScreenScaffold(
 ) {
     Box(
         modifier = modifier
-            .background(color = MyColors.getScreenBackground()),
+            .background(color = MyTheme.colors.screenBackground),
     ) {
         content()
         SnackbarHost(snackbarHostState)

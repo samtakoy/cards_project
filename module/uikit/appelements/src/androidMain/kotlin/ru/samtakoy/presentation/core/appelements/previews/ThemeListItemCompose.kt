@@ -10,9 +10,6 @@ import androidx.compose.ui.Modifier
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ru.samtakoy.presentation.core.appelements.themelistitem.ThemeListItemUiModel
 import ru.samtakoy.presentation.core.appelements.themelistitem.ThemeListItemView
-import ru.samtakoy.presentation.core.design_system.base.MyColors
-import ru.samtakoy.presentation.core.design_system.base.MyOffsets
-import ru.samtakoy.presentation.core.design_system.base.UiOffsets
 import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
 import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.utils.asAnnotated
@@ -28,9 +25,9 @@ private fun ThemeListItemView_Preview() = MyTheme {
     )
     Column(
         modifier = Modifier
-            .background(MyColors.getScreenBackground())
-            .padding(MyOffsets.small),
-        verticalArrangement = Arrangement.spacedBy(UiOffsets.listItemOffset)
+            .background(MyTheme.colors.screenBackground)
+            .padding(MyTheme.offsets.itemsSmallVOffset),
+        verticalArrangement = Arrangement.spacedBy(MyTheme.offsets.listItemOffset)
     ) {
         myItems.forEach {
             key(it.id) { ThemeListItemView(model = it) }

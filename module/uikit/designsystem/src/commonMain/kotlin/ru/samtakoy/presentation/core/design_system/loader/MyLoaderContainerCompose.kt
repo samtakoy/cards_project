@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import ru.samtakoy.presentation.core.design_system.base.MyColors
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 
 @Composable
 fun MyLoaderContainer(
@@ -27,7 +27,7 @@ fun MyLoaderContainer(
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .background(color = MyColors.backgroundLoaderBgColor)
+                .background(color = MyTheme.colors.backgroundLoaderBgColor)
                 .pointerInput(Unit) {}
         ) {
             CircularProgressIndicator(

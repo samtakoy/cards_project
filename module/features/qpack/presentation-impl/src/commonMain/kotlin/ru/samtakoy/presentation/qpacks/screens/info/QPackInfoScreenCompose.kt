@@ -25,8 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.jetbrains.compose.resources.stringResource
 import ru.samtakoy.presentation.base.observeActionsWithLifecycle
-import ru.samtakoy.presentation.core.design_system.base.UiOffsets
 import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButton
 import ru.samtakoy.presentation.core.design_system.dialogs.choice.MyChoiceDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.choice.MyChoiceDialogView
@@ -153,8 +153,8 @@ internal fun QPackInfoScreenInternal(
             )
             Column(
                 modifier = Modifier.padding(
-                    horizontal = UiOffsets.screenContentHPadding,
-                    vertical = UiOffsets.screenContentVPadding
+                    horizontal = MyTheme.offsets.screenContentHPadding,
+                    vertical = MyTheme.offsets.screenContentVPadding
                 )
             ) {
                 Text(
@@ -165,10 +165,10 @@ internal fun QPackInfoScreenInternal(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = UiOffsets.screenContentVPadding)
+                        .padding(vertical = MyTheme.offsets.screenContentVPadding)
                         .weight(1f),
                     verticalArrangement = Arrangement.spacedBy(
-                        UiOffsets.itemsStandartVOffset,
+                        MyTheme.offsets.itemsStandartVOffset,
                         Alignment.CenterVertically
                     ),
                     horizontalAlignment = Alignment.CenterHorizontally

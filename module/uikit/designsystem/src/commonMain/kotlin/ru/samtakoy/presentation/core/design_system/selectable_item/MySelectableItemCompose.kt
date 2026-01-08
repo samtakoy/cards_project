@@ -18,7 +18,7 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
-import ru.samtakoy.presentation.core.design_system.base.MyOffsets
+import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 
 @Composable
 fun MySelectableItem(
@@ -63,7 +63,7 @@ fun MySelectableItem(
                 this.contentDescription = contentDescription.orEmpty()
                 role = Role.Checkbox
             },
-        horizontalArrangement = Arrangement.spacedBy(MyOffsets.small, Alignment.Start),
+        horizontalArrangement = Arrangement.spacedBy(MyTheme.offsets.itemsSmallHOffset, Alignment.Start),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Checkbox(
