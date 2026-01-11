@@ -13,14 +13,6 @@ interface QPackInteractor {
     @OptIn(ExperimentalTime::class)
     suspend fun updateQPackViewCount(qPackId: Long, currentTime: Instant)
     fun getChildQPacksAsFlow(themeId: Long): Flow<List<QPack>>
-    fun getAllQPacksByLastViewDateAscAsFlow(
-        searchString: String?,
-        onlyFavorites: Boolean
-    ): Flow<List<QPack>>
-    fun getAllQPacksByCreationDateDescAsFlow(
-        searchString: String?,
-        onlyFavorites: Boolean
-    ): Flow<List<QPack>>
     suspend fun getQPacksByIds(ids: List<Long>): List<QPack>
     suspend fun getQPacksFromThemeCount(themeId: Long): Int
 }

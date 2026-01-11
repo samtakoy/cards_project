@@ -87,6 +87,14 @@
     <string name="qpack_favorites_box">Важно</string>
     <string name="msg_there_is_no_cards_in_pack">Нет ни одной карточки в наборе</string>
 
+    <!-- qpack list -->
+    <string name="qpacks_request_error">Ошибка при запросе списка</string>
+    <string name="qpacks_menu_item_sort">сортировка</string>
+    <string name="qpacks_menu_item_by_last_view_date">давно просмотренные</string>
+    <string name="qpacks_menu_item_by_creation_date">недавно созданные</string>
+    <string name="qpacks_search_hint">Поиск</string>
+    <string name="qpacks_favorites_check_box_title">Избранные</string>
+
     <!-- ******************************************************************************* -->
     <!-- Themes list module -->
 

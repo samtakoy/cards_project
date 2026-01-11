@@ -2,6 +2,7 @@ package ru.samtakoy.presentation.qpacks.di
 
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -25,6 +26,11 @@ import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoMenuMapperIm
 import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoPlayDialogMapper
 import ru.samtakoy.presentation.qpacks.screens.info.mapper.QPackInfoPlayDialogMapperImpl
 import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModelImpl
+import ru.samtakoy.presentation.qpacks.screens.list.mapper.QPackListItemUiModelMapper
+import ru.samtakoy.presentation.qpacks.screens.list.mapper.QPackListItemUiModelMapperImpl
+import ru.samtakoy.presentation.qpacks.screens.list.mapper.QPackListSortButtonMapper
+import ru.samtakoy.presentation.qpacks.screens.list.mapper.QPackListSortButtonMapperImpl
+import ru.samtakoy.presentation.qpacks.screens.list.vm.QPackListViewModelImpl
 import ru.samtakoy.presentation.themes.entry.QPackListEntryImpl
 import ru.samtakoy.speech.domain.scope.PlayerScopeQualifier
 
@@ -64,6 +70,9 @@ fun qPackPresentationModule() = module {
 
     // список
     factory<MainTabFeatureEntry>(named<QPackListRoute>()) { QPackListEntryImpl() }
+    factoryOf(::QPackListItemUiModelMapperImpl) bind QPackListItemUiModelMapper::class
+    factoryOf(::QPackListSortButtonMapperImpl) bind QPackListSortButtonMapper::class
+    viewModelOf(::QPackListViewModelImpl)
 
     // выбор
     factory<MainTabFeatureEntry>(named< QPackSelectionRoute>()) { QPackSelectionEntryImpl() }
