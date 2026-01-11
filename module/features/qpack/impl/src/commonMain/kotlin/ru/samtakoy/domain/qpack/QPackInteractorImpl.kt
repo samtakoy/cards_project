@@ -43,28 +43,6 @@ internal class QPackInteractorImpl(
         return qPackRepository.getQPacksFromThemeAsFlow(themeId)
     }
 
-    override fun getAllQPacksByLastViewDateAscAsFlow(
-        searchString: String?,
-        onlyFavorites: Boolean
-    ): Flow<List<QPack>> {
-        return if (searchString.isNullOrBlank()) {
-            qPackRepository.getAllQPacksByLastViewDateAscAsFlow(onlyFavorites = onlyFavorites)
-        } else {
-            qPackRepository.getAllQPacksByLastViewDateAscFilteredAsFlow(searchString, onlyFavorites = onlyFavorites)
-        }
-    }
-
-    override fun getAllQPacksByCreationDateDescAsFlow(
-        searchString: String?,
-        onlyFavorites: Boolean
-    ): Flow<List<QPack>> {
-        return if (searchString.isNullOrBlank()) {
-            qPackRepository.getAllQPacksByCreationDateDescAsFlow(onlyFavorites = onlyFavorites)
-        } else {
-            qPackRepository.getAllQPacksByCreationDateDescFilteredAsFlow(searchString, onlyFavorites = onlyFavorites)
-        }
-    }
-
     override suspend fun getQPacksByIds(ids: List<Long>): List<QPack> {
         return qPackRepository.getQPacksByIds(ids)
     }

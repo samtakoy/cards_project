@@ -8,5 +8,11 @@ import ru.samtakoy.presentation.core.design_system.base.model.UiId
 data class MyButtonUiModel(
     val id: UiId,
     val text: AnnotatedString,
-    val isEnabled: Boolean = true
-)
+    val isEnabled: Boolean = true,
+    val type: Type = Type.Regular
+) {
+    enum class Type {
+        SmallSwitcher,
+        Regular
+    }
+}

@@ -125,10 +125,10 @@
     <string name="edit_text_block_hint">Редактирование текста</string>
     <string name="edit_text_context_edit">редактировать</string>
 
+    <!-- TODO remove -->
     <string name="qpacks_menu_item_sort">сортировка</string>
     <string name="qpacks_menu_item_by_last_view_date">давно просмотренные</string>
     <string name="qpacks_menu_item_by_creation_date">недавно созданные</string>
-    <string name="qpacks_request_error">Ошибка при запросе списка</string>
     <string name="qpacks_search_hint">Поиск</string>
     <string name="qpacks_favorites_check_box_title">Избранные</string>
 

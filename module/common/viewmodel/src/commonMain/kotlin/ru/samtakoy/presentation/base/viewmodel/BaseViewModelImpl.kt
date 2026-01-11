@@ -2,6 +2,7 @@ package ru.samtakoy.presentation.base.viewmodel
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,8 +22,11 @@ abstract class BaseViewModelImpl<State: Any, Action, Event>(
     override val ioScope: CoroutineScope = scopeProvider.ioScope
 
     private val _viewStates = MutableStateFlow(initialState)
-    /** TODO переделать на использование channel при подписке? */
-    private val _viewActions = MutableSharedFlow<Action>(replay = 0)
+    private val _viewActions = MutableSharedFlow<Action>(
+        replay = 0,
+        extraBufferCapacity = ACTIONS_BUFFER_EXTRA_CAPACITY,
+        onBufferOverflow = BufferOverflow.SUSPEND
+    )
 
     private var isFirstTimeInit: Boolean = true
 
@@ -67,5 +71,9 @@ abstract class BaseViewModelImpl<State: Any, Action, Event>(
         mainScope.launch {
             _viewActions.emit(action)
         }
+    }
+
+    companion object {
+        private const val ACTIONS_BUFFER_EXTRA_CAPACITY = 3
     }
 }
