@@ -22,7 +22,7 @@ kotlin {
             implementation(projects.module.core.resources)
 
             implementation(projects.module.common.viewmodel)
-            implementation(projects.module.uikit.designsystem)
+            implementation(projects.module.core.uikit)
             implementation(projects.module.common.utils.presentation)
 
             implementation(projects.module.core.navigation.api)
@@ -35,9 +35,9 @@ kotlin {
             implementation(projects.module.features.view.presentationApi)
             implementation(projects.module.features.favorites.presentationApi)
 
-            implementation(projects.module.features.speech.presentation)
+            implementation(projects.module.services.speech.presentation)
 
-            implementation(projects.module.utilFeatures.permissions.impl)
+            implementation(projects.module.services.permissions.impl)
         }
     }
 }

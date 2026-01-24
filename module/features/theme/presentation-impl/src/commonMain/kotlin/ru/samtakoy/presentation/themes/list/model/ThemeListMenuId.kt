@@ -1,6 +1,6 @@
 package ru.samtakoy.presentation.themes.list.model
 
-import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
+import ru.samtakoy.presentation.base.model.LongUiId
 
 internal object ThemeListMenuId {
     private var idGenerator: Long = 0

@@ -5,7 +5,7 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            api(projects.module.core.db.model.theme)
+            api(projects.module.core.cards.model.theme)
         }
     }
 }

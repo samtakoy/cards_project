@@ -26,8 +26,8 @@ import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.presentation.base.viewmodel.savedstate.toSavedState
 import ru.samtakoy.presentation.core.appelements.qpacklistitem.QPackListItemUiModel
-import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
-import ru.samtakoy.presentation.core.design_system.base.model.UiId
+import ru.samtakoy.presentation.base.model.LongUiId
+import ru.samtakoy.presentation.base.model.UiId
 import ru.samtakoy.presentation.qpacks.screens.list.mapper.QPackListItemUiModelMapper
 import ru.samtakoy.presentation.qpacks.screens.list.mapper.QPackListSortButtonMapper
 import ru.samtakoy.presentation.qpacks.screens.list.model.QPackListSortButtonId

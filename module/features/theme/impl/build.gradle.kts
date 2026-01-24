@@ -10,7 +10,7 @@ kotlin {
 
             implementation(projects.module.features.theme.api)
             implementation(projects.module.features.qpack.api)
-            implementation(projects.module.core.db.repoApi)
+            implementation(projects.module.core.cards.repoApi)
         }
     }
 }

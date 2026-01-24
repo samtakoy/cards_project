@@ -19,7 +19,7 @@ import ru.samtakoy.presentation.cards.screens.view.vm.mapper.QuestionButtonsMapp
 import ru.samtakoy.presentation.cards.screens.viewresult.vm.CardsViewResultViewModelImpl
 import ru.samtakoy.presentation.cards.screens.viewresult.vm.mapper.CardsViewResultMapper
 import ru.samtakoy.presentation.cards.screens.viewresult.vm.mapper.CardsViewResultMapperImpl
-import ru.samtakoy.presentation.navigation.RootFeatureEntry
+import ru.samtakoy.navigation.presentation.RootFeatureEntry
 
 fun cardPresentationModule() = module {
     factory<RootFeatureEntry>(qualifier = named<CardsViewRoute>()) {

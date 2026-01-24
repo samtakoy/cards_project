@@ -9,7 +9,7 @@ kotlin {
             implementation(libs.koin.core)
 
             implementation(projects.module.features.favorites.api)
-            implementation(projects.module.core.db.repoApi)
+            implementation(projects.module.core.cards.repoApi)
         }
     }
 }

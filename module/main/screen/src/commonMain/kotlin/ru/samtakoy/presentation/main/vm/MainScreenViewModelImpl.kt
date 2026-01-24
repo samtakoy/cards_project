@@ -9,7 +9,7 @@ import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.presentation.main.mapper.MainScreenContentMapper
-import ru.samtakoy.presentation.navigation.TabRouteId
+import ru.samtakoy.navigation.domain.model.TabRouteId
 
 internal class MainScreenViewModelImpl(
     private val contentMapper: MainScreenContentMapper,

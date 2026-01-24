@@ -1,7 +1,7 @@
 package ru.samtakoy.presentation.main.navigation
 
 import androidx.navigation.NavHostController
-import ru.samtakoy.presentation.navigation.MainTabRoute
+import ru.samtakoy.navigation.presentation.MainTabRoute
 
 fun NavHostController.changeTab(route: MainTabRoute) {
     navigate(route) {

@@ -1,6 +1,6 @@
 package ru.samtakoy.presentation.themes.list.model
 
-import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
+import ru.samtakoy.presentation.base.model.AnyUiId
 
 internal object ItemContextMenuId {
     val ThemeMenu: AnyUiId = AnyUiId()

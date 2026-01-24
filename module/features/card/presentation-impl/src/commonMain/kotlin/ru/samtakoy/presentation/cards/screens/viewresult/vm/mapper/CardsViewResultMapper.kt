@@ -5,7 +5,7 @@ import ru.samtakoy.domain.learncourse.schedule.Schedule
 import ru.samtakoy.domain.view.ViewHistoryItem
 import ru.samtakoy.presentation.cards.screens.viewresult.vm.CardsViewResultViewModel.State
 import ru.samtakoy.presentation.cards.view.model.CardViewMode
-import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
+import ru.samtakoy.presentation.base.model.AnyUiId
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.utils.asA
 import ru.samtakoy.presentation.utils.toStringView

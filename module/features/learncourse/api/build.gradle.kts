@@ -5,8 +5,8 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            api(projects.module.core.db.model.learncourse)
-            api(projects.module.core.db.model.view)
+            api(projects.module.core.cards.model.learncourse)
+            api(projects.module.core.cards.model.view)
         }
     }
 }

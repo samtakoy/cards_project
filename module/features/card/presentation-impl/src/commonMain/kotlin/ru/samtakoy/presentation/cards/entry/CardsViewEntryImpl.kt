@@ -11,8 +11,8 @@ import ru.samtakoy.presentation.cards.CardsViewParams
 import ru.samtakoy.presentation.cards.CardsViewResultParams
 import ru.samtakoy.presentation.cards.CardsViewResultRoute
 import ru.samtakoy.presentation.cards.CardsViewRoute
-import ru.samtakoy.presentation.navigation.RootFeatureEntry
-import ru.samtakoy.presentation.navigation.base.navType
+import ru.samtakoy.navigation.presentation.RootFeatureEntry
+import ru.samtakoy.navigation.presentation.base.navType
 import kotlin.reflect.typeOf
 
 @Immutable

@@ -7,7 +7,7 @@ import androidx.compose.runtime.remember
 import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ru.samtakoy.domain.qpack.QPack
-import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
+import ru.samtakoy.presentation.base.model.AnyUiId
 import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.qpacks.di.qPackPresentationModule

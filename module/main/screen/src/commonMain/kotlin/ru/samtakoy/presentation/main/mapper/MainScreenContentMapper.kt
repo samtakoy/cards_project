@@ -1,7 +1,7 @@
 package ru.samtakoy.presentation.main.mapper
 
 import org.jetbrains.compose.resources.getString
-import ru.samtakoy.presentation.navigation.TabRouteId
+import ru.samtakoy.navigation.domain.model.TabRouteId
 import ru.samtakoy.presentation.main.vm.MainScreenViewModel
 import ru.samtakoy.presentation.utils.asAnnotated
 import ru.samtakoy.resources.Res

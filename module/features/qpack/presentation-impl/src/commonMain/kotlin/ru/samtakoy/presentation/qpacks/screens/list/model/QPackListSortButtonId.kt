@@ -1,6 +1,6 @@
 package ru.samtakoy.presentation.qpacks.screens.list.model
 
-import ru.samtakoy.presentation.core.design_system.base.model.UiId
+import ru.samtakoy.presentation.base.model.UiId
 
 internal enum class QPackListSortButtonId : UiId {
     LastViewDateAsc,

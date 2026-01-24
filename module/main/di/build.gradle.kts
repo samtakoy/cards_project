@@ -10,9 +10,9 @@ kotlin {
             implementation(projects.module.common.utils.common)
             implementation(projects.module.core.log)
 
-            implementation(projects.module.core.db.repoImpl)
+            implementation(projects.module.core.cards.repoImpl)
             implementation(projects.module.core.network)
-            implementation(projects.module.utilFeatures.task.impl)
+            implementation(projects.module.services.task.impl)
 
             implementation(projects.module.features.card.impl)
             implementation(projects.module.features.favorites.impl)
@@ -22,10 +22,10 @@ kotlin {
             implementation(projects.module.features.view.impl)
 
             // features
-            implementation(projects.module.features.import.impl)
-            implementation(projects.module.features.speech.impl)
-            implementation(projects.module.features.speech.presentation)
-            implementation(projects.module.utilFeatures.download.impl)
+            implementation(projects.module.services.import.impl)
+            implementation(projects.module.services.speech.impl)
+            implementation(projects.module.services.speech.presentation)
+            implementation(projects.module.services.download.impl)
 
             implementation(projects.module.main.screen)
             implementation(projects.module.features.card.presentationImpl)
@@ -36,8 +36,8 @@ kotlin {
             implementation(projects.module.features.settings.presentationImpl)
             implementation(projects.module.features.view.presentationImpl)
 
-            implementation(projects.module.utilFeatures.notification.impl)
-            implementation(projects.module.utilFeatures.permissions.impl)
+            implementation(projects.module.services.notification.impl)
+            implementation(projects.module.services.permissions.impl)
         }
     }
 }

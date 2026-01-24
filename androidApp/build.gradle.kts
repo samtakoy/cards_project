@@ -109,11 +109,11 @@ dependencies {
 
     implementation(projects.module.main.di)
 
-    implementation(projects.module.utilFeatures.permissions.impl)
+    implementation(projects.module.services.permissions.impl)
 
-    implementation(projects.module.core.db.repoApi)
+    implementation(projects.module.core.cards.repoApi)
 
-    implementation(projects.module.utilFeatures.task.api)
+    implementation(projects.module.services.task.api)
 
     implementation(projects.module.features.card.api)
 
@@ -127,12 +127,12 @@ dependencies {
 
     implementation(projects.module.features.favorites.api)
 
-    implementation(projects.module.features.export.api)
-    implementation(projects.module.features.import.api)
+    implementation(projects.module.services.export.api)
+    implementation(projects.module.services.import.api)
 
     implementation(projects.module.common.utils.presentation)
     implementation(projects.module.common.viewmodel)
-    implementation(projects.module.uikit.designsystem)
+    implementation(projects.module.core.uikit)
 
     implementation(projects.module.core.navigation.api)
 

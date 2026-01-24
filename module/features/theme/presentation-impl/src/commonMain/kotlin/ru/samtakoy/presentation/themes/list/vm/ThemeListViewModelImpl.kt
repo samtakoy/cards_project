@@ -25,7 +25,7 @@ import ru.samtakoy.platform.permissions.PermissionsController
 import ru.samtakoy.platform.permissions.model.MyPermission
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.base.viewmodel.savedstate.SavedStateValue
-import ru.samtakoy.presentation.core.design_system.base.model.UiId
+import ru.samtakoy.presentation.base.model.UiId
 import ru.samtakoy.presentation.core.design_system.dropdown.DropDownMenuUiModel
 import ru.samtakoy.presentation.core.design_system.dropdown.getEmptyMenu
 import ru.samtakoy.presentation.core.design_system.progress.ProgressOverlayUiModel

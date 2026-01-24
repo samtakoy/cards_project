@@ -5,8 +5,8 @@ import androidx.compose.ui.text.AnnotatedString
 import kotlinx.collections.immutable.ImmutableList
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
 import ru.samtakoy.presentation.core.appelements.qpacklistitem.QPackListItemUiModel
-import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
-import ru.samtakoy.presentation.core.design_system.base.model.UiId
+import ru.samtakoy.presentation.base.model.LongUiId
+import ru.samtakoy.presentation.base.model.UiId
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.qpacks.screens.list.vm.QPackListViewModel.Action
 import ru.samtakoy.presentation.qpacks.screens.list.vm.QPackListViewModel.Event

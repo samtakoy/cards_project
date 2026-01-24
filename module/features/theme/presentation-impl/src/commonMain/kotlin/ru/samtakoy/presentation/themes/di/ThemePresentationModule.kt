@@ -5,7 +5,7 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import ru.samtakoy.presentation.navigation.MainTabFeatureEntry
+import ru.samtakoy.navigation.presentation.MainTabFeatureEntry
 import ru.samtakoy.presentation.themes.list.ThemeListRoute
 import ru.samtakoy.presentation.themes.entry.ThemeListEntryImpl
 import ru.samtakoy.presentation.themes.list.mapper.ThemeUiItemMapper

@@ -1,6 +1,6 @@
 package ru.samtakoy.presentation.qpacks.screens.fastlist.mapper
 
-import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
+import ru.samtakoy.presentation.base.model.LongUiId
 import ru.samtakoy.presentation.qpacks.screens.fastlist.model.FastCardUiModel
 import ru.samtakoy.domain.card.domain.model.Card
 import ru.samtakoy.presentation.utils.asAnnotated

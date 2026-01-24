@@ -8,7 +8,7 @@ import ru.samtakoy.presentation.qpacks.screens.fastlist.model.FastCardUiModel
 import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.Action
 import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.Event
 import ru.samtakoy.presentation.qpacks.screens.info.vm.QPackInfoViewModel.State
-import ru.samtakoy.presentation.core.design_system.base.model.UiId
+import ru.samtakoy.presentation.base.model.UiId
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.choice.MyChoiceDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dropdown.DropDownMenuUiModel

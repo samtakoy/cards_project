@@ -1,7 +1,7 @@
 package ru.samtakoy.presentation.qpacks.screens.list.mapper
 
 import ru.samtakoy.common.utils.DateUtils
-import ru.samtakoy.presentation.core.design_system.base.model.LongUiId
+import ru.samtakoy.presentation.base.model.LongUiId
 import ru.samtakoy.domain.qpack.QPack
 import ru.samtakoy.presentation.core.appelements.qpacklistitem.QPackListItemUiModel
 import ru.samtakoy.presentation.qpacks.screens.list.model.QPackSortType

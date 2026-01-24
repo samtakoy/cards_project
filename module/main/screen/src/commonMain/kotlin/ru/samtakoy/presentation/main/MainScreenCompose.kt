@@ -33,15 +33,15 @@ import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.compose.getKoin
+import ru.samtakoy.navigation.domain.model.TabRouteId
+import ru.samtakoy.navigation.presentation.MainTabFeatureEntry
+import ru.samtakoy.navigation.presentation.MainTabRoute
+import ru.samtakoy.navigation.presentation.RootFeatureEntry
+import ru.samtakoy.navigation.presentation.getRouteName
+import ru.samtakoy.navigation.presentation.getRouteWithoutArgs
 import ru.samtakoy.presentation.main.navigation.MainFlowRoute
 import ru.samtakoy.presentation.main.navigation.changeTab
 import ru.samtakoy.presentation.main.vm.MainScreenViewModel
-import ru.samtakoy.presentation.navigation.MainTabFeatureEntry
-import ru.samtakoy.presentation.navigation.MainTabRoute
-import ru.samtakoy.presentation.navigation.RootFeatureEntry
-import ru.samtakoy.presentation.navigation.TabRouteId
-import ru.samtakoy.presentation.navigation.getRouteName
-import ru.samtakoy.presentation.navigation.getRouteWithoutArgs
 import ru.samtakoy.presentation.themes.list.ThemeListRoute
 import ru.samtakoy.speech.presentation.TopPlayerView
 

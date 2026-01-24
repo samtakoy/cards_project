@@ -4,9 +4,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import ru.samtakoy.presentation.navigation.MainTabFeatureEntry
-import ru.samtakoy.presentation.navigation.MainTabRoute
-import ru.samtakoy.presentation.navigation.TabRouteId
+import ru.samtakoy.navigation.presentation.MainTabFeatureEntry
+import ru.samtakoy.navigation.presentation.MainTabRoute
+import ru.samtakoy.navigation.domain.model.TabRouteId
 import ru.samtakoy.presentation.themes.list.ThemeListRoute
 
 internal class ThemeListEntryImpl : MainTabFeatureEntry {

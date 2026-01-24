@@ -26,19 +26,18 @@ kotlin {
             implementation(projects.module.common.utils.common)
             implementation(projects.module.core.resources)
 
-            implementation(projects.module.utilFeatures.permissions.api)
+            implementation(projects.module.services.permissions.api)
 
-            implementation(projects.module.utilFeatures.task.model)
+            implementation(projects.module.services.task.model)
 
-            implementation(projects.module.features.export.api)
-            implementation(projects.module.features.import.api)
-            implementation(projects.module.utilFeatures.download.api)
+            implementation(projects.module.services.export.api)
+            implementation(projects.module.services.import.api)
+            implementation(projects.module.services.download.api)
             implementation(projects.module.features.theme.api)
             implementation(projects.module.features.qpack.api)
 
             implementation(projects.module.common.viewmodel)
-            implementation(projects.module.uikit.designsystem)
-            implementation(projects.module.uikit.appelements)
+            implementation(projects.module.core.uikit)
             implementation(projects.module.common.utils.presentation)
 
             implementation(projects.module.core.navigation.api)

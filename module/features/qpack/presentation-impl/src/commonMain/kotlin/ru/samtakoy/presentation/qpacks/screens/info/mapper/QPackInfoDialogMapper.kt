@@ -2,7 +2,7 @@ package ru.samtakoy.presentation.qpacks.screens.info.mapper
 
 import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.getString
-import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
+import ru.samtakoy.presentation.base.model.AnyUiId
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.choice.MyChoiceDialogUiModel
 import ru.samtakoy.presentation.core.design_system.radio.MyRadioItemUiModel

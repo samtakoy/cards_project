@@ -41,7 +41,7 @@ import ru.samtakoy.presentation.cards.screens.view.vm.mapper.CardContentMapper
 import ru.samtakoy.presentation.cards.screens.view.vm.mapper.CardsViewViewStateMapper
 import ru.samtakoy.presentation.cards.screens.view.vm.mapper.QuestionButtonsMapper
 import ru.samtakoy.presentation.cards.view.model.CardViewMode
-import ru.samtakoy.presentation.core.design_system.base.model.UiId
+import ru.samtakoy.presentation.base.model.UiId
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.resources.Res
 import ru.samtakoy.resources.common_err_message

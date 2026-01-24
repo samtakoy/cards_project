@@ -12,7 +12,7 @@ kotlin {
             implementation(projects.module.core.resources)
 
             implementation(projects.module.common.utils.common)
-            implementation(projects.module.core.db.model.learncourse)
+            implementation(projects.module.core.cards.model.learncourse)
         }
     }
 }

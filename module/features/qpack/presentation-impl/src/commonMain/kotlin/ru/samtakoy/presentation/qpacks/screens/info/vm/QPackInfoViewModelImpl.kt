@@ -16,7 +16,7 @@ import ru.samtakoy.domain.view.ViewHistoryInteractor
 import ru.samtakoy.domain.view.ViewHistoryItem
 import ru.samtakoy.speech.domain.RunPlayCardsTaskUseCase
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
-import ru.samtakoy.presentation.core.design_system.base.model.UiId
+import ru.samtakoy.presentation.base.model.UiId
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.core.design_system.dropdown.getEmptyMenu
 import ru.samtakoy.presentation.qpacks.screens.fastlist.mapper.FastCardUiModelMapper

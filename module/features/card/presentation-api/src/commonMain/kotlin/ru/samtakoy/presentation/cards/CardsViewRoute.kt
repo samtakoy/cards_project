@@ -1,8 +1,7 @@
 package ru.samtakoy.presentation.cards
 
 import kotlinx.serialization.Serializable
-import ru.samtakoy.presentation.cards.view.model.CardViewMode
-import ru.samtakoy.presentation.navigation.RootRoute
+import ru.samtakoy.navigation.presentation.RootRoute
 
 @Serializable
 data class CardsViewRoute(

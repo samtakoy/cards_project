@@ -2,7 +2,7 @@ package ru.samtakoy.presentation.qpacks.screens.info.mapper
 
 import org.jetbrains.compose.resources.getString
 import ru.samtakoy.common.utils.coroutines.SuspendLazy
-import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
+import ru.samtakoy.presentation.base.model.AnyUiId
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.utils.asA
 import ru.samtakoy.resources.Res

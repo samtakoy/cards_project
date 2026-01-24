@@ -33,7 +33,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.jetbrains.compose.resources.stringResource
 import ru.samtakoy.presentation.base.observeActionsWithLifecycle
 import ru.samtakoy.presentation.core.appelements.qpacklistitem.QPackListItemView
-import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
+import ru.samtakoy.presentation.base.model.AnyUiId
 import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButton
 import ru.samtakoy.presentation.core.design_system.scaffold.MySimpleScreenScaffold

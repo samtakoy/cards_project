@@ -10,7 +10,7 @@ import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.Action
 import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.Event
 import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel.State
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModel
-import ru.samtakoy.presentation.core.design_system.base.model.UiId
+import ru.samtakoy.presentation.base.model.UiId
 import ru.samtakoy.presentation.core.design_system.button.usual.MyButtonUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.alert.MyAlertDialogUiModel
 import ru.samtakoy.presentation.core.design_system.dialogs.inputtext.MyInputTextDialogUiModel

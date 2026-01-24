@@ -2,7 +2,7 @@ package ru.samtakoy.presentation.themes.list
 
 import androidx.compose.runtime.Immutable
 import kotlinx.serialization.Serializable
-import ru.samtakoy.presentation.navigation.MainTabRoute
+import ru.samtakoy.navigation.presentation.MainTabRoute
 
 @Immutable
 @Serializable

@@ -52,7 +52,7 @@ import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.CardSta
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.Event
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.NavigationAction
 import ru.samtakoy.presentation.cards.screens.view.vm.CardsViewViewModel.State
-import ru.samtakoy.presentation.core.design_system.base.model.AnyUiId
+import ru.samtakoy.presentation.base.model.AnyUiId
 import ru.samtakoy.presentation.core.design_system.base.theme.MyTheme
 import ru.samtakoy.presentation.core.design_system.base.utils.getRoundedShape
 import ru.samtakoy.presentation.core.design_system.base.utils.getTopRoundedShape
