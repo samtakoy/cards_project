@@ -10,6 +10,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.core)
 
             implementation(projects.module.core.navigation.api)
+            implementation(projects.module.main.tabnavigation.api)
         }
     }
 }

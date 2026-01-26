@@ -2,7 +2,7 @@ package ru.samtakoy.presentation.main
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.SavedStateHandle
 import org.koin.core.context.GlobalContext
@@ -13,13 +13,14 @@ import ru.samtakoy.presentation.main.vm.MainScreenViewModelImpl
 fun MainScreenEntry() {
     MyTheme {
         MainScreen(
-            viewModel = rememberSaveable {
+            viewModel = remember {
                 val koin = GlobalContext.get()
                 MainScreenViewModelImpl(
                     contentMapper = koin.get(),
                     scopeProvider = koin.get(),
                     // TODO решение: https://github.com/JetBrains/compose-multiplatform-core/pull/2554
-                    savedStateHandle = SavedStateHandle()
+                    savedStateHandle = SavedStateHandle(),
+                    tabNavigatorHost = koin.get()
                 )
             },
             modifier = Modifier.fillMaxSize()

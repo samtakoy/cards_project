@@ -26,6 +26,7 @@ kotlin {
             implementation(projects.module.common.utils.presentation)
 
             implementation(projects.module.core.navigation.api)
+            implementation(projects.module.main.tabnavigation.api)
 
             implementation(projects.module.features.card.presentationApi)
             implementation(projects.module.features.theme.presentationApi)

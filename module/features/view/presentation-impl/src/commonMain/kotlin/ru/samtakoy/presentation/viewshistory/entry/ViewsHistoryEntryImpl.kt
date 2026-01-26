@@ -3,9 +3,9 @@ package ru.samtakoy.presentation.themes.entry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import ru.samtakoy.navigation.presentation.MainTabFeatureEntry
-import ru.samtakoy.navigation.presentation.MainTabRoute
-import ru.samtakoy.navigation.domain.model.TabRouteId
+import ru.samtakoy.tabnavigation.presentation.MainTabFeatureEntry
+import ru.samtakoy.tabnavigation.presentation.model.MainTabRoute
+import ru.samtakoy.tabnavigation.presentation.model.TabRouteId
 import ru.samtakoy.presentation.viewshistory.ViewsHistoryRoute
 
 // internal
@@ -18,15 +18,10 @@ class ViewsHistoryEntryImpl : MainTabFeatureEntry {
 
     override fun registerGraph(
         navGraphBuilder: NavGraphBuilder,
-        rootNavController: NavHostController,
-        currentNavController: NavHostController,
-        onMainNavigator: () -> Unit
+        rootNavController: NavHostController
     ) {
         navGraphBuilder.composable<ViewsHistoryRoute> {
-            ViewsHistoryEntry(
-                navController = currentNavController,
-                onMainNavigator = onMainNavigator
-            )
+            ViewsHistoryEntry()
         }
     }
 }

@@ -2,13 +2,13 @@ package ru.samtakoy.presentation.base.viewmodel.savedstate
 
 import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-// TODO fun + inline + reified?
 class SavedStateValue<T>(
     private val initialValueGetter: () -> T,
     private val keyName: String,
@@ -27,6 +27,7 @@ class SavedStateValue<T>(
         }
 
     init {
+        @OptIn(FlowPreview::class)
         stateFlow
             .debounce(SAVE_DELAY)
             .onEach { value ->

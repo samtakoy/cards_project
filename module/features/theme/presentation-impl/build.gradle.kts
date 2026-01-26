@@ -26,6 +26,9 @@ kotlin {
             implementation(projects.module.common.utils.common)
             implementation(projects.module.core.resources)
 
+            implementation(projects.module.core.navigation.api)
+            implementation(projects.module.main.tabnavigation.api)
+
             implementation(projects.module.services.permissions.api)
 
             implementation(projects.module.services.task.model)
@@ -39,8 +42,6 @@ kotlin {
             implementation(projects.module.common.viewmodel)
             implementation(projects.module.core.uikit)
             implementation(projects.module.common.utils.presentation)
-
-            implementation(projects.module.core.navigation.api)
 
             implementation(projects.module.features.theme.presentationApi)
             implementation(projects.module.features.qpack.presentationApi)

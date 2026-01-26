@@ -14,6 +14,8 @@ kotlin {
             implementation(projects.module.core.network)
             implementation(projects.module.services.task.impl)
 
+            implementation(projects.module.main.tabnavigation.impl)
+
             implementation(projects.module.features.card.impl)
             implementation(projects.module.features.favorites.impl)
             implementation(projects.module.features.learncourse.impl)

@@ -13,15 +13,11 @@ import ru.samtakoy.presentation.qpacks.screens.info.QPackInfoEntry
 @Immutable
 internal class QPackInfoEntryImpl : RootFeatureEntry {
     @Stable
-    override fun registerGraph(
-        navGraphBuilder: NavGraphBuilder,
-        rootNavController: NavHostController
-    ) {
+    override fun registerGraph(navGraphBuilder: NavGraphBuilder) {
         navGraphBuilder.composable<QPackInfoRoute> { backStackEntry ->
             val route = backStackEntry.toRoute<QPackInfoRoute>()
             QPackInfoEntry(
-                qPackId = route.qPackId,
-                rootNavController = rootNavController,
+                qPackId = route.qPackId
             )
         }
     }

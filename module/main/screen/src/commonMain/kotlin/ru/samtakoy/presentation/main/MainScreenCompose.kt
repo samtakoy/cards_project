@@ -13,7 +13,9 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -30,20 +32,25 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.compose.getKoin
-import ru.samtakoy.navigation.domain.model.TabRouteId
-import ru.samtakoy.navigation.presentation.MainTabFeatureEntry
-import ru.samtakoy.navigation.presentation.MainTabRoute
+import ru.samtakoy.navigation.presentation.LocalRootNavigator
 import ru.samtakoy.navigation.presentation.RootFeatureEntry
-import ru.samtakoy.navigation.presentation.getRouteName
-import ru.samtakoy.navigation.presentation.getRouteWithoutArgs
+import ru.samtakoy.navigation.presentation.RootNavigator
+import ru.samtakoy.navigation.presentation.RootRoute
+import ru.samtakoy.presentation.base.observeActionsWithLifecycle
 import ru.samtakoy.presentation.main.navigation.MainFlowRoute
-import ru.samtakoy.presentation.main.navigation.changeTab
 import ru.samtakoy.presentation.main.vm.MainScreenViewModel
 import ru.samtakoy.presentation.themes.list.ThemeListRoute
 import ru.samtakoy.speech.presentation.TopPlayerView
+import ru.samtakoy.tabnavigation.presentation.MainTabFeatureEntry
+import ru.samtakoy.tabnavigation.presentation.getRouteName
+import ru.samtakoy.tabnavigation.presentation.getRouteWithoutArgs
+import ru.samtakoy.tabnavigation.presentation.model.MainTabRoute
+import ru.samtakoy.tabnavigation.presentation.model.TabRouteId
+import ru.samtakoy.tabnavigation.presentation.navigator.LocalTabNavigator
+import ru.samtakoy.tabnavigation.presentation.navigator.TabNavigator
+import ru.samtakoy.tabnavigation.presentation.utils.changeTab
 
 @Composable
 internal fun MainScreen(
@@ -51,18 +58,49 @@ internal fun MainScreen(
     modifier: Modifier = Modifier
 ) {
     val viewState by viewModel.getViewStateAsFlow().collectAsStateWithLifecycle()
+    val tabsNavController = rememberNavController()
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
     Box(
         modifier = modifier
             .fillMaxSize()
     ) {
         MainScreenInternal(
             viewState = viewState,
-            onEvent = viewModel::onEvent
+            onEvent = viewModel::onEvent,
+            drawerState = drawerState,
+            tabsNavController = tabsNavController,
+            tabNavigator = viewModel.tabNavigator
         )
         TopPlayerView(
             modifier = Modifier
                 .systemBarsPadding()
         )
+    }
+    HandleActions(
+        viewModel = viewModel,
+        drawerState = drawerState,
+        tabsNavController = tabsNavController
+    )
+}
+
+@Composable
+private fun HandleActions(
+    viewModel: MainScreenViewModel,
+    drawerState: DrawerState,
+    tabsNavController: NavHostController
+) {
+    val coroutineScope = rememberCoroutineScope()
+    viewModel.getViewActionsAsFlow().observeActionsWithLifecycle { action ->
+        when (action) {
+            MainScreenViewModel.Action.ShowMainDrawer -> {
+                coroutineScope.launch {
+                    drawerState.open()
+                }
+            }
+            is MainScreenViewModel.Action.AddTabFlowScreen -> {
+                tabsNavController.navigate(action.route)
+            }
+        }
     }
 }
 
@@ -71,12 +109,13 @@ internal fun MainScreen(
 private fun MainScreenInternal(
     viewState: MainScreenViewModel.State,
     onEvent: (MainScreenViewModel.Event) -> Unit,
+    drawerState: DrawerState,
+    tabsNavController: NavHostController,
+    tabNavigator: TabNavigator,
     modifier: Modifier = Modifier
 ) {
     val rootNavController = rememberNavController()
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val coroutineScope = rememberCoroutineScope()
-
+    val rootNavigator = rememberRootNavigator(rootNavController)
 
     val koin = getKoin() // TODO через вью модель?
     val rootFeatureEntries: ImmutableList<RootFeatureEntry> = remember {
@@ -85,25 +124,51 @@ private fun MainScreenInternal(
             .toImmutableList()
     }
 
-    NavHost(
-        navController = rootNavController,
-        startDestination = MainFlowRoute.Tabs,
-        modifier = modifier.fillMaxSize()
+    CompositionLocalProvider(
+        LocalRootNavigator provides rootNavigator
     ) {
-        composable<MainFlowRoute.Tabs> {
-            TabsView(
-                viewState = viewState,
-                onEvent = onEvent,
-                rootNavController = rootNavController,
-                drawerState = drawerState,
-                coroutineScope = coroutineScope
-            )
+        NavHost(
+            navController = rootNavController,
+            startDestination = MainFlowRoute.Tabs,
+            modifier = modifier.fillMaxSize()
+        ) {
+            composable<MainFlowRoute.Tabs> {
+                CompositionLocalProvider(
+                    LocalTabNavigator provides tabNavigator
+                ) {
+                    TabsView(
+                        viewState = viewState,
+                        onEvent = onEvent,
+                        rootNavController = rootNavController,
+                        drawerState = drawerState,
+                        tabsNavController
+                    )
+                }
+            }
+            rootFeatureEntries.forEach { featureEntry ->
+                featureEntry.registerGraph(navGraphBuilder = this)
+            }
         }
-        rootFeatureEntries.forEach { featureEntry ->
-            featureEntry.registerGraph(
-                navGraphBuilder = this,
-                rootNavController = rootNavController
-            )
+    }
+}
+
+@NonRestartableComposable
+@Composable
+private fun rememberRootNavigator(
+    rootNavController: NavHostController
+): RootNavigator = remember(rootNavController) {
+    object : RootNavigator {
+        override fun goBack() {
+            rootNavController.popBackStack()
+        }
+
+        override fun replace(route: RootRoute) {
+            goBack()
+            navigate(route)
+        }
+
+        override fun navigate(route: RootRoute) {
+            rootNavController.navigate(route)
         }
     }
 }
@@ -115,8 +180,8 @@ private fun TabsView(
     onEvent: (MainScreenViewModel.Event) -> Unit,
     rootNavController: NavHostController,
     drawerState: DrawerState,
-    coroutineScope: CoroutineScope
-) {
+    tabsNavController: NavHostController) {
+    val coroutineScope = rememberCoroutineScope()
     val koin = getKoin() // TODO через вью модель?
     val mainTabFeatureEntries: ImmutableList<MainTabFeatureEntry> = remember {
         koin.getAll<MainTabFeatureEntry>().toImmutableList()
@@ -129,7 +194,6 @@ private fun TabsView(
         }.toImmutableMap()
     }
 
-    val tabsNavController = rememberNavController()
     val currentBackStack by tabsNavController.currentBackStack.collectAsState()
     val currentRootRouteName = remember {
         derivedStateOf {
@@ -143,15 +207,6 @@ private fun TabsView(
         val currentRoot = currentRootRouteName.value ?: return@LaunchedEffect
         if (currentRoot.startsWith(featureEntry.getRouteName()).not()) {
             tabsNavController.changeTab(featureEntry.defaultRoute)
-        }
-    }
-
-    LaunchedEffect(currentRootRouteName) {
-        // при изменении таба синхронизация viewState.selectedItemId
-        val currentRoot = currentRootRouteName.value ?: return@LaunchedEffect
-        val featureEntry = mainTabFeatureEntriesById[viewState.selectedItemId] ?: return@LaunchedEffect
-        if (currentRoot.startsWith(featureEntry.getRouteName()).not()) {
-            onEvent(MainScreenViewModel.Event.NavigationChangedExternally(featureEntry.tabId))
         }
     }
 
@@ -185,11 +240,7 @@ private fun TabsView(
             mainTabFeatureEntries.forEach { featureEntry ->
                 featureEntry.registerGraph(
                     navGraphBuilder = this,
-                    rootNavController = rootNavController,
-                    currentNavController = tabsNavController,
-                    onMainNavigator = {
-                        coroutineScope.launch { drawerState.open() }
-                    }
+                    rootNavController = rootNavController
                 )
             }
         }

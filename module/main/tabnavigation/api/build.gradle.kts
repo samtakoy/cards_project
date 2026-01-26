@@ -1,0 +1,21 @@
+plugins {
+    id("convention.kmp-lib.plugin")
+    alias(libs.plugins.kotlinx.serialization)
+}
+
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlinx.serialization.core)
+            api(libs.kotlinx.serialization.json)
+            implementation(libs.androidx.navigation.compose)
+
+            implementation(projects.module.common.utils.presentation)
+        }
+    }
+}
+
+android {
+    namespace = "ru.samtakoy.main.tabnavigation"
+}

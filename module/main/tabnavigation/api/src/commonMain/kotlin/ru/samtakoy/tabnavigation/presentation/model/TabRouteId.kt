@@ -1,4 +1,4 @@
-package ru.samtakoy.navigation.domain.model
+package ru.samtakoy.tabnavigation.presentation.model
 
 import androidx.compose.runtime.Immutable
 import ru.samtakoy.presentation.base.model.UiId

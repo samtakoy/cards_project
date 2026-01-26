@@ -5,9 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 
 @Composable
-internal fun CourseListEntry(
-    navController: NavHostController,
-    onMainNavigator: () -> Unit
-) {
+internal fun CourseListEntry() {
     Text("CourseList. Не реализовано.")
 }

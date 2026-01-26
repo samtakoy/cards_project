@@ -76,6 +76,8 @@ include(":module:features:settings:presentation-impl")
 
 include(":module:main:di")
 include(":module:main:screen")
+include(":module:main:tabnavigation:api")
+include(":module:main:tabnavigation:impl")
 
 include(":module:services:task:api")
 include(":module:services:task:impl")

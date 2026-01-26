@@ -27,6 +27,7 @@ import ru.samtakoy.presentation.settings.di.settingsPresentationModule
 import ru.samtakoy.presentation.themes.di.themePresentationModule
 import ru.samtakoy.speech.platform.di.speechPlatformModule
 import ru.samtakoy.speech.presentation.di.speechPresentationModule
+import ru.samtakoy.tabnavigation.di.tabNavigationModule
 
 fun koinModulesModule() = module {
     includes(
@@ -39,6 +40,7 @@ fun koinModulesModule() = module {
 
         // main
         mainScreenModule(),
+        tabNavigationModule(),
 
         // features
         speechDataModule(),

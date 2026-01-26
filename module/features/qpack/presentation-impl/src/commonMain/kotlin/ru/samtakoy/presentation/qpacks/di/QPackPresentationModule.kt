@@ -8,7 +8,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 import ru.samtakoy.common.utils.scope.releaseScope
 import ru.samtakoy.common.utils.scope.useScope
-import ru.samtakoy.navigation.presentation.MainTabFeatureEntry
+import ru.samtakoy.tabnavigation.presentation.MainTabFeatureEntry
 import ru.samtakoy.navigation.presentation.RootFeatureEntry
 import ru.samtakoy.presentation.qpacks.QPackInfoRoute
 import ru.samtakoy.presentation.qpacks.QPackListRoute

@@ -5,9 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 
 @Composable
-internal fun SettingsEntry(
-    navController: NavHostController,
-    onMainNavigator: () -> Unit
-) {
+internal fun SettingsEntry() {
     Text("Settings. Не реализовано.")
 }

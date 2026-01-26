@@ -9,21 +9,28 @@ import ru.samtakoy.common.utils.coroutines.ScopeProvider
 import ru.samtakoy.presentation.base.viewmodel.BaseViewModelImpl
 import ru.samtakoy.presentation.base.viewmodel.savedstate.SavedStateValue
 import ru.samtakoy.presentation.main.mapper.MainScreenContentMapper
-import ru.samtakoy.navigation.domain.model.TabRouteId
+import ru.samtakoy.presentation.main.vm.MainScreenViewModel.Action
+import ru.samtakoy.presentation.main.vm.MainScreenViewModel.Event
+import ru.samtakoy.presentation.main.vm.MainScreenViewModel.State
+import ru.samtakoy.tabnavigation.presentation.model.TabRouteId
+import ru.samtakoy.tabnavigation.presentation.navigator.TabNavigator
+import ru.samtakoy.tabnavigation.presentation.navigator.TabNavigatorEvent
+import ru.samtakoy.tabnavigation.presentation.navigator.TabNavigatorHost
 
 internal class MainScreenViewModelImpl(
     private val contentMapper: MainScreenContentMapper,
     scopeProvider: ScopeProvider,
     savedStateHandle: SavedStateHandle,
-) : BaseViewModelImpl<MainScreenViewModel.State, MainScreenViewModel.Action, MainScreenViewModel.Event>(
+    private val tabNavigatorHost: TabNavigatorHost
+) : BaseViewModelImpl<State, Action, Event>(
     scopeProvider = scopeProvider,
-    initialState = MainScreenViewModel.State(
+    initialState = State(
         menuItems = emptyList<MainScreenViewModel.MenuItem>().toImmutableList(),
         selectedItemId = null
     )
 ), MainScreenViewModel {
 
-    val selectedItemId: SavedStateValue<TabRouteId> = SavedStateValue(
+    private val selectedItemId: SavedStateValue<TabRouteId> = SavedStateValue(
         initialValueGetter = { TabRouteId.ThemeList },
         keyName = KEY_SELECTED_ITEM,
         savedStateHandle = savedStateHandle,
@@ -33,6 +40,9 @@ internal class MainScreenViewModelImpl(
         },
         saveScope = ioScope
     )
+
+    override val tabNavigator: TabNavigator
+        get() = tabNavigatorHost.getTabNavigator()
 
     init {
         launchCatching {
@@ -45,10 +55,21 @@ internal class MainScreenViewModelImpl(
         subscribeData()
     }
 
-    override fun onEvent(event: MainScreenViewModel.Event) {
+    override fun onEvent(event: Event) {
         when (event) {
-            is MainScreenViewModel.Event.MenuItemClick -> onUIMenuItemClick(event.item)
-            is MainScreenViewModel.Event.NavigationChangedExternally -> onUiNavigationChange(event.tabRouteId)
+            is Event.MenuItemClick -> onUIMenuItemClick(event.item)
+            is Event.NavigationChangedExternally -> onUiNavigationChange(event.tabRouteId)
+        }
+    }
+
+    private fun onTabNavigationEvent(event: TabNavigatorEvent) {
+        when (event) {
+            TabNavigatorEvent.ShowMainDrawer -> {
+                sendAction(Action.ShowMainDrawer)
+            }
+            is TabNavigatorEvent.PutNextScreenInStack -> {
+                sendAction(Action.AddTabFlowScreen(event.route))
+            }
         }
     }
 
@@ -66,6 +87,11 @@ internal class MainScreenViewModelImpl(
             .distinctUntilChanged()
             .onEach {
                 updateState { state -> state.copy(selectedItemId = it) }
+            }
+            .launchIn(mainScope)
+        tabNavigatorHost.getNavigationEventsAsFlow()
+            .onEach {
+                onTabNavigationEvent(it)
             }
             .launchIn(mainScope)
     }

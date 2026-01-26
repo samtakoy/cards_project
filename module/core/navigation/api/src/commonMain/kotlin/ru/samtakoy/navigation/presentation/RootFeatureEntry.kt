@@ -8,8 +8,5 @@ import androidx.navigation.NavHostController
 @Immutable
 interface RootFeatureEntry {
     @Stable
-    fun registerGraph(
-        navGraphBuilder: NavGraphBuilder,
-        rootNavController: NavHostController
-    )
+    fun registerGraph(navGraphBuilder: NavGraphBuilder)
 }

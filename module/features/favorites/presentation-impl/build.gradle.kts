@@ -25,6 +25,8 @@ kotlin {
 
             implementation(projects.module.core.navigation.api)
 
+            implementation(projects.module.main.tabnavigation.api)
+
             implementation(projects.module.features.favorites.presentationApi)
         }
     }

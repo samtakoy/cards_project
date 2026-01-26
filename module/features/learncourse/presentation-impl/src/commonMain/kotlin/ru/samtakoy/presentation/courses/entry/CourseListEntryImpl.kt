@@ -4,9 +4,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import ru.samtakoy.presentation.courses.CourseListRoute
-import ru.samtakoy.navigation.presentation.MainTabFeatureEntry
-import ru.samtakoy.navigation.presentation.MainTabRoute
-import ru.samtakoy.navigation.domain.model.TabRouteId
+import ru.samtakoy.tabnavigation.presentation.MainTabFeatureEntry
+import ru.samtakoy.tabnavigation.presentation.model.MainTabRoute
+import ru.samtakoy.tabnavigation.presentation.model.TabRouteId
 
 // internal
 class CourseListEntryImpl : MainTabFeatureEntry {
@@ -18,15 +18,10 @@ class CourseListEntryImpl : MainTabFeatureEntry {
 
     override fun registerGraph(
         navGraphBuilder: NavGraphBuilder,
-        rootNavController: NavHostController,
-        currentNavController: NavHostController,
-        onMainNavigator: () -> Unit
+        rootNavController: NavHostController
     ) {
         navGraphBuilder.composable<CourseListRoute> {
-            CourseListEntry(
-                navController = currentNavController,
-                onMainNavigator = onMainNavigator
-            )
+            CourseListEntry()
         }
     }
 }

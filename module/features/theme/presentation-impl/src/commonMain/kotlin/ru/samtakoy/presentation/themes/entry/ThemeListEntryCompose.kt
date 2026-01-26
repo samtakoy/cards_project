@@ -12,14 +12,14 @@ import ru.samtakoy.presentation.themes.list.ThemeListRoute
 import ru.samtakoy.presentation.themes.list.ThemeListScreen
 import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModel
 import ru.samtakoy.presentation.themes.list.vm.ThemeListViewModelImpl
+import ru.samtakoy.tabnavigation.presentation.navigator.LocalTabNavigator
 
 @Composable
 internal fun ThemeListEntry(
     rootNavController: NavHostController,
-    navController: NavHostController,
-    onMainNavigator: () -> Unit,
     route: ThemeListRoute
 ) {
+    val tabNavigator = LocalTabNavigator.current
     ThemeListScreen(
         viewModel = koinViewModel<ThemeListViewModelImpl> {
             parametersOf(
@@ -29,7 +29,7 @@ internal fun ThemeListEntry(
                 route.themeTitle
             )
         },
-        onMainNavigator = onMainNavigator,
+        onMainNavigator = { tabNavigator.showMainDrawer() },
         onNavigationAction = { action ->
             when (action) {
                 is ThemeListViewModel.NavigationAction.NavigateToBatchExportDirDialog,
@@ -40,7 +40,9 @@ internal fun ThemeListEntry(
                 ThemeListViewModel.NavigationAction.NavigateToOnlineImport,
                 ThemeListViewModel.NavigationAction.NavigateToSettings -> Unit // TODO()
                 is ThemeListViewModel.NavigationAction.NavigateToTheme -> {
-                    navController.navigate(ThemeListRoute(themeId = action.themeId, themeTitle = action.themeTitle))
+                    tabNavigator.putNextInStack(
+                        ThemeListRoute(themeId = action.themeId, themeTitle = action.themeTitle)
+                    )
                 }
                 is ThemeListViewModel.NavigationAction.NavigateToQPack -> {
                     rootNavController.navigate(QPackInfoRoute(qPackId = action.qPackId))
